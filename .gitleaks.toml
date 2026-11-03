@@ -1,0 +1,15 @@
+title = "GetMaster gitleaks config"
+
+# gitleaks'ning standart qoidalari (AWS, GitHub, Stripe, yuqori entropiyali kalitlar va h.k.) saqlanadi.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Haqiqiy bo‘lmagan joylar"
+paths = [
+  '''(^|/)pnpm-lock\.yaml$''',
+  '''(^|/)package-lock\.json$''',
+  '''(^|/)\.env\.example$''',
+  '''(^|/)tests/''',
+  '''(^|/)docs/''',
+]

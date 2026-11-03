@@ -1,0 +1,69 @@
+.gm-toggle-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-1);
+}
+
+.gm-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--qs-space-3);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.gm-toggle input[type='checkbox'] {
+  margin-top: 3px;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--qs-color-primary);
+  flex-shrink: 0;
+}
+
+.gm-toggle__label {
+  color: var(--qs-color-text);
+}
+
+.gm-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--qs-space-2);
+  cursor: pointer;
+}
+
+.gm-switch__track {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--qs-color-border);
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.gm-switch__track[data-checked='true'] {
+  background: var(--qs-color-primary);
+}
+
+.gm-switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: var(--qs-shadow-sm);
+  transition: transform 0.15s ease;
+}
+
+.gm-switch__track[data-checked='true'] .gm-switch__thumb {
+  transform: translateX(18px);
+}
+
+.gm-switch:has(input:focus-visible) .gm-switch__track {
+  outline: 2px solid var(--qs-focus-ring);
+  outline-offset: 2px;
+}

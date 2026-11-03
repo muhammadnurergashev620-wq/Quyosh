@@ -1,0 +1,171 @@
+/* Admin / superadmin yuqori paneli: suzuvchi yumaloq karta */
+.gm-aheader {
+  position: sticky;
+  top: var(--qs-safe-top);
+  z-index: 600;
+  height: var(--qs-header-height);
+  border-bottom: 1px solid var(--qs-color-border);
+  background: color-mix(in srgb, var(--qs-color-surface) 88%, transparent);
+  backdrop-filter: saturate(160%) blur(12px);
+}
+
+.gm-aheader__card {
+  display: flex;
+  align-items: center;
+  gap: var(--qs-space-3);
+  height: 100%;
+  padding: 0 var(--qs-space-5);
+}
+
+.gm-aheader__brand { display: inline-flex; flex-shrink: 0; text-decoration: none; }
+
+.gm-aheader__panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--qs-color-primary);
+  background: var(--qs-color-primary-soft);
+}
+
+.gm-aheader__divider { width: 1px; height: 28px; flex-shrink: 0; background: var(--qs-color-border); }
+.gm-aheader__divider--tall { height: 34px; margin: 0 var(--qs-space-1); }
+
+/* O‘ng tomon */
+.gm-aheader__actions { margin-left: auto; display: flex; align-items: center; gap: var(--qs-space-3); flex-shrink: 0; }
+
+.gm-dropdown__trigger.gm-aheader__pill {
+  height: 42px;
+  padding: 0 12px;
+  gap: 8px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 999px;
+  background: var(--qs-color-surface);
+  color: var(--qs-color-text);
+  font-size: 13px;
+  font-weight: 700;
+}
+.gm-dropdown__trigger.gm-aheader__pill:hover { background: var(--qs-color-surface-muted); }
+
+.gm-aheader__theme {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 999px;
+  background: var(--qs-color-surface);
+}
+.gm-aheader__theme button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 34px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--qs-color-text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.gm-aheader__theme button.is-on { background: var(--qs-color-primary-soft); color: var(--qs-color-primary); }
+.gm-aheader__theme button:focus-visible { outline: 2px solid var(--qs-color-primary); outline-offset: 1px; }
+
+.gm-aheader__bell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 999px;
+  background: var(--qs-color-surface);
+  color: var(--qs-color-text);
+  text-decoration: none;
+}
+.gm-aheader__bell:hover { background: var(--qs-color-surface-muted); }
+.gm-aheader__badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--qs-color-danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.gm-dropdown__trigger.gm-aheader__user {
+  gap: 10px;
+  padding: 3px 6px 3px 3px;
+  border-radius: 999px;
+}
+.gm-aheader__avatar { position: relative; display: inline-flex; }
+.gm-aheader__avatar .gm-chat-avatar--sm { width: 40px; height: 40px; font-size: 14px; }
+.gm-aheader__avatar i {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid var(--qs-color-surface);
+}
+.gm-aheader__who { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; line-height: 1.25; }
+.gm-aheader__who strong { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 700; color: var(--qs-color-text); }
+.gm-aheader__who small { font-size: 12px; color: var(--qs-color-text-muted); }
+.gm-aheader__chev { color: var(--qs-color-text-muted); transition: transform 0.15s ease; }
+.gm-aheader__user[aria-expanded='true'] .gm-aheader__chev { transform: rotate(180deg); }
+
+.gm-aheader__menu { min-width: 230px; }
+.gm-aheader__switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--qs-color-border);
+  transition: background-color 0.15s ease;
+}
+.gm-aheader__switch span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease;
+}
+.gm-aheader__switch[data-on='true'] { background: var(--qs-color-primary); }
+.gm-aheader__switch[data-on='true'] span { transform: translateX(16px); }
+
+/* Planshet va telefon */
+@media (max-width: 1099px) {
+  .gm-aheader__panel { display: none; }
+  .gm-aheader__who { display: none; }
+  .gm-aheader__chev { display: none; }
+}
+
+@media (max-width: 899px) {
+  .gm-aheader__card { gap: var(--qs-space-2); padding: 0 var(--qs-space-3); }
+  .gm-aheader__theme { display: none; }
+  .gm-aheader__divider { display: none; }
+  .gm-aheader__actions { gap: var(--qs-space-2); }
+}
+@media (max-width: 560px) {
+  .gm-dropdown__trigger.gm-aheader__pill span { display: none; }
+  .gm-dropdown__trigger.gm-aheader__pill { padding: 0 10px; }
+  .gm-aheader__brand .gm-logo__word { display: none; }
+}
+.gm-aheader__guest { display: inline-flex; gap: 8px; align-items: center; }

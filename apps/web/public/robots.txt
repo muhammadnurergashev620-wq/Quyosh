@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /mijoz
+Disallow: /dokon
+Disallow: /sozlamalar
+
+Sitemap: https://quyosh.uz/sitemap.xml

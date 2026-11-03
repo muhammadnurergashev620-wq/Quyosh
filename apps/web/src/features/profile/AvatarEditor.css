@@ -1,0 +1,23 @@
+.gm-avedit { position: relative; display: inline-flex; flex-shrink: 0; }
+.gm-avedit.is-busy .gm-chat-avatar { opacity: 0.55; }
+.gm-avedit__btn {
+  position: absolute;
+  bottom: -2px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid var(--qs-color-surface, #fff);
+  background: var(--qs-color-primary);
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.gm-avedit__btn:hover:not(:disabled) { transform: scale(1.08); }
+.gm-avedit__btn:disabled { opacity: 0.6; cursor: progress; }
+.gm-avedit__btn:focus-visible { outline: 2px solid var(--qs-color-primary); outline-offset: 2px; }
+.gm-avedit__btn--edit { right: -4px; }
+.gm-avedit__btn--remove { left: -4px; background: var(--qs-color-danger, #d64545); }
+.gm-avedit--sm .gm-avedit__btn { width: 22px; height: 22px; }

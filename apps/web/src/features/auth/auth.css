@@ -1,0 +1,525 @@
+.gm-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-4);
+  width: 100%;
+}
+
+.gm-auth-form__hint {
+  font-size: 13px;
+  color: var(--qs-color-text-muted);
+}
+
+.gm-auth-form__countdown {
+  font-size: 13px;
+  color: var(--qs-color-text-muted);
+  text-align: center;
+}
+
+
+/* Qurilmalar limiti ogohlantirishi (kod kiritishdan oldin) */
+.gm-devlimit {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--qs-color-warning) 45%, var(--qs-color-border));
+  border-radius: 14px;
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+  text-align: left;
+}
+.gm-devlimit__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--qs-color-surface);
+}
+.gm-devlimit strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.3;
+}
+.gm-devlimit p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Ro‘yxatdan o‘tgandan keyin login/parol kartochkasi */
+.gm-cred-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+.gm-cred-card__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.gm-cred-card__head h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.gm-cred-card__head p {
+  margin: 2px 0 0;
+  color: var(--qs-color-text-muted);
+  font-size: 13.5px;
+}
+.gm-cred-card__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--qs-color-success-bg);
+  color: var(--qs-color-success);
+}
+.gm-cred-card__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.gm-cred-card__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'label label'
+    'value tools';
+  align-items: center;
+  gap: 4px 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 14px;
+  background: var(--qs-color-surface-muted);
+}
+.gm-cred-card__label {
+  grid-area: label;
+  color: var(--qs-color-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.gm-cred-card__value {
+  grid-area: value;
+  min-width: 0;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.gm-cred-card__value--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.03em;
+}
+.gm-cred-card__row > .gm-cred-card__copy,
+.gm-cred-card__tools {
+  grid-area: tools;
+}
+.gm-cred-card__tools {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.gm-cred-card__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--qs-color-border-strong);
+  border-radius: 999px;
+  background: var(--qs-color-surface);
+  color: var(--qs-color-text);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.gm-cred-card__copy:hover {
+  border-color: var(--qs-color-primary);
+  color: var(--qs-color-primary);
+}
+.gm-cred-card__warn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--qs-color-warning) 45%, var(--qs-color-border));
+  border-radius: 14px;
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+}
+.gm-cred-card__warn svg {
+  flex: none;
+  margin-top: 2px;
+}
+.gm-cred-card__warn p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.gm-cred-card__confirm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gm-cred-card__confirm input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--qs-color-primary);
+}
+@media (max-width: 420px) {
+  .gm-cred-card__row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'label'
+      'value'
+      'tools';
+  }
+  .gm-cred-card__tools {
+    justify-content: flex-start;
+  }
+}
+
+
+/* ===== Login/parol kartasi: markazlashgan, tartibli, har qanday ekranda mos ===== */
+.gm-cred-card {
+  gap: 18px;
+  text-align: center;
+}
+.gm-cred-card__head {
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+.gm-cred-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--qs-color-success) 10%, transparent);
+}
+.gm-cred-card__icon svg {
+  width: 26px;
+  height: 26px;
+}
+.gm-cred-card__head h2 {
+  font-size: 22px;
+}
+.gm-cred-card__head p {
+  margin-top: 4px;
+}
+.gm-cred-card__rows {
+  gap: 12px;
+  text-align: left;
+}
+.gm-cred-card__row {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'label'
+    'value'
+    'tools';
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 16px;
+}
+.gm-cred-card__value {
+  font-size: 18px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+.gm-cred-card__row > .gm-cred-card__copy,
+.gm-cred-card__tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+}
+.gm-cred-card__copy {
+  justify-content: center;
+  min-height: 40px;
+  width: 100%;
+}
+.gm-cred-card__warn {
+  align-items: center;
+  padding: 14px 16px;
+  text-align: left;
+}
+.gm-cred-card__warn svg {
+  margin-top: 0;
+}
+.gm-cred-card__warn p {
+  font-size: 13.5px;
+}
+.gm-cred-card__confirm {
+  justify-content: center;
+  padding: 4px 0;
+  text-align: left;
+}
+.gm-cred-card .gm-auth-submit,
+.gm-cred-card .gm-button {
+  min-height: 50px;
+}
+@media (max-width: 899px) {
+  .gm-cred-card {
+    gap: 14px;
+  }
+  .gm-cred-card__icon {
+    width: 48px;
+    height: 48px;
+  }
+  .gm-cred-card__head h2 {
+    font-size: 20px;
+  }
+  .gm-cred-card__value {
+    font-size: 17px;
+  }
+}
+
+/* ===== «Login va parolni saqlang» kartasi ===== */
+.gm-save {
+  --qs-save-gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-save-gap);
+  width: 100%;
+  text-align: left;
+}
+.gm-save__ok {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 6px;
+  padding: 5px 12px 5px 10px;
+  border-radius: 999px;
+  background: var(--qs-color-success-bg);
+  color: var(--qs-color-success);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.gm-save__head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+.gm-save__head h2 {
+  margin: 0;
+  font-size: clamp(20px, 5.4vw, 24px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.gm-save__head p {
+  max-width: 36ch;
+  margin: 0 auto;
+  color: var(--qs-color-text-muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.gm-save__head p strong {
+  color: var(--qs-color-text);
+  font-weight: 700;
+}
+.gm-save__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gm-save__label {
+  color: var(--qs-color-text);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.gm-save__box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  padding: 6px 6px 6px 16px;
+  border: 1px solid var(--qs-color-border-strong);
+  border-radius: 14px;
+  background: var(--qs-color-surface);
+  transition: border-color 0.15s ease;
+}
+.gm-save__box:hover {
+  border-color: color-mix(in srgb, var(--qs-color-primary) 45%, var(--qs-color-border-strong));
+}
+.gm-save__box:focus-within {
+  border-color: var(--qs-color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-color-primary) 22%, transparent);
+}
+.gm-save__value {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 4px 0;
+  border-radius: 6px;
+  color: var(--qs-color-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  user-select: all;
+  -webkit-user-select: all;
+  outline: none;
+}
+.gm-save__value--masked {
+  letter-spacing: 0.12em;
+}
+.gm-save__btn {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.gm-save__btn:hover {
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+}
+.gm-save__btn:active {
+  background: color-mix(in srgb, var(--qs-color-primary) 16%, var(--qs-color-surface-muted));
+}
+.gm-save__btn:focus-visible,
+.gm-save__confirm:has(input:focus-visible) {
+  outline: 2px solid var(--qs-focus-ring);
+  outline-offset: 2px;
+}
+.gm-save__btn--icon {
+  padding: 0;
+}
+.gm-save__btn--done,
+.gm-save__btn--done:hover {
+  background: var(--qs-color-success-bg);
+  color: var(--qs-color-success);
+}
+/* «Nusxa» ↔ «Nusxalandi» almashganda tugma o‘lchami o‘zgarmasin */
+.gm-save__btn:not(.gm-save__btn--icon) {
+  min-width: 112px;
+}
+.gm-save__confirm {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 16px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 14px;
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.gm-save__confirm:hover {
+  border-color: var(--qs-color-border-strong);
+}
+.gm-save__confirm:has(input:checked) {
+  border-color: color-mix(in srgb, var(--qs-color-success) 45%, var(--qs-color-border));
+  background: var(--qs-color-success-bg);
+}
+.gm-save__confirm input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--qs-color-primary);
+  cursor: pointer;
+}
+.gm-save .gm-save__cta {
+  min-height: 52px;
+  font-size: 15.5px;
+}
+.gm-save__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+@media (max-width: 420px) {
+  .gm-save {
+    --qs-save-gap: 16px;
+  }
+  .gm-save__box {
+    min-height: 52px;
+    padding-left: 14px;
+  }
+  .gm-save__value {
+    font-size: 15px;
+  }
+}
+/* Tor ekranlar (≤ 400px): «Nusxa» yozuvi yashirinadi, belgi va 44px tugma qoladi */
+@media (max-width: 400px) {
+  .gm-save__btn:not(.gm-save__btn--icon) {
+    min-width: 44px;
+    padding: 0;
+  }
+  .gm-save__btn:not(.gm-save__btn--icon) span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gm-save__box,
+  .gm-save__btn,
+  .gm-save__confirm {
+    transition: none;
+  }
+}
+
+/* Belgilanmagan holatda tugma tinch va tekis ko‘rinadi (soyasiz) */
+.gm-save .gm-save__cta:disabled {
+  box-shadow: none;
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Kod qayerga yuborilgani: aniq xabar kartasi (email yoki SMS) */
+.gm-auth-delivery { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--qs-color-success) 30%, var(--qs-color-border)); border-radius: 16px; background: color-mix(in srgb, var(--qs-color-success-bg) 60%, var(--qs-color-surface)); text-align: left; }
+.gm-auth-delivery__icon { display: grid; flex: none; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--qs-color-success); color: #fff; }
+.gm-auth-delivery p { display: grid; gap: 2px; margin: 0; min-width: 0; }
+.gm-auth-delivery strong { font-size: 0.98rem; font-weight: 800; }
+.gm-auth-delivery span { font-weight: 700; overflow-wrap: anywhere; }
+.gm-auth-delivery small { color: var(--qs-color-text-muted); font-size: 0.84rem; }

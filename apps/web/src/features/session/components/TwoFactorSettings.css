@@ -1,0 +1,92 @@
+.gm-twofa {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-3);
+}
+.gm-twofa__head {
+  display: flex;
+  align-items: center;
+  gap: var(--qs-space-3);
+}
+.gm-twofa__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+}
+.gm-twofa__icon--on {
+  background: var(--qs-color-success-bg);
+  color: var(--qs-color-success);
+}
+.gm-twofa__title {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  min-width: 0;
+}
+.gm-twofa__title h2 {
+  margin: 0;
+}
+.gm-twofa__text {
+  margin: 0;
+  color: var(--qs-color-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.gm-twofa__switch {
+  padding-top: var(--qs-space-3);
+  border-top: 1px solid var(--qs-color-border);
+}
+.gm-twofa__hint {
+  margin: 0;
+  color: var(--qs-color-text-muted);
+  font-size: 13px;
+}
+
+.gm-twofa__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.gm-twofa__form {
+  gap: 18px;
+}
+.gm-twofa__title h2 {
+  font-size: 17px;
+}
+.gm-twofa__text {
+  font-size: 14.5px;
+}
+.gm-twofa__hint {
+  font-size: 14px;
+}
+
+/* Faqat «Kirishda kod so‘ralmaydi» qatori (yozuv + almashtirgich) o‘rtada; chiziq va umumiy ko‘rinish avvalgidek */
+.gm-twofa__switch { display: flex; justify-content: center; }
+.gm-twofa__switch .gm-switch { justify-content: center; }
+
+/* O‘chirishni tasdiqlash oynasi: tasdiqlash oynalari bilan bir xil uslub (markazda, ramkasiz tugma), «Joriy parol» yorlig‘i ko‘rinadi */
+.gm-twofa-modal .gm-twofa__form { width: 100%; gap: 16px; }
+.gm-twofa-modal .gm-alert { text-align: center; justify-content: center; }
+.gm-twofa-modal .gm-alert__title { text-align: center; }
+.gm-twofa-modal .gm-field__label {
+  position: static;
+  display: block;
+  width: auto;
+  height: auto;
+  margin: 0 0 8px;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  text-align: center;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+.gm-twofa-modal .gm-field { text-align: center; }
+.gm-twofa-modal .gm-field__control { text-align: left; }

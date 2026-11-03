@@ -1,0 +1,12 @@
+.qs-dash { display: grid; gap: 24px; padding: 8px 0; }
+.qs-dash h1 { margin: 0; }
+.qs-dash__grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.qs-kpi {
+  display: grid; gap: 6px; padding: 22px; border-radius: 20px; text-decoration: none; color: var(--qs-color-text);
+  background: var(--qs-color-surface); border: 1px solid var(--qs-color-border); box-shadow: var(--qs-shadow-sm, 0 1px 2px rgba(18, 28, 70, .05));
+  transition: border-color 160ms cubic-bezier(.2, .75, .2, 1);
+}
+.qs-kpi:hover { border-color: color-mix(in srgb, var(--qs-color-primary) 40%, var(--qs-color-border)); }
+.qs-kpi__icon { color: var(--qs-color-primary); }
+.qs-kpi strong { font-family: var(--qs-font-display); font-size: 30px; font-variant-numeric: tabular-nums; }
+.qs-kpi small { color: var(--qs-color-text-muted); }

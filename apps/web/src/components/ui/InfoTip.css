@@ -1,0 +1,7 @@
+.gm-infotip { position: relative; display: inline-flex; vertical-align: middle; }
+.gm-infotip button { display: grid; place-items: center; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--qs-color-text-muted); cursor: help; }
+.gm-infotip button:hover, .gm-infotip button:focus-visible { color: var(--qs-color-primary); }
+.gm-infotip button:focus-visible { outline: 2px solid var(--qs-focus-ring); outline-offset: 1px; }
+.gm-infotip__box { position: absolute; z-index: 60; bottom: calc(100% + 8px); left: 50%; width: max-content; max-width: 260px; padding: 9px 12px; border-radius: 10px; background: #111827; color: #f9fafb; font-size: 12.5px; font-weight: 500; line-height: 1.45; text-align: left; transform: translateX(-50%); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); pointer-events: none; white-space: normal; }
+:root[data-theme='dark'] .gm-infotip__box { background: #f3f4f6; color: #111827; }
+@media (max-width: 639px) { .gm-infotip__box { left: auto; right: -8px; transform: none; } }

@@ -1,0 +1,47 @@
+.gm-alert {
+  border-radius: var(--qs-radius-md);
+  border: 1px solid transparent;
+  border-left-width: 4px;
+  padding: var(--qs-space-3) var(--qs-space-4);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.gm-alert__title {
+  font-weight: 800;
+  font-family: var(--qs-font-display);
+  margin-bottom: 6px;
+}
+
+.gm-alert__body {
+  line-height: 1.5;
+}
+
+.gm-alert--info {
+  background: var(--qs-color-info-bg);
+  border-color: color-mix(in srgb, var(--qs-color-primary) 35%, transparent);
+  border-left-color: var(--qs-color-primary);
+  color: var(--qs-color-text);
+}
+
+.gm-alert--success {
+  background: var(--qs-color-success-bg);
+  border-color: color-mix(in srgb, var(--qs-color-success) 35%, transparent);
+  border-left-color: var(--qs-color-success);
+  color: var(--qs-color-text);
+}
+
+.gm-alert--warning {
+  background: var(--qs-color-warning-bg);
+  border-color: color-mix(in srgb, var(--qs-color-warning) 35%, transparent);
+  border-left-color: var(--qs-color-warning);
+  color: var(--qs-color-text);
+}
+
+.gm-alert--danger {
+  background: var(--qs-color-danger-bg);
+  border-color: color-mix(in srgb, var(--qs-color-danger) 35%, transparent);
+  border-left-color: var(--qs-color-danger);
+  color: var(--qs-color-text);
+}

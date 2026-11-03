@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/brand/favicon-64.png" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="theme-color" content="#2563EB" />
+    <meta
+      name="description"
+      content="Quyosh — tomingiz uchun quyosh paneli hisobi, tasdiqlangan do‘konlar va narx takliflari bir joyda."
+    />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <script>
+      (function () {
+        try {
+          var mode = localStorage.getItem('quyosh.theme') === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', mode);
+          var size = localStorage.getItem('quyosh.ui-size');
+          document.documentElement.setAttribute('data-ui-size', size === 'small' || size === 'large' ? size : 'medium');
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+    <title>Quyosh</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

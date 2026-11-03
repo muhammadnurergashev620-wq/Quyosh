@@ -1,0 +1,112 @@
+.gm-header {
+  position: sticky;
+  top: var(--qs-safe-top);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--qs-space-3);
+  height: var(--qs-header-height);
+  padding: 0 var(--qs-space-5);
+  border-bottom: 1px solid var(--qs-color-border);
+  background: color-mix(in srgb, var(--qs-color-surface) 88%, transparent);
+  backdrop-filter: saturate(160%) blur(12px);
+}
+
+.gm-header__brand {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.gm-header__panel {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--qs-color-primary);
+  background: var(--qs-color-primary-soft);
+  white-space: nowrap;
+}
+
+.gm-header__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--qs-space-2);
+}
+
+.gm-header__user {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.gm-icon-button {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--qs-color-text-muted);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.gm-icon-button:hover {
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text);
+}
+
+.gm-icon-button__dot {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--qs-color-danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 17px;
+  text-align: center;
+  border: 2px solid var(--qs-color-surface);
+  box-sizing: content-box;
+}
+
+@media (max-width: 899px) {
+  .gm-header {
+    padding: 0 var(--qs-space-4);
+    --qs-header-height: 60px;
+  }
+
+  .gm-header__user {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .gm-header__panel {
+    display: none;
+  }
+}
+
+/* Til tanlash */
+.gm-lang__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 8px;
+  color: var(--qs-color-text);
+  font-size: 13px;
+  font-weight: 700;
+}

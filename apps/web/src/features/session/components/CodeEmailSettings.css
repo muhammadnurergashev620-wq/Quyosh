@@ -1,0 +1,11 @@
+/* Ikki bosqichli himoya sahifasidagi umumiy karta ichida, yuqori blokdan chiziq bilan ajraladi */
+.gm-psub__body .gm-codemail { display: flex; flex-direction: column; gap: 14px; margin-top: 26px; padding-top: 26px; border-top: 1px solid var(--qs-color-border); }
+.gm-codemail__head { display: flex; align-items: center; gap: 14px; }
+.gm-codemail__icon { display: grid; flex: none; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--qs-color-primary-soft); color: var(--qs-color-primary); }
+.gm-codemail__head h2 { margin: 0; font: 800 1.1rem/1.25 var(--qs-font-display); }
+.gm-codemail__text { margin: 0; color: var(--qs-color-text-muted); font-size: 14.5px; line-height: 1.6; }
+.gm-codemail__current { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 14px 18px; border-radius: 14px; background: var(--qs-color-surface-muted); font-weight: 700; }
+.gm-codemail__current button { border: 0; background: none; color: var(--qs-color-primary); font: inherit; font-weight: 700; cursor: pointer; }
+.gm-codemail__current button:hover { text-decoration: underline; }
+.gm-codemail__form { display: grid; gap: 14px; }
+.gm-codemail__actions { display: flex; flex-wrap: wrap; gap: 10px; }

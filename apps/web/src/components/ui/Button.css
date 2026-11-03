@@ -1,0 +1,130 @@
+.gm-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--qs-space-2);
+  border-radius: var(--qs-radius-md);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  font-family: var(--qs-font-display);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+  white-space: nowrap;
+  text-decoration: none;
+  user-select: none;
+}
+
+.gm-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.gm-button--md {
+  min-height: var(--qs-btn-h-md);
+  padding: 0 var(--qs-btn-px);
+  font-size: var(--qs-btn-fs-md);
+}
+
+.gm-button--sm {
+  min-height: var(--qs-btn-h-sm);
+  padding: 0 calc(var(--qs-btn-px) - 4px);
+  font-size: var(--qs-btn-fs-sm);
+  border-radius: 10px;
+}
+
+.gm-button--lg {
+  min-height: var(--qs-btn-h-lg);
+  padding: 0 calc(var(--qs-btn-px) + 4px);
+  font-size: var(--qs-btn-fs-lg);
+  border-radius: 14px;
+}
+
+.gm-button--full {
+  width: 100%;
+}
+
+.gm-button--primary {
+  background: var(--qs-color-primary);
+  color: var(--qs-color-primary-contrast);
+  box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--qs-color-primary) 70%, transparent);
+}
+
+.gm-button--primary:hover:not(:disabled) {
+  background: var(--qs-color-primary-hover);
+  color: var(--qs-color-primary-contrast);
+}
+
+.gm-button--secondary {
+  background: var(--qs-color-surface);
+  border-color: var(--qs-color-border-strong);
+  color: var(--qs-color-text);
+}
+
+.gm-button--secondary:hover:not(:disabled) {
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text);
+}
+
+.gm-button--ghost {
+  background: transparent;
+  color: var(--qs-color-text);
+}
+
+.gm-button--ghost:hover:not(:disabled) {
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text);
+}
+
+.gm-button--danger {
+  background: var(--qs-color-danger);
+  color: #fff;
+}
+
+.gm-button--danger:hover:not(:disabled) {
+  filter: brightness(0.92);
+  color: #fff;
+}
+
+.gm-button--accent {
+  background: var(--qs-color-accent);
+  color: var(--qs-color-accent-contrast);
+  box-shadow: 0 6px 16px -6px rgba(255, 176, 32, 0.8);
+}
+
+.gm-button--accent:hover:not(:disabled) {
+  filter: brightness(0.96);
+  color: var(--qs-color-accent-contrast);
+}
+
+.gm-button__spinner {
+  position: absolute;
+}
+
+.gm-button > svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Yozuv va belgi (ikonka) tugma markazida, bir chiziqda turishi uchun */
+.gm-button__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: inherit;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.gm-button__label.gm-visually-hidden {
+  display: inline-block;
+}
+
+.gm-button__label > svg {
+  flex: none;
+}

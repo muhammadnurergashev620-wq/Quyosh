@@ -1,0 +1,29 @@
+.gm-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--qs-color-surface-muted) 25%,
+    var(--qs-color-border) 37%,
+    var(--qs-color-surface-muted) 63%
+  );
+  background-size: 400% 100%;
+  animation: gm-skeleton-shimmer 1.4s ease infinite;
+  border-radius: var(--qs-radius-sm);
+  height: 16px;
+  width: 100%;
+}
+
+@keyframes gm-skeleton-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-skeleton {
+    animation: none;
+    background: var(--qs-color-surface-muted);
+  }
+}

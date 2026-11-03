@@ -1,0 +1,22 @@
+# Mahalliy ishlab chiqish stack'i (Postgres + PostGIS — TZ 8/12). Portlar GetMaster dev stack'i bilan to'qnashmaydi: 55433/56380/59010/53311.
+#  — BARCHA portlar faqat 127.0.0.1 ga bog‘langan (tarmoqdagi boshqa qurilmalar ulana olmaydi).
+# Ishga tushirish: docker compose -p quyosh --env-file ../../.env -f docker-compose.local.yml up -d
+# MinIO ma'lumotlari .env dagi STORAGE_ACCESS_KEY_ID / STORAGE_SECRET_ACCESS_KEY dan olinadi (standart parol ishlatilmaydi).
+name: quyosh
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: quyosh
+      POSTGRES_USER: quyosh
+      # Mavjud ma'lumotlar katalogi uchun ishlatilmaydi (parol bazada saqlangan); yangi katalog bo'lsa .env dagi qiymat kerak.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD .env da berilishi kerak}
+    ports:
+      - "127.0.0.1:55433:5432"
+    volumes:
+  postgres-data:
+  redis-data:
+  minio-data:
+  clamav-data:

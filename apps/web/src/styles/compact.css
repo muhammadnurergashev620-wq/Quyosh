@@ -1,0 +1,758 @@
+/* Telefonda ixcham joylashuv: kamroq aylantirish, hamma narsa bir ekranda ko‘rinsin. */
+@media (max-width: 899px) {
+  body {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 17px;
+  }
+
+  .gm-header {
+    padding: 0 var(--qs-space-4);
+    gap: var(--qs-space-2);
+  }
+
+  .gm-app-layout__content {
+    padding: var(--qs-space-3) var(--qs-space-4);
+    padding-bottom: 72px;
+  }
+
+  .gm-page-header {
+    margin-bottom: var(--qs-space-3);
+    gap: var(--qs-space-2);
+  }
+
+  .gm-page-header .gm-page-lead,
+  .gm-page-lead {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .gm-footer {
+    display: none;
+  }
+
+  .gm-mobile-nav {
+    padding-top: 4px;
+  }
+
+  .gm-mobile-nav__link {
+    min-height: 44px;
+    gap: 2px;
+    font-size: 10.5px;
+    padding: 4px 2px;
+  }
+
+  .gm-empty-state {
+    padding: var(--qs-space-5) var(--qs-space-4);
+    gap: 6px;
+  }
+
+  .gm-empty-state__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+  }
+
+  .gm-empty-state__title {
+    font-size: 16px;
+  }
+
+  .gm-empty-state__description {
+    font-size: 13px;
+  }
+}
+
+/* Statistika kartochkalari va sana filtri: telefonda 2 ustunli, ixcham */
+@media (max-width: 899px) {
+  .gm-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--qs-space-2);
+  }
+
+  .gm-stat {
+    padding: var(--qs-space-3);
+    border-radius: var(--qs-radius-md);
+  }
+
+  .gm-stat__icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 6px;
+    border-radius: 9px;
+  }
+
+  .gm-stat__value {
+    font-size: 22px;
+  }
+
+  .gm-stat__label {
+    font-size: 12px;
+  }
+
+  .gm-toolbar:has(input[type='date']) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--qs-space-2);
+  }
+
+  .gm-count-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--qs-space-2);
+  }
+
+  .gm-count-card {
+    padding: var(--qs-space-3);
+  }
+}
+
+@media (max-width: 899px) {
+  .gm-toolbar:has(input[type='date']) > *,
+  .gm-toolbar input[type='date'] {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+/* Profil sarlavhasi, daromad kartochkalari, umumiy kartochkalar: telefonda ixcham */
+@media (max-width: 899px) {
+  .gm-phero {
+    border-radius: var(--qs-radius-lg);
+  }
+
+  .gm-phero__cover {
+    height: 48px;
+  }
+
+  .gm-phero__body {
+    padding: 0 var(--qs-space-4);
+    margin-top: -26px;
+    gap: var(--qs-space-3);
+  }
+
+  .gm-phero__body .gm-chat-avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 1.25rem;
+    border-width: 3px;
+  }
+
+  .gm-phero__who {
+    padding-top: 30px;
+  }
+
+  .gm-phero__name h2 {
+    font-size: 1.1rem;
+  }
+
+  .gm-phero__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--qs-space-2);
+    margin-top: var(--qs-space-3);
+    padding: var(--qs-space-3) var(--qs-space-4) var(--qs-space-4);
+  }
+
+  .gm-phero__stats > div {
+    padding: var(--qs-space-2) var(--qs-space-3);
+  }
+
+  .gm-phero__stats dd {
+    font-size: 1.15rem;
+  }
+
+  .gm-earn__kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--qs-space-2);
+  }
+
+  .gm-earn__kpi {
+    padding: var(--qs-space-3);
+  }
+
+  .gm-earn__hero-value {
+    font-size: 1.8rem;
+  }
+
+  .gm-card,
+  .gm-detail-section {
+    border-radius: var(--qs-radius-md);
+  }
+
+  .gm-detail-section {
+    margin-top: var(--qs-space-3);
+  }
+}
+
+@media (max-width: 899px) {
+  .gm-earn__hero-side {
+    flex-direction: row;
+    gap: var(--qs-space-2);
+  }
+
+  .gm-earn__hero-side div {
+    flex: 1;
+    min-width: 0;
+    padding: var(--qs-space-2) var(--qs-space-3);
+  }
+
+  .gm-earn__hero-side strong {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 899px) {
+  .gm-earn__kpi strong {
+    font-size: 1.05rem;
+    overflow-wrap: anywhere;
+  }
+}
+
+.gm-btn-danger-text,
+.gm-btn-danger-text:hover:not(:disabled) {
+  color: var(--qs-color-danger);
+}
+
+.gm-service-list {
+  margin: 0 0 var(--qs-space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.gm-service-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--qs-space-2);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--qs-color-border);
+}
+
+/* Bo‘lim/holat tablari telefonda bir qatorda gorizontal aylanadi */
+@media (max-width: 899px) {
+  .gm-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-bottom: var(--qs-space-3);
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .gm-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gm-tabs > * {
+    flex: 0 0 auto;
+  }
+
+  .gm-inline-form .gm-field {
+    flex-basis: 100%;
+  }
+
+  .gm-inline-form > .gm-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 899px) {
+  .gm-aord__tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .gm-aord__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gm-aord__tabs > * {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 899px) {
+  .gm-aord__stats > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  .gm-aord__dates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--qs-space-2);
+  }
+
+  .gm-aord__dates > * {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .gm-phero__body {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--qs-space-3);
+  }
+
+  .gm-phero__who {
+    padding-top: 30px;
+  }
+}
+
+@media (pointer: coarse) {
+  ::selection {
+    background: transparent;
+  }
+
+  input::selection,
+  textarea::selection {
+    background: color-mix(in srgb, var(--qs-color-primary) 28%, transparent);
+  }
+}
+
+/* ===== Buyurtmalar sahifasi (telefon): sarlavha, tablar, kartochkalar ===== */
+@media (max-width: 899px) {
+  .gm-mopage {
+    display: flex;
+    flex-direction: column;
+    gap: var(--qs-space-3);
+  }
+
+  .gm-mopage .gm-page-header {
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--qs-space-3);
+  }
+
+  .gm-mopage .gm-page-header .gm-page-lead {
+    display: none;
+  }
+
+  .gm-mopage .gm-page-header a {
+    flex: none;
+  }
+
+  .gm-mopage__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .gm-olist-tabs {
+    align-self: stretch;
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+
+  .gm-olist-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gm-otab {
+    flex: 1 0 auto;
+    justify-content: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
+  .gm-mopage .gm-mopage__search {
+    flex: none;
+    max-width: none;
+  }
+
+  .gm-mopage .gm-mopage__search input {
+    height: 42px;
+    font-size: 14px;
+  }
+
+  .gm-mopage .gm-mo {
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .gm-mopage .gm-mo:hover {
+    transform: none;
+  }
+
+  .gm-mopage .gm-mo__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+  }
+
+  .gm-mopage .gm-mo__body {
+    gap: 5px;
+  }
+
+  .gm-mopage .gm-mo__head {
+    align-items: center;
+    gap: 8px;
+  }
+
+  .gm-mopage .gm-mo__head h3 {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-size: 1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .gm-mopage .gm-mo__head > :last-child {
+    flex: none;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .gm-mopage .gm-mo__sub {
+    font-size: 0.82rem;
+  }
+
+  .gm-mopage .gm-mo__foot {
+    gap: 4px 8px;
+    margin-top: 2px;
+  }
+
+  .gm-mopage .gm-mo__amount {
+    font-size: 1rem;
+  }
+
+  .gm-mopage .gm-mo__time {
+    order: 3;
+    flex-basis: 100%;
+    font-size: 0.75rem;
+  }
+}
+
+/* Profil kartochkalari doim to‘liq kenglikda (ustunlar torayib ketmasin) */
+@media (max-width: 899px) {
+  .gm-ppage .gm-pgrid,
+  .gm-ppage .gm-pcol {
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .gm-ppage .gm-pcard {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Manzil qo‘shish: tez tanlash tugmalari va shahar/tuman qatori */
+.gm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gm-chip {
+  padding: 6px 14px;
+  border: 1px solid var(--qs-color-border-strong);
+  border-radius: 999px;
+  background: var(--qs-color-surface);
+  color: var(--qs-color-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gm-chip--on {
+  border-color: var(--qs-color-primary);
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+}
+
+.gm-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--qs-space-3);
+}
+
+.gm-addr-maplink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 10px;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .gm-form__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Tugmalar: umumiy tekislash va rangli variantlar ===== */
+.gm-button {
+  line-height: 1;
+}
+
+.gm-button svg {
+  flex: none;
+}
+
+.gm-button--sm {
+  gap: 6px;
+}
+
+.gm-btn-tone--warn {
+  border-color: color-mix(in srgb, var(--qs-color-warning) 45%, var(--qs-color-border));
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+}
+
+.gm-btn-tone--warn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--qs-color-warning-bg) 70%, var(--qs-color-warning) 12%);
+  color: var(--qs-color-warning);
+}
+
+.gm-btn-tone--danger {
+  border-color: color-mix(in srgb, var(--qs-color-danger) 45%, var(--qs-color-border));
+  background: var(--qs-color-danger-bg);
+  color: var(--qs-color-danger);
+}
+
+.gm-btn-tone--danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--qs-color-danger-bg) 70%, var(--qs-color-danger) 12%);
+  color: var(--qs-color-danger);
+}
+
+.gm-btn-danger-text:hover:not(:disabled) {
+  background: var(--qs-color-danger-bg);
+}
+
+/* Kichik «chip» tugmalar (nusxalash, ko‘rsatish…) */
+.gm-btn-chip {
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.gm-btn-chip.gm-button--primary {
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+  border-color: transparent;
+}
+
+.gm-btn-chip.gm-button--primary:hover:not(:disabled) {
+  background: var(--qs-color-primary);
+  color: var(--qs-color-primary-contrast);
+}
+
+/* Admin profili: sarlavhadagi tugmalar va kirish ma’lumotlari */
+.gm-uprofile__actions .gm-button {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.gm-uprofile__actions a {
+  display: inline-flex;
+}
+
+.gm-cred {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.gm-cred__row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 14px;
+  background: var(--qs-color-surface-muted);
+}
+
+.gm-cred__key {
+  color: var(--qs-color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gm-cred__value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 15px;
+}
+
+.gm-cred__dots {
+  letter-spacing: 0.12em;
+}
+
+.gm-cred__tools {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.gm-cred__note {
+  color: var(--qs-color-text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .gm-cred__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .gm-cred__tools {
+    justify-content: flex-start;
+  }
+}
+
+.gm-uprofile__actions a,
+.gm-uprofile__actions a:hover {
+  text-decoration: none;
+}
+
+.gm-uprofile__actions a .gm-button {
+  color: var(--qs-color-text);
+}
+
+/* Kirish ma’lumotlari: yorliq + qiymat birinchi qatorda, tugmalar ostida — hech qachon kartadan chiqib ketmaydi */
+.gm-uprofile__field > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.gm-cred {
+  width: 100%;
+  min-width: 0;
+}
+
+.gm-cred__row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  grid-template-areas:
+    'key value'
+    'tools tools';
+  align-items: center;
+  gap: 8px 10px;
+  min-width: 0;
+}
+
+.gm-cred__key {
+  grid-area: key;
+}
+
+.gm-cred__value {
+  grid-area: value;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.gm-cred__tools {
+  grid-area: tools;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+}
+
+.gm-cred__tools .gm-button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.gm-cred__note {
+  display: block;
+}
+
+/* Sarlavhadagi amal tugmalari: o‘ngda, bir xil balandlikda, qatorga o‘ralganda ham tekis */
+.gm-uprofile__actions {
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.gm-uprofile__actions .gm-button {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .gm-uprofile__actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .gm-cred__row {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'key'
+      'value'
+      'tools';
+    gap: 6px;
+  }
+}
+
+/* Foydalanuvchilar ro‘yxati: kartalar buyurtma kartalaridagi kabi ko‘tarilib ajraladi */
+.gm-user-card.gm-card--clickable {
+  transition:
+    transform 0.18s var(--qs-ease, ease),
+    box-shadow 0.18s var(--qs-ease, ease),
+    border-color 0.18s,
+    background-color 0.18s;
+}
+
+.gm-user-card.gm-card--clickable:hover,
+.gm-user-card.gm-card--clickable:focus-visible {
+  transform: translateY(-3px) scale(1.012);
+  border-color: color-mix(in srgb, var(--qs-color-primary) 55%, var(--qs-color-border));
+  background: color-mix(in srgb, var(--qs-color-primary-soft) 55%, var(--qs-color-surface));
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--qs-color-primary) 45%, transparent);
+  outline: none;
+}
+
+.gm-user-card.gm-card--clickable:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-color-primary) 30%, transparent);
+}
+
+.gm-user-card.gm-card--clickable:active {
+  transform: translateY(-1px) scale(0.995);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-user-card.gm-card--clickable {
+    transition: none;
+  }
+
+  .gm-user-card.gm-card--clickable:hover,
+  .gm-user-card.gm-card--clickable:focus-visible,
+  .gm-user-card.gm-card--clickable:active {
+    transform: none;
+  }
+}

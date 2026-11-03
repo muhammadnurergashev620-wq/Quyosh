@@ -1,0 +1,222 @@
+/* ===== Tasdiqlash oynasi: markazlashgan, ramkasiz tugmalar ===== */
+.gm-modal--confirm { position: relative; max-width: 460px; }
+.gm-modal--confirm .gm-modal__header { justify-content: center; padding: 30px 64px 0; text-align: center; }
+.gm-modal--confirm .gm-modal__title { font: 800 1.35rem/1.25 var(--qs-font-display); letter-spacing: -0.02em; }
+.gm-modal--confirm .gm-modal__close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; }
+.gm-modal--confirm .gm-modal__body { display: grid; justify-items: center; gap: 14px; padding: 14px 32px 8px; text-align: center; }
+.gm-confirm__icon { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 20px; background: var(--qs-color-primary-soft); color: var(--qs-color-primary); order: -2; }
+.gm-modal--confirm-danger .gm-confirm__icon { background: color-mix(in srgb, var(--qs-color-danger) 14%, var(--qs-color-surface)); color: var(--qs-color-danger); }
+.gm-confirm__text { margin: 0; max-width: 34ch; color: var(--qs-color-text-muted); font-size: 0.95rem; line-height: 1.55; }
+.gm-modal--confirm .gm-field { width: 100%; text-align: left; margin-top: 6px; }
+.gm-modal--confirm .gm-field__control { border-radius: 14px; }
+
+.gm-modal--confirm .gm-modal__footer { justify-content: center; gap: 12px; padding: 18px 32px 30px; border-top: 0; }
+.gm-modal--confirm .gm-modal__footer .gm-button {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 52px;
+  border: 0;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: none;
+}
+.gm-modal--confirm .gm-modal__footer .gm-button--secondary { background: var(--qs-color-surface-muted); color: var(--qs-color-text); }
+.gm-modal--confirm .gm-modal__footer .gm-button--secondary:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-text) 10%, var(--qs-color-surface-muted)); }
+.gm-modal--confirm .gm-modal__footer .gm-button--danger { background: color-mix(in srgb, var(--qs-color-danger) 88%, #2a0606); color: #fff; box-shadow: 0 10px 20px -12px var(--qs-color-danger); }
+.gm-modal--confirm .gm-modal__footer .gm-button--danger:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-danger) 78%, #2a0606); color: #fff; filter: none; transform: translateY(-1px); }
+.gm-modal--confirm .gm-modal__footer .gm-button--primary { box-shadow: 0 10px 20px -12px var(--qs-color-primary); }
+.gm-modal--confirm .gm-modal__footer .gm-button:focus-visible { outline: 2px solid var(--qs-focus-ring); outline-offset: 3px; }
+@media (max-width: 520px) {
+  .gm-modal--confirm .gm-modal__header { padding: 24px 56px 0; }
+  .gm-modal--confirm .gm-modal__body { padding: 12px 20px 6px; }
+  .gm-modal--confirm .gm-modal__footer { flex-direction: column-reverse; padding: 14px 20px 22px; }
+  .gm-modal--confirm .gm-modal__footer .gm-button { width: 100%; flex: none; }
+}
+
+/* Yon bo‘shliqlar kengaytirildi: yozuvlar va maydonlar chetga yopishmasin */
+.gm-modal--confirm { max-width: 500px; }
+.gm-modal--confirm .gm-modal__header { padding: 34px 72px 0; }
+.gm-modal--confirm .gm-modal__body { gap: 16px; padding: 16px 48px 10px; }
+.gm-modal--confirm .gm-modal__footer { padding: 22px 48px 38px; gap: 14px; }
+.gm-modal--confirm .gm-field { gap: 10px; }
+.gm-modal--confirm .gm-field__label { padding-left: 2px; }
+.gm-modal--confirm .gm-field__control { padding: 14px 16px; }
+@media (max-width: 520px) {
+  .gm-modal--confirm .gm-modal__header { padding: 28px 60px 0; }
+  .gm-modal--confirm .gm-modal__body { padding: 14px 28px 8px; }
+  .gm-modal--confirm .gm-modal__footer { padding: 18px 28px 28px; }
+}
+
+/* «Sabab» yozuvi maydon (va tugmalar) o‘rtasida */
+.gm-modal--confirm .gm-field { text-align: center; justify-items: stretch; }
+.gm-modal--confirm .gm-field__label { display: block; width: 100%; padding-left: 0; text-align: center; }
+.gm-modal--confirm .gm-field__control { text-align: left; }
+
+/* «Sabab» yorlig‘i ko‘rinmaydi (ekran o‘qigichlar uchun qoladi) — uning o‘rnini izoh matni bosadi */
+.gm-modal--confirm .gm-field__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.gm-modal--confirm .gm-confirm__text { margin-bottom: -4px; font-weight: 600; color: var(--qs-color-text); }
+
+/* Belgi sarlavhadan tepada, o‘rtada */
+.gm-modal__icon { display: flex; justify-content: center; padding-top: 34px; }
+.gm-modal--confirm .gm-confirm__icon { order: 0; }
+.gm-modal--confirm .gm-modal__icon + .gm-modal__header { padding-top: 18px; }
+@media (max-width: 520px) {
+  .gm-modal__icon { padding-top: 26px; }
+  .gm-modal--confirm .gm-modal__icon + .gm-modal__header { padding-top: 14px; }
+  }
+
+/* Sabab matni va maydoni pastga — tugmalarga yaqinroq */
+.gm-modal--confirm .gm-modal__body { gap: 10px; padding: 26px 48px 0; }
+.gm-modal--confirm .gm-confirm__text { margin: 0; }
+.gm-modal--confirm .gm-field { margin-top: 0; }
+.gm-modal--confirm .gm-modal__footer { padding-top: 14px; }
+@media (max-width: 520px) {
+  .gm-modal--confirm .gm-modal__body { padding: 20px 28px 0; }
+  .gm-modal--confirm .gm-modal__footer { padding-top: 12px; }
+}
+
+/* Belgi va sarlavha tepaga yaqinroq */
+.gm-modal__icon { padding-top: 20px; }
+.gm-modal--confirm .gm-modal__icon + .gm-modal__header { padding-top: 12px; }
+@media (max-width: 520px) {
+  .gm-modal__icon { padding-top: 16px; }
+  .gm-modal--confirm .gm-modal__icon + .gm-modal__header { padding-top: 10px; }
+}
+
+/* Xato holati: sabab yozilmasa — maydon qizil ramkada, titraydi, xabar yumshoq chiqadi */
+.gm-modal--confirm .gm-field__control--shake { animation: gm-confirm-shake 380ms cubic-bezier(0.36, 0.07, 0.19, 0.97); border-color: var(--qs-color-danger); background: color-mix(in srgb, var(--qs-color-danger) 5%, var(--qs-color-surface)); }
+.gm-modal--confirm .gm-field__error {
+  justify-content: center;
+  align-items: center;
+  margin-top: 2px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--qs-color-danger-bg);
+  font-size: 0.86rem;
+  font-weight: 700;
+  animation: gm-confirm-error-in 220ms var(--qs-ease);
+}
+@keyframes gm-confirm-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(3px); }
+  30%, 50%, 70% { transform: translateX(-5px); }
+  40%, 60% { transform: translateX(5px); }
+}
+@keyframes gm-confirm-error-in { from { opacity: 0; transform: translateY(-4px); } }
+@media (prefers-reduced-motion: reduce) {
+  .gm-modal--confirm .gm-field__control--shake, .gm-modal--confirm .gm-field__error { animation: none; }
+}
+
+/* Faqat «Tasdiqlash» tugmasi — o‘rtada, katta; yopish (✕) tugmasi aniq ko‘rinadi */
+.gm-modal--confirm .gm-modal__footer { justify-content: center; }
+.gm-modal--confirm .gm-modal__footer .gm-button { flex: 1 1 100%; min-height: 58px; font-size: 1.1rem; border-radius: 16px; }
+.gm-modal--confirm .gm-modal__close {
+  top: 14px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  background: color-mix(in srgb, var(--qs-color-text) 12%, var(--qs-color-surface));
+  color: var(--qs-color-text);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  transition: background-color 160ms var(--qs-ease), transform 160ms var(--qs-ease);
+}
+.gm-modal--confirm .gm-modal__close:hover { background: color-mix(in srgb, var(--qs-color-danger) 18%, var(--qs-color-surface)); color: var(--qs-color-danger); transform: scale(1.06); }
+.gm-modal--confirm .gm-modal__close:focus-visible { outline: 2px solid var(--qs-focus-ring); outline-offset: 2px; }
+@media (max-width: 520px) {
+  .gm-modal--confirm .gm-modal__footer .gm-button { min-height: 56px; }
+}
+
+/* Tasdiqlash tugmasi — avvalgi o‘lchamda (ikki tugmadagi bittasining kengligi), faqat o‘rtada */
+.gm-modal--confirm .gm-modal__footer { justify-content: center; }
+.gm-modal--confirm .gm-modal__footer .gm-button {
+  flex: 0 0 calc(50% - 7px);
+  width: calc(50% - 7px);
+  min-width: 0;
+  min-height: 52px;
+  font-size: 1rem;
+  border-radius: 14px;
+}
+@media (max-width: 520px) {
+  .gm-modal--confirm .gm-modal__footer .gm-button { flex: none; width: 100%; min-height: 52px; }
+}
+
+/* Yakuniy sayqal: muvozanatli bo‘shliqlar, namuna matn, aniq tugma */
+.gm-modal__icon { padding-top: 28px; }
+.gm-modal--confirm .gm-confirm__icon { width: 64px; height: 64px; border-radius: 22px; }
+.gm-modal--confirm .gm-modal__icon + .gm-modal__header { padding-top: 14px; }
+.gm-modal--confirm .gm-modal__body { padding-top: 22px; }
+.gm-modal--confirm .gm-modal__footer { padding-bottom: 34px; }
+.gm-modal--confirm textarea.gm-field__control { min-height: 96px; line-height: 1.5; }
+.gm-modal--confirm .gm-field__control::placeholder { color: color-mix(in srgb, var(--qs-color-text-muted) 80%, transparent); font-size: 0.95rem; }
+.gm-modal--confirm .gm-modal__footer .gm-button { flex: 0 0 auto; width: auto; min-width: 220px; padding-inline: 32px; }
+.gm-modal--confirm .gm-modal__close { width: 40px; height: 40px; font-size: 18px; }
+@media (max-width: 520px) {
+  .gm-modal__icon { padding-top: 22px; }
+  .gm-modal--confirm .gm-modal__footer { padding-bottom: 26px; }
+  .gm-modal--confirm .gm-modal__footer .gm-button { width: 100%; min-width: 0; }
+}
+
+/* Namuna matn («Masalan: …») maydonning o‘rtasida; yozishni boshlagach oddiy, chapdan */
+.gm-modal--confirm textarea.gm-field__control:placeholder-shown {
+  padding-top: 33px;
+  text-align: center;
+}
+
+/* Tugma ichidagi yozuv aniq o‘rtada: gorizontal va vertikal */
+.gm-modal--confirm .gm-modal__footer .gm-button,
+.gm-rqd__danger .gm-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: 0;
+  text-align: center;
+  line-height: 1;
+}
+.gm-modal--confirm .gm-modal__footer .gm-button .gm-button__label,
+.gm-rqd__danger .gm-button .gm-button__label {
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+/* Namuna matn maydonning aniq o‘rtasida (gorizontal va vertikal): balandlik qat’iy, tepa bo‘shliq hisoblangan */
+.gm-modal--confirm textarea.gm-field__control {
+  box-sizing: border-box;
+  height: 120px;
+  min-height: 120px;
+  font-size: 16px;
+  line-height: 24px;
+}
+.gm-modal--confirm textarea.gm-field__control:placeholder-shown {
+  padding-top: 46px;
+  padding-bottom: 0;
+  text-align: center;
+}
+
+/* Ikkita tugma («Qolish» / «Tizimdan chiqish»): teng kenglikda, yonma-yon; «Qolish» yumshoq kulrang */
+.gm-modal--confirm .gm-modal__footer:has(> .gm-button:nth-child(2)) { flex-wrap: nowrap; }
+.gm-modal--confirm .gm-modal__footer:has(> .gm-button:nth-child(2)) .gm-button { flex: 1 1 0; width: auto; min-width: 0; padding-inline: 16px; }
+@media (max-width: 520px) {
+  .gm-modal--confirm .gm-modal__footer:has(> .gm-button:nth-child(2)) { flex-direction: column-reverse; }
+  .gm-modal--confirm .gm-modal__footer:has(> .gm-button:nth-child(2)) .gm-button { flex: none; width: 100%; }
+}
+
+/* Tasdiqlash oynasidagi bir qatorli maydon (parol): tugma bilan mutanosib balandlik va kenglik */
+.gm-modal--confirm input.gm-field__control { box-sizing: border-box; height: 56px; min-height: 56px; padding: 0 18px; font-size: 16px; line-height: 1.2; border-radius: 14px; }
+.gm-modal--confirm .gm-field:has(input.gm-field__control) { width: 100%; max-width: 100%; margin-inline: auto; }
+.gm-modal--confirm .gm-field:has(input.gm-field__control) .gm-field__control { padding-right: 52px; }

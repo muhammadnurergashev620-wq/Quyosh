@@ -1,0 +1,52 @@
+/* Admin ro‘yxat sahifalari (Adminlar, Buyurtmalar) uchun umumiy sarlavha, ko‘rinish tugmalari va kartalar. */
+.gm-adm2__head { display: flex; align-items: center; gap: var(--qs-space-4); flex-wrap: wrap; }
+.gm-adm2__head > div { flex: 1; min-width: 220px; }
+.gm-adm2__logo { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--qs-color-primary-soft); color: var(--qs-color-primary); flex-shrink: 0; }
+.gm-adm2__create { margin-left: auto; }
+.gm-ul__sections { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.gm-adm2__views { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--qs-color-border); border-radius: 10px; }
+.gm-adm2__views button { display: grid; place-items: center; width: 34px; height: 30px; border: none; border-radius: 8px; background: transparent; color: var(--qs-color-text-muted); cursor: pointer; }
+.gm-adm2__views button.is-on { background: var(--qs-color-primary-soft); color: var(--qs-color-primary); }
+.gm-adm2__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: var(--qs-space-3); }
+.gm-adm2__card { display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 1px solid var(--qs-color-border); border-radius: 14px; background: var(--qs-color-surface); cursor: pointer; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+.gm-adm2__card:hover, .gm-adm2__card.is-open { border-color: var(--qs-color-primary); box-shadow: 0 10px 24px -18px var(--qs-color-primary); }
+.gm-adm2__card header { display: flex; align-items: center; gap: 10px; }
+.gm-adm2__card header > div { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.gm-adm2__card header strong { font-size: 15px; overflow-wrap: anywhere; }
+.gm-adm2__card header small { color: var(--qs-color-text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gm-adm2__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.gm-adm2__card footer { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--qs-color-text-muted); flex-wrap: wrap; }
+.gm-adm2__size { height: 34px; margin-left: 8px; padding: 0 8px; border: 1px solid var(--qs-color-border); border-radius: 8px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-size: 13px; }
+@media (max-width: 560px) { .gm-adm2__create { width: 100%; margin-left: 0; } }
+
+/* Umumiy: karta-tugmalar, sana oralig‘i va katakchalar */
+.gm-ord2__kpis { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.gm-ukpi--btn { font: inherit; text-align: left; color: inherit; cursor: pointer; transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease; }
+.gm-ukpi--btn:hover { transform: translateY(-1px); border-color: var(--qs-color-primary); }
+.gm-ukpi--btn.is-on { border-color: var(--qs-color-primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--qs-color-primary) 22%, transparent); }
+.gm-ukpi--btn:focus-visible { outline: 2px solid var(--qs-color-primary); outline-offset: 2px; }
+.gm-ord2__kpis .gm-ukpi { padding: 16px; gap: 12px; }
+.gm-ord2__kpis .gm-ukpi__icon { width: 48px; height: 48px; }
+.gm-ord2__money { font-size: 20px !important; flex-wrap: wrap; row-gap: 0; }
+.gm-ord2__date { position: relative; }
+.gm-ord2__datepop { left: auto; right: 0; width: 240px; }
+.gm-ord2__check { flex-direction: row !important; align-items: center; gap: 8px !important; font-size: 13px !important; color: var(--qs-color-text) !important; cursor: pointer; }
+.gm-ord2__check input { width: 17px !important; height: 17px !important; min-width: 0 !important; accent-color: var(--qs-color-primary); }
+@media (max-width: 1500px) { .gm-ord2__kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .gm-ord2__kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .gm-ord2__kpis { grid-template-columns: minmax(0, 1fr); } .gm-ord2__date { width: 100%; margin-left: 0; } .gm-ord2__date .gm-button { width: 100%; } }
+
+/* Tablar va sana tezkor tugmalari (Audit, Bildirishnomalar) */
+.gm-aud__presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.gm-aud__presets button { padding: 5px 10px; border: 1px solid var(--qs-color-border); border-radius: 999px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.gm-aud__presets button:hover { border-color: var(--qs-color-primary); color: var(--qs-color-primary); }
+.gm-aud__tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 12px; }
+.gm-aud__tabs button { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 14px; border: 1px solid var(--qs-color-border); border-radius: 10px; background: var(--qs-color-surface); color: var(--qs-color-text-muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.gm-aud__tabs button span { padding: 1px 7px; border-radius: 999px; background: var(--qs-color-surface-muted); font-size: 11.5px; }
+.gm-aud__tabs button.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: #fff; }
+.gm-aud__tabs button.is-on span { background: rgba(255, 255, 255, 0.22); }
+
+/* Sarlavha + qisqa matn ustuni */
+.gm-ntf__text { display: flex; flex-direction: column; gap: 2px; min-width: 200px; }
+.gm-ntf__text strong { font-size: 13.5px; }
+.gm-ntf__text small { max-width: 360px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--qs-color-text-muted); font-size: 12px; }

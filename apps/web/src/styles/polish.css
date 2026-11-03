@@ -1,0 +1,326 @@
+.gm-page-lead {
+  margin: 4px 0 0;
+  color: var(--qs-color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.gm-page-header h1 {
+  letter-spacing: -0.02em;
+}
+.gm-page-header {
+  gap: var(--qs-space-2) var(--qs-space-4);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--qs-color-primary) 22%, transparent);
+}
+html {
+  scrollbar-color: var(--qs-color-border-strong) transparent;
+  scrollbar-width: thin;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--qs-color-border-strong);
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.gm-button {
+  transition: transform 0.15s var(--qs-ease), box-shadow 0.15s var(--qs-ease), background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.gm-button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+.gm-button:not(:disabled):active {
+  transform: translateY(0) scale(0.985);
+}
+
+.gm-field__control:not(:disabled):hover {
+  border-color: color-mix(in srgb, var(--qs-color-primary) 45%, var(--qs-color-border-strong));
+}
+.gm-field__control:focus-visible {
+  border-color: var(--qs-color-primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--qs-color-primary) 16%, transparent);
+  outline: none;
+}
+
+.gm-card,
+.gm-detail-section {
+  transition: box-shadow 0.2s var(--qs-ease), border-color 0.2s var(--qs-ease), transform 0.2s var(--qs-ease);
+}
+.gm-detail-section > h2 {
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.gm-empty-state {
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--qs-color-border);
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--qs-color-primary) 7%, transparent), transparent 65%),
+    var(--qs-color-surface);
+  box-shadow: var(--qs-shadow-sm);
+}
+.gm-empty-state__icon {
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--qs-color-primary) 8%, transparent);
+}
+
+.gm-alert {
+  border-radius: var(--qs-radius-md);
+  box-shadow: var(--qs-shadow-sm);
+}
+.gm-badge {
+  letter-spacing: 0.01em;
+}
+
+.gm-list > .gm-card {
+  transition: transform 0.18s var(--qs-ease), box-shadow 0.18s var(--qs-ease), border-color 0.18s var(--qs-ease);
+}
+
+.gm-sidebar a,
+.gm-sidebar button {
+  transition: background-color 0.15s, color 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.gm-verification-banner__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--qs-color-primary);
+  color: var(--qs-color-primary-contrast);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--qs-shadow-sm);
+  transition: transform 0.15s var(--qs-ease), box-shadow 0.15s var(--qs-ease);
+}
+.gm-verification-banner__link:hover {
+  color: var(--qs-color-primary-contrast);
+  transform: translateY(-1px);
+  box-shadow: var(--qs-shadow-md);
+}
+.gm-verification-banner__link svg {
+  transition: transform 0.15s var(--qs-ease);
+}
+.gm-verification-banner__link:hover svg {
+  transform: translateX(3px);
+}
+
+/* Sharhlar: yulduzlar rangli, izohsiz sharh ham tartibli */
+.gm-review-stars {
+  margin: 0;
+  color: #f5a524;
+  font-size: 1.05rem;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+.gm-review-stars__off {
+  color: var(--qs-color-border-strong);
+}
+.gm-review-nocomment {
+  margin: 0;
+  font-style: italic;
+}
+
+/* ===== Barcha panellar: sarlavha, izoh va tablar chetga yopishmasin — kontent o‘qi bo‘yicha o‘rtada ===== */
+@media (min-width: 641px) {
+  .gm-app-layout__content .gm-page-header,
+  .gm-app-layout__content .gm-ohead,
+  .gm-app-layout__content .gm-masters-head {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--qs-space-3);
+    text-align: center;
+  }
+  .gm-app-layout__content .gm-page-header > div,
+  .gm-app-layout__content .gm-ohead > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+  .gm-app-layout__content .gm-page-header h1,
+  .gm-app-layout__content .gm-ohead h1,
+  .gm-app-layout__content .gm-masters-head h1 {
+    margin: 0;
+  }
+  .gm-app-layout__content .gm-page-lead,
+  .gm-app-layout__content .gm-ohead p,
+  .gm-app-layout__content .gm-masters-head p {
+    display: block;
+    max-width: 64ch;
+    margin: 0 auto;
+    text-wrap: balance;
+  }
+  .gm-app-layout__content .gm-page-header + * {
+    margin-top: 0;
+  }
+
+  /* Tablar: o‘rtada */
+  .gm-app-layout__content .gm-tabs,
+  .gm-app-layout__content .gm-olist-tabs,
+  .gm-app-layout__content .gm-earn__ranges {
+    align-self: center;
+    margin-inline: auto;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .gm-app-layout__content .gm-tabs {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* Faqat ikonkali tugma (masalan, o‘chirish): hech qachon mayda bo‘lib qolmasin — barmoq bilan bosishga qulay */
+.gm-button:has(> svg:only-child) {
+  min-width: 36px;
+  min-height: 36px;
+  padding-inline: 8px;
+}
+@media (pointer: coarse) {
+  .gm-button:has(> svg:only-child) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Qoldirilgan sharh: tinch holat, qayta yuborish tugmasi o‘chiq */
+.gm-review-done {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.gm-review-done__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--qs-color-success);
+  font-weight: 700;
+}
+.gm-review-done__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: var(--qs-card-radius-sm);
+  background: var(--qs-color-surface-muted);
+}
+.gm-review-done__body p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.gm-review-done__body small {
+  color: var(--qs-color-text-muted);
+}
+.gm-review-done .gm-button:disabled {
+  align-self: flex-start;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ===== Belgi (checkbox): butun ilovada kvadrat emas — yumaloq, aniq va bir xil =====
+   Faqat oddiy belgilash qutilari; «switch» (yoqish/o‘chirish) tugmasi bundan mustasno. */
+input[type='checkbox']:not([role='switch']) {
+  --qs-check: var(--qs-color-primary);
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-grid;
+  flex: none;
+  place-content: center;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border: 2px solid var(--qs-color-border-strong);
+  border-radius: 50%;
+  background: var(--qs-color-surface);
+  vertical-align: middle;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input[type='checkbox']:not([role='switch'])::after {
+  content: '';
+  width: 6px;
+  height: 11px;
+  margin-top: -2px;
+  border: solid #fff;
+  border-width: 0 2.5px 2.5px 0;
+  border-radius: 1px;
+  opacity: 0;
+  transform: rotate(45deg) scale(0.6);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+input[type='checkbox']:not([role='switch']):hover {
+  border-color: var(--qs-check);
+}
+input[type='checkbox']:not([role='switch']):checked {
+  border-color: var(--qs-check);
+  background: var(--qs-check);
+}
+input[type='checkbox']:not([role='switch']):checked::after {
+  opacity: 1;
+  transform: rotate(45deg) scale(1);
+}
+input[type='checkbox']:not([role='switch']):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-check) 28%, transparent);
+}
+input[type='checkbox']:not([role='switch']):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* Xavfli amal (masalan, «hamma uchun o‘chirish») belgisi qizil */
+.gm-delete-both input[type='checkbox']:not([role='switch']) {
+  --qs-check: var(--qs-color-danger);
+}
+
+/* Ogohlantirish bannerlari sarlavhaga yopishmasin */
+.gm-phone-banner,
+.gm-app-layout__content > .gm-alert { margin-bottom: var(--qs-space-5); }
+.gm-chooser__search input::placeholder { text-overflow: ellipsis; }
+.gm-chooser__search input { text-overflow: ellipsis; }
+
+/* ——— Yozuv va tugmalar hech qachon chetga yopishmasin ——— */
+/* Matnli ochiluvchi tugmalar (til, «Menyu»): chekkadan bo‘sh joy; avatarli tugmada avatar chetga tegmaydi. */
+.gm-dropdown__trigger:not(:has(.gm-avatar)) { padding: 6px 12px; }
+
+@media (max-width: 899px) {
+  /* Tablar: telefonda yon tomonga yashirinib, chetda kesilib qolmaydi — qatorlarga o‘raladi va chiroyli to‘ladi */
+  .gm-app-layout .gm-tabs { flex-wrap: wrap; overflow: visible; justify-content: center; gap: 4px; width: 100%; }
+  .gm-app-layout .gm-tabs > * { flex: 1 1 auto; }
+  /* Kartadagi amal tugmalari: teng kenglikdagi to‘r — bitta tugma yolg‘iz qatorda qolmaydi */
+  .gm-card .gm-action-row { width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 8px; }
+  .gm-card .gm-action-row > .gm-button { width: 100%; justify-content: center; }
+}
+
+/* Qoldirilgan sharh bloki: yulduzlar, izoh va sana bir xil chap chiziqda (markazlashgan kartada ham) */
+.gm-review-done__body { align-items: flex-start; text-align: left; }
+.gm-review-done__body p, .gm-review-done__body small { width: 100%; text-align: left; }
+
+.qs-placeholder { display: grid; gap: 8px; justify-items: start; padding: 32px 24px; color: var(--qs-color-text-muted); }
+.qs-placeholder h1 { color: var(--qs-color-text); margin: 0; }
+.qs-placeholder p { margin: 0; }

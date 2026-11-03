@@ -1,0 +1,425 @@
+.gm-adm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-4);
+}
+.gm-adm__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-3);
+}
+.gm-adm__card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: var(--qs-card-pad);
+  border: var(--qs-card-border);
+  border-radius: var(--qs-card-radius);
+  background: var(--qs-color-surface);
+  box-shadow: var(--qs-card-shadow);
+}
+.gm-adm__who {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.gm-adm__info {
+  flex: 1;
+  min-width: 0;
+}
+.gm-adm__info h2 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.gm-adm__info h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+.gm-adm__info h2 a:hover {
+  color: var(--qs-color-primary);
+}
+.gm-adm__info p {
+  margin: 2px 0 0;
+  color: var(--qs-color-text-muted);
+  font-size: 13.5px;
+}
+.gm-adm__meta {
+  font-size: 12.5px !important;
+}
+.gm-adm__badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.gm-adm__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--qs-color-border);
+}
+.gm-adm__actions .gm-button {
+  min-height: 40px;
+}
+@media (max-width: 640px) {
+  .gm-adm__who {
+    flex-wrap: wrap;
+  }
+  .gm-adm__badges {
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+  .gm-adm__actions .gm-button {
+    flex: 1 1 calc(50% - 8px);
+  }
+}
+
+/* ===== Yangi admin yaratish oynasi ===== */
+.gm-newadm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.gm-newadm__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.gm-newadm__pw {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gm-newadm__pw .gm-field__control {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+.gm-newadm__pwbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  color: var(--qs-color-text-muted);
+  font-size: 13px;
+}
+.gm-newadm__pwbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.gm-newadm__pwbar button:hover {
+  background: color-mix(in srgb, var(--qs-color-primary) 18%, var(--qs-color-surface));
+}
+.gm-newadm__pwbar button:focus-visible,
+.gm-newadm__super:has(input:focus-visible) {
+  outline: 2px solid var(--qs-focus-ring);
+  outline-offset: 2px;
+}
+.gm-newadm__super {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: var(--qs-card-radius-sm);
+  background: var(--qs-color-surface-muted);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.gm-newadm__super:has(input:checked) {
+  border-color: color-mix(in srgb, var(--qs-color-primary) 45%, var(--qs-color-border));
+  background: var(--qs-color-primary-soft);
+}
+.gm-newadm__super input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  accent-color: var(--qs-color-primary);
+  cursor: pointer;
+}
+.gm-newadm__super span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.gm-newadm__super strong {
+  font-size: 15px;
+}
+.gm-newadm__super small {
+  color: var(--qs-color-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+@media (max-width: 520px) {
+  .gm-newadm__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== «Admin yaratildi» oynasi ===== */
+.gm-newadm__ok {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--qs-color-success) 40%, var(--qs-color-border));
+  border-radius: var(--qs-card-radius-sm);
+  background: var(--qs-color-success-bg);
+}
+.gm-newadm__ok-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--qs-color-surface);
+  color: var(--qs-color-success);
+}
+.gm-newadm__ok strong {
+  display: block;
+  font-size: 16px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.gm-newadm__ok p {
+  margin: 2px 0 0;
+  color: var(--qs-color-text-muted);
+  font-size: 14px;
+}
+.gm-newadm__creds {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.gm-newadm--done .gm-save__label {
+  font-size: 13px;
+}
+.gm-newadm__warn {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--qs-card-radius-sm);
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.gm-newadm__warn strong {
+  color: inherit;
+}
+
+/* ===== Admin huquqlari ===== */
+.gm-adm__perms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.gm-adm__perms-title {
+  margin-right: 4px;
+  color: var(--qs-color-text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+.gm-perm {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.gm-perm__legend {
+  display: flex;
+  float: left;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.gm-perm__legend small {
+  color: var(--qs-color-text-muted);
+  font-weight: 600;
+}
+.gm-perm__all {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.gm-perm__grid {
+  clear: both;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.gm-perm__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: var(--qs-card-radius-sm);
+  background: var(--qs-color-surface-muted);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.gm-perm__item:has(input:checked) {
+  border-color: color-mix(in srgb, var(--qs-color-primary) 45%, var(--qs-color-border));
+  background: var(--qs-color-primary-soft);
+}
+.gm-perm__item:has(input:focus-visible) {
+  outline: 2px solid var(--qs-focus-ring);
+  outline-offset: 2px;
+}
+.gm-perm__item input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--qs-color-primary);
+}
+.gm-perm__item span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.gm-perm__item strong {
+  font-size: 14px;
+  line-height: 1.3;
+}
+.gm-perm__item small {
+  color: var(--qs-color-text-muted);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+@media (max-width: 640px) {
+  .gm-perm__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Yangi admin oynasi: bo‘limlar va huquqlar guruhlari ===== */
+.gm-newadm {
+  gap: 22px;
+}
+.gm-newadm__sec {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+}
+.gm-newadm__sec + .gm-newadm__sec {
+  padding-top: 22px;
+  border-top: 1px solid var(--qs-color-border);
+}
+.gm-newadm__sec-title {
+  margin: 0;
+  color: var(--qs-color-text-muted);
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.gm-perm__legend {
+  margin-bottom: 14px;
+}
+.gm-perm__count {
+  margin-left: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.gm-perm__count--empty {
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+}
+.gm-perm__groups {
+  clear: both;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.gm-perm__group-title {
+  margin: 0 0 8px;
+  color: var(--qs-color-text-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.gm-perm__grid {
+  clear: none;
+}
+.gm-perm__item {
+  min-height: 64px;
+  padding: 12px 14px;
+  background: var(--qs-color-surface);
+}
+.gm-perm__item:hover {
+  border-color: var(--qs-color-border-strong);
+}
+.gm-perm__item:has(input:checked) {
+  background: var(--qs-color-primary-soft);
+}
+.gm-perm__item input {
+  width: 20px;
+  height: 20px;
+}
+.gm-perm__item small {
+  font-size: 13px;
+}
+.gm-newadm__super {
+  background: var(--qs-color-surface);
+}
+.gm-newadm__super:has(input:checked) {
+  background: var(--qs-color-primary-soft);
+}
+/* Uzun forma: sarlavha va pastki tugmalar joyida, tarkib aylanadi */
+.gm-modal--large .gm-modal__body {
+  max-height: calc(var(--qs-vh, 100vh) - 190px);
+  overflow-y: auto;
+}
+.gm-perm__item input[type='checkbox'],
+.gm-newadm__super input[type='checkbox'] {
+  margin-top: 1px;
+}
+
+/* Butun karta bosiladi (profilni ochadi); ichidagi tugma va kalitlar o‘z vazifasini bajaradi */
+.gm-adm__card { position: relative; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+.gm-adm__card:hover { border-color: var(--qs-color-primary); box-shadow: 0 8px 24px -12px color-mix(in srgb, var(--qs-color-primary) 45%, transparent); }
+.gm-adm__open::after { content: ''; position: absolute; inset: 0; border-radius: inherit; cursor: pointer; }
+.gm-adm__open:focus-visible { outline: none; }
+.gm-adm__open:focus-visible::after { outline: 3px solid var(--qs-focus-ring); outline-offset: 2px; }
+.gm-adm__twofa, .gm-adm__actions, .gm-adm__perms { position: relative; z-index: 1; }
+.gm-adm__perms { pointer-events: none; }
+.gm-adm__twofa { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; background: var(--qs-color-surface-muted, rgba(100, 116, 139, 0.08)); }
+.gm-adm__twofa > div { display: grid; gap: 2px; min-width: 0; }
+.gm-adm__twofa strong { font-size: 13.5px; }
+.gm-adm__twofa span { color: var(--qs-color-text-muted); font-size: 12.5px; }

@@ -1,0 +1,10 @@
+.gm-page-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--qs-space-3);
+  padding: var(--qs-space-8) var(--qs-space-6);
+  color: var(--qs-color-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+}

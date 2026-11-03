@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2023",
+
+    "types": ["node", "multer"],
+
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "declaration": true,
+    "removeComments": true,
+    "sourceMap": true,
+
+    "outDir": "./dist",
+    "rootDir": ".",
+
+    "incremental": true,
+    "skipLibCheck": true,
+
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false
+  },
+  "exclude": ["node_modules", "dist", "apps", "TASK", "3-oy marcketplace"]
+}

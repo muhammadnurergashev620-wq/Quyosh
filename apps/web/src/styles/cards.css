@@ -1,0 +1,451 @@
+/* =====================================================================
+   KARTA DIZAYN TIZIMI — butun loyiha uchun yagona qoidalar.
+   Qiymatlar tokens.css dagi --qs-card-* o‘zgaruvchilaridan olinadi.
+   Bu fayl oxirida yuklanadi: avvalgi (komponent) uslublari ustidan
+   yagona radius / padding / chegara / soya / holatlarni o‘rnatadi.
+   Mantiq va joylashuv (grid/flex) o‘zgarmaydi — faqat sirt va holatlar.
+   ===================================================================== */
+
+/* ---- 1) Sirt kartalari (oddiy) ---- */
+.gm-card,
+.gm-detail-section,
+.gm-form-card,
+.gm-key-value,
+.gm-stat,
+.gm-count-card,
+.gm-ocardlink,
+.gm-order-card,
+.gm-master,
+.gm-pay__panel,
+.gm-opa,
+.gm-reqform__section,
+.gm-reqform__card,
+.gm-addr-card,
+.gm-svc-card,
+.gm-device,
+.gm-earn__panel,
+.gm-earn__collapse,
+.gm-role-select__option,
+.gm-pfm__item,
+.gm-pfm__add,
+.gm-workarea,
+.gm-trustp__new,
+.gm-uprofile__card,
+.gm-aordd__card,
+.gm-audit__card,
+.gm-landing__category,
+.gm-landing__step,
+.gm-landing__trust-card,
+.gm-doc-card,
+.gm-terms__item,
+.gm-landing__stat {
+  border: var(--qs-card-border);
+  border-radius: var(--qs-card-radius);
+  background: var(--qs-color-surface);
+  box-shadow: var(--qs-card-shadow);
+}
+
+/* Holat variantlari bor kartalar (faol/kutilmoqda/tanlangan ...): rang va chegarasi o‘z modifikatoridan keladi,
+   bu yerda faqat umumiy radius, soya va ichki bo‘shliq birlashtiriladi. */
+.gm-mo,
+.gm-ocard,
+.gm-oprogress,
+.gm-pcard,
+.gm-status,
+.gm-pausecard,
+.gm-workedit__block,
+.gm-paym__card,
+.gm-audit__role,
+.gm-earn__kpi {
+  border-radius: var(--qs-card-radius);
+}
+.gm-mo,
+.gm-ocard,
+.gm-pcard,
+.gm-earn__kpi {
+  box-shadow: var(--qs-card-shadow);
+}
+
+/* Ichki bo‘shliq: bitta qiymat (qator-kartalar ixchamroq) */
+.gm-card,
+.gm-detail-section,
+.gm-form-card,
+.gm-key-value,
+.gm-stat,
+.gm-count-card,
+.gm-ocard,
+.gm-pcard,
+.gm-pay__panel,
+.gm-opa,
+.gm-reqform__section,
+.gm-earn__panel,
+.gm-pfm__add,
+.gm-status,
+.gm-pausecard,
+.gm-workarea,
+.gm-workedit__block,
+.gm-trustp__new,
+.gm-uprofile__card,
+.gm-aordd__card,
+.gm-landing__step,
+.gm-landing__trust-card,
+.gm-landing__stat {
+  padding: var(--qs-card-pad);
+}
+.gm-ocardlink,
+.gm-oprogress,
+.gm-order-card,
+.gm-mo,
+.gm-master,
+.gm-paym__card,
+.gm-reqform__card,
+.gm-addr-card,
+.gm-svc-card,
+.gm-device,
+.gm-earn__kpi,
+.gm-role-select__option,
+.gm-audit__card,
+.gm-audit__role,
+.gm-landing__category {
+  padding: var(--qs-card-pad-sm);
+}
+.gm-ocardlink,
+.gm-master,
+.gm-mo,
+.gm-order-card,
+.gm-earn__kpi {
+  padding: 16px;
+}
+.gm-mo {
+  padding: 16px 20px;
+}
+
+/* ---- 2) Hero / panel / bo‘sh holat kartalari (katta radius) ---- */
+.gm-profile-hero,
+.gm-phero,
+.gm-earn__hero,
+.gm-uprofile__hero,
+.gm-aordd__hero,
+.gm-empty-state,
+.gm-mempty,
+.gm-auth-layout .gm-auth-layout__panel {
+  border-radius: var(--qs-card-radius-lg);
+}
+.gm-profile-hero,
+.gm-phero,
+.gm-earn__hero,
+.gm-uprofile__hero,
+.gm-aordd__hero,
+.gm-empty-state,
+.gm-mempty {
+  border: var(--qs-card-border);
+  box-shadow: var(--qs-card-shadow);
+}
+
+/* ---- 3) Karta ichidagi mayda bloklar (ichki plitkalar) ---- */
+.gm-uprofile__stat,
+.gm-aordd__money > div,
+.gm-aord__stat,
+.gm-pay__facts div,
+.gm-earn__hero-side div,
+.gm-mempty__steps li,
+.gm-addrm__item,
+.gm-addrlist li,
+.gm-reqform__address,
+.gm-service-option,
+.gm-work-proof-panel {
+  border-radius: var(--qs-card-radius-sm);
+}
+.gm-mempty__steps li {
+  border-radius: var(--qs-card-radius);
+}
+
+/* ---- 4) Interaktiv kartalar: bir xil hover / active / fokus ---- */
+a.gm-card,
+.gm-card--clickable,
+.gm-mo,
+.gm-ocardlink,
+.gm-master,
+.gm-order-card,
+.gm-role-select__option,
+a.gm-stat,
+.gm-svc-card[role='button'],
+.gm-addr-card[role='button'] {
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+a.gm-card:hover,
+.gm-card--clickable:hover,
+.gm-mo:hover,
+.gm-ocardlink:hover,
+.gm-master:hover,
+.gm-order-card:hover,
+.gm-role-select__option:hover,
+a.gm-stat:hover {
+  transform: none;
+  border-color: var(--qs-card-hover-border);
+  box-shadow: var(--qs-shadow-md);
+}
+/* Ogohlantiruvchi karta (harakat kutilmoqda): hoverda ham ogohlantirish rangi saqlanadi */
+.gm-mo--action:hover {
+  border-color: color-mix(in srgb, var(--qs-color-warning) 70%, var(--qs-color-border));
+}
+a.gm-card:active,
+.gm-card--clickable:active,
+.gm-mo:active,
+.gm-ocardlink:active,
+.gm-master:active,
+.gm-order-card:active,
+.gm-role-select__option:active {
+  box-shadow: var(--qs-card-shadow);
+}
+a.gm-card:focus-visible,
+.gm-card--clickable:focus-visible,
+.gm-mo:focus-visible,
+.gm-ocardlink:focus-visible,
+.gm-master:focus-visible,
+.gm-order-card:focus-visible,
+.gm-role-select__option:focus-visible,
+a.gm-stat:focus-visible {
+  outline: 2px solid var(--qs-focus-ring);
+  outline-offset: 2px;
+}
+.gm-card[aria-disabled='true'],
+.gm-role-select__option:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---- 5) Karta ichidagi matn ierarxiyasi ---- */
+/* Sarlavha */
+.gm-card__header h3,
+.gm-detail-section > h2,
+.gm-pcard > h2,
+.gm-earn__panel h2,
+.gm-pay__panel h2,
+.gm-reqform__section > h2,
+.gm-mo__head h3,
+.gm-master__name {
+  font-size: var(--qs-card-title-size);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+.gm-detail-section > h2,
+.gm-pcard > h2,
+.gm-reqform__section > h2 {
+  margin: 0 0 var(--qs-space-3);
+}
+/* Izoh / meta */
+.gm-card__meta,
+.gm-mo__sub,
+.gm-master__profession {
+  color: var(--qs-color-text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+/* Yorliq (label) */
+.gm-cred-card__label,
+.gm-uprofile__stat small,
+.gm-earn__kpi small,
+.gm-pay__facts small {
+  font-size: var(--qs-card-label-size);
+  font-weight: 700;
+  color: var(--qs-color-text-muted);
+}
+
+/* ---- 6) Auth kartasi: barcha ekranlarda bir xil radius ---- */
+.gm-auth-layout .gm-auth-layout__panel {
+  border: var(--qs-card-border);
+  background: var(--qs-color-surface);
+}
+
+/* ---- 7) Telefon: ixcham, lekin hamma kartada bir xil ---- */
+@media (max-width: 899px) {
+  :root {
+    --qs-card-pad: 16px;
+  }
+  .gm-mo,
+  .gm-mopage .gm-mo {
+    padding: 14px 16px;
+    border-radius: var(--qs-card-radius);
+  }
+  .gm-profile-hero,
+  .gm-phero,
+  .gm-earn__hero,
+  .gm-uprofile__hero,
+  .gm-aordd__hero,
+  .gm-mempty,
+  .gm-auth-layout .gm-auth-layout__panel {
+    border-radius: 20px;
+  }
+}
+@media (max-width: 359px) {
+  :root {
+    --qs-card-pad: 14px;
+  }
+}
+
+/* Hoverda siljish (translate) yo‘q: barcha kartalar bir xil sokin javob beradi */
+.gm-addr-card:hover,
+.gm-svc-card:hover,
+.gm-doc-card:hover,
+.gm-terms__item:hover,
+.gm-landing__category:hover,
+.gm-landing__step:hover,
+.gm-landing__trust-card:hover {
+  transform: none;
+}
+
+/* ---- 8) Harakat sezgir foydalanuvchilar uchun ---- */
+@media (prefers-reduced-motion: reduce) {
+  a.gm-card,
+  .gm-card--clickable,
+  .gm-mo,
+  .gm-ocardlink,
+  .gm-master,
+  .gm-order-card,
+  .gm-role-select__option {
+    transition: none;
+  }
+}
+
+/* ---- Buyurtma sahifasidagi to‘lov kartasi: boshqa kartalar bilan bir xil (qalin chap chiziqsiz), holat — yengil rangli ramka ---- */
+.gm-opaycard {
+  padding: var(--qs-card-pad);
+  border: var(--qs-card-border);
+  border-radius: var(--qs-card-radius);
+  box-shadow: var(--qs-card-shadow);
+}
+.gm-opaycard--success {
+  border-color: color-mix(in srgb, var(--qs-color-success) 40%, var(--qs-color-border));
+  background: color-mix(in srgb, var(--qs-color-success) 5%, var(--qs-color-surface));
+}
+.gm-opaycard--warning {
+  border-color: color-mix(in srgb, var(--qs-color-warning) 40%, var(--qs-color-border));
+  background: color-mix(in srgb, var(--qs-color-warning) 5%, var(--qs-color-surface));
+}
+.gm-opaycard--danger {
+  border-color: color-mix(in srgb, var(--qs-color-danger) 40%, var(--qs-color-border));
+  background: color-mix(in srgb, var(--qs-color-danger) 5%, var(--qs-color-surface));
+}
+.gm-opaycard__head h2 {
+  font-size: var(--qs-card-title-size);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* ---- «Belgilangan vaqt» va «To‘lov» kartalari: toza ierarxiya ---- */
+.gm-ocard__value {
+  font-family: var(--qs-font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--qs-color-text);
+}
+.gm-ocard .gm-oactions .gm-button,
+.gm-opaycard__actions .gm-button {
+  min-height: 44px;
+  padding-inline: 18px;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+.gm-opaycard {
+  gap: 14px;
+}
+.gm-opaycard__head h2 {
+  gap: 10px;
+}
+.gm-opaycard__head h2 svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--qs-color-primary);
+}
+.gm-opaycard__body {
+  gap: 12px 16px;
+  padding: 14px 16px;
+  border-radius: var(--qs-card-radius-sm);
+  background: var(--qs-color-surface-muted);
+}
+.gm-opaycard__method {
+  min-width: 0;
+  gap: 12px;
+}
+.gm-opaycard__method .gm-paym__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--qs-color-surface);
+  color: var(--qs-color-primary);
+  box-shadow: inset 0 0 0 1px var(--qs-color-border);
+}
+.gm-opaycard__method strong {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.gm-opaycard__method small {
+  font-size: 13px;
+}
+.gm-opaycard__amount {
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.gm-opaycard__hint {
+  font-size: 14px;
+  line-height: 1.55;
+}
+.gm-opaycard__actions a {
+  display: block;
+  text-decoration: none;
+}
+@media (max-width: 520px) {
+  .gm-opaycard__body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .gm-opaycard__amount {
+    align-self: flex-end;
+  }
+  .gm-opaycard__actions,
+  .gm-opaycard__actions a,
+  .gm-opaycard__actions .gm-button,
+  .gm-ocard .gm-oactions .gm-button {
+    width: 100%;
+  }
+  .gm-opaycard__actions,
+  .gm-ocard .gm-oactions {
+    flex-direction: column;
+  }
+}
+
+/* To‘lov kartasi ichida usul tanlash (alohida sahifasiz) */
+.gm-opaycard__choose {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.gm-opaycard__choose-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.gm-opaycard__choose .gm-paym {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+@media (max-width: 420px) {
+  .gm-opaycard__choose .gm-paym {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

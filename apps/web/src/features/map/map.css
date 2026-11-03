@@ -1,0 +1,23 @@
+/* Xarita (TZ 12, U7.3). Atributsiya o‘ng pastda doim ko‘rinadi — boshqa UI uni yopmaydi. */
+.qs-map { position: relative; min-height: 320px; border: 1px solid var(--qs-color-border); border-radius: 16px; overflow: hidden; background: var(--qs-color-surface-muted); }
+.qs-map__canvas { position: absolute; inset: 0; }
+.qs-map__tools { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.qs-map__tool { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border: 1px solid var(--qs-color-border); border-radius: 10px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-size: 13px; font-weight: 700; box-shadow: var(--qs-shadow-sm); cursor: pointer; }
+.qs-map__tool.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: #fff; }
+@media (max-width: 560px) { .qs-map__tool span { display: none; } }
+.qs-map .maplibregl-ctrl-attrib { font-size: 11px; }
+.qs-map__overlay { position: absolute; left: 10px; right: 10px; bottom: 34px; z-index: 2; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--qs-color-surface) 94%, transparent); box-shadow: var(--qs-shadow-md); font-size: 13.5px; }
+.qs-map__overlay strong { font-family: var(--qs-font-display); font-size: 16px; }
+.qs-map__card { position: absolute; top: 56px; left: 10px; z-index: 3; width: min(320px, calc(100% - 20px)); padding: 14px; border-radius: 14px; background: var(--qs-color-surface); box-shadow: var(--qs-shadow-lg); display: grid; gap: 8px; }
+.qs-map__card header { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+.qs-map__card button.qs-map__close { border: 0; background: none; cursor: pointer; color: var(--qs-color-text-muted); }
+.qs-cluster { display: grid; place-items: center; border-radius: 50%; background: var(--qs-color-primary); color: #fff; font-weight: 800; font-size: 13px; border: 3px solid color-mix(in srgb, #fff 80%, transparent); box-shadow: 0 6px 16px -6px rgba(0,0,0,.4); cursor: pointer; }
+.qs-pin { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50% 50% 50% 4px; transform: rotate(-45deg); background: var(--qs-color-accent); border: 3px solid #fff; box-shadow: 0 6px 16px -6px rgba(0,0,0,.5); cursor: pointer; }
+.qs-pin span { transform: rotate(45deg); color: #1a1a1a; font-weight: 800; font-size: 13px; }
+.qs-mappage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--qs-space-4); align-items: start; }
+.qs-mappage .qs-map { height: calc(100dvh - 230px); min-height: 460px; }
+@media (max-width: 1000px) { .qs-mappage { grid-template-columns: minmax(0, 1fr); } .qs-mappage .qs-map { height: 60dvh; } }
+.qs-editor { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, 1fr); gap: var(--qs-space-4); align-items: start; }
+.qs-editor .qs-map { height: 520px; }
+@media (max-width: 1000px) { .qs-editor { grid-template-columns: minmax(0, 1fr); } .qs-editor .qs-map { height: 58dvh; } }
+.qs-map--form { height: 300px; }

@@ -1,0 +1,143 @@
+:root {
+  --qs-font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --qs-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --qs-font-display: 'Onest', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --qs-color-bg: #eef2f9;
+  --qs-color-surface: #ffffff;
+  --qs-color-surface-muted: #e7ecf6;
+  --qs-color-border: #dbe2ef;
+  --qs-color-border-strong: #c3cde0;
+  --qs-color-text: #0c1730;
+  --qs-color-text-muted: #58647e;
+  --qs-color-ink: #07111d;
+
+  --qs-color-primary: #2563eb;
+  --qs-color-primary-hover: #1d4fd1;
+  --qs-color-primary-soft: #e0ebff;
+  --qs-color-primary-contrast: #ffffff;
+  --qs-focus-ring: #2563eb;
+  --qs-color-accent: #f0b84b;
+  /* Grafik seriyalari (dataviz validator: light/dark alohida tekshirilgan) */
+  --qs-chart-gen: #d97706;
+  --qs-chart-load: #2563eb;
+  --qs-chart-grid: #e2e8f0;
+  --qs-color-accent-contrast: #271b06;
+
+  --qs-color-danger: #d94352;
+  --qs-color-danger-bg: #fdecef;
+  --qs-color-success: #087b57;
+  --qs-color-success-bg: #e4f7ef;
+  --qs-color-warning: #a75c0a;
+  --qs-color-warning-bg: #fff3df;
+  --qs-color-info-bg: #e9efff;
+
+  --qs-radius-sm: 8px;
+  --qs-radius-md: 14px;
+  --qs-radius-lg: 18px;
+  --qs-radius-xl: 26px;
+  --qs-radius-2xl: 32px;
+
+  --qs-space-1: 4px;
+  --qs-space-2: 8px;
+  --qs-space-3: 12px;
+  --qs-space-4: 16px;
+  --qs-space-5: 24px;
+  --qs-space-6: 32px;
+  --qs-space-8: 48px;
+  --qs-space-10: 64px;
+
+  --qs-shadow-sm: 0 1px 2px rgba(18, 28, 70, .05), 0 4px 14px -6px rgba(18, 28, 70, .08);
+  --qs-shadow-md: 0 14px 34px -12px rgba(18, 28, 70, .18);
+  --qs-shadow-lg: 0 28px 70px -18px rgba(18, 28, 70, .28);
+
+  --qs-card-radius: 20px;
+  --qs-card-radius-lg: 26px;
+  --qs-card-radius-sm: 14px;
+  --qs-card-pad: 22px;
+  --qs-card-pad-sm: 12px 16px;
+  --qs-card-border: 1px solid var(--qs-color-border);
+  --qs-card-shadow: var(--qs-shadow-sm);
+  --qs-card-hover-border: color-mix(in srgb, var(--qs-color-primary) 40%, var(--qs-color-border));
+  --qs-card-title-size: 16px;
+  --qs-card-label-size: 12.5px;
+
+  --qs-btn-h-sm: 32px;
+  --qs-btn-h-md: 44px;
+  --qs-btn-h-lg: 50px;
+  --qs-btn-fs-sm: 12.5px;
+  --qs-btn-fs-md: 14px;
+  --qs-btn-fs-lg: 15px;
+  --qs-btn-px: 18px;
+
+  --qs-header-height: 64px;
+  --qs-sidebar-width: 288px;
+  --qs-grad-primary: var(--qs-color-primary);
+  --qs-grad-soft: var(--qs-color-primary-soft);
+  --qs-ease: cubic-bezier(.2,.75,.2,1);
+}
+
+:root[data-panel='SHOP'] { --qs-color-primary:#059669; --qs-color-primary-hover:#047857; --qs-color-primary-soft:#d9f4e8; --qs-color-info-bg:#d9f4e8; --qs-focus-ring:#059669; }
+:root[data-panel='ADMIN'] { --qs-color-primary:#1e3a8a; --qs-color-primary-hover:#172e6e; --qs-color-primary-soft:#dde6fa; --qs-color-info-bg:#dde6fa; --qs-focus-ring:#1e3a8a; }
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --qs-color-bg:#08101f;
+  --qs-color-surface:#0f1a30;
+  --qs-color-surface-muted:#16233f;
+  --qs-color-border:#233252;
+  --qs-color-border-strong:#32456b;
+  --qs-color-text:#eef2f7;
+  --qs-color-text-muted:#93a1b8;
+  --qs-color-ink:#05080c;
+  --qs-color-primary:#6f9cff;
+  --qs-color-primary-hover:#8aaaFF;
+  --qs-color-primary-soft:#15285a;
+  --qs-color-primary-contrast:#071124;
+  --qs-focus-ring:#8aaaFF;
+  --qs-color-accent:#f2c66b;
+  --qs-chart-gen:#c97a06;
+  --qs-chart-load:#5b8cf5;
+  --qs-chart-grid:#22314f;
+  --qs-color-danger:#ff7c88;
+  --qs-color-danger-bg:#2a151a;
+  --qs-color-success:#45d7a3;
+  --qs-color-success-bg:#0e2b21;
+  --qs-color-warning:#f2b46b;
+  --qs-color-warning-bg:#2c2114;
+  --qs-color-info-bg:#172544;
+  --qs-grad-primary: var(--qs-color-primary);
+  --qs-grad-soft: var(--qs-color-primary-soft);
+  --qs-shadow-sm:0 1px 2px rgba(0,0,0,.35);
+  --qs-shadow-md:0 12px 32px rgba(0,0,0,.42);
+  --qs-shadow-lg:0 26px 72px rgba(0,0,0,.58);
+}
+:root[data-theme='dark'][data-panel='SHOP'] { --qs-color-primary:#34d399; --qs-color-primary-hover:#5fe0b2; --qs-color-primary-soft:#0e2d27; --qs-color-primary-contrast:#04231a; --qs-focus-ring:#5fe0b2; }
+:root[data-theme='dark'][data-panel='ADMIN'] { --qs-color-primary:#7d9fe8; --qs-color-primary-hover:#a1bbf2; --qs-color-primary-soft:#172a55; --qs-color-primary-contrast:#0a1328; --qs-focus-ring:#a1bbf2; }
+
+:root[data-ui-size='small'] {
+  --qs-btn-h-sm: 28px;
+  --qs-btn-h-md: 34px;
+  --qs-btn-h-lg: 40px;
+  --qs-btn-fs-sm: 12px;
+  --qs-btn-fs-md: 13px;
+  --qs-btn-fs-lg: 14px;
+  --qs-btn-px: 14px;
+}
+
+:root[data-ui-size='large'] {
+  --qs-btn-h-sm: 38px;
+  --qs-btn-h-md: 48px;
+  --qs-btn-h-lg: 56px;
+  --qs-btn-fs-sm: 14px;
+  --qs-btn-fs-md: 16px;
+  --qs-btn-fs-lg: 17px;
+  --qs-btn-px: 24px;
+}
+
+/* Telefonda joyni tejash: ixcham sarlavha, kichikroq bo‘shliqlar */
+@media (max-width: 899px) {
+  :root {
+    --qs-header-height: 56px;
+  }
+}

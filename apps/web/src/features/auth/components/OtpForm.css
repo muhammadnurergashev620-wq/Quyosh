@@ -1,0 +1,39 @@
+/* Kod tasdiqlash shakli: markazlashgan, keng bo‘shliqli; kompyuter, planshet va telefonda mos */
+.gm-otp { display: flex; flex-direction: column; align-items: stretch; gap: 20px; width: 100%; padding-inline: 4px; text-align: center; }
+.gm-otp__icon {
+  display: grid;
+  place-items: center;
+  align-self: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--qs-color-primary) 10%, var(--qs-color-surface)), var(--qs-color-primary-soft));
+  color: var(--qs-color-primary);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--qs-color-primary) 18%, transparent), 0 14px 26px -18px var(--qs-color-primary);
+}
+.gm-otp__lead { display: grid; gap: 4px; margin: 0; color: var(--qs-color-text-muted); font-size: 0.95rem; line-height: 1.5; overflow-wrap: anywhere; }
+.gm-otp__lead strong { color: var(--qs-color-text); font-size: 1.05rem; font-weight: 800; }
+.gm-otp__error { margin: -6px 0 0; padding: 8px 12px; border-radius: 10px; background: var(--qs-color-danger-bg); color: var(--qs-color-danger); font-size: 0.88rem; font-weight: 700; line-height: 1.4; }
+.gm-otp__timer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; padding-inline: 2px; }
+.gm-otp__timer > .gm-alert { width: 100%; text-align: left; }
+.gm-otp__time { color: var(--qs-color-text); font-size: 0.95rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.gm-otp__time small { color: var(--qs-color-text-muted); font-size: 0.85rem; font-weight: 600; }
+.gm-otp__time--low { color: var(--qs-color-warning); }
+.gm-otp__resend { padding: 6px 2px; border: 0; background: none; color: var(--qs-color-primary); font: inherit; font-size: 0.92rem; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.gm-otp__resend:disabled { color: var(--qs-color-text-muted); font-weight: 600; text-decoration: none; cursor: default; }
+@media (max-width: 380px) { .gm-otp { gap: 16px; padding-inline: 0; } .gm-otp__icon { width: 58px; height: 58px; border-radius: 18px; } }
+
+/* Sahifa: sarlavha ham o‘rtada, karta ichida yetarli bo‘shliq */
+.gm-auth-layout .gm-auth-page.gm-otp-page { align-items: center; gap: 18px; padding-block: 6px; text-align: center; }
+.gm-auth-layout .gm-auth-page.gm-otp-page h1 { font-size: clamp(1.4rem, 5vw, 1.9rem); line-height: 1.2; }
+.gm-auth-layout .gm-auth-page.gm-otp-page > .gm-alert,
+.gm-auth-layout .gm-auth-page.gm-otp-page > .gm-devlimit { width: 100%; text-align: left; }
+
+/* Kod sahifasi kartasi keng: kataklar qulay o‘lchamda, yozuvlar chetga yopishmaydi */
+.gm-auth-layout .gm-auth-layout__panel:has(.gm-otp-page) { box-sizing: border-box; width: 100%; max-width: 520px; padding-inline: clamp(16px, 5vw, 40px); }
+.gm-auth-layout .gm-auth-layout__panel:has(.gm-otp-page) .gm-panel-badge { align-self: center; }
+
+/* Kod kelmadimi? — qayta yuborish qatori tugmalar ostida, o‘rtada */
+.gm-otp__resendrow { margin: 0; color: var(--qs-color-text-muted); font-size: 0.95rem; line-height: 1.6; }
+.gm-otp__resendrow .gm-otp__resend { font-size: 0.95rem; }
+.gm-otp__limit { margin: 0; padding: 12px 14px; border-radius: 14px; background: var(--qs-color-danger-bg); color: var(--qs-color-danger); font-size: 0.9rem; font-weight: 700; line-height: 1.45; }

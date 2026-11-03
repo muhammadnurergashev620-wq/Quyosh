@@ -1,0 +1,1519 @@
+.gm-ppage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-5);
+}
+.gm-pgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--qs-space-4);
+  align-items: start;
+}
+.gm-pgrid > * {
+  min-width: 0;
+}
+.gm-pcol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-4);
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .gm-pgrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.gm-phero {
+  overflow: hidden;
+  border: 1px solid var(--qs-color-border);
+  border-radius: var(--qs-radius-xl);
+  background: var(--qs-color-surface);
+  box-shadow: var(--qs-shadow-sm);
+}
+.gm-phero__cover {
+  position: relative;
+  height: 72px;
+  overflow: hidden;
+  background: linear-gradient(115deg, color-mix(in srgb, var(--qs-color-primary) 14%, var(--qs-color-surface)), color-mix(in srgb, var(--qs-color-primary) 5%, var(--qs-color-surface)));
+}
+.gm-phero__cover::before,
+.gm-phero__cover::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+.gm-phero__cover::before {
+  top: -70px;
+  right: 8%;
+  width: 180px;
+  height: 180px;
+  background: color-mix(in srgb, var(--qs-color-primary) 16%, transparent);
+}
+.gm-phero__cover::after {
+  top: 6px;
+  right: -30px;
+  width: 110px;
+  height: 110px;
+  background: color-mix(in srgb, var(--qs-color-primary) 10%, transparent);
+}
+.gm-phero__body {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--qs-space-4);
+  padding: 0 var(--qs-space-5);
+  margin-top: -34px;
+  position: relative;
+  z-index: 1;
+}
+.gm-phero__body .gm-chat-avatar {
+  width: 84px;
+  height: 84px;
+  flex: none;
+  border: 4px solid var(--qs-color-surface);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--qs-color-primary) 22%, transparent);
+  font-size: 1.6rem;
+}
+.gm-phero__who {
+  min-width: 0;
+  padding-top: 42px;
+}
+.gm-phero__name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--qs-space-2);
+}
+.gm-phero__name h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  overflow-wrap: anywhere;
+}
+.gm-phero__id {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.gm-phero__who p {
+  margin: 2px 0 0;
+  color: var(--qs-color-text-muted);
+}
+.gm-phero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--qs-space-2);
+}
+.gm-phero__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--qs-space-3);
+  margin: var(--qs-space-4) 0 0;
+  padding: var(--qs-space-4) var(--qs-space-5) var(--qs-space-5);
+}
+.gm-phero__stats > div {
+  padding: var(--qs-space-3) var(--qs-space-4);
+  border-radius: var(--qs-radius-md);
+  background: var(--qs-color-surface-muted);
+}
+.gm-phero__stats dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--qs-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.gm-phero__stats dd {
+  margin: 4px 0 0;
+  font-family: var(--qs-font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+.gm-phero__stats small {
+  margin-left: 6px;
+  color: var(--qs-color-text-muted);
+  font-family: var(--qs-font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+@media (max-width: 560px) {
+  .gm-phero__body {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--qs-space-2);
+  }
+  .gm-phero__who {
+    padding-top: 0;
+  }
+}
+
+.gm-pcard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-4);
+  padding: var(--qs-space-5);
+  border: 1px solid var(--qs-color-border);
+  border-radius: var(--qs-radius-lg);
+  background: var(--qs-color-surface);
+  box-shadow: var(--qs-shadow-sm);
+}
+.gm-pcard__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--qs-space-3);
+}
+.gm-pcard__head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.gm-pcard__head p {
+  margin: 2px 0 0;
+  color: var(--qs-color-text-muted);
+  font-size: 0.85rem;
+}
+.gm-pcard__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+}
+.gm-inforows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.gm-inforows > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--qs-space-4);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--qs-color-border);
+}
+.gm-inforows > div:last-child {
+  border-bottom: 0;
+}
+.gm-inforows dt {
+  color: var(--qs-color-text-muted);
+  font-size: 0.875rem;
+}
+.gm-inforows dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.gm-ptags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gm-ptags li {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.gm-pcard .gm-detail-section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.gm-pcard--highlight {
+  border-color: var(--qs-color-primary);
+  animation: gm-pcard-pulse 1s ease-in-out 3;
+}
+@keyframes gm-pcard-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--qs-color-primary) 0%, transparent), var(--qs-shadow-sm);
+    background: var(--qs-color-surface);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--qs-color-primary) 28%, transparent), var(--qs-shadow-md);
+    background: color-mix(in srgb, var(--qs-color-primary) 7%, var(--qs-color-surface));
+  }
+}
+
+.gm-pcard__chevron {
+  display: none;
+}
+.gm-pcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-4);
+}
+.gm-pcard__body[hidden] {
+  display: none;
+}
+
+/* Telefonda: kartochkalar yig‘iladigan ro‘yxat (accordion) */
+@media (max-width: 899px) {
+  .gm-ppage,
+  .gm-pgrid,
+  .gm-pcol {
+    gap: var(--qs-space-2);
+  }
+  .gm-pgrid,
+  .gm-pcol {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  .gm-pcard {
+    width: 100%;
+  }
+  .gm-pcard {
+    gap: 0;
+    padding: 0;
+    border-radius: var(--qs-radius-md);
+    overflow: hidden;
+  }
+  .gm-pcard__head {
+    align-items: center;
+    padding: var(--qs-space-3) var(--qs-space-3);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .gm-pcard__head:active {
+    background: var(--qs-color-surface-muted);
+  }
+  .gm-pcard__head > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .gm-pcard__head h2 {
+    font-size: 0.98rem;
+  }
+  .gm-pcard__head p {
+    display: none;
+  }
+  .gm-pcard--open .gm-pcard__head p {
+    display: block;
+  }
+  .gm-pcard__chevron {
+    display: block;
+    flex: none;
+    color: var(--qs-color-text-muted);
+    transition: transform 0.2s ease;
+  }
+  .gm-pcard--open .gm-pcard__chevron {
+    transform: rotate(180deg);
+  }
+  .gm-pcard__body {
+    padding: 0 var(--qs-space-3) var(--qs-space-3);
+    border-top: 1px solid var(--qs-color-border);
+    padding-top: var(--qs-space-3);
+    gap: var(--qs-space-3);
+  }
+}
+
+/* ===== Profil kartochkalari: qatorlar, manzillar, havola-tugmalar ===== */
+.gm-inforows dt {
+  flex: none;
+}
+.gm-inforows dd {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.gm-pmuted {
+  color: var(--qs-color-text-muted);
+  font-weight: 500;
+}
+.gm-pempty {
+  margin: 0;
+  padding: 14px;
+  border: 1px dashed var(--qs-color-border-strong);
+  border-radius: 12px;
+  color: var(--qs-color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.gm-addrlist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gm-addrlist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 12px;
+  background: var(--qs-color-surface-muted);
+}
+.gm-addrlist__pin {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+}
+.gm-addrlist__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+.gm-addrlist__text strong {
+  font-size: 0.85rem;
+}
+.gm-addrlist__text span {
+  color: var(--qs-color-text-muted);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.gm-addrlist .gm-addrlist__more {
+  justify-content: center;
+  border-style: dashed;
+  background: transparent;
+  color: var(--qs-color-text-muted);
+  font-size: 0.8rem;
+}
+
+/* To‘liq kenglikdagi havola-tugma */
+.gm-plink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 8px 12px;
+  border: 1px solid var(--qs-color-border-strong);
+  border-radius: 14px;
+  background: var(--qs-color-surface);
+  color: var(--qs-color-text);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition:
+    transform 0.18s var(--qs-ease, ease),
+    border-color 0.18s,
+    background-color 0.18s,
+    box-shadow 0.18s;
+}
+.gm-plink:hover,
+.gm-plink:focus-visible {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--qs-color-primary) 55%, var(--qs-color-border));
+  background: color-mix(in srgb, var(--qs-color-primary-soft) 55%, var(--qs-color-surface));
+  box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--qs-color-primary) 45%, transparent);
+  outline: none;
+}
+.gm-plink:active {
+  transform: translateY(0) scale(0.99);
+}
+.gm-plink__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+}
+.gm-plink__label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.gm-plink__arrow {
+  flex: none;
+  color: var(--qs-color-text-muted);
+  transition: transform 0.18s var(--qs-ease, ease), color 0.18s;
+}
+.gm-plink:hover .gm-plink__arrow,
+.gm-plink:focus-visible .gm-plink__arrow {
+  color: var(--qs-color-primary);
+  transform: translateX(4px);
+}
+
+/* Saqlash tugmasi */
+.gm-psave {
+  min-height: 50px;
+  border-radius: 14px;
+  font-size: 15px;
+}
+.gm-psave:disabled {
+  border-color: var(--qs-color-border);
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-plink,
+  .gm-plink__arrow {
+    transition: none;
+  }
+  .gm-plink:hover,
+  .gm-plink:focus-visible,
+  .gm-plink:active {
+    transform: none;
+  }
+}
+
+/* ===== Ish holati va tugmalar ===== */
+
+.gm-pbtn {
+  min-height: 50px;
+  border-radius: 14px;
+  font-size: 15px;
+}
+.gm-pbtn--off {
+  border-color: color-mix(in srgb, var(--qs-color-danger) 40%, var(--qs-color-border));
+  background: var(--qs-color-danger-bg);
+  color: var(--qs-color-danger);
+}
+.gm-pbtn--off:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--qs-color-danger-bg) 70%, var(--qs-color-danger) 12%);
+  color: var(--qs-color-danger);
+}
+.gm-pbtn--pause:not(:disabled) {
+  border-color: color-mix(in srgb, var(--qs-color-warning) 45%, var(--qs-color-border));
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+}
+.gm-pbtn--pause:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--qs-color-warning-bg) 70%, var(--qs-color-warning) 12%);
+  color: var(--qs-color-warning);
+}
+.gm-pbtn:disabled {
+  border-color: var(--qs-color-border);
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.gm-pnote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+.gm-pnote svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+
+.gm-ptags li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  transition: transform 0.15s var(--qs-ease, ease), background-color 0.15s;
+}
+.gm-ptags li:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--qs-color-primary) 16%, var(--qs-color-surface));
+}
+@media (prefers-reduced-motion: reduce) {
+  .gm-ptags li {
+    transition: none;
+  }
+  .gm-ptags li:hover {
+    transform: none;
+  }
+}
+
+/* Usta: ish joyi va hudud bloki */
+.gm-workarea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-3);
+  padding: var(--qs-space-4);
+  border: 1px solid var(--qs-color-border);
+  border-radius: 16px;
+  background: var(--qs-color-surface-muted);
+}
+.gm-workarea__title {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.gm-workarea__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.gm-workarea__note {
+  margin: 0;
+  color: var(--qs-color-text-muted);
+  font-size: 0.82rem;
+}
+
+/* ===== Ish holati paneli ===== */
+.gm-statuspanel {
+  gap: 14px;
+}
+
+.gm-status {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 18px;
+  background: var(--qs-color-surface-muted);
+  overflow: hidden;
+}
+.gm-status::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 140% at 0% 0%, var(--qs-status-tint, transparent), transparent 60%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.gm-status--active {
+  --qs-status-c: var(--qs-color-success);
+  --qs-status-bg: var(--qs-color-success-bg);
+  --qs-status-tint: var(--qs-color-success-bg);
+  border-color: color-mix(in srgb, var(--qs-color-success) 35%, var(--qs-color-border));
+}
+.gm-status--paused {
+  --qs-status-c: var(--qs-color-warning);
+  --qs-status-bg: var(--qs-color-warning-bg);
+  --qs-status-tint: var(--qs-color-warning-bg);
+  border-color: color-mix(in srgb, var(--qs-color-warning) 35%, var(--qs-color-border));
+}
+.gm-status--inactive {
+  --qs-status-c: var(--qs-color-text-muted);
+  --qs-status-bg: var(--qs-color-surface);
+}
+.gm-status__orb {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--qs-status-bg);
+  color: var(--qs-status-c);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--qs-status-c) 14%, transparent);
+}
+.gm-status__text {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+.gm-status__text small {
+  color: var(--qs-color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.gm-status__text strong {
+  color: var(--qs-status-c);
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+.gm-status__text span {
+  color: var(--qs-color-text-muted);
+  font-size: 0.85rem;
+}
+.gm-status__reason {
+  margin-top: 2px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.gm-status__dot {
+  position: relative;
+  flex: none;
+  align-self: flex-start;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--qs-status-c);
+}
+.gm-status--active .gm-status__dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--qs-status-c);
+  animation: gm-status-ping 1.8s ease-out infinite;
+}
+@keyframes gm-status-ping {
+  from {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+
+.gm-pnote {
+  align-items: center;
+  padding: 12px 14px;
+}
+.gm-pnote__link {
+  color: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.gm-pausecard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 18px;
+  background: var(--qs-color-surface);
+  transition: opacity 0.2s;
+}
+.gm-pausecard.is-locked {
+  background: var(--qs-color-surface-muted);
+}
+.gm-pausecard.is-locked .gm-pausecard__head > div,
+.gm-pausecard.is-locked .gm-field,
+.gm-pausecard.is-locked .gm-button {
+  opacity: 0.6;
+}
+.gm-pausecard__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.gm-pausecard__head h3 {
+  margin: 0;
+  font-size: 0.98rem;
+}
+.gm-pausecard__head p {
+  margin: 2px 0 0;
+  color: var(--qs-color-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+.gm-pausecard__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+}
+.gm-pausecard__lock {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--qs-color-surface);
+  border: 1px solid var(--qs-color-border);
+  color: var(--qs-color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+@media (max-width: 420px) {
+  .gm-pausecard__head {
+    flex-wrap: wrap;
+  }
+  .gm-pausecard__lock {
+    margin-left: 48px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gm-status--active .gm-status__dot::after {
+    animation: none;
+  }
+}
+
+/* ===== Ish holati: ixcham tugmalar (kattalashib ketmaydi) ===== */
+.gm-statuspanel {
+  gap: 12px;
+}
+.gm-status {
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+}
+.gm-status__orb {
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-status-c) 12%, transparent);
+}
+.gm-status__orb svg {
+  width: 20px;
+  height: 20px;
+}
+.gm-status__text strong {
+  font-size: 1.08rem;
+}
+
+.gm-sactions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.gm-sbtn {
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  width: auto;
+}
+.gm-sbtn--off {
+  border-color: color-mix(in srgb, var(--qs-color-danger) 40%, var(--qs-color-border));
+  background: var(--qs-color-danger-bg);
+  color: var(--qs-color-danger);
+}
+.gm-sbtn--off:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--qs-color-danger-bg) 70%, var(--qs-color-danger) 12%);
+  color: var(--qs-color-danger);
+}
+.gm-sbtn--pause:not(:disabled) {
+  border-color: color-mix(in srgb, var(--qs-color-warning) 45%, var(--qs-color-border));
+  background: var(--qs-color-warning-bg);
+  color: var(--qs-color-warning);
+}
+.gm-sbtn--pause:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--qs-color-warning-bg) 70%, var(--qs-color-warning) 12%);
+  color: var(--qs-color-warning);
+}
+.gm-sbtn:disabled {
+  border-color: var(--qs-color-border);
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.gm-pnote {
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+}
+
+.gm-pausecard {
+  gap: 10px;
+  padding: 14px;
+  border-radius: 16px;
+}
+.gm-pausecard__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+}
+.gm-pausecard.is-locked .gm-pausecard__head > div,
+.gm-pausecard.is-locked .gm-field,
+.gm-pausecard.is-locked .gm-button {
+  opacity: 0.7;
+}
+.gm-pausecard__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+.gm-pausecard__row .gm-field {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.gm-pausecard__row .gm-button {
+  flex: 0 0 auto;
+}
+
+/* ===== Ish holati: tugma holat kartasi ichida, tekis joylashgan ===== */
+.gm-status {
+  flex-wrap: wrap;
+}
+.gm-status__text {
+  flex: 1 1 160px;
+}
+.gm-status__action {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  margin-left: auto;
+}
+.gm-status--active::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--qs-status-c);
+  animation: gm-status-ping 1.8s ease-out infinite;
+}
+.gm-status--active .gm-status__action {
+  margin-top: 12px;
+}
+@media (max-width: 460px) {
+  .gm-status__action {
+    flex: 1 1 100%;
+    margin-left: 0;
+    padding-top: 12px;
+    border-top: 1px solid color-mix(in srgb, var(--qs-status-c) 18%, var(--qs-color-border));
+  }
+  .gm-status__action .gm-button {
+    width: 100%;
+  }
+  .gm-status--active .gm-status__action {
+    margin-top: 0;
+  }
+}
+
+/* Pauza qatori: maydon va tugma bir xil balandlikda, tekis */
+.gm-pausecard__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+}
+.gm-pausecard__row .gm-field__control {
+  min-height: 40px;
+  height: 40px;
+}
+.gm-pausecard__row .gm-button {
+  height: 40px;
+}
+@media (max-width: 460px) {
+  .gm-pausecard__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gm-pausecard__row .gm-button {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gm-status--active::after {
+    animation: none;
+  }
+}
+
+/* ===== Ish holati: yozuvlar o‘lchami va joylashuvi (yagona shkala: 11.5 / 13 / 15–17 px) ===== */
+.gm-status {
+  align-items: center;
+  gap: 14px;
+}
+.gm-status__text {
+  flex: 1 1 170px;
+  gap: 2px;
+}
+.gm-status__text small {
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+.gm-status__text strong {
+  margin-top: 3px;
+  font-size: 17px;
+  line-height: 1.15;
+}
+.gm-status__text span {
+  margin-top: 1px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.gm-status__reason {
+  font-size: 12.5px;
+}
+.gm-status__action .gm-sbtn {
+  white-space: nowrap;
+}
+
+.gm-pnote {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.gm-pausecard {
+  gap: 14px;
+}
+.gm-pausecard__head {
+  align-items: center;
+  gap: 12px;
+}
+.gm-pausecard__head h3 {
+  font-size: 15px;
+  line-height: 1.2;
+}
+.gm-pausecard__head p {
+  margin-top: 3px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.gm-pausecard__row {
+  gap: 12px;
+}
+.gm-pausecard__row .gm-field {
+  gap: 6px;
+}
+.gm-pausecard__row .gm-field__label {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.gm-pausecard__row .gm-field__control {
+  font-size: 14px;
+}
+.gm-pausecard__row .gm-field__control::placeholder {
+  font-size: 13.5px;
+}
+.gm-pausecard__row .gm-sbtn {
+  font-size: 13.5px;
+}
+
+@media (max-width: 460px) {
+  .gm-status__text {
+    flex-basis: 140px;
+  }
+  .gm-status__text strong {
+    font-size: 16px;
+  }
+}
+
+/* ===== Usta profili: kartochkalar o‘zi muvozanatlanadigan ikki ustun ===== */
+.gm-pmasonry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-2);
+  width: 100%;
+}
+@media (min-width: 900px) {
+  .gm-pmasonry {
+    display: block;
+    column-count: 2;
+    column-gap: var(--qs-space-4);
+  }
+  .gm-pmasonry > .gm-pcard {
+    display: flex;
+    margin-bottom: var(--qs-space-4);
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+  }
+}
+@media (max-width: 899px) {
+  .gm-pmasonry > .gm-pcard {
+    width: 100%;
+  }
+}
+
+/* Bosiladigan hudud nomlari */
+.gm-ptags li:has(.gm-ptags__btn) {
+  padding: 0;
+}
+.gm-ptags__btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  gap: 4px;
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.gm-ptags__btn:focus-visible {
+  outline: 2px solid var(--qs-color-primary);
+  outline-offset: 2px;
+}
+.gm-pnote-muted {
+  margin: 0;
+  color: var(--qs-color-text-muted);
+  font-size: 12.5px;
+}
+
+/* Ish hududi muharriri: bitta karta, ketma-ket bo‘limlar */
+.gm-workedit {
+  gap: 18px;
+}
+.gm-workedit__block {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 20px 18px;
+  text-align: center;
+  border: 1px solid var(--qs-color-border);
+  border-radius: 16px;
+  background: var(--qs-color-surface-muted);
+}
+.gm-workedit__block > h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+.gm-workedit__block > .gm-workarea__note {
+  margin: 0 auto;
+  max-width: 46ch;
+  text-align: center;
+}
+.gm-workedit__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  border-radius: 12px;
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+}
+.gm-workedit__block label,
+.gm-workedit__block input {
+  text-align: left;
+}
+.gm-workedit__expand {
+  align-self: center;
+}
+.gm-workedit__tags li {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+}
+.gm-workedit__tags .gm-ptags__btn {
+  padding-right: 6px;
+}
+.gm-workedit__remove {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+.gm-workedit__remove:hover {
+  background: color-mix(in srgb, var(--qs-color-danger) 18%, transparent);
+  color: var(--qs-color-danger);
+  opacity: 1;
+}
+.gm-workedit__add {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+}
+.gm-workedit__addbtn {
+  height: 40px;
+}
+@media (max-width: 460px) {
+  .gm-workedit__add {
+    grid-template-columns: 1fr;
+  }
+  .gm-workedit__addbtn {
+    width: 100%;
+  }
+}
+
+/* Ish hududlari: manzil + radius + xarita bitta kartada */
+.gm-workedit__block--main {
+  border-color: color-mix(in srgb, var(--qs-color-primary) 30%, var(--qs-color-border));
+  background: color-mix(in srgb, var(--qs-color-primary-soft) 35%, var(--qs-color-surface));
+}
+.gm-workedit__sub {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--qs-color-border-strong);
+}
+.gm-workedit__label {
+  font-size: 13px;
+  font-weight: 700;
+}
+.gm-workedit__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 6px 5px 12px;
+}
+
+/* ===== Ish holati kartasi (yakuniy): hamma narsa o‘rtada, bir tekis ===== */
+.gm-pcard:has(.gm-statuspanel) .gm-pcard__head {
+  align-items: center;
+}
+.gm-pcard:has(.gm-statuspanel) .gm-pcard__head > div {
+  flex: 1 1 auto;
+  text-align: center;
+}
+.gm-pcard:has(.gm-statuspanel) .gm-pcard__head h2 {
+  font-size: 1.05rem;
+}
+.gm-pcard:has(.gm-statuspanel) .gm-pcard__head p {
+  margin-top: 2px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.gm-statuspanel {
+  gap: 14px;
+}
+
+/* Holat bloki: orb tepada, matn o‘rtada, tugma pastda */
+.gm-status {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 18px;
+  text-align: center;
+}
+.gm-status__text {
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  max-width: 34ch;
+  text-align: center;
+}
+.gm-status__text small {
+  font-size: 0.7rem;
+}
+.gm-status__text strong {
+  font-size: 1.2rem;
+}
+.gm-status__text span {
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.gm-status__action,
+.gm-status--active .gm-status__action {
+  flex: 0 0 auto;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--qs-status-c) 18%, var(--qs-color-border));
+}
+.gm-status__action .gm-button {
+  width: auto;
+  min-width: 170px;
+  height: 40px;
+  justify-content: center;
+}
+
+/* Ogohlantirish */
+.gm-pnote {
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  text-align: center;
+}
+.gm-pnote svg {
+  margin-top: 0;
+}
+
+/* Pauza kartasi */
+.gm-pausecard {
+  gap: 16px;
+  padding: 20px 18px;
+}
+.gm-pausecard__head {
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.gm-pausecard__head > div {
+  max-width: 36ch;
+}
+.gm-pausecard__head h3 {
+  font-size: 1rem;
+}
+.gm-pausecard__head p {
+  margin-top: 4px;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+.gm-pausecard__row {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: 12px;
+}
+.gm-pausecard__row .gm-field {
+  width: 100%;
+  align-items: center;
+  text-align: center;
+}
+.gm-pausecard__row .gm-field__label {
+  font-size: 0.82rem;
+  text-align: center;
+}
+.gm-pausecard__row .gm-field__control {
+  width: 100%;
+  text-align: center;
+}
+.gm-pausecard__row .gm-button {
+  width: auto;
+  min-width: 170px;
+  justify-content: center;
+}
+
+/* ===== Ish holati: ixcham variant (o‘rtacha o‘lcham) ===== */
+.gm-statuspanel {
+  gap: 10px;
+}
+.gm-status {
+  gap: 8px;
+  padding: 14px 16px;
+}
+.gm-status__orb {
+  width: 38px;
+  height: 38px;
+}
+.gm-status__orb svg {
+  width: 18px;
+  height: 18px;
+}
+.gm-status__text {
+  gap: 2px;
+}
+.gm-status__text strong {
+  font-size: 1.05rem;
+}
+.gm-status__text span {
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+.gm-status__action,
+.gm-status--active .gm-status__action {
+  padding-top: 10px;
+}
+.gm-status__action .gm-button {
+  min-width: 0;
+  height: 36px;
+  padding-inline: 18px;
+  font-size: 0.85rem;
+}
+.gm-pnote {
+  padding: 9px 14px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+.gm-pausecard {
+  gap: 10px;
+  padding: 14px 16px;
+}
+.gm-pausecard__head {
+  flex-direction: row;
+  justify-content: center;
+  gap: 12px;
+  text-align: left;
+}
+.gm-pausecard__head > div {
+  max-width: none;
+}
+.gm-pausecard__icon {
+  width: 34px;
+  height: 34px;
+}
+.gm-pausecard__head h3 {
+  font-size: 0.95rem;
+}
+.gm-pausecard__head p {
+  margin-top: 2px;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+.gm-pausecard__row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  justify-items: stretch;
+  gap: 8px 10px;
+}
+.gm-pausecard__row .gm-field {
+  align-items: stretch;
+  gap: 4px;
+  text-align: left;
+}
+.gm-pausecard__row .gm-field__label {
+  font-size: 0.78rem;
+  text-align: left;
+}
+.gm-pausecard__row .gm-field__control {
+  height: 36px;
+  min-height: 36px;
+  text-align: left;
+}
+.gm-pausecard__row .gm-button {
+  min-width: 0;
+  height: 36px;
+  padding-inline: 16px;
+  font-size: 0.85rem;
+}
+@media (max-width: 460px) {
+  .gm-pausecard__head {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+  }
+  .gm-pausecard__row {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+  .gm-pausecard__row .gm-field {
+    width: 100%;
+  }
+  .gm-pausecard__row .gm-button {
+    width: auto;
+  }
+}
+
+/* Ish holati: sarlavha kartaning aynan o‘rtasida (ikonka chapda, chevron/bo‘shliq o‘ngda) */
+.gm-pcard:has(.gm-statuspanel) .gm-pcard__head {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 12px;
+}
+.gm-pcard:has(.gm-statuspanel) .gm-pcard__head > div {
+  grid-column: 2;
+  text-align: center;
+}
+.gm-pcard:has(.gm-statuspanel) .gm-pcard__chevron {
+  grid-column: 3;
+  justify-self: end;
+}
+
+/* Tasdiqlash kartasi: sarlavha o‘rtada */
+.gm-pcard:has(.gm-trustp) .gm-pcard__head {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 12px;
+}
+.gm-pcard:has(.gm-trustp) .gm-pcard__head > div {
+  grid-column: 2;
+  text-align: center;
+}
+.gm-pcard:has(.gm-trustp) .gm-pcard__chevron {
+  grid-column: 3;
+  justify-self: end;
+}
+
+/* ===== Profil sahifasi: barcha kartalar bir xil — sarlavha o‘rtada, ichki chetlar bir tekis ===== */
+.gm-pcard {
+  padding: 20px 18px;
+}
+.gm-pcard__head {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 12px;
+}
+.gm-pcard__head > div {
+  grid-column: 2;
+  text-align: center;
+}
+.gm-pcard__head h2 {
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+.gm-pcard__head p {
+  margin-top: 3px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.gm-pcard__chevron {
+  grid-column: 3;
+  justify-self: end;
+}
+.gm-pcard__body {
+  gap: 14px;
+}
+.gm-inforows > div {
+  gap: 16px;
+  padding: 11px 2px;
+}
+.gm-inforows dt {
+  flex: none;
+}
+.gm-inforows dd {
+  min-width: 0;
+}
+@media (max-width: 899px) {
+  .gm-pcard {
+    padding: 0;
+  }
+  .gm-pcard__head {
+    padding: 14px 16px;
+  }
+  .gm-pcard__body {
+    padding: 16px;
+  }
+}
+
+/* Profil sahifalari: sahifa sarlavhasi o‘rtada */
+.gm-ppage > .gm-page-header {
+  justify-content: center;
+  text-align: center;
+}
+.gm-ppage > .gm-page-header h1 {
+  text-align: center;
+}
+
+/* Sensorli ekran: bosiladigan hudud nomlari kamida 40px balandlikda */
+@media (pointer: coarse) {
+  .gm-ptags__btn { min-height: 40px; }
+}
+
+/* Profil ko‘rsatkichlari: juft bo‘lmasa oxirgisi butun qatorni egallaydi (telefonda bo‘sh joy qolmasin) */
+.gm-phero__stats > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+@media (min-width: 560px) {
+  .gm-phero__stats { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .gm-phero__stats > div:last-child:nth-child(odd) { grid-column: auto; }
+}

@@ -1,0 +1,2203 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  SHOP
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  BLOCKED
+  SUSPENDED
+
+  DELETED
+}
+
+enum OtpPurpose {
+  REGISTER
+  LOGIN
+  PHONE_VERIFICATION
+  PASSWORD_RESET
+  CHANGE_PHONE
+}
+
+enum OtpStatus {
+  ACTIVE
+  VERIFIED
+  EXPIRED
+  BLOCKED
+}
+
+enum SessionStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+enum PolicyType {
+  TERMS
+  PRIVACY
+  PLATFORM_RULES
+}
+
+enum PolicyStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MediaAssetStatus {
+  UPLOADING
+  QUARANTINED
+  SCANNING
+  PROCESSING
+  READY
+  REJECTED
+  FAILED
+}
+
+enum MediaAssetKind {
+  PRODUCT_IMAGE
+  SHOP_LOGO
+  VERIFICATION_DOC
+  MESSAGE_ATTACHMENT
+  REPORT
+  IMPORT
+  PORTFOLIO
+  USER_AVATAR
+  CERTIFICATE
+  SUPPORT_ATTACHMENT
+  ARTICLE_COVER
+}
+
+enum NotificationChannel {
+  IN_APP
+  PUSH
+  SMS
+  TELEGRAM
+  EMAIL
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  READ
+}
+
+enum OutboxStatus {
+  PENDING
+  PROCESSING
+  PUBLISHED
+  FAILED
+}
+
+enum UserLocale {
+  uz
+  oz
+  ru
+}
+
+enum AccountType {
+  INDIVIDUAL
+  BUSINESS
+}
+
+model User {
+  id                   String                   @id @default(uuid()) @db.Uuid
+  accountNumber        Int                      @unique @default(autoincrement()) @map("account_number")
+  phone                String?                  @unique @db.VarChar(32)
+  email                String?                  @unique @db.VarChar(255)
+  /// Google hisobi (sub): Google orqali ro‘yxatdan o‘tgan foydalanuvchi uchun.
+  googleId             String?                  @unique @map("google_id") @db.VarChar(64)
+  googleEmail          String?                  @map("google_email") @db.VarChar(255)
+  passwordHash         String?                  @map("password_hash")
+  firstName            String?                  @map("first_name") @db.VarChar(100)
+  lastName             String?                  @map("last_name") @db.VarChar(100)
+  avatarUrl            String?                  @map("avatar_url")
+  /// Profil rasmi (yuklangan fayl). Google rasmi bo‘lsa `avatarUrl` da; yuklangan rasm doim ustun.
+  avatarAssetId        String?                  @unique @map("avatar_asset_id") @db.Uuid
+  avatarUpdatedAt      DateTime?                @map("avatar_updated_at")
+  /// Admin akkaunt o‘ziga rasm qo‘ya oladimi: faqat superadmin yoqadi (standart — yo‘q).
+  adminAvatarAllowed   Boolean                  @default(false) @map("admin_avatar_allowed")
+  avatarAsset          MediaAsset?              @relation("UserAvatar", fields: [avatarAssetId], references: [id], onDelete: SetNull)
+  userRoles            UserRole[]
+  status               UserStatus               @default(PENDING)
+  phoneVerifiedAt      DateTime?                @map("phone_verified_at")
+  lastLoginAt          DateTime?                @map("last_login_at")
+  preferences          Json?
+  /// TZ 7.2: interfeys tili (uz — lotin, oz — kirill, ru) va hisob turi (jismoniy / yuridik shaxs).
+  locale               UserLocale               @default(uz)
+  accountType          AccountType              @default(INDIVIDUAL) @map("account_type")
+  organization         Organization?
+  sites                CustomerSite[]           @relation("UserSites")
+  calculations         Calculation[]            @relation("UserCalculations")
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
+  twoFactorEnabled     Boolean                  @default(true) @map("two_factor_enabled")
+  /// Superadmin: boshqa adminlarni yaratish va boshqarish huquqi (oddiy admin — yo‘q).
+  isSuperAdmin         Boolean                  @default(false) @map("is_super_admin")
+  /// Oddiy adminning huquqlari (bo‘limlar); superadmin uchun e’tiborga olinmaydi.
+  adminPermissions     String[]                 @default([]) @map("admin_permissions")
+  /// Superadmin tanlaydi: bu admin yangi adminlar yarata oladimi (faqat oddiy admin uchun).
+  canCreateAdmins      Boolean                  @default(false) @map("can_create_admins")
+  /// Bu admin yangi adminga qaysi huquqlarni bera olishi (superadmin belgilaydi).
+  grantablePermissions String[]                 @default([]) @map("grantable_permissions")
+  /// Bu adminni yaratgan admin (superadmin yaratgan bo‘lsa ham yoziladi).
+  createdByAdminId     String?                  @map("created_by_admin_id") @db.Uuid
+  createdByAdmin       User?                    @relation("AdminCreator", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+  createdAdmins        User[]                   @relation("AdminCreator")
+  deletedAt            DateTime?                @map("deleted_at")
+  /// TZ 16: o‘chirish so‘rovi — 14 kun ichida bekor qilish mumkin, keyin anonimlashtiriladi.
+  deletionRequestedAt  DateTime?                @map("deletion_requested_at")
+  deletionScheduledAt  DateTime?                @map("deletion_scheduled_at")
+  anonymizedAt         DateTime?                @map("anonymized_at")
+  refreshTokens        RefreshToken[]
+  deviceSessions       DeviceSession[]
+  pushTokens           PushToken[]
+  otpCodes             OtpCode[]
+  policies             PolicyAcceptance[]
+  notifications        Notification[]
+  auditLogs            AuditLog[]               @relation("AuditActor")
+  errorLogs            ErrorLog[]               @relation("ErrorLogUser")
+  outboxEvents         OutboxEvent[]            @relation("OutboxCreator")
+  mediaAssets          MediaAsset[]             @relation("MediaUploader")
+  shopMemberships      ShopMember[]             @relation("ShopMemberUser")
+  sentShopInvitations  ShopInvitation[]         @relation("InvitationSender")
+  createdShops         Shop[]                   @relation("ShopCreator")
+  quoteRequests        QuoteRequest[]           @relation("UserQuoteRequests")
+  installations        Installation[]           @relation("UserInstallations")
+  reviews              Review[]                 @relation("UserReviews")
+  favorites            Favorite[]               @relation("UserFavorites")
+  reportJobs           ReportJob[]              @relation("UserReportJobs")
+  notificationPrefs    NotificationPreference[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model UserRole {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  role   Role
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+  @@map("user_roles")
+}
+
+model PushToken {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  token      String   @unique @db.VarChar(512)
+  platform   String   @default("android") @db.VarChar(16)
+  /// Qaysi panel ilovasi (customer/master): bildirishnoma mazmuni shunga moslanadi.
+  panel      String?  @db.VarChar(16)
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now()) @map("last_seen_at")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_tokens")
+}
+
+model DeviceSession {
+  id         String        @id @default(uuid()) @db.Uuid
+  userId     String        @db.Uuid
+  deviceId   String        @db.VarChar(255)
+  status     SessionStatus @default(ACTIVE)
+  lastSeenAt DateTime      @default(now()) @map("last_seen_at")
+  createdAt  DateTime      @default(now())
+  revokedAt  DateTime?     @map("revoked_at")
+  userAgent  String?       @map("user_agent") @db.VarChar(400)
+  ipAddress  String?       @map("ip_address") @db.VarChar(64)
+  panel      String?       @db.VarChar(16)
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceId])
+  @@index([userId, status])
+  @@map("device_sessions")
+}
+
+model RefreshToken {
+  id         String        @id @default(uuid()) @db.Uuid
+  userId     String        @db.Uuid
+  tokenHash  String        @unique @map("token_hash") @db.VarChar(255)
+  familyId   String        @db.Uuid
+  deviceId   String        @db.VarChar(255)
+  status     SessionStatus @default(ACTIVE)
+  expiresAt  DateTime      @map("expires_at")
+  revokedAt  DateTime?     @map("revoked_at")
+  lastSeenAt DateTime      @default(now()) @map("last_seen_at")
+  createdAt  DateTime      @default(now())
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, deviceId, status])
+  @@index([userId, status])
+  @@index([familyId])
+  @@index([familyId, deviceId, status])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+model BlockedPhone {
+  id          String   @id @default(uuid()) @db.Uuid
+  phone       String   @unique @db.VarChar(32)
+  reason      String?  @db.VarChar(500)
+  blockedById String?  @map("blocked_by_id") @db.Uuid
+  createdAt   DateTime @default(now())
+
+  @@map("blocked_phones")
+}
+
+model OtpCode {
+  id          String     @id @default(uuid()) @db.Uuid
+  userId      String?    @db.Uuid
+  phone       String     @db.VarChar(32)
+  codeHash    String     @map("code_hash") @db.VarChar(255)
+  purpose     OtpPurpose
+  status      OtpStatus  @default(ACTIVE)
+  attempts    Int        @default(0)
+  maxAttempts Int        @default(5) @map("max_attempts")
+  expiresAt   DateTime   @map("expires_at")
+  verifiedAt  DateTime?  @map("verified_at")
+  ipAddress   String?    @map("ip_address") @db.VarChar(64)
+  panel       String?    @db.VarChar(16)
+  createdAt   DateTime   @default(now())
+  user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([phone, purpose, status])
+  @@index([ipAddress, purpose, createdAt])
+  @@index([expiresAt])
+  @@map("otp_codes")
+}
+
+model PolicyVersion {
+  id          String             @id @default(uuid()) @db.Uuid
+  type        PolicyType
+  version     String             @db.VarChar(50)
+  title       String             @db.VarChar(255)
+  content     String
+  status      PolicyStatus       @default(DRAFT)
+  publishedAt DateTime?          @map("published_at")
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  acceptances PolicyAcceptance[]
+
+  @@unique([type, version])
+  @@index([type, status])
+  @@map("policy_versions")
+}
+
+model PolicyAcceptance {
+  id         String        @id @default(uuid()) @db.Uuid
+  userId     String        @db.Uuid
+  policyId   String        @db.Uuid
+  acceptedAt DateTime      @default(now()) @map("accepted_at")
+  ipAddress  String?       @map("ip_address") @db.VarChar(64)
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  policy     PolicyVersion @relation(fields: [policyId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, policyId])
+  @@index([policyId])
+  @@map("policy_acceptances")
+}
+
+model Notification {
+  id           String              @id @default(uuid()) @db.Uuid
+  userId       String              @db.Uuid
+  channel      NotificationChannel
+  title        String              @db.VarChar(255)
+  body         String
+  template     String?             @db.VarChar(150)
+  data         Json?
+  status       NotificationStatus  @default(PENDING)
+  sentAt       DateTime?           @map("sent_at")
+  readAt       DateTime?           @map("read_at")
+  error        String?
+  /// SMS tungi vaqtda (22:00–08:00) kechiktiriladi (TZ 14.2) — shu vaqtda yuboriladi.
+  scheduledFor DateTime?           @map("scheduled_for")
+  createdAt    DateTime            @default(now())
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status, createdAt])
+  @@index([channel, status])
+  @@index([status, scheduledFor])
+  @@map("notifications")
+}
+
+model MediaAsset {
+  id                 String           @id @default(uuid()) @db.Uuid
+  uploaderId         String           @db.Uuid
+  kind               MediaAssetKind
+  status             MediaAssetStatus @default(UPLOADING)
+  quarantineKey      String?          @map("quarantine_key")
+  originalKey        String?          @map("original_key")
+  thumbnailKey       String?          @map("thumbnail_key")
+  mediumKey          String?          @map("medium_key")
+  originalName       String           @map("original_name") @db.VarChar(255)
+  declaredMimeType   String           @map("declared_mime_type") @db.VarChar(150)
+  detectedMimeType   String?          @map("detected_mime_type") @db.VarChar(150)
+  sizeBytes          BigInt           @map("size_bytes")
+  scanResult         String?          @map("scan_result") @db.VarChar(50)
+  rejectionReason    String?          @map("rejection_reason")
+  linkedResourceType String?          @map("linked_resource_type") @db.VarChar(50)
+  linkedResourceId   String?          @map("linked_resource_id") @db.Uuid
+  attempts           Int              @default(0)
+  lastError          String?          @map("last_error")
+  cleanedUpAt        DateTime?        @map("cleaned_up_at")
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  uploader           User             @relation("MediaUploader", fields: [uploaderId], references: [id], onDelete: Restrict)
+  avatarOf           User?            @relation("UserAvatar")
+
+  @@index([uploaderId, status])
+  @@index([linkedResourceType, linkedResourceId])
+  @@index([status, updatedAt])
+  @@map("media_assets")
+}
+
+model IdempotencyKey {
+  id             String   @id @default(uuid()) @db.Uuid
+  key            String   @db.VarChar(255)
+  userId         String   @db.Uuid
+  method         String   @db.VarChar(10)
+  endpoint       String   @db.VarChar(255)
+  requestHash    String   @map("request_hash") @db.VarChar(255)
+  responseStatus Int?     @map("response_status")
+  responseBody   Json?
+  resourceType   String?  @map("resource_type") @db.VarChar(100)
+  resourceId     String?  @map("resource_id") @db.Uuid
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime @map("expires_at")
+
+  @@unique([userId, method, endpoint, key])
+  @@index([expiresAt])
+  @@map("idempotency_keys")
+}
+
+model OutboxEvent {
+  id            String       @id @default(uuid()) @db.Uuid
+  eventName     String       @map("event_name") @db.VarChar(150)
+  eventVersion  Int          @default(1) @map("event_version")
+  aggregateType String       @map("aggregate_type") @db.VarChar(100)
+  aggregateId   String       @map("aggregate_id") @db.Uuid
+  payload       Json
+  status        OutboxStatus @default(PENDING)
+  attempts      Int          @default(0)
+  availableAt   DateTime     @default(now()) @map("available_at")
+  publishedAt   DateTime?    @map("published_at")
+  lastError     String?      @map("last_error")
+  createdById   String?      @db.Uuid
+  createdAt     DateTime     @default(now())
+  createdBy     User?        @relation("OutboxCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([status, availableAt])
+  @@index([aggregateType, aggregateId])
+  @@map("outbox_events")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  actorId    String?  @db.Uuid
+  action     String   @db.VarChar(150)
+  targetType String?  @map("target_type") @db.VarChar(100)
+  targetId   String?  @map("target_id") @db.Uuid
+  before     Json?
+  after      Json?
+  reason     String?
+  ipAddress  String?  @map("ip_address") @db.VarChar(64)
+  device     String?
+  requestId  String?  @map("request_id") @db.VarChar(100)
+  createdAt  DateTime @default(now())
+  actor      User?    @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId, createdAt])
+  @@index([targetType, targetId, createdAt])
+  @@index([action, createdAt])
+  @@map("audit_logs")
+}
+
+model ErrorLog {
+  id          String    @id @default(uuid()) @db.Uuid
+  /// SERVER | CLIENT
+  source      String    @db.VarChar(16)
+  /// HTTP | UNHANDLED | UI_CRASH | UI_ERROR | API_ERROR | NETWORK
+  kind        String    @db.VarChar(32)
+  /// ERROR (5xx, qulash) | WARNING (4xx, foydalanuvchi xatosi)
+  severity    String    @db.VarChar(16)
+  status      Int?
+  code        String?   @db.VarChar(100)
+  message     String
+  stack       String?
+  method      String?   @db.VarChar(10)
+  path        String?   @db.VarChar(500)
+  pageUrl     String?   @map("page_url") @db.VarChar(500)
+  requestId   String?   @map("request_id") @db.VarChar(100)
+  userId      String?   @map("user_id") @db.Uuid
+  userRole    String?   @map("user_role") @db.VarChar(20)
+  panel       String?   @db.VarChar(20)
+  platform    String?   @db.VarChar(20)
+  userAgent   String?   @map("user_agent") @db.VarChar(400)
+  ipAddress   String?   @map("ip_address") @db.VarChar(64)
+  appVersion  String?   @map("app_version") @db.VarChar(40)
+  context     Json?
+  /// Bir xil xatoliklarni guruhlash uchun (manba+tur+kod+status+yo‘l shabloni+xabar boshi).
+  fingerprint String    @db.VarChar(64)
+  resolvedAt  DateTime? @map("resolved_at")
+  createdAt   DateTime  @default(now())
+  user        User?     @relation("ErrorLogUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([fingerprint, createdAt])
+  @@index([userId, createdAt])
+  @@index([source, severity, createdAt])
+  @@index([resolvedAt])
+  @@map("error_logs")
+}
+
+// ───────────── Do‘kon (TZ 7.3) ─────────────
+
+enum ShopStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  SUSPENDED
+}
+
+enum ShopVerificationStatus {
+  NOT_SUBMITTED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum ShopCreatedSource {
+  SELF
+  ADMIN
+}
+
+enum ShopMemberRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+model Shop {
+  id                 String                     @id @default(uuid()) @db.Uuid
+  slug               String                     @unique @db.VarChar(120)
+  name               String                     @db.VarChar(120)
+  description        String?                    @db.VarChar(10000)
+  logoAssetId        String?                    @map("logo_asset_id") @db.Uuid
+  coverAssetId       String?                    @map("cover_asset_id") @db.Uuid
+  stir               String?                    @db.VarChar(9)
+  phone              String?                    @db.VarChar(32)
+  email              String?                    @db.VarChar(255)
+  verificationStatus ShopVerificationStatus     @default(NOT_SUBMITTED) @map("verification_status")
+  status             ShopStatus                 @default(DRAFT)
+  createdSource      ShopCreatedSource          @default(SELF) @map("created_source")
+  createdByUserId    String?                    @map("created_by_user_id") @db.Uuid
+  createdBy          User?                      @relation("ShopCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  suspendedAt        DateTime?                  @map("suspended_at")
+  suspendReason      String?                    @map("suspend_reason") @db.VarChar(2000)
+  avgResponseMinutes Int?                       @map("avg_response_minutes")
+  ratingAvg          Decimal                    @default(0) @map("rating_avg") @db.Decimal(3, 2)
+  ratingCount        Int                        @default(0) @map("rating_count")
+  archivedAt         DateTime?                  @map("archived_at")
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+  members            ShopMember[]
+  invitations        ShopInvitation[]
+  verificationDocs   ShopVerificationDocument[]
+  branches           ShopBranch[]
+  products           ShopProduct[]
+  services           Service[]
+  importJobs         ImportJob[]
+  proposedModels     ProductModel[]             @relation("ProposedModels")
+  requestShops       QuoteRequestShop[]
+  quotes             Quote[]
+  installations      Installation[]
+  reviews            Review[]
+  favorites          Favorite[]
+  certifications     ShopCertification[]
+  projects           ShopProject[]
+  widget             WidgetConfig?
+  quoteTemplates     QuoteTemplate[]
+
+  @@index([status])
+  @@map("shops")
+}
+
+/// Do‘kon egaligining yagona manbai: memberRole = OWNER (har do‘konda aynan bitta — partial unique index, SQL migratsiyada).
+model ShopMember {
+  id            String             @id @default(uuid()) @db.Uuid
+  shopId        String             @map("shop_id") @db.Uuid
+  userId        String             @map("user_id") @db.Uuid
+  memberRole    ShopMemberRole     @map("member_role")
+  permissions   String[]           @default([])
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  shop          Shop               @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  user          User               @relation("ShopMemberUser", fields: [userId], references: [id], onDelete: Cascade)
+  assignedLeads QuoteRequestShop[]
+
+  @@unique([shopId, userId])
+  @@index([userId])
+  @@map("shop_members")
+}
+
+/// Yuridik shaxs ma’lumoti (TZ 7.2): accountType = BUSINESS bo‘lganda.
+model Organization {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @unique @map("user_id") @db.Uuid
+  name      String   @db.VarChar(200)
+  stir      String   @db.VarChar(9)
+  address   String?  @db.VarChar(500)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("organizations")
+}
+
+enum ShopInvitationPurpose {
+  INITIAL_OWNER
+  TRANSFER
+  MEMBER
+}
+
+enum ShopInvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
+/// TZ 3.7.2: egani/a’zoni taklif qilish (bir martalik token, 7 kun).
+model ShopInvitation {
+  id              String                @id @default(uuid()) @db.Uuid
+  shopId          String                @map("shop_id") @db.Uuid
+  invitedByUserId String                @map("invited_by_user_id") @db.Uuid
+  /// E.164 telefon yoki email.
+  target          String                @db.VarChar(255)
+  memberRole      ShopMemberRole        @map("member_role")
+  permissions     String[]              @default([])
+  purpose         ShopInvitationPurpose
+  tokenHash       String                @unique @map("token_hash") @db.VarChar(128)
+  status          ShopInvitationStatus  @default(PENDING)
+  expiresAt       DateTime              @map("expires_at")
+  acceptedAt      DateTime?             @map("accepted_at")
+  acceptedUserId  String?               @map("accepted_user_id") @db.Uuid
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  shop            Shop                  @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  invitedBy       User                  @relation("InvitationSender", fields: [invitedByUserId], references: [id], onDelete: Restrict)
+
+  @@index([shopId, status])
+  @@index([expiresAt])
+  @@map("shop_invitations")
+}
+
+enum ShopDocType {
+  REGISTRATION
+  LICENSE
+  OTHER
+}
+
+enum DocReviewStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model ShopVerificationDocument {
+  id         String          @id @default(uuid()) @db.Uuid
+  shopId     String          @map("shop_id") @db.Uuid
+  fileId     String          @map("file_id") @db.Uuid
+  docType    ShopDocType     @map("doc_type")
+  status     DocReviewStatus @default(PENDING)
+  reviewerId String?         @map("reviewer_id") @db.Uuid
+  reviewedAt DateTime?       @map("reviewed_at")
+  reason     String?         @db.VarChar(2000)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  shop       Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@index([shopId])
+  @@map("shop_verification_documents")
+}
+
+enum BranchStatus {
+  ACTIVE
+  INACTIVE
+}
+
+/// Filial. `location geography(Point,4326)` va ServiceArea — M3 (PostGIS) migratsiyasida qo‘shiladi.
+model ShopBranch {
+  id                    String                                @id @default(uuid()) @db.Uuid
+  shopId                String                                @map("shop_id") @db.Uuid
+  name                  String                                @db.VarChar(120)
+  address               String                                @db.VarChar(500)
+  regionCode            String?                               @map("region_code") @db.VarChar(32)
+  phone                 String?                               @db.VarChar(32)
+  openingHoursJson      Json?                                 @map("opening_hours_json")
+  holidayExceptionsJson Json?                                 @map("holiday_exceptions_json")
+  status                BranchStatus                          @default(ACTIVE)
+  version               Int                                   @default(1)
+  archivedAt            DateTime?                             @map("archived_at")
+  createdAt             DateTime                              @default(now())
+  updatedAt             DateTime                              @updatedAt
+  /// TZ 12: geography(Point,4326). Yozish/o‘qish faqat GeoRepository orqali ($queryRaw).
+  location              Unsupported("geography(Point,4326)")?
+  shop                  Shop                                  @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  offers                ProductOffer[]
+  services              Service[]
+  serviceAreas          ServiceArea[]
+
+  @@index([shopId])
+  @@map("shop_branches")
+}
+
+/// Filial xizmat hududi (TZ 7.4, 12): geography(MultiPolygon,4326), max 20 000 km².
+model ServiceArea {
+  id           String                                      @id @default(uuid()) @db.Uuid
+  branchId     String                                      @map("branch_id") @db.Uuid
+  geom         Unsupported("geography(MultiPolygon,4326)")
+  areaKm2      Decimal                                     @map("area_km2") @db.Decimal(12, 3)
+  serviceTypes ServiceType[]                               @map("service_types")
+  active       Boolean                                     @default(true)
+  createdAt    DateTime                                    @default(now())
+  updatedAt    DateTime                                    @updatedAt
+  branch       ShopBranch                                  @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@index([branchId])
+  @@map("service_areas")
+}
+
+enum SiteType {
+  HOUSE
+  BUSINESS
+  WAREHOUSE
+  GARAGE
+  OTHER
+}
+
+enum AreaType {
+  ROOF
+  GROUND
+  CARPORT
+}
+
+enum RoofShape {
+  FLAT
+  PITCHED
+}
+
+enum ShadingLevel {
+  NONE
+  LIGHT
+  HEAVY
+}
+
+/// Mijoz obyekti (TZ 7.5). Manzil va nuqta private: public API va do‘konga (kontakt ochilmaguncha) berilmaydi.
+model CustomerSite {
+  id           String                               @id @default(uuid()) @db.Uuid
+  userId       String                               @map("user_id") @db.Uuid
+  title        String                               @db.VarChar(120)
+  siteType     SiteType                             @default(HOUSE) @map("site_type")
+  address      String?                              @db.VarChar(500)
+  location     Unsupported("geography(Point,4326)")
+  regionCode   String?                              @map("region_code") @db.VarChar(32)
+  districtCode String?                              @map("district_code") @db.VarChar(32)
+  notes        String?                              @db.VarChar(2000)
+  archivedAt   DateTime?                            @map("archived_at")
+  createdAt    DateTime                             @default(now())
+  updatedAt    DateTime                             @updatedAt
+  user         User                                 @relation("UserSites", fields: [userId], references: [id], onDelete: Cascade)
+  areas        SiteArea[]
+
+  @@index([userId])
+  @@map("customer_sites")
+}
+
+/// O‘rnatish maydoni: geometry(Polygon,4326); maydonlar serverda ST_Area(polygon::geography) bilan (TZ 11.3).
+model SiteArea {
+  id               String                                @id @default(uuid()) @db.Uuid
+  siteId           String                                @map("site_id") @db.Uuid
+  name             String                                @db.VarChar(120)
+  areaType         AreaType                              @default(ROOF) @map("area_type")
+  roofShape        RoofShape                             @default(FLAT) @map("roof_shape")
+  polygon          Unsupported("geometry(Polygon,4326)")
+  projectedAreaM2  Decimal                               @map("projected_area_m2") @db.Decimal(12, 2)
+  surfaceAreaM2    Decimal                               @map("surface_area_m2") @db.Decimal(12, 2)
+  usableFactor     Decimal                               @map("usable_factor") @db.Decimal(4, 3)
+  usableAreaM2     Decimal                               @map("usable_area_m2") @db.Decimal(12, 2)
+  azimuthDeg       Int?                                  @map("azimuth_deg")
+  tiltDeg          Decimal?                              @map("tilt_deg") @db.Decimal(5, 2)
+  shadingLevel     ShadingLevel                          @default(NONE) @map("shading_level")
+  obstacleInfoJson Json?                                 @map("obstacle_info_json")
+  createdAt        DateTime                              @default(now())
+  updatedAt        DateTime                              @updatedAt
+  site             CustomerSite                          @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId])
+  @@map("site_areas")
+}
+
+// ───────────── Katalog (TZ 7.4) ─────────────
+
+model Category {
+  id                  String         @id @default(uuid()) @db.Uuid
+  parentId            String?        @map("parent_id") @db.Uuid
+  slug                String         @unique @db.VarChar(120)
+  nameI18n            Json           @map("name_i18n")
+  descriptionI18n     Json?          @map("description_i18n")
+  /// Filtr va forma uchun atributlar sxemasi (U7.5).
+  attributeSchemaJson Json?          @map("attribute_schema_json")
+  active              Boolean        @default(true)
+  sortOrder           Int            @default(0) @map("sort_order")
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  parent              Category?      @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children            Category[]     @relation("CategoryTree")
+  models              ProductModel[]
+
+  @@index([parentId])
+  @@map("categories")
+}
+
+enum ProductModelStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  MERGED
+}
+
+/// Yagona uskuna katalogi: bir model — bitta yozuv, do‘konlar unga o‘z narxini qo‘shadi.
+model ProductModel {
+  id                    String              @id @default(uuid()) @db.Uuid
+  categoryId            String              @map("category_id") @db.Uuid
+  brand                 String              @db.VarChar(120)
+  model                 String              @db.VarChar(160)
+  slug                  String              @unique @db.VarChar(200)
+  status                ProductModelStatus  @default(PENDING)
+  mergedIntoId          String?             @map("merged_into_id") @db.Uuid
+  rejectReason          String?             @map("reject_reason") @db.VarChar(2000)
+  nominalPowerW         Int?                @map("nominal_power_w")
+  efficiencyPct         Decimal?            @map("efficiency_pct") @db.Decimal(7, 4)
+  widthMm               Int?                @map("width_mm")
+  heightMm              Int?                @map("height_mm")
+  weightKg              Decimal?            @map("weight_kg") @db.Decimal(8, 2)
+  tempCoeffPmaxPctPerC  Decimal?            @map("temp_coeff_pmax_pct_per_c") @db.Decimal(7, 4)
+  vocV                  Decimal?            @map("voc_v") @db.Decimal(8, 3)
+  vmpV                  Decimal?            @map("vmp_v") @db.Decimal(8, 3)
+  iscA                  Decimal?            @map("isc_a") @db.Decimal(8, 3)
+  impA                  Decimal?            @map("imp_a") @db.Decimal(8, 3)
+  degradationPctPerYear Decimal?            @map("degradation_pct_per_year") @db.Decimal(7, 4)
+  inverterAcKw          Decimal?            @map("inverter_ac_kw") @db.Decimal(12, 4)
+  inverterMaxDcV        Decimal?            @map("inverter_max_dc_v") @db.Decimal(8, 2)
+  mpptMinV              Decimal?            @map("mppt_min_v") @db.Decimal(8, 2)
+  mpptMaxV              Decimal?            @map("mppt_max_v") @db.Decimal(8, 2)
+  mpptMaxCurrentA       Decimal?            @map("mppt_max_current_a") @db.Decimal(8, 2)
+  batteryVoltageV       Decimal?            @map("battery_voltage_v") @db.Decimal(8, 2)
+  batteryCapacityKwh    Decimal?            @map("battery_capacity_kwh") @db.Decimal(14, 4)
+  batteryUsableDod      Decimal?            @map("battery_usable_dod") @db.Decimal(7, 6)
+  batteryChemistry      String?             @map("battery_chemistry") @db.VarChar(40)
+  batteryCycles         Int?                @map("battery_cycles")
+  warrantyMonths        Int?                @map("warranty_months")
+  specsJson             Json?               @map("specs_json")
+  datasheetFileId       String?             @map("datasheet_file_id") @db.Uuid
+  proposedByShopId      String?             @map("proposed_by_shop_id") @db.Uuid
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  category              Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  mergedInto            ProductModel?       @relation("ModelMerge", fields: [mergedIntoId], references: [id], onDelete: SetNull)
+  mergedFrom            ProductModel[]      @relation("ModelMerge")
+  proposedByShop        Shop?               @relation("ProposedModels", fields: [proposedByShopId], references: [id], onDelete: SetNull)
+  images                ProductModelImage[]
+  shopProducts          ShopProduct[]
+  favorites             Favorite[]
+
+  @@unique([brand, model])
+  @@index([categoryId, status])
+  @@index([nominalPowerW])
+  @@index([batteryCapacityKwh])
+  @@index([inverterAcKw])
+  @@map("product_models")
+}
+
+model ProductModelImage {
+  id             String       @id @default(uuid()) @db.Uuid
+  productModelId String       @map("product_model_id") @db.Uuid
+  fileId         String       @map("file_id") @db.Uuid
+  altText        String?      @map("alt_text") @db.VarChar(255)
+  sortOrder      Int          @default(0) @map("sort_order")
+  productModel   ProductModel @relation(fields: [productModelId], references: [id], onDelete: Cascade)
+
+  @@index([productModelId])
+  @@map("product_model_images")
+}
+
+enum ShopProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+model ShopProduct {
+  id             String            @id @default(uuid()) @db.Uuid
+  shopId         String            @map("shop_id") @db.Uuid
+  productModelId String            @map("product_model_id") @db.Uuid
+  description    String?           @db.VarChar(10000)
+  status         ShopProductStatus @default(DRAFT)
+  version        Int               @default(1)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  shop           Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  productModel   ProductModel      @relation(fields: [productModelId], references: [id], onDelete: Restrict)
+  offers         ProductOffer[]
+
+  @@unique([shopId, productModelId])
+  @@index([shopId, status])
+  @@map("shop_products")
+}
+
+enum Currency {
+  UZS
+  USD
+}
+
+enum StockStatus {
+  IN_STOCK
+  ON_ORDER
+  OUT_OF_STOCK
+}
+
+model ProductOffer {
+  id            String      @id @default(uuid()) @db.Uuid
+  shopProductId String      @map("shop_product_id") @db.Uuid
+  branchId      String?     @map("branch_id") @db.Uuid
+  price         Decimal     @db.Decimal(18, 2)
+  currency      Currency    @default(UZS)
+  vatIncluded   Boolean     @default(true) @map("vat_included")
+  stockStatus   StockStatus @default(IN_STOCK) @map("stock_status")
+  quantity      Int?
+  validFrom     DateTime    @default(now()) @map("valid_from") @db.Date
+  validUntil    DateTime?   @map("valid_until") @db.Date
+  version       Int         @default(1)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  shopProduct   ShopProduct @relation(fields: [shopProductId], references: [id], onDelete: Cascade)
+  branch        ShopBranch? @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@index([shopProductId, branchId, stockStatus])
+  @@map("product_offers")
+}
+
+enum ServiceType {
+  INSTALLATION
+  SITE_VISIT
+  AUDIT
+  MAINTENANCE
+  DELIVERY
+}
+
+enum PricingModel {
+  FIXED
+  FROM
+  PER_KW
+  PER_UNIT
+  QUOTE_REQUIRED
+}
+
+model Service {
+  id              String       @id @default(uuid()) @db.Uuid
+  shopId          String       @map("shop_id") @db.Uuid
+  branchId        String?      @map("branch_id") @db.Uuid
+  serviceType     ServiceType  @map("service_type")
+  pricingModel    PricingModel @map("pricing_model")
+  price           Decimal?     @db.Decimal(18, 2)
+  currency        Currency     @default(UZS)
+  descriptionI18n Json?        @map("description_i18n")
+  warrantyMonths  Int?         @map("warranty_months")
+  active          Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  shop            Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  branch          ShopBranch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@index([shopId, serviceType, active])
+  @@map("services")
+}
+
+model ExchangeRate {
+  id        String   @id @default(uuid()) @db.Uuid
+  currency  Currency
+  rateToUzs Decimal  @map("rate_to_uzs") @db.Decimal(18, 6)
+  rateDate  DateTime @map("rate_date") @db.Date
+  source    String   @db.VarChar(255)
+  fetchedAt DateTime @default(now()) @map("fetched_at")
+
+  @@unique([currency, rateDate])
+  @@map("exchange_rates")
+}
+
+enum ImportStatus {
+  UPLOADED
+  VALIDATED
+  APPLIED
+  FAILED
+}
+
+model ImportJob {
+  id          String       @id @default(uuid()) @db.Uuid
+  shopId      String       @map("shop_id") @db.Uuid
+  createdById String       @map("created_by_id") @db.Uuid
+  fileName    String       @map("file_name") @db.VarChar(255)
+  status      ImportStatus @default(UPLOADED)
+  rowCount    Int          @default(0) @map("row_count")
+  errorCount  Int          @default(0) @map("error_count")
+  /// Tekshirilgan qatorlar (qo‘llash uchun) va xatolar (qator, ustun, sabab).
+  rowsJson    Json?        @map("rows_json")
+  errorsJson  Json?        @map("errors_json")
+  appliedAt   DateTime?    @map("applied_at")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  shop        Shop         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@index([shopId, createdAt])
+  @@map("import_jobs")
+}
+
+// ───────────── M4: hisoblash ma’lumotlari (TZ 7.5) ─────────────
+
+enum CustomerType {
+  HOUSEHOLD
+  LEGAL
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum TouPeriodType {
+  ALL
+  DAY
+  NIGHT
+}
+
+enum CompensationType {
+  NONE
+  NET_METERING
+  NET_BILLING
+  FEED_IN
+}
+
+enum SettlementPeriod {
+  MONTH
+  YEAR
+}
+
+enum FinancingType {
+  BANK_LOAN
+  INSTALLMENT
+  LEASING
+}
+
+enum PaymentType {
+  ANNUITY
+  DIFFERENTIATED
+}
+
+enum SolarProvider {
+  PVGIS
+  NASA_POWER
+  DEFAULT
+}
+
+enum DatasetStatus {
+  FRESH
+  STALE
+  FAILED
+}
+
+enum SystemType {
+  ON_GRID
+  HYBRID
+  OFF_GRID
+}
+
+enum CalcMode {
+  QUICK
+  DETAILED
+}
+
+enum ProductionMethod {
+  A_PV_YIELD
+  B_IRRADIANCE
+  DEFAULT
+}
+
+/// Tarif jadvali: hudud + iste’molchi turi + amal davri (PUBLISHED davrlar kesishmaydi — exclusion constraint).
+model TariffSchedule {
+  id                 String            @id @default(uuid()) @db.Uuid
+  regionCode         String            @map("region_code") @db.VarChar(32)
+  customerType       CustomerType      @map("customer_type")
+  title              String            @db.VarChar(200)
+  billingPeriod      String            @default("MONTH") @map("billing_period") @db.VarChar(16)
+  fixedChargeMonthly Decimal?          @map("fixed_charge_monthly") @db.Decimal(18, 2)
+  touEnabled         Boolean           @default(false) @map("tou_enabled")
+  sourceUrl          String?           @map("source_url") @db.VarChar(1000)
+  verifiedAt         DateTime?         @map("verified_at")
+  verifiedById       String?           @map("verified_by_id") @db.Uuid
+  effectiveFrom      DateTime          @map("effective_from") @db.Date
+  effectiveUntil     DateTime?         @map("effective_until") @db.Date
+  status             PublishStatus     @default(DRAFT)
+  version            Int               @default(1)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  tiers              TariffTier[]
+  touPeriods         TariffTouPeriod[]
+
+  @@index([regionCode, customerType, status, effectiveFrom])
+  @@map("tariff_schedules")
+}
+
+model TariffTier {
+  id           String         @id @default(uuid()) @db.Uuid
+  scheduleId   String         @map("schedule_id") @db.Uuid
+  seasonMonths Int[]          @default([]) @map("season_months")
+  touPeriod    TouPeriodType  @default(ALL) @map("tou_period")
+  minKwh       Decimal        @map("min_kwh") @db.Decimal(14, 3)
+  maxKwh       Decimal?       @map("max_kwh") @db.Decimal(14, 3)
+  ratePerKwh   Decimal        @map("rate_per_kwh") @db.Decimal(18, 6)
+  currency     Currency       @default(UZS)
+  notes        String?        @db.VarChar(500)
+  schedule     TariffSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId])
+  @@map("tariff_tiers")
+}
+
+model TariffTouPeriod {
+  id         String         @id @default(uuid()) @db.Uuid
+  scheduleId String         @map("schedule_id") @db.Uuid
+  touPeriod  TouPeriodType  @map("tou_period")
+  startHour  Int            @map("start_hour")
+  endHour    Int            @map("end_hour")
+  schedule   TariffSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId])
+  @@map("tariff_tou_periods")
+}
+
+model ExportRule {
+  id               String           @id @default(uuid()) @db.Uuid
+  regionCode       String           @map("region_code") @db.VarChar(32)
+  customerType     CustomerType     @map("customer_type")
+  compensationType CompensationType @map("compensation_type")
+  ratePerKwh       Decimal?         @map("rate_per_kwh") @db.Decimal(18, 6)
+  settlementPeriod SettlementPeriod @default(MONTH) @map("settlement_period")
+  maxSystemKw      Decimal?         @map("max_system_kw") @db.Decimal(12, 3)
+  eligibilityJson  Json?            @map("eligibility_json")
+  currency         Currency         @default(UZS)
+  sourceUrl        String?          @map("source_url") @db.VarChar(1000)
+  verifiedAt       DateTime?        @map("verified_at")
+  effectiveFrom    DateTime         @map("effective_from") @db.Date
+  effectiveUntil   DateTime?        @map("effective_until") @db.Date
+  status           PublishStatus    @default(DRAFT)
+  version          Int              @default(1)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([regionCode, customerType, status, effectiveFrom])
+  @@map("export_rules")
+}
+
+model GridConnectionLimit {
+  id            String        @id @default(uuid()) @db.Uuid
+  regionCode    String        @map("region_code") @db.VarChar(32)
+  customerType  CustomerType  @map("customer_type")
+  maxKw         Decimal       @map("max_kw") @db.Decimal(12, 3)
+  sourceUrl     String?       @map("source_url") @db.VarChar(1000)
+  verifiedAt    DateTime?     @map("verified_at")
+  effectiveFrom DateTime      @map("effective_from") @db.Date
+  status        PublishStatus @default(DRAFT)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([regionCode, customerType, status])
+  @@map("grid_connection_limits")
+}
+
+model LoadProfile {
+  id                String    @id @default(uuid()) @db.Uuid
+  code              String    @unique @db.VarChar(40)
+  nameI18n          Json      @map("name_i18n")
+  monthlyFactors    Decimal[] @map("monthly_factors") @db.Decimal(8, 5)
+  hourlyFactorsJson Json      @map("hourly_factors_json")
+  active            Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("load_profiles")
+}
+
+model ApplianceType {
+  id                  String    @id @default(uuid()) @db.Uuid
+  code                String    @unique @db.VarChar(40)
+  nameI18n            Json      @map("name_i18n")
+  defaultPowerW       Int       @map("default_power_w")
+  defaultHoursPerDay  Decimal   @map("default_hours_per_day") @db.Decimal(5, 2)
+  defaultMonths       Int[]     @default([]) @map("default_months")
+  surgeFactor         Decimal   @default(1) @map("surge_factor") @db.Decimal(5, 2)
+  hourlyUsageTemplate Decimal[] @map("hourly_usage_template") @db.Decimal(8, 5)
+  isMotorLoad         Boolean   @default(false) @map("is_motor_load")
+  active              Boolean   @default(true)
+  sortOrder           Int       @default(0) @map("sort_order")
+
+  @@map("appliance_types")
+}
+
+model ApplianceTemplate {
+  id           String       @id @default(uuid()) @db.Uuid
+  code         String       @unique @db.VarChar(40)
+  nameI18n     Json         @map("name_i18n")
+  itemsJson    Json         @map("items_json")
+  customerType CustomerType @default(HOUSEHOLD) @map("customer_type")
+  active       Boolean      @default(true)
+  sortOrder    Int          @default(0) @map("sort_order")
+
+  @@map("appliance_templates")
+}
+
+model FinancingProduct {
+  id                String         @id @default(uuid()) @db.Uuid
+  providerName      String         @map("provider_name") @db.VarChar(200)
+  financingType     FinancingType  @map("financing_type")
+  annualRate        Decimal        @map("annual_rate") @db.Decimal(18, 6)
+  minTermMonths     Int            @map("min_term_months")
+  maxTermMonths     Int            @map("max_term_months")
+  allowedTerms      Int[]          @default([]) @map("allowed_terms")
+  minDownPaymentPct Decimal        @default(0) @map("min_down_payment_pct") @db.Decimal(7, 4)
+  maxAmount         Decimal?       @map("max_amount") @db.Decimal(18, 2)
+  oneTimeFeePct     Decimal        @default(0) @map("one_time_fee_pct") @db.Decimal(7, 4)
+  monthlyFee        Decimal        @default(0) @map("monthly_fee") @db.Decimal(18, 2)
+  paymentType       PaymentType    @default(ANNUITY) @map("payment_type")
+  customerTypes     CustomerType[] @map("customer_types")
+  sourceUrl         String?        @map("source_url") @db.VarChar(1000)
+  verifiedAt        DateTime?      @map("verified_at")
+  effectiveFrom     DateTime       @map("effective_from") @db.Date
+  effectiveUntil    DateTime?      @map("effective_until") @db.Date
+  status            PublishStatus  @default(DRAFT)
+  version           Int            @default(1)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@index([status, effectiveFrom])
+  @@map("financing_products")
+}
+
+model CalculationSettings {
+  id             String        @id @default(uuid()) @db.Uuid
+  modelVersion   String        @unique @map("model_version") @db.VarChar(40)
+  parametersJson Json          @map("parameters_json")
+  sourceNotes    String?       @map("source_notes") @db.VarChar(4000)
+  effectiveFrom  DateTime      @map("effective_from") @db.Date
+  effectiveUntil DateTime?     @map("effective_until") @db.Date
+  status         PublishStatus @default(DRAFT)
+  createdById    String?       @map("created_by_id") @db.Uuid
+  version        Int           @default(1)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([status, effectiveFrom])
+  @@map("calculation_settings")
+}
+
+/// 1 kWp normallashgan soatlik qator keshi (TZ 11.6): cellKey 0,05° to‘r, tilt/azimut 5° qadam, 180 kun.
+model SolarDataset {
+  id                   String        @id @default(uuid()) @db.Uuid
+  provider             SolarProvider
+  cellKey              String        @map("cell_key") @db.VarChar(40)
+  tiltBucket           Int           @map("tilt_bucket")
+  azimuthBucket        Int           @map("azimuth_bucket")
+  database             String        @default("") @db.VarChar(40)
+  datasetVersion       String        @default("") @map("dataset_version") @db.VarChar(40)
+  objectKey            String?       @map("object_key") @db.VarChar(300)
+  annualYieldKwhPerKwp Decimal       @map("annual_yield_kwh_per_kwp") @db.Decimal(10, 2)
+  monthlyYieldJson     Json          @map("monthly_yield_json")
+  fetchedAt            DateTime      @default(now()) @map("fetched_at")
+  expiresAt            DateTime      @map("expires_at")
+  status               DatasetStatus @default(FRESH)
+
+  @@unique([provider, cellKey, tiltBucket, azimuthBucket, database])
+  @@map("solar_datasets")
+}
+
+/// DEFAULT usuli: viloyat bo‘yicha oylik specific yield (kWh/kWp/oy), admin kiritadi.
+model RegionalYield {
+  id               String   @id @default(uuid()) @db.Uuid
+  regionCode       String   @unique @map("region_code") @db.VarChar(32)
+  monthlyYieldJson Json     @map("monthly_yield_json")
+  sourceNote       String?  @map("source_note") @db.VarChar(1000)
+  updatedAt        DateTime @updatedAt
+
+  @@map("regional_yields")
+}
+
+model Calculation {
+  id                    String           @id @default(uuid()) @db.Uuid
+  userId                String           @map("user_id") @db.Uuid
+  siteId                String?          @map("site_id") @db.Uuid
+  title                 String?          @db.VarChar(200)
+  mode                  CalcMode
+  systemType            SystemType       @map("system_type")
+  inputSnapshotJson     Json             @map("input_snapshot_json")
+  outputSummaryJson     Json             @map("output_summary_json")
+  hourlySeriesObjectKey String?          @map("hourly_series_object_key") @db.VarChar(300)
+  modelVersion          String           @map("model_version") @db.VarChar(40)
+  calculationSettingsId String?          @map("calculation_settings_id") @db.Uuid
+  tariffScheduleId      String?          @map("tariff_schedule_id") @db.Uuid
+  exportRuleId          String?          @map("export_rule_id") @db.Uuid
+  financingProductId    String?          @map("financing_product_id") @db.Uuid
+  solarDatasetId        String?          @map("solar_dataset_id") @db.Uuid
+  exchangeRateId        String?          @map("exchange_rate_id") @db.Uuid
+  productionMethod      ProductionMethod @map("production_method")
+  archivedAt            DateTime?        @map("archived_at")
+  createdAt             DateTime         @default(now())
+  user                  User             @relation("UserCalculations", fields: [userId], references: [id], onDelete: Cascade)
+  reportJobs            ReportJob[]
+
+  @@index([userId, createdAt])
+  @@map("calculations")
+}
+
+/// Tugallanmagan hisob (TZ 7.5, U8.15): guest uchun cookie tokeni bo‘yicha, 7 kun.
+model CalculationDraft {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String?  @map("user_id") @db.Uuid
+  cookieTokenHash String   @unique @map("cookie_token_hash") @db.VarChar(128)
+  inputJson       Json     @map("input_json")
+  expiresAt       DateTime @map("expires_at")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([expiresAt])
+  @@index([userId])
+  @@map("calculation_drafts")
+}
+
+/// Read-only havola (TZ 9.9): manzil va poligon ko‘rsatilmaydi.
+model CalculationShare {
+  id            String    @id @default(uuid()) @db.Uuid
+  calculationId String    @map("calculation_id") @db.Uuid
+  tokenHash     String    @unique @map("token_hash") @db.VarChar(128)
+  expiresAt     DateTime? @map("expires_at")
+  revokedAt     DateTime? @map("revoked_at")
+  viewCount     Int       @default(0) @map("view_count")
+  createdAt     DateTime  @default(now())
+
+  @@index([calculationId])
+  @@map("calculation_shares")
+}
+
+enum ReportStatus {
+  QUEUED
+  RUNNING
+  READY
+  FAILED
+}
+
+/// PDF hisobot ishi (TZ 9.9): fon jobida tayyorlanadi, S3’da saqlanadi, 10 daqiqalik imzolangan havola bilan yuklab olinadi.
+model ReportJob {
+  id            String       @id @default(uuid()) @db.Uuid
+  userId        String       @map("user_id") @db.Uuid
+  calculationId String       @map("calculation_id") @db.Uuid
+  lang          String       @default("uz") @db.VarChar(8)
+  qrMode        String       @default("NONE") @map("qr_mode") @db.VarChar(16)
+  status        ReportStatus @default(QUEUED)
+  objectKey     String?      @map("object_key") @db.VarChar(300)
+  error         String?      @db.VarChar(1000)
+  createdAt     DateTime     @default(now())
+  finishedAt    DateTime?    @map("finished_at")
+  /// FK lar M5 migratsiyasida qo‘lda yaratilgan (nomlari saqlangan) — migrate diff ularni o‘chirmasligi uchun.
+  user          User         @relation("UserReportJobs", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "report_jobs_user_fkey")
+  calculation   Calculation  @relation(fields: [calculationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "report_jobs_calculation_fkey")
+
+  @@index([userId, createdAt])
+  @@map("report_jobs")
+}
+
+// ───────────── M6: so‘rov, yozishma, taklif, montaj, sharh (TZ 7.6, 7.7, 13) ─────────────
+
+enum QuoteRequestStatus {
+  OPEN
+  CLOSED_SELECTED
+  CLOSED_NO_SELECTION
+  EXPIRED
+  CANCELLED
+}
+
+enum RequestShopStatus {
+  SENT
+  VIEWED
+  CLARIFICATION_REQUESTED
+  QUOTED
+  DECLINED
+  SELECTED
+  NOT_SELECTED
+}
+
+enum PipelineStage {
+  NEW
+  CONTACTED
+  SITE_VISIT
+  PROPOSAL
+  WON
+  LOST
+}
+
+enum MessageSide {
+  CUSTOMER
+  SHOP
+  SYSTEM
+}
+
+enum SiteVisitStatus {
+  PROPOSED
+  CONFIRMED
+  DONE
+  CANCELLED
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  VIEWED
+  ACCEPTED
+  REJECTED
+  EXPIRED
+  WITHDRAWN
+}
+
+enum QuoteItemType {
+  EQUIPMENT
+  INSTALLATION
+  DELIVERY
+  OTHER
+}
+
+enum InstallationStatus {
+  AGREED
+  SITE_VISIT_SCHEDULED
+  INSTALLATION_SCHEDULED
+  INSTALLED
+  CONFIRMED
+  DISPUTED
+  CANCELLED
+}
+
+enum ModerationStatus {
+  PENDING
+  PUBLISHED
+  HIDDEN
+}
+
+enum ComplaintTargetType {
+  REVIEW
+  SHOP
+  PRODUCT_MODEL
+  MESSAGE
+  USER
+}
+
+enum ComplaintReason {
+  SPAM
+  FAKE
+  ABUSE
+  WRONG_INFO
+  OTHER
+}
+
+enum ComplaintStatus {
+  OPEN
+  RESOLVED
+  REJECTED
+}
+
+/// Mijozning taklif so‘rovi (TZ 7.6, 13.1). Do‘konlarga kontakt ochilmaguncha faqat hudud/parametrlar ko‘rinadi (13.2).
+model QuoteRequest {
+  id                 String             @id @default(uuid()) @db.Uuid
+  number             Int                @unique @default(autoincrement())
+  userId             String             @map("user_id") @db.Uuid
+  siteId             String?            @map("site_id") @db.Uuid
+  calculationId      String?            @map("calculation_id") @db.Uuid
+  title              String             @db.VarChar(200)
+  systemType         SystemType         @map("system_type")
+  requiredCapacityKw Decimal?           @map("required_capacity_kw") @db.Decimal(10, 2)
+  batteryNeeded      Boolean            @default(false) @map("battery_needed")
+  installationNeeded Boolean            @default(true) @map("installation_needed")
+  financingInterest  Boolean            @default(false) @map("financing_interest")
+  notes              String?            @db.VarChar(2000)
+  regionCode         String?            @map("region_code") @db.VarChar(32)
+  districtCode       String?            @map("district_code") @db.VarChar(32)
+  status             QuoteRequestStatus @default(OPEN)
+  /// PLATFORM yoki WIDGET (TZ 13.6) — analitika uchun.
+  source             String             @default("PLATFORM") @db.VarChar(16)
+  lastActivityAt     DateTime           @default(now()) @map("last_activity_at")
+  closedAt           DateTime?          @map("closed_at")
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  user               User               @relation("UserQuoteRequests", fields: [userId], references: [id], onDelete: Cascade)
+  shops              QuoteRequestShop[]
+  quotes             Quote[]
+
+  @@index([userId, status, createdAt])
+  @@index([status, lastActivityAt])
+  @@map("quote_requests")
+}
+
+model QuoteRequestShop {
+  id                String                @id @default(uuid()) @db.Uuid
+  requestId         String                @map("request_id") @db.Uuid
+  shopId            String                @map("shop_id") @db.Uuid
+  status            RequestShopStatus     @default(SENT)
+  contactRevealedAt DateTime?             @map("contact_revealed_at")
+  assignedMemberId  String?               @map("assigned_member_id") @db.Uuid
+  pipelineStage     PipelineStage         @default(NEW) @map("pipeline_stage")
+  declineReason     String?               @map("decline_reason") @db.VarChar(1000)
+  sentAt            DateTime              @default(now()) @map("sent_at")
+  viewedAt          DateTime?             @map("viewed_at")
+  firstResponseAt   DateTime?             @map("first_response_at")
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  request           QuoteRequest          @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  shop              Shop                  @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  assignedMember    ShopMember?           @relation(fields: [assignedMemberId], references: [id], onDelete: SetNull)
+  notes             ShopLeadNote[]
+  messages          ConversationMessage[]
+  siteVisits        SiteVisit[]
+
+  @@unique([requestId, shopId])
+  @@index([shopId, status])
+  @@map("quote_request_shops")
+}
+
+model ShopLeadNote {
+  id            String           @id @default(uuid()) @db.Uuid
+  requestShopId String           @map("request_shop_id") @db.Uuid
+  authorId      String           @map("author_id") @db.Uuid
+  body          String           @db.VarChar(4000)
+  createdAt     DateTime         @default(now())
+  requestShop   QuoteRequestShop @relation(fields: [requestShopId], references: [id], onDelete: Cascade)
+
+  @@index([requestShopId])
+  @@map("shop_lead_notes")
+}
+
+model ConversationMessage {
+  id                String           @id @default(uuid()) @db.Uuid
+  requestShopId     String           @map("request_shop_id") @db.Uuid
+  senderUserId      String?          @map("sender_user_id") @db.Uuid
+  senderSide        MessageSide      @map("sender_side")
+  body              String           @db.VarChar(4000)
+  /// Tizim xabari turi (STATUS, REVISION, SITE_VISIT, FIX_REQUEST …) — UI ikonasi uchun.
+  systemKind        String?          @map("system_kind") @db.VarChar(40)
+  attachmentFileIds String[]         @default([]) @map("attachment_file_ids") @db.Uuid
+  clientId          String?          @map("client_id") @db.VarChar(64)
+  readAt            DateTime?        @map("read_at")
+  createdAt         DateTime         @default(now())
+  requestShop       QuoteRequestShop @relation(fields: [requestShopId], references: [id], onDelete: Cascade)
+
+  @@unique([requestShopId, clientId])
+  @@index([requestShopId, createdAt])
+  @@map("conversation_messages")
+}
+
+model SiteVisit {
+  id                String           @id @default(uuid()) @db.Uuid
+  requestShopId     String           @map("request_shop_id") @db.Uuid
+  /// [{start, end}] ISO — 1..3 ta oraliq (U9.4).
+  proposedSlotsJson Json             @map("proposed_slots_json")
+  confirmedStart    DateTime?        @map("confirmed_start")
+  confirmedEnd      DateTime?        @map("confirmed_end")
+  status            SiteVisitStatus  @default(PROPOSED)
+  notes             String?          @db.VarChar(2000)
+  cancelReason      String?          @map("cancel_reason") @db.VarChar(1000)
+  proposedById      String           @map("proposed_by_id") @db.Uuid
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  requestShop       QuoteRequestShop @relation(fields: [requestShopId], references: [id], onDelete: Cascade)
+
+  @@index([requestShopId])
+  @@map("site_visits")
+}
+
+/// Tijoriy taklif (TZ 13.3). Jami summalar faqat serverda; bitta so‘rovga bitta do‘kondan bitta faol taklif (partial unique, SQL).
+model Quote {
+  id                         String                 @id @default(uuid()) @db.Uuid
+  requestId                  String                 @map("request_id") @db.Uuid
+  shopId                     String                 @map("shop_id") @db.Uuid
+  currentRevision            Int                    @default(0) @map("current_revision")
+  equipmentSubtotal          Decimal                @default(0) @map("equipment_subtotal") @db.Decimal(18, 2)
+  installationSubtotal       Decimal                @default(0) @map("installation_subtotal") @db.Decimal(18, 2)
+  deliveryCost               Decimal                @default(0) @map("delivery_cost") @db.Decimal(18, 2)
+  otherCosts                 Decimal                @default(0) @map("other_costs") @db.Decimal(18, 2)
+  discountAmount             Decimal                @default(0) @map("discount_amount") @db.Decimal(18, 2)
+  vatIncluded                Boolean                @default(true) @map("vat_included")
+  vatRate                    Decimal                @default(12) @map("vat_rate") @db.Decimal(5, 2)
+  vatAmount                  Decimal                @default(0) @map("vat_amount") @db.Decimal(18, 2)
+  total                      Decimal                @default(0) @db.Decimal(18, 2)
+  currency                   Currency               @default(UZS)
+  /// USD katalog narxlari so‘mga o‘girilganda ishlatilgan MB kursi (13.3).
+  exchangeRateUsd            Decimal?               @map("exchange_rate_usd") @db.Decimal(18, 6)
+  exchangeRateDate           DateTime?              @map("exchange_rate_date") @db.Date
+  systemPowerKw              Decimal?               @map("system_power_kw") @db.Decimal(10, 2)
+  systemType                 SystemType?            @map("system_type")
+  warrantyEquipmentMonths    Int?                   @map("warranty_equipment_months")
+  warrantyInstallationMonths Int?                   @map("warranty_installation_months")
+  warrantyText               String?                @map("warranty_text") @db.VarChar(4000)
+  durationDays               Int?                   @map("duration_days")
+  includedScope              String?                @map("included_scope") @db.VarChar(4000)
+  excludedScope              String?                @map("excluded_scope") @db.VarChar(4000)
+  validUntil                 DateTime?              @map("valid_until") @db.Date
+  status                     QuoteStatus            @default(DRAFT)
+  viewedAt                   DateTime?              @map("viewed_at")
+  sentAt                     DateTime?              @map("sent_at")
+  decidedAt                  DateTime?              @map("decided_at")
+  rejectReason               String?                @map("reject_reason") @db.VarChar(1000)
+  expiringNotifiedAt         DateTime?              @map("expiring_notified_at")
+  createdById                String                 @map("created_by_id") @db.Uuid
+  version                    Int                    @default(1)
+  createdAt                  DateTime               @default(now())
+  updatedAt                  DateTime               @updatedAt
+  request                    QuoteRequest           @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  shop                       Shop                   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  items                      QuoteItem[]
+  revisions                  QuoteRevision[]
+  financingOptions           QuoteFinancingOption[]
+  installation               Installation?
+
+  @@index([requestId, shopId, status])
+  @@index([status, validUntil])
+  @@map("quotes")
+}
+
+model QuoteRevision {
+  id           String   @id @default(uuid()) @db.Uuid
+  quoteId      String   @map("quote_id") @db.Uuid
+  revision     Int
+  snapshotJson Json     @map("snapshot_json")
+  createdBy    String   @map("created_by") @db.Uuid
+  createdAt    DateTime @default(now())
+  quote        Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@unique([quoteId, revision])
+  @@map("quote_revisions")
+}
+
+model QuoteItem {
+  id                String        @id @default(uuid()) @db.Uuid
+  quoteId           String        @map("quote_id") @db.Uuid
+  productModelId    String?       @map("product_model_id") @db.Uuid
+  serviceId         String?       @map("service_id") @db.Uuid
+  titleSnapshot     String        @map("title_snapshot") @db.VarChar(300)
+  specsSnapshotJson Json?         @map("specs_snapshot_json")
+  quantity          Decimal       @db.Decimal(12, 3)
+  unitPrice         Decimal       @map("unit_price") @db.Decimal(18, 2)
+  lineTotal         Decimal       @map("line_total") @db.Decimal(18, 2)
+  itemType          QuoteItemType @map("item_type")
+  sortOrder         Int           @default(0) @map("sort_order")
+  quote             Quote         @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@index([quoteId])
+  @@map("quote_items")
+}
+
+model QuoteFinancingOption {
+  id             String        @id @default(uuid()) @db.Uuid
+  quoteId        String        @map("quote_id") @db.Uuid
+  financingType  FinancingType @map("financing_type")
+  providerName   String        @map("provider_name") @db.VarChar(200)
+  annualRate     Decimal       @map("annual_rate") @db.Decimal(9, 6)
+  termMonths     Int           @map("term_months")
+  downPaymentPct Decimal       @default(0) @map("down_payment_pct") @db.Decimal(7, 4)
+  paymentType    PaymentType   @default(ANNUITY) @map("payment_type")
+  notes          String?       @db.VarChar(1000)
+  quote          Quote         @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+
+  @@index([quoteId])
+  @@map("quote_financing_options")
+}
+
+/// Qabul qilingan taklif bo‘yicha montaj (TZ 13.1, 13.7).
+model Installation {
+  id                   String             @id @default(uuid()) @db.Uuid
+  quoteId              String             @unique @map("quote_id") @db.Uuid
+  requestId            String             @map("request_id") @db.Uuid
+  userId               String             @map("user_id") @db.Uuid
+  shopId               String             @map("shop_id") @db.Uuid
+  status               InstallationStatus @default(AGREED)
+  scheduledDate        DateTime?          @map("scheduled_date") @db.Date
+  installedAt          DateTime?          @map("installed_at")
+  confirmedAt          DateTime?          @map("confirmed_at")
+  cancelReason         String?            @map("cancel_reason") @db.VarChar(1000)
+  disputeReason        String?            @map("dispute_reason") @db.VarChar(2000)
+  checklistTemplateId  String?            @map("checklist_template_id") @db.Uuid
+  /// [{code, status: OK/ISSUE/NA, comment, photoFileIds}]
+  checklistResultJson  Json?              @map("checklist_result_json")
+  checklistCompletedAt DateTime?          @map("checklist_completed_at")
+  /// Holatlar tarixi (U9.8 timeline): [{status, at, byUserId, side, note}]
+  historyJson          Json               @default("[]") @map("history_json")
+  remindersSent        Int                @default(0) @map("reminders_sent")
+  version              Int                @default(1)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  quote                Quote              @relation(fields: [quoteId], references: [id], onDelete: Restrict)
+  shop                 Shop               @relation(fields: [shopId], references: [id], onDelete: Restrict)
+  user                 User               @relation("UserInstallations", fields: [userId], references: [id], onDelete: Cascade)
+  review               Review?
+  installedSystem      InstalledSystem?
+
+  @@index([userId, status])
+  @@index([shopId, status])
+  @@map("installations")
+}
+
+model AcceptanceChecklistTemplate {
+  id         String     @id @default(uuid()) @db.Uuid
+  systemType SystemType @map("system_type")
+  version    Int
+  /// [{code, titleI18n, hintI18n, required, photoRequired, onlyWithBattery?}]
+  itemsJson  Json       @map("items_json")
+  active     Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+
+  @@unique([systemType, version])
+  @@map("acceptance_checklist_templates")
+}
+
+/// Montajdan keyingi tizim kartasi (TZ 7.6). Kabinet funksiyalari (o‘qishlar, eslatmalar) — M7.
+model InstalledSystem {
+  id                     String                @id @default(uuid()) @db.Uuid
+  userId                 String                @map("user_id") @db.Uuid
+  siteId                 String?               @map("site_id") @db.Uuid
+  installationId         String?               @unique @map("installation_id") @db.Uuid
+  systemPowerKw          Decimal               @map("system_power_kw") @db.Decimal(10, 2)
+  systemType             SystemType            @map("system_type")
+  componentsJson         Json                  @map("components_json")
+  checklistJson          Json?                 @map("checklist_json")
+  installedAt            DateTime              @map("installed_at")
+  expectedMonthlyKwhJson Json?                 @map("expected_monthly_kwh_json")
+  createdAt              DateTime              @default(now())
+  /// Platformadan tashqari o‘rnatilgan tizim uchun nom (mijoz qo‘lda qo‘shganda).
+  title                  String?               @db.VarChar(200)
+  archivedAt             DateTime?             @map("archived_at")
+  installation           Installation?         @relation(fields: [installationId], references: [id], onDelete: SetNull)
+  warranties             WarrantyItem[]
+  readings               ProductionReading[]
+  reminders              MaintenanceReminder[]
+
+  @@index([userId])
+  @@map("installed_systems")
+}
+
+model WarrantyItem {
+  id                String          @id @default(uuid()) @db.Uuid
+  installedSystemId String          @map("installed_system_id") @db.Uuid
+  component         String          @db.VarChar(200)
+  months            Int
+  startsAt          DateTime        @map("starts_at") @db.Date
+  endsAt            DateTime        @map("ends_at") @db.Date
+  installedSystem   InstalledSystem @relation(fields: [installedSystemId], references: [id], onDelete: Cascade)
+
+  @@index([installedSystemId, endsAt])
+  @@map("warranty_items")
+}
+
+model Review {
+  id               String           @id @default(uuid()) @db.Uuid
+  userId           String           @map("user_id") @db.Uuid
+  shopId           String           @map("shop_id") @db.Uuid
+  installationId   String           @unique @map("installation_id") @db.Uuid
+  rating           Int
+  comment          String?          @db.VarChar(2000)
+  moderationStatus ModerationStatus @default(PENDING) @map("moderation_status")
+  moderatedAt      DateTime?        @map("moderated_at")
+  moderatedById    String?          @map("moderated_by_id") @db.Uuid
+  riskFlags        String[]         @default([]) @map("risk_flags")
+  riskScore        Int              @default(0) @map("risk_score")
+  ipHash           String?          @map("ip_hash") @db.VarChar(64)
+  deviceHash       String?          @map("device_hash") @db.VarChar(64)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  user             User             @relation("UserReviews", fields: [userId], references: [id], onDelete: Cascade)
+  shop             Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  installation     Installation     @relation(fields: [installationId], references: [id], onDelete: Cascade)
+  reply            ReviewReply?
+
+  @@index([shopId, moderationStatus])
+  @@index([ipHash, createdAt])
+  @@map("reviews")
+}
+
+model ReviewReply {
+  id               String           @id @default(uuid()) @db.Uuid
+  reviewId         String           @unique @map("review_id") @db.Uuid
+  shopId           String           @map("shop_id") @db.Uuid
+  authorId         String           @map("author_id") @db.Uuid
+  body             String           @db.VarChar(2000)
+  moderationStatus ModerationStatus @default(PUBLISHED) @map("moderation_status")
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  review           Review           @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@map("review_replies")
+}
+
+model Complaint {
+  id         String              @id @default(uuid()) @db.Uuid
+  /// Avtomatik shikoyatda (13.4) null.
+  reporterId String?             @map("reporter_id") @db.Uuid
+  targetType ComplaintTargetType @map("target_type")
+  targetId   String              @map("target_id") @db.Uuid
+  reason     ComplaintReason
+  details    String?             @db.VarChar(2000)
+  status     ComplaintStatus     @default(OPEN)
+  resolvedBy String?             @map("resolved_by") @db.Uuid
+  resolvedAt DateTime?           @map("resolved_at")
+  createdAt  DateTime            @default(now())
+
+  @@index([targetType, targetId])
+  @@index([status])
+  @@map("complaints")
+}
+
+model Favorite {
+  id             String        @id @default(uuid()) @db.Uuid
+  userId         String        @map("user_id") @db.Uuid
+  shopId         String?       @map("shop_id") @db.Uuid
+  productModelId String?       @map("product_model_id") @db.Uuid
+  createdAt      DateTime      @default(now())
+  user           User          @relation("UserFavorites", fields: [userId], references: [id], onDelete: Cascade)
+  shop           Shop?         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  productModel   ProductModel? @relation(fields: [productModelId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, shopId])
+  @@unique([userId, productModelId])
+  @@map("favorites")
+}
+
+/// Sharh moderatsiyasi chegaralari (TZ 13.4) — versiyalanadi, faol bittasi.
+model ModerationSettings {
+  id          String   @id @default(uuid()) @db.Uuid
+  version     Int      @unique
+  rulesJson   Json     @map("rules_json")
+  active      Boolean  @default(false)
+  createdById String?  @map("created_by_id") @db.Uuid
+  createdAt   DateTime @default(now())
+
+  @@map("moderation_settings")
+}
+
+// ───────────── M7: kabinet, portfolio, sertifikatlar, vidjet, analitika, yordam, bilimlar (TZ 7.3, 7.6, 7.7) ─────────────
+
+enum ReadingSource {
+  MANUAL
+}
+
+enum ReminderType {
+  CLEANING
+  INSPECTION
+  WARRANTY_EXPIRY
+}
+
+/// Oylik ishlab chiqarish ko‘rsatkichi (TZ 3.6): oyning 1-kuni bo‘yicha bitta yozuv.
+model ProductionReading {
+  id                String          @id @default(uuid()) @db.Uuid
+  installedSystemId String          @map("installed_system_id") @db.Uuid
+  periodMonth       DateTime        @map("period_month") @db.Date
+  generatedKwh      Decimal         @map("generated_kwh") @db.Decimal(12, 2)
+  meterReading      Decimal?        @map("meter_reading") @db.Decimal(14, 2)
+  source            ReadingSource   @default(MANUAL)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  installedSystem   InstalledSystem @relation(fields: [installedSystemId], references: [id], onDelete: Cascade)
+
+  @@unique([installedSystemId, periodMonth])
+  @@map("production_readings")
+}
+
+model MaintenanceReminder {
+  id                String          @id @default(uuid()) @db.Uuid
+  installedSystemId String          @map("installed_system_id") @db.Uuid
+  type              ReminderType
+  intervalDays      Int?            @map("interval_days")
+  /// WARRANTY_EXPIRY uchun — qaysi kafolat.
+  warrantyItemId    String?         @map("warranty_item_id") @db.Uuid
+  nextAt            DateTime        @map("next_at")
+  lastSentAt        DateTime?       @map("last_sent_at")
+  lastDoneAt        DateTime?       @map("last_done_at")
+  active            Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  installedSystem   InstalledSystem @relation(fields: [installedSystemId], references: [id], onDelete: Cascade)
+
+  @@index([nextAt, active])
+  @@index([installedSystemId])
+  @@map("maintenance_reminders")
+}
+
+enum CertType {
+  OFFICIAL_DEALER
+  CERTIFIED_INSTALLER
+  LICENSE
+}
+
+enum CertStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+/// Do‘kon sertifikatlari va belgilar (TZ 4.11): belgi faqat APPROVED va muddati o‘tmagan bo‘lsa ko‘rinadi.
+model ShopCertification {
+  id                 String     @id @default(uuid()) @db.Uuid
+  shopId             String     @map("shop_id") @db.Uuid
+  certType           CertType   @map("cert_type")
+  brand              String?    @db.VarChar(120)
+  issuer             String     @db.VarChar(200)
+  certNumber         String?    @map("cert_number") @db.VarChar(120)
+  fileId             String     @map("file_id") @db.Uuid
+  validFrom          DateTime   @map("valid_from") @db.Date
+  validUntil         DateTime?  @map("valid_until") @db.Date
+  status             CertStatus @default(PENDING)
+  reviewerId         String?    @map("reviewer_id") @db.Uuid
+  reviewedAt         DateTime?  @map("reviewed_at")
+  reason             String?    @db.VarChar(1000)
+  expiringNotifiedAt DateTime?  @map("expiring_notified_at")
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  shop               Shop       @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@index([shopId, status])
+  @@index([validUntil])
+  @@map("shop_certifications")
+}
+
+/// Portfolio loyihasi (TZ 7.3). installationId — "Tasdiqlangan montaj" belgisi.
+model ShopProject {
+  id             String             @id @default(uuid()) @db.Uuid
+  shopId         String             @map("shop_id") @db.Uuid
+  title          String             @db.VarChar(200)
+  city           String?            @db.VarChar(120)
+  systemPowerKw  Decimal?           @map("system_power_kw") @db.Decimal(10, 2)
+  systemType     SystemType?        @map("system_type")
+  completedAt    DateTime?          @map("completed_at") @db.Date
+  installationId String?            @map("installation_id") @db.Uuid
+  description    String?            @db.VarChar(4000)
+  published      Boolean            @default(true)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  shop           Shop               @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  images         ShopProjectImage[]
+
+  @@index([shopId])
+  @@map("shop_projects")
+}
+
+model ShopProjectImage {
+  id        String      @id @default(uuid()) @db.Uuid
+  projectId String      @map("project_id") @db.Uuid
+  fileId    String      @map("file_id") @db.Uuid
+  sortOrder Int         @default(0) @map("sort_order")
+  project   ShopProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("shop_project_images")
+}
+
+/// Embed vidjet (TZ 4.15, 13.6, U13): faqat allowedDomains dan (CSP frame-ancestors).
+model WidgetConfig {
+  id             String   @id @default(uuid()) @db.Uuid
+  shopId         String   @unique @map("shop_id") @db.Uuid
+  publicKey      String   @unique @map("public_key") @db.VarChar(40)
+  allowedDomains String[] @default([]) @map("allowed_domains")
+  themeJson      Json     @default("{}") @map("theme_json")
+  active         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  shop           Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@map("widget_configs")
+}
+
+/// Funnel va do‘kon analitikasi (TZ 7.7): PII yo‘q; 24 oy saqlanadi.
+model AnalyticsEvent {
+  id             String   @id @default(uuid()) @db.Uuid
+  eventType      String   @map("event_type") @db.VarChar(60)
+  userId         String?  @map("user_id") @db.Uuid
+  anonymousId    String?  @map("anonymous_id") @db.VarChar(64)
+  shopId         String?  @map("shop_id") @db.Uuid
+  entityId       String?  @map("entity_id") @db.Uuid
+  regionCode     String?  @map("region_code") @db.VarChar(32)
+  propertiesJson Json     @default("{}") @map("properties_json")
+  occurredAt     DateTime @default(now()) @map("occurred_at")
+
+  @@index([eventType, occurredAt])
+  @@index([shopId, occurredAt])
+  @@map("analytics_events")
+}
+
+enum SupportPriority {
+  URGENT
+  HIGH
+  NORMAL
+}
+
+enum SupportStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_USER
+  RESOLVED
+  CLOSED
+}
+
+enum SupportSide {
+  USER
+  AGENT
+  SYSTEM
+}
+
+/// Yordam markazi (TZ 4.20, 7.7): SUP-000123, ish vaqti bo‘yicha birinchi javob muddati.
+model SupportTicket {
+  id                 String           @id @default(uuid()) @db.Uuid
+  number             Int              @unique @default(autoincrement())
+  requesterUserId    String?          @map("requester_user_id") @db.Uuid
+  guestContact       String?          @map("guest_contact") @db.VarChar(64)
+  shopId             String?          @map("shop_id") @db.Uuid
+  category           String           @db.VarChar(40)
+  subject            String           @db.VarChar(200)
+  priority           SupportPriority  @default(NORMAL)
+  status             SupportStatus    @default(OPEN)
+  relatedType        String?          @map("related_type") @db.VarChar(40)
+  relatedId          String?          @map("related_id") @db.Uuid
+  requestIdRef       String?          @map("request_id_ref") @db.VarChar(100)
+  assigneeId         String?          @map("assignee_id") @db.Uuid
+  firstResponseDueAt DateTime         @map("first_response_due_at")
+  firstRespondedAt   DateTime?        @map("first_responded_at")
+  slaWarnedAt        DateTime?        @map("sla_warned_at")
+  resolvedAt         DateTime?        @map("resolved_at")
+  closedAt           DateTime?        @map("closed_at")
+  satisfaction       Int?
+  lastMessageAt      DateTime         @default(now()) @map("last_message_at")
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  messages           SupportMessage[]
+
+  @@index([status, priority, firstResponseDueAt])
+  @@index([requesterUserId])
+  @@map("support_tickets")
+}
+
+model SupportMessage {
+  id                String        @id @default(uuid()) @db.Uuid
+  ticketId          String        @map("ticket_id") @db.Uuid
+  senderUserId      String?       @map("sender_user_id") @db.Uuid
+  senderSide        SupportSide   @map("sender_side")
+  body              String        @db.VarChar(8000)
+  attachmentFileIds String[]      @default([]) @map("attachment_file_ids") @db.Uuid
+  isInternal        Boolean       @default(false) @map("is_internal")
+  createdAt         DateTime      @default(now())
+  ticket            SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId, createdAt])
+  @@map("support_messages")
+}
+
+model SupportReplyTemplate {
+  id        String   @id @default(uuid()) @db.Uuid
+  titleI18n Json     @map("title_i18n")
+  bodyI18n  Json     @map("body_i18n")
+  category  String?  @db.VarChar(40)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@map("support_reply_templates")
+}
+
+enum ArticleType {
+  GUIDE
+  ARTICLE
+  FAQ
+  VIDEO
+  GLOSSARY
+}
+
+enum CtaType {
+  CALCULATOR
+  OUTAGE
+  FINANCING
+  SHOPS
+  NONE
+}
+
+model KnowledgeCategory {
+  id        String         @id @default(uuid()) @db.Uuid
+  slug      String         @unique @db.VarChar(120)
+  nameI18n  Json           @map("name_i18n")
+  icon      String?        @db.VarChar(40)
+  parentId  String?        @map("parent_id") @db.Uuid
+  sortOrder Int            @default(0) @map("sort_order")
+  articles  GuideArticle[]
+
+  @@map("knowledge_categories")
+}
+
+/// Bilimlar markazi (TZ 4.19, 7.7): 3 tilda (uz/oz/ru), Markdown, SEO; title/body trigram indeks (SQL).
+model GuideArticle {
+  id                 String            @id @default(uuid()) @db.Uuid
+  slug               String            @unique @db.VarChar(160)
+  articleType        ArticleType       @map("article_type")
+  categoryId         String            @map("category_id") @db.Uuid
+  titleI18n          Json              @map("title_i18n")
+  summaryI18n        Json              @map("summary_i18n")
+  bodyI18n           Json              @map("body_i18n")
+  /// Qidiruv uchun barcha tillardagi sarlavha va matn (trigram).
+  searchText         String            @default("") @map("search_text")
+  videoUrl           String?           @map("video_url") @db.VarChar(500)
+  coverFileId        String?           @map("cover_file_id") @db.Uuid
+  tags               String[]          @default([])
+  seoTitleI18n       Json?             @map("seo_title_i18n")
+  seoDescriptionI18n Json?             @map("seo_description_i18n")
+  ctaType            CtaType           @default(NONE) @map("cta_type")
+  authorId           String?           @map("author_id") @db.Uuid
+  readingMinutes     Int               @default(3) @map("reading_minutes")
+  sourceUrls         String[]          @default([]) @map("source_urls")
+  beginnerOrder      Int?              @map("beginner_order")
+  verifiedAt         DateTime?         @map("verified_at")
+  publishedAt        DateTime?         @map("published_at")
+  status             PublishStatus     @default(DRAFT)
+  helpfulYes         Int               @default(0) @map("helpful_yes")
+  helpfulNo          Int               @default(0) @map("helpful_no")
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  category           KnowledgeCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@index([categoryId, status, publishedAt])
+  @@map("guide_articles")
+}
+
+// ───────────── M7 qo‘shimcha: kanallar, shablonlar, bosh sahifa bloklari, ops (TZ 5.6, 7.2, 7.3, 7.7, 14.2, 19.1) ─────────────
+
+/// Foydalanuvchi bildirishnoma kanallari (TZ 7.2): tur bo‘yicha IN_APP/SMS/EMAIL; yo‘q bo‘lsa — standart (14.2).
+model NotificationPreference {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  type      String   @db.VarChar(60)
+  channels  String[] @default([])
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+  @@map("notification_preferences")
+}
+
+/// Taklif shablonlari (TZ 7.3, U11.4): qatorlar va standart shartlar.
+model QuoteTemplate {
+  id           String   @id @default(uuid()) @db.Uuid
+  shopId       String   @map("shop_id") @db.Uuid
+  name         String   @db.VarChar(120)
+  itemsJson    Json     @map("items_json")
+  defaultsJson Json     @default("{}") @map("defaults_json")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  shop         Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@index([shopId])
+  @@map("quote_templates")
+}
+
+/// Bosh sahifa bloklari (TZ 5.6): 3 tilda, nashrdan oldin preview, versiya va audit.
+model SiteBlock {
+  id          String        @id @default(uuid()) @db.Uuid
+  page        String        @default("HOME") @db.VarChar(40)
+  blockType   String        @map("block_type") @db.VarChar(40)
+  sortOrder   Int           @default(0) @map("sort_order")
+  contentI18n Json          @map("content_i18n")
+  draftI18n   Json?         @map("draft_i18n")
+  status      PublishStatus @default(DRAFT)
+  version     Int           @default(1)
+  publishedAt DateTime?     @map("published_at")
+  updatedById String?       @map("updated_by_id") @db.Uuid
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@unique([page, blockType])
+  @@index([page, status, sortOrder])
+  @@map("site_blocks")
+}
+
+/// Tashqi provayder kvotasi (TZ 7.7, 14.1 provider-quota-poll).
+model ProviderQuotaSnapshot {
+  id          String   @id @default(uuid()) @db.Uuid
+  provider    String   @db.VarChar(30)
+  metric      String   @db.VarChar(40)
+  used        Int
+  limit       Int?
+  failures    Int      @default(0)
+  periodStart DateTime @map("period_start")
+  capturedAt  DateTime @default(now()) @map("captured_at")
+
+  @@index([provider, capturedAt])
+  @@map("provider_quota_snapshots")
+}
+
+model OpsDeployment {
+  id           String    @id @default(uuid()) @db.Uuid
+  service      String    @db.VarChar(20)
+  environment  String    @db.VarChar(20)
+  version      String    @db.VarChar(60)
+  gitSha       String?   @map("git_sha") @db.VarChar(64)
+  status       String    @db.VarChar(20)
+  startedAt    DateTime  @map("started_at")
+  finishedAt   DateTime? @map("finished_at")
+  triggeredBy  String?   @map("triggered_by") @db.VarChar(120)
+  changelogUrl String?   @map("changelog_url") @db.VarChar(500)
+
+  @@index([service, environment, startedAt])
+  @@map("ops_deployments")
+}
+
+model OpsAlertEvent {
+  id             String    @id @default(uuid()) @db.Uuid
+  fingerprint    String    @db.VarChar(120)
+  alertName      String    @map("alert_name") @db.VarChar(120)
+  severity       String    @db.VarChar(20)
+  status         String    @db.VarChar(20)
+  startsAt       DateTime  @map("starts_at")
+  endsAt         DateTime? @map("ends_at")
+  summary        String    @db.VarChar(1000)
+  labelsJson     Json      @default("{}") @map("labels_json")
+  acknowledgedBy String?   @map("acknowledged_by") @db.Uuid
+  acknowledgedAt DateTime? @map("acknowledged_at")
+
+  @@unique([fingerprint, startsAt])
+  @@index([status, severity])
+  @@map("ops_alert_events")
+}

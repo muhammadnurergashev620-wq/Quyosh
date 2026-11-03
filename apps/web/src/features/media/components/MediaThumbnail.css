@@ -1,0 +1,8 @@
+.gm-media-thumb {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: var(--qs-radius-md);
+  border: 1px solid var(--qs-color-border);
+  flex-shrink: 0;
+}

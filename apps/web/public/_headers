@@ -1,0 +1,13 @@
+# Statik hosting (Netlify / Cloudflare Pages) uchun xavfsizlik sarlavhalari.
+# Boshqa hostingda (nginx va h.k.) xuddi shu sarlavhalarni server sozlamasiga ko‘chiring.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(self), geolocation=(self), payment=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: frame-ancestors 'none'
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

@@ -1,0 +1,36 @@
+.gm-spinner {
+  display: inline-block;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  opacity: 0.85;
+  animation: gm-spin 0.7s linear infinite;
+}
+
+.gm-spinner--sm {
+  width: 14px;
+  height: 14px;
+}
+
+.gm-spinner--md {
+  width: 20px;
+  height: 20px;
+}
+
+.gm-spinner--lg {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+@keyframes gm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-spinner {
+    animation-duration: 1.6s;
+  }
+}

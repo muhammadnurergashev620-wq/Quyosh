@@ -1,0 +1,103 @@
+.gm-langset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-3);
+}
+.gm-langset__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+.gm-langset__title svg {
+  color: var(--qs-color-primary);
+}
+.gm-langset__lead {
+  margin: 0;
+  color: var(--qs-color-text-muted);
+  font-size: 14px;
+}
+.gm-langset__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (min-width: 640px) {
+  .gm-langset__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.gm-langset__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--qs-color-border);
+  border-radius: var(--qs-card-radius-sm);
+  background: var(--qs-color-surface);
+  color: var(--qs-color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.gm-langset__item:hover {
+  border-color: var(--qs-color-border-strong);
+}
+.gm-langset__item--active {
+  border-color: var(--qs-color-primary);
+  background: var(--qs-color-primary-soft);
+}
+.gm-langset__item:focus-visible {
+  outline: 2px solid var(--qs-focus-ring);
+  outline-offset: 2px;
+}
+.gm-langset__code {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--qs-color-surface-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+.gm-langset__item--active .gm-langset__code {
+  background: var(--qs-color-primary);
+  color: var(--qs-color-primary-contrast);
+}
+.gm-langset__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.gm-langset__check {
+  flex: none;
+  color: var(--qs-color-primary);
+}
+
+/* Til tanlash: belgi (✓) yozuvga tegmasin — 4 ta tor ustun o‘rniga sig‘adigan ustunlar */
+.gm-langset__grid { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.gm-langset__item { gap: 12px; min-height: 62px; padding: 12px 16px; }
+.gm-langset__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gm-langset__check {
+  box-sizing: content-box;
+  width: 14px;
+  height: 14px;
+  margin-left: 4px;
+  padding: 4px;
+  border-radius: 50%;
+  background: var(--qs-color-primary);
+  color: var(--qs-color-primary-contrast);
+}
+.gm-langset__item--active { box-shadow: 0 0 0 1.5px var(--qs-color-primary); }
+@media (min-width: 640px) {
+  .gm-langset__grid { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+}
+.gm-langset__grid,
+.gm-langset__grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+@media (min-width: 640px) { .gm-langset__grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); } }

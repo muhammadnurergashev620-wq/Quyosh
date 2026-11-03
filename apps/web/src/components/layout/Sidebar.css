@@ -1,0 +1,114 @@
+.gm-sidebar {
+  position: sticky;
+  top: calc(var(--qs-header-height) + var(--qs-safe-top));
+  align-self: flex-start;
+  width: var(--qs-sidebar-width);
+  flex-shrink: 0;
+  height: calc(var(--qs-vh, 100vh) - var(--qs-header-height) - var(--qs-safe-top));
+  overflow-y: auto;
+  padding: var(--qs-space-5) var(--qs-space-4) var(--qs-space-6);
+  border-right: 1px solid var(--qs-color-border);
+  background: var(--qs-color-surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--qs-space-5);
+}
+
+.gm-sidebar__heading {
+  padding: 0 var(--qs-space-3) var(--qs-space-2);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--qs-color-text-muted);
+  opacity: 0.8;
+}
+
+.gm-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gm-sidebar__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--qs-space-3);
+  padding: 10px var(--qs-space-3);
+  border-radius: var(--qs-radius-md);
+  color: var(--qs-color-text-muted);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.gm-sidebar__link:hover {
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text);
+}
+
+.gm-sidebar__link--active,
+.gm-sidebar__link--active:hover {
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+}
+
+.gm-sidebar__link--active::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--qs-color-primary);
+}
+
+@media (max-width: 899px) {
+  .gm-sidebar {
+    display: none;
+  }
+}
+
+.gm-nav-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--qs-color-danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  animation: gm-nav-badge-pop 0.25s var(--qs-ease, ease-out);
+}
+.gm-nav-badge--dot {
+  position: absolute;
+  top: 6px;
+  right: 22%;
+  min-width: 10px;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  margin: 0;
+}
+.gm-nav-badge--corner {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  margin: 0;
+}
+@keyframes gm-nav-badge-pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+}

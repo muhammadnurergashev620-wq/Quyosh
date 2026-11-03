@@ -1,0 +1,41 @@
+.gm-tone-0 { --tone-bg: hsl(215 90% 91%); --tone-fg: hsl(215 70% 34%); }
+.gm-tone-1 { --tone-bg: hsl(160 60% 87%); --tone-fg: hsl(165 75% 24%); }
+.gm-tone-2 { --tone-bg: hsl(30 95% 88%); --tone-fg: hsl(24 80% 32%); }
+.gm-tone-3 { --tone-bg: hsl(220 22% 90%); --tone-fg: hsl(220 35% 32%); }
+.gm-tone-4 { --tone-bg: hsl(235 55% 91%); --tone-fg: hsl(235 55% 36%); }
+.gm-tone-5 { --tone-bg: hsl(190 75% 86%); --tone-fg: hsl(195 80% 26%); }
+.gm-tone-6 { --tone-bg: hsl(48 95% 84%); --tone-fg: hsl(38 85% 28%); }
+.gm-tone-7 { --tone-bg: hsl(130 55% 86%); --tone-fg: hsl(135 60% 25%); }
+
+:root[data-theme='dark'] .gm-tone-0 { --tone-bg: hsl(215 45% 24%); --tone-fg: hsl(215 90% 80%); }
+:root[data-theme='dark'] .gm-tone-1 { --tone-bg: hsl(165 40% 20%); --tone-fg: hsl(160 65% 72%); }
+:root[data-theme='dark'] .gm-tone-2 { --tone-bg: hsl(28 45% 23%); --tone-fg: hsl(30 90% 75%); }
+:root[data-theme='dark'] .gm-tone-3 { --tone-bg: hsl(220 20% 26%); --tone-fg: hsl(220 35% 80%); }
+:root[data-theme='dark'] .gm-tone-4 { --tone-bg: hsl(235 35% 26%); --tone-fg: hsl(235 80% 82%); }
+:root[data-theme='dark'] .gm-tone-5 { --tone-bg: hsl(192 45% 21%); --tone-fg: hsl(190 75% 72%); }
+:root[data-theme='dark'] .gm-tone-6 { --tone-bg: hsl(44 45% 22%); --tone-fg: hsl(46 90% 72%); }
+:root[data-theme='dark'] .gm-tone-7 { --tone-bg: hsl(132 35% 21%); --tone-fg: hsl(130 60% 72%); }
+
+.gm-chat-avatar {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--tone-bg, var(--qs-color-primary-soft));
+  color: var(--tone-fg, var(--qs-color-primary));
+  font-family: var(--qs-font-display);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.gm-chat-avatar--sm { width: 32px; height: 32px; font-size: 12px; }
+.gm-chat-avatar--md { width: 48px; height: 48px; font-size: 17px; }
+.gm-chat-avatar--lg { width: 64px; height: 64px; font-size: 22px; }
+.gm-chat-avatar--admin {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #4338ca, #6366f1);
+  color: #fff;
+}
+.gm-chat-avatar--photo { overflow: hidden; background: var(--qs-color-surface-muted, var(--qs-color-primary-soft)); }
+.gm-chat-avatar--photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
