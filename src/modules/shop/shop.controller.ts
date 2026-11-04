@@ -14,36 +14,17 @@ import { ShopOperationsService } from './shop-operations.service';
 import { AdminShopsService } from './admin-shops.service';
 import { PublicShopsService } from './public-shops.service';
 import {
-  AdminCreateShopDto, AdminShopQueryDto, BranchDto, CreateShopDto, DuplicateQueryDto, InviteMemberDto, OwnerTargetDto, PublicShopQueryDto, ReasonDto, ServiceDto, UpdateBranchDto, UpdateMemberDto, UpdateShopDto, VerificationDocumentDto,
+  AdminAddMemberDto, AdminCreateShopDto, AdminShopQueryDto, BranchDto, ChangeOwnerDto, DuplicateQueryDto, PublicShopQueryDto, ReasonDto, ServiceDto, UpdateBranchDto, UpdateMemberDto, UpdateShopDto,
 } from './dto/shop.dto';
 
-/** Mijoz/foydalanuvchi: do‘kon ochish, o‘z do‘konlari, taklifni qabul qilish. */
+/** Foydalanuvchining o‘z do‘konlari (do‘kon almashtirgich). Do‘kon ochish va taklif qabul qilish yo‘q (v3.1: do‘konni admin yaratadi). */
 @Controller()
 export class ShopController {
-  constructor(
-    private readonly shops: ShopService,
-    private readonly members: ShopMembersService,
-  ) {}
-
-  @Post('shops')
-  create(@CurrentUser('sub') userId: string, @Body() dto: CreateShopDto) {
-    return this.shops.createSelf(userId, dto);
-  }
+  constructor(private readonly shops: ShopService) {}
 
   @Get('me/shops')
   myShops(@CurrentUser('sub') userId: string) {
     return this.shops.myShops(userId);
-  }
-
-  @Public()
-  @Get('shop-invitations/:token')
-  previewInvitation(@Param('token') token: string) {
-    return this.members.preview(token);
-  }
-
-  @Post('shop-invitations/:token/accept')
-  acceptInvitation(@CurrentUser('sub') userId: string, @Param('token') token: string) {
-    return this.members.accept(userId, token);
   }
 }
 
@@ -101,40 +82,10 @@ export class ManageShopController {
     return this.shops.updateProfile(ctx, userId, dto);
   }
 
-  @RequireShopPermission('shop.verification')
-  @Get('verification-documents')
-  documents(@CurrentShop() ctx: ShopContext) {
-    return this.shops.listVerificationDocuments(ctx.shopId);
-  }
-
-  @RequireShopPermission('shop.verification')
-  @Post('verification-documents')
-  addDocument(@CurrentShop() ctx: ShopContext, @CurrentUser('sub') userId: string, @Body() dto: VerificationDocumentDto) {
-    return this.shops.addVerificationDocument(ctx, userId, dto);
-  }
-
-  @RequireShopPermission('shop.verification')
-  @Post('submit')
-  submit(@CurrentShop() ctx: ShopContext, @CurrentUser('sub') userId: string) {
-    return this.shops.submitForReview(ctx, userId);
-  }
-
   @RequireShopPermission('members.manage')
   @Get('members')
   listMembers(@CurrentShop() ctx: ShopContext) {
     return this.members.listMembers(ctx.shopId);
-  }
-
-  @RequireShopPermission('members.manage')
-  @Post('members/invitations')
-  invite(@CurrentShop() ctx: ShopContext, @CurrentUser('sub') userId: string, @Body() dto: InviteMemberDto) {
-    return this.members.invite(ctx, userId, dto);
-  }
-
-  @RequireShopPermission('members.manage')
-  @Delete('members/invitations/:invitationId')
-  revoke(@CurrentShop() ctx: ShopContext, @CurrentUser('sub') userId: string, @Param('invitationId', ParseUUIDPipe) invitationId: string) {
-    return this.members.revokeInvitation(ctx.shopId, userId, invitationId);
   }
 
   @RequireShopPermission('members.manage')
@@ -213,7 +164,7 @@ export class ManageShopController {
   }
 }
 
-/** Admin: /admin/shops/* (huquq — SHOPS; yaratish/to‘xtatish — faqat superadmin, servisda). */
+/** Admin: /admin/shops/* (huquq — SHOPS). Parol bor javoblar (create, members, reset-password) vaqtincha parolni bir marta qaytaradi. */
 @Controller('admin/shops')
 @Roles(Role.ADMIN)
 @RequiresPermission('SHOPS')
@@ -240,14 +191,19 @@ export class AdminShopsController {
     return this.admin.detail(shopId);
   }
 
-  @Post(':shopId/approve')
-  approve(@CurrentUser('sub') adminId: string, @Param('shopId', ParseUUIDPipe) shopId: string) {
-    return this.admin.approve(adminId, shopId);
+  @Post(':shopId/members')
+  addMember(@CurrentUser('sub') adminId: string, @Param('shopId', ParseUUIDPipe) shopId: string, @Body() dto: AdminAddMemberDto) {
+    return this.admin.addMember(adminId, shopId, dto);
   }
 
-  @Post(':shopId/reject')
-  reject(@CurrentUser('sub') adminId: string, @Param('shopId', ParseUUIDPipe) shopId: string, @Body() dto: ReasonDto) {
-    return this.admin.reject(adminId, shopId, dto.reason);
+  @Post(':shopId/members/:userId/reset-password')
+  resetPassword(@CurrentUser('sub') adminId: string, @Param('shopId', ParseUUIDPipe) shopId: string, @Param('userId', ParseUUIDPipe) userId: string) {
+    return this.admin.resetMemberPassword(adminId, shopId, userId);
+  }
+
+  @Post(':shopId/owner')
+  changeOwner(@CurrentUser('sub') adminId: string, @Param('shopId', ParseUUIDPipe) shopId: string, @Body() dto: ChangeOwnerDto) {
+    return this.admin.changeOwner(adminId, shopId, dto.userId, dto.reason);
   }
 
   @Post(':shopId/suspend')
@@ -258,11 +214,5 @@ export class AdminShopsController {
   @Post(':shopId/resume')
   resume(@CurrentUser('sub') adminId: string, @Param('shopId', ParseUUIDPipe) shopId: string) {
     return this.admin.resume(adminId, shopId);
-  }
-
-  /** Boshlang‘ich ega taklifi yoki egalikni o‘tkazish (TRANSFER). */
-  @Post(':shopId/owner-invitation')
-  inviteOwner(@CurrentUser('sub') adminId: string, @Param('shopId', ParseUUIDPipe) shopId: string, @Body() dto: OwnerTargetDto) {
-    return this.admin.inviteOwner(adminId, shopId, dto.target);
   }
 }

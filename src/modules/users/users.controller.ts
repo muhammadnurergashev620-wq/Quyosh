@@ -5,7 +5,7 @@ import { panelOf } from '../../common/utils/panel';
 import { RateLimit } from '../../common/decorators/rate-limit.decorator';
 import { RequestPhoneDto, VerifyPhoneDto } from './dto/phone.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { ChangePasswordDto, SetPasswordDto } from './dto/set-password.dto';
+import { ChangePasswordDto, FirstPasswordDto, SetPasswordDto } from './dto/set-password.dto';
 import { SetTwoFactorDto } from './dto/two-factor.dto';
 import { SetEmailDto } from './dto/set-email.dto';
 import { DeleteAccountDto } from './dto/delete-account.dto';
@@ -54,6 +54,13 @@ export class UsersController {
   @Post('me/password/change')
   changePassword(@CurrentUser('sub') userId: string, @CurrentUser('deviceId') deviceId: string | undefined, @Body() dto: ChangePasswordDto) {
     return this.usersService.changePassword(userId, deviceId, dto.currentPassword, dto.newPassword);
+  }
+
+  /** Do‘kon hisobi: admin bergan vaqtincha parolni birinchi kirishda yangisiga almashtirish (mustPasswordChange). */
+  @RateLimit({ policy: 'login', scope: 'ip', escalate: true })
+  @Post('me/password/first')
+  firstPassword(@CurrentUser('sub') userId: string, @CurrentUser('deviceId') deviceId: string | undefined, @Body() dto: FirstPasswordDto) {
+    return this.usersService.setFirstPassword(userId, deviceId, dto.newPassword);
   }
 
   @Patch('me/profile')

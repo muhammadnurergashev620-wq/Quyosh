@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import type { Request, Response } from 'express';
 import { randomBytes } from 'node:crypto';
@@ -14,7 +14,7 @@ import { ParseUUIDPipe } from '../../common/validators/any-uuid';
 import { ShopContentService } from './shop-content.service';
 import { WidgetService } from './widget.service';
 import { renderEmbedScript, renderWidgetFrame } from './widget-frame';
-import { AdminCertQueryDto, CertificationDto, ProjectDto, ReviewCertificationDto, WidgetConfigDto, WidgetEstimateDto, WidgetLeadDto, WidgetOtpDto } from './dto/shop-content.dto';
+import { AdminBadgeDto, ProjectDto, WidgetConfigDto, WidgetEstimateDto, WidgetLeadDto, WidgetOtpDto } from './dto/shop-content.dto';
 
 const apiBase = (req: Request) => {
   const proto = String(req.headers['x-forwarded-proto'] ?? req.protocol).split(',')[0];
@@ -22,7 +22,7 @@ const apiBase = (req: Request) => {
   return `${proto}://${host}`;
 };
 
-/** Do‘kon: portfolio (U11.10), sertifikatlar (U11.12), vidjet (U11.13). */
+/** Do‘kon: portfolio (U11.10), vidjet (U11.13). Sertifikat yuborish yo‘q (v3.1). */
 @Controller('manage/shops/:shopId')
 @UseGuards(ShopAccessGuard)
 export class ManageShopContentController {
@@ -52,29 +52,6 @@ export class ManageShopContentController {
   @Delete('projects/:id')
   deleteProject(@CurrentShop() ctx: ShopContext, @Param('id', ParseUUIDPipe) id: string) {
     return this.content.deleteProject(ctx, id);
-  }
-
-  @Get('certifications')
-  certifications(@CurrentShop() ctx: ShopContext) {
-    return this.content.certifications(ctx);
-  }
-
-  @RequireShopPermission('shop.profile')
-  @Post('certifications')
-  createCertification(@CurrentShop() ctx: ShopContext, @CurrentUser('sub') userId: string, @Body() dto: CertificationDto) {
-    return this.content.createCertification(ctx, dto, userId);
-  }
-
-  @RequireShopPermission('shop.profile')
-  @Put('certifications/:id')
-  updateCertification(@CurrentShop() ctx: ShopContext, @Param('id', ParseUUIDPipe) id: string, @Body() dto: CertificationDto) {
-    return this.content.updateCertification(ctx, id, dto);
-  }
-
-  @RequireShopPermission('shop.profile')
-  @Delete('certifications/:id')
-  deleteCertification(@CurrentShop() ctx: ShopContext, @Param('id', ParseUUIDPipe) id: string) {
-    return this.content.deleteCertification(ctx, id);
   }
 
   @RequireShopPermission('widget.manage')
@@ -152,20 +129,20 @@ export class PublicShopContentController {
   }
 }
 
-/** Admin: sertifikatlarni tekshirish (TZ 9.11). */
-@Controller('admin/certifications')
+/** Admin: do‘kon belgilari (rasmiy diler va h.k.) — qo‘yish va olib tashlash (TZ 9.11). */
+@Controller('admin/shops/:shopId/badges')
 @Roles(Role.ADMIN)
 @RequiresPermission('SHOPS')
-export class AdminCertificationsController {
+export class AdminShopBadgesController {
   constructor(private readonly content: ShopContentService) {}
 
-  @Get()
-  list(@Query() query: AdminCertQueryDto) {
-    return this.content.adminCertifications(query);
+  @Post()
+  add(@CurrentUser('sub') adminId: string, @Param('shopId', ParseUUIDPipe) shopId: string, @Body() dto: AdminBadgeDto) {
+    return this.content.addBadge(adminId, shopId, dto);
   }
 
-  @Patch(':id')
-  review(@CurrentUser('sub') adminId: string, @Param('id', ParseUUIDPipe) id: string, @Body() dto: ReviewCertificationDto) {
-    return this.content.reviewCertification(adminId, id, dto);
+  @Delete(':badgeId')
+  remove(@CurrentUser('sub') adminId: string, @Param('shopId', ParseUUIDPipe) shopId: string, @Param('badgeId', ParseUUIDPipe) badgeId: string) {
+    return this.content.removeBadge(adminId, shopId, badgeId);
   }
 }

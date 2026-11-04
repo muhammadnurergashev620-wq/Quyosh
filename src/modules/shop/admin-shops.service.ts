@@ -1,35 +1,37 @@
-import { ForbiddenException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, ShopStatus } from '@prisma/client';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, Role, ShopStatus } from '@prisma/client';
 import { PrismaService } from '../../infrastructure/database/prisma.service';
 import { OutboxService } from '../../infrastructure/outbox/outbox.service';
 import { ERRORS } from '../../common/constants/error-messages';
+import { DEFAULT_PERMISSIONS } from '../../common/constants/shop-permissions';
 import { DomainException } from '../../common/exceptions/business.exception';
+import { hashSecret } from '../../common/security/hash';
+import { generateTempPassword } from '../../common/security/temp-password';
 import { normalizeUzPhone } from '../../common/utils/phone';
 import { canTransition } from './shop-state-machine';
 import { conflict, invalidTransition, ShopService } from './shop.service';
-import { ShopMembersService } from './shop-members.service';
-import { AdminCreateShopDto, AdminShopQueryDto } from './dto/shop.dto';
+import { AdminAddMemberDto, AdminCreateShopDto, AdminShopQueryDto } from './dto/shop.dto';
 
 const OWNER_SELECT = { where: { memberRole: 'OWNER' as const }, select: { user: { select: { id: true, accountNumber: true, firstName: true, lastName: true, phone: true } } } };
+const MEMBER_USER = { id: true, accountNumber: true, firstName: true, lastName: true, phone: true, email: true, mustPasswordChange: true } as const;
 
-/** Admin: do‘konlar ro‘yxati, tekshiruv, yaratish, to‘xtatish, egalikni o‘tkazish (TZ 3.7, U18.3). */
+/** Vaqtincha parol bilan yaratilgan/tiklangan hisob: parol javobda BIR MARTA qaytadi (bazada faqat hash, logga yozilmaydi). */
+interface IssuedAccount {
+  user: { id: string; phone: string | null; firstName: string | null; lastName: string | null };
+  temporaryPassword: string;
+}
+
+/**
+ * Admin: do‘kon yaratish (egasining hisobi bilan), a’zo qo‘shish, parolni tiklash, egani almashtirish,
+ * to‘xtatish/qayta yoqish (TZ 3.7). Huquq — `SHOPS` (controller); har amal AuditLog’ga yoziladi.
+ */
 @Injectable()
 export class AdminShopsService {
   constructor(
     private readonly db: PrismaService,
     private readonly outbox: OutboxService,
     private readonly shops: ShopService,
-    private readonly members: ShopMembersService,
   ) {}
-
-  private async actorKind(adminId: string): Promise<'ADMIN' | 'SUPER_ADMIN'> {
-    const admin = await this.db.user.findUnique({ where: { id: adminId }, select: { isSuperAdmin: true } });
-    return admin?.isSuperAdmin ? 'SUPER_ADMIN' : 'ADMIN';
-  }
-
-  private async requireSuper(adminId: string) {
-    if ((await this.actorKind(adminId)) !== 'SUPER_ADMIN') throw new ForbiddenException(ERRORS.SUPER_ADMIN_ONLY);
-  }
 
   async list(query: AdminShopQueryDto) {
     const limit = Math.min(query.limit ?? 20, 100);
@@ -54,7 +56,7 @@ export class AdminShopsService {
         select: {
           id: true, slug: true, name: true, stir: true, phone: true, status: true, verificationStatus: true, createdSource: true, ratingAvg: true, ratingCount: true, createdAt: true, logoAssetId: true,
           members: OWNER_SELECT,
-          _count: { select: { branches: { where: { archivedAt: null } }, products: true, verificationDocs: true } },
+          _count: { select: { branches: { where: { archivedAt: null } }, products: true } },
         },
       }),
       this.db.shop.count({ where }),
@@ -74,9 +76,8 @@ export class AdminShopsService {
     const shop = await this.db.shop.findFirst({
       where: { id: shopId, archivedAt: null },
       include: {
-        members: { orderBy: { createdAt: 'asc' }, select: { id: true, memberRole: true, permissions: true, createdAt: true, user: { select: { id: true, accountNumber: true, firstName: true, lastName: true, phone: true, email: true } } } },
-        invitations: { where: { status: 'PENDING' }, orderBy: { createdAt: 'desc' }, select: { id: true, target: true, memberRole: true, purpose: true, expiresAt: true, createdAt: true } },
-        verificationDocs: { orderBy: { createdAt: 'desc' } },
+        members: { orderBy: { createdAt: 'asc' }, select: { id: true, memberRole: true, permissions: true, createdAt: true, user: { select: MEMBER_USER } } },
+        certifications: { orderBy: { createdAt: 'desc' } },
         branches: { where: { archivedAt: null }, orderBy: { createdAt: 'asc' } },
         createdBy: { select: { id: true, accountNumber: true, firstName: true, lastName: true } },
         _count: { select: { products: true, services: true } },
@@ -96,83 +97,141 @@ export class AdminShopsService {
     return this.shops.duplicates(stir, phone);
   }
 
-  /** TZ 3.7.1: faqat superadmin; dublikatlar tekshiriladi; egasiga INITIAL_OWNER taklifi. */
+  /** Foydalanuvchi uchun login (telefon) band emasligini tekshiradi: mavjud akkaunt do‘konga bog‘lanmaydi. */
+  private async assertPhoneFree(phone: string, tx: Prisma.TransactionClient = this.db) {
+    const taken = await tx.user.findFirst({ where: { phone }, select: { id: true } });
+    if (taken) throw conflict('PHONE_TAKEN', ERRORS.SHOP_PHONE_TAKEN_BY_USER);
+  }
+
+  /** SHOP rolli hisob + vaqtincha parol (mustPasswordChange = true). Parol faqat qaytariladi. */
+  private async newShopAccount(
+    tx: Prisma.TransactionClient,
+    input: { phone: string; firstName: string; lastName?: string },
+    passwordHash: string,
+  ) {
+    return tx.user.create({
+      data: {
+        phone: input.phone,
+        firstName: input.firstName.trim(),
+        lastName: input.lastName?.trim() || null,
+        status: 'ACTIVE',
+        phoneVerifiedAt: new Date(),
+        passwordHash,
+        mustPasswordChange: true,
+        userRoles: { create: [{ role: Role.SHOP }] },
+      },
+      select: { id: true, phone: true, firstName: true, lastName: true },
+    });
+  }
+
+  /** TZ 3.7.1: do‘kon + birinchi filial + egasining hisobi (OWNER) — bitta tranzaksiyada; do‘kon darhol ACTIVE/VERIFIED. */
   async create(adminId: string, dto: AdminCreateShopDto) {
-    await this.requireSuper(adminId);
-    const ownerTarget = this.members.normalizeTarget(dto.ownerTarget);
-    const dup = await this.shops.duplicates(dto.stir, dto.phone);
+    const phone = normalizeUzPhone(dto.phone)!;
+    const ownerPhone = normalizeUzPhone(dto.ownerPhone)!;
+    const dup = await this.shops.duplicates(dto.stir, phone);
     if (dup.blocking) throw conflict('SHOP_STIR_TAKEN', ERRORS.SHOP_STIR_TAKEN);
-    if ((dup.shops.length > 0) && !dto.confirmDuplicates) {
+    if (dup.shops.length > 0 && !dto.confirmDuplicates) {
       throw new DomainException(HttpStatus.CONFLICT, 'SHOP_DUPLICATE_WARNING', 'Shu telefon raqamli do‘kon mavjud. Davom etish uchun tasdiqlang');
     }
-    const result = await this.db.$transaction(async (tx) => {
-      const shop = await tx.shop.create({
+    await this.assertPhoneFree(ownerPhone);
+
+    const temporaryPassword = generateTempPassword();
+    const passwordHash = await hashSecret(temporaryPassword, 12);
+    const { shop, owner } = await this.db.$transaction(async (tx) => {
+      await this.assertPhoneFree(ownerPhone, tx);
+      const user = await this.newShopAccount(tx, { phone: ownerPhone, firstName: dto.ownerFirstName, lastName: dto.ownerLastName }, passwordHash);
+      const created = await tx.shop.create({
         data: {
           slug: await this.shops.uniqueSlug(dto.name, tx),
           name: dto.name.trim(),
-          phone: normalizeUzPhone(dto.phone),
-          stir: dto.stir ?? null,
+          phone,
+          stir: dto.stir,
           createdSource: 'ADMIN',
           createdByUserId: adminId,
-          ...(dto.activate ? { status: 'ACTIVE' as const, verificationStatus: 'VERIFIED' as const } : {}),
+          status: 'ACTIVE',
+          verificationStatus: 'VERIFIED',
+          members: { create: { userId: user.id, memberRole: 'OWNER' } },
+          branches: { create: { name: 'Asosiy filial', address: dto.address.trim(), regionCode: dto.regionCode, phone } },
         },
       });
-      await tx.auditLog.create({ data: { actorId: adminId, action: 'SHOP_CREATED', targetType: 'Shop', targetId: shop.id, after: { name: shop.name, source: 'ADMIN', status: shop.status, duplicatesConfirmed: !!dto.confirmDuplicates } } });
-      const invite = await this.members.createInvitation(tx, { shopId: shop.id, invitedByUserId: adminId, target: ownerTarget, memberRole: 'OWNER', permissions: [], purpose: 'INITIAL_OWNER' });
-      return { shop, invite };
+      // Parol audit va logga tushmaydi — faqat kim va nima yaratilgani.
+      await tx.auditLog.create({
+        data: { actorId: adminId, action: 'SHOP_CREATED', targetType: 'Shop', targetId: created.id, after: { name: created.name, stir: created.stir, source: 'ADMIN', status: created.status, ownerUserId: user.id, duplicatesConfirmed: !!dto.confirmDuplicates } },
+      });
+      await tx.auditLog.create({ data: { actorId: adminId, action: 'SHOP_ACCOUNT_CREATED', targetType: 'User', targetId: user.id, after: { shopId: created.id, role: 'OWNER', mustPasswordChange: true } } });
+      return { shop: created, owner: user };
     });
-    const invitation = await this.members.deliver(result.invite, result.shop.name);
-    return { shop: result.shop, invitation };
+    return { shop, owner, temporaryPassword };
   }
 
-  /** Egasiz do‘kon uchun boshlang‘ich ega taklifini qayta yuborish (eski PENDING bekor qilinadi). */
-  async inviteOwner(adminId: string, shopId: string, rawTarget: string) {
-    await this.requireSuper(adminId);
+  /** TZ 3.7.2: xodim qo‘shish — hisob (login + vaqtincha parol) va ShopMember(MANAGER/STAFF). */
+  async addMember(adminId: string, shopId: string, dto: AdminAddMemberDto) {
     const shop = await this.shops.findOrThrow(shopId);
-    const target = this.members.normalizeTarget(rawTarget);
-    const hasOwner = await this.db.shopMember.count({ where: { shopId, memberRole: 'OWNER' } });
-    const purpose = hasOwner ? 'TRANSFER' : 'INITIAL_OWNER';
-    const invite = await this.db.$transaction(async (tx) => {
-      await tx.shopInvitation.updateMany({ where: { shopId, memberRole: 'OWNER', status: 'PENDING' }, data: { status: 'REVOKED' } });
-      return this.members.createInvitation(tx, { shopId, invitedByUserId: adminId, target, memberRole: 'OWNER', permissions: [], purpose });
+    const phone = normalizeUzPhone(dto.phone)!;
+    await this.assertPhoneFree(phone);
+    const temporaryPassword = generateTempPassword();
+    const passwordHash = await hashSecret(temporaryPassword, 12);
+    const { user, member } = await this.db.$transaction(async (tx) => {
+      await this.assertPhoneFree(phone, tx);
+      const created = await this.newShopAccount(tx, { phone, firstName: dto.firstName, lastName: dto.lastName }, passwordHash);
+      const row = await tx.shopMember.create({
+        data: { shopId: shop.id, userId: created.id, memberRole: dto.memberRole, permissions: dto.permissions ?? DEFAULT_PERMISSIONS[dto.memberRole] },
+        select: { id: true, memberRole: true, permissions: true },
+      });
+      await tx.auditLog.create({ data: { actorId: adminId, action: 'SHOP_MEMBER_ADDED', targetType: 'Shop', targetId: shop.id, after: { userId: created.id, memberRole: row.memberRole, permissions: row.permissions } } });
+      return { user: created, member: row };
     });
-    return this.members.deliver(invite, shop.name);
+    return { member, user, temporaryPassword } satisfies { member: unknown } & IssuedAccount;
   }
 
-  /** Tasdiqlash: PENDING_REVIEW → ACTIVE, hujjatlar APPROVED. Egasiz do‘kon faollashmaydi. */
-  async approve(adminId: string, shopId: string) {
-    const actor = await this.actorKind(adminId);
+  /** Parolni tiklash: yangi vaqtincha parol, mustPasswordChange = true, barcha sessiyalar bekor qilinadi. */
+  async resetMemberPassword(adminId: string, shopId: string, userId: string) {
     const shop = await this.shops.findOrThrow(shopId);
-    if (!canTransition(shop.status, 'ACTIVE', actor) || shop.status === 'SUSPENDED') throw invalidTransition();
-    const owners = await this.db.shopMember.count({ where: { shopId, memberRole: 'OWNER' } });
-    if (owners === 0) throw conflict('SHOP_OWNER_REQUIRED', ERRORS.SHOP_OWNER_REQUIRED);
-    return this.transition(adminId, shop.id, shop.status, { status: 'ACTIVE', verificationStatus: 'VERIFIED' }, 'SHOP_VERIFICATION_APPROVED', null, async (tx) => {
-      await tx.shopVerificationDocument.updateMany({ where: { shopId, status: 'PENDING' }, data: { status: 'ACCEPTED', reviewerId: adminId, reviewedAt: new Date() } });
-    }, { title: 'Do‘kon tasdiqlandi', body: `«${shop.name}» tekshiruvdan o‘tdi va katalogda ko‘rinadi.` });
+    const member = await this.db.shopMember.findFirst({ where: { shopId: shop.id, userId }, select: { id: true, memberRole: true, user: { select: { id: true, phone: true, firstName: true, lastName: true, deletedAt: true } } } });
+    if (!member || member.user.deletedAt) throw new NotFoundException(ERRORS.SHOP_MEMBER_NOT_FOUND);
+    const temporaryPassword = generateTempPassword();
+    const passwordHash = await hashSecret(temporaryPassword, 12);
+    const revokedAt = new Date();
+    const sessions = await this.db.$transaction(async (tx) => {
+      await tx.user.update({ where: { id: userId }, data: { passwordHash, mustPasswordChange: true } });
+      await tx.refreshToken.updateMany({ where: { userId, status: 'ACTIVE' }, data: { status: 'REVOKED', revokedAt } });
+      const revoked = await tx.deviceSession.updateMany({ where: { userId, status: 'ACTIVE' }, data: { status: 'REVOKED', revokedAt } });
+      await tx.auditLog.create({ data: { actorId: adminId, action: 'SHOP_PASSWORD_RESET', targetType: 'User', targetId: userId, after: { shopId: shop.id, memberRole: member.memberRole, revokedSessions: revoked.count } } });
+      return revoked.count;
+    });
+    return { user: member.user && { id: member.user.id, phone: member.user.phone, firstName: member.user.firstName, lastName: member.user.lastName }, temporaryPassword, revokedSessions: sessions };
   }
 
-  /** Rad etish: PENDING_REVIEW → DRAFT, sabab majburiy (ega ko‘radi). */
-  async reject(adminId: string, shopId: string, reason: string) {
-    const actor = await this.actorKind(adminId);
+  /** Egani almashtirish: mavjud a’zo OWNER, eski ega MANAGER (bitta OWNER — partial unique, shuning uchun avval pasaytiriladi). */
+  async changeOwner(adminId: string, shopId: string, userId: string, reason: string) {
     const shop = await this.shops.findOrThrow(shopId);
-    if (shop.status !== 'PENDING_REVIEW' || !canTransition(shop.status, 'DRAFT', actor)) throw invalidTransition();
-    return this.transition(adminId, shop.id, shop.status, { status: 'DRAFT', verificationStatus: 'REJECTED' }, 'SHOP_VERIFICATION_REJECTED', reason, async (tx) => {
-      await tx.shopVerificationDocument.updateMany({ where: { shopId, status: 'PENDING' }, data: { status: 'REJECTED', reviewerId: adminId, reviewedAt: new Date(), reason } });
-    }, { title: 'Do‘kon tekshiruvi rad etildi', body: `Sabab: ${reason}` });
+    const target = await this.db.shopMember.findFirst({ where: { shopId: shop.id, userId }, select: { id: true, memberRole: true } });
+    if (!target) throw new NotFoundException(ERRORS.SHOP_MEMBER_NOT_FOUND);
+    if (target.memberRole === 'OWNER') throw conflict('SHOP_ALREADY_OWNER', 'Bu a’zo allaqachon do‘kon egasi');
+    return this.db.$transaction(async (tx) => {
+      await this.shops.assertOwnerLimit(userId, tx);
+      const previous = await tx.shopMember.findFirst({ where: { shopId: shop.id, memberRole: 'OWNER' }, select: { id: true, userId: true } });
+      if (previous) await tx.shopMember.update({ where: { id: previous.id }, data: { memberRole: 'MANAGER', permissions: DEFAULT_PERMISSIONS.MANAGER } });
+      await tx.shopMember.update({ where: { id: target.id }, data: { memberRole: 'OWNER', permissions: [] } });
+      await tx.auditLog.create({ data: { actorId: adminId, action: 'SHOP_OWNER_CHANGED', reason, targetType: 'Shop', targetId: shop.id, before: { ownerUserId: previous?.userId ?? null }, after: { ownerUserId: userId } } });
+      for (const id of [previous?.userId, userId]) {
+        if (!id) continue;
+        await this.outbox.emit(tx, { eventName: 'shop.owner_changed', aggregateType: 'Shop', aggregateId: shop.id, payload: { userId: id, title: 'Do‘kon egasi o‘zgardi', body: `«${shop.name}» do‘konining egasi almashtirildi.` }, createdById: adminId });
+      }
+      return { shopId: shop.id, ownerUserId: userId, previousOwnerUserId: previous?.userId ?? null };
+    });
   }
 
   async suspend(adminId: string, shopId: string, reason: string) {
-    await this.requireSuper(adminId);
     const shop = await this.shops.findOrThrow(shopId);
-    if (!canTransition(shop.status, 'SUSPENDED', 'SUPER_ADMIN')) throw invalidTransition();
-    return this.transition(adminId, shop.id, shop.status, { status: 'SUSPENDED', suspendedAt: new Date(), suspendReason: reason }, 'SHOP_SUSPENDED', reason, undefined, { title: 'Do‘kon to‘xtatildi', body: `Sabab: ${reason}` });
+    if (!canTransition(shop.status, 'SUSPENDED', 'ADMIN')) throw invalidTransition();
+    return this.transition(adminId, shop.id, shop.status, { status: 'SUSPENDED', suspendedAt: new Date(), suspendReason: reason }, 'SHOP_SUSPENDED', reason, { title: 'Do‘kon to‘xtatildi', body: `Sabab: ${reason}` });
   }
 
   async resume(adminId: string, shopId: string) {
-    await this.requireSuper(adminId);
     const shop = await this.shops.findOrThrow(shopId);
-    if (!canTransition(shop.status, 'ACTIVE', 'SUPER_ADMIN') || shop.status !== 'SUSPENDED') throw invalidTransition();
-    return this.transition(adminId, shop.id, shop.status, { status: 'ACTIVE', suspendedAt: null, suspendReason: null }, 'SHOP_RESUMED', null, undefined, { title: 'Do‘kon qayta faollashtirildi', body: `«${shop.name}» yana ishlamoqda.` });
+    if (!canTransition(shop.status, 'ACTIVE', 'ADMIN')) throw invalidTransition();
+    return this.transition(adminId, shop.id, shop.status, { status: 'ACTIVE', suspendedAt: null, suspendReason: null }, 'SHOP_RESUMED', null, { title: 'Do‘kon qayta faollashtirildi', body: `«${shop.name}» yana ishlamoqda.` });
   }
 
   private async transition(
@@ -182,13 +241,11 @@ export class AdminShopsService {
     data: Prisma.ShopUpdateManyMutationInput,
     action: string,
     reason: string | null,
-    extra?: (tx: Prisma.TransactionClient) => Promise<void>,
     notify?: { title: string; body: string },
   ) {
     return this.db.$transaction(async (tx) => {
       const updated = await tx.shop.updateMany({ where: { id: shopId, status: from }, data });
       if (updated.count === 0) throw invalidTransition();
-      if (extra) await extra(tx);
       await tx.auditLog.create({ data: { actorId: adminId, action, reason, targetType: 'Shop', targetId: shopId, before: { status: from }, after: { status: (data.status as string) ?? from } } });
       if (notify) {
         const owner = await tx.shopMember.findFirst({ where: { shopId, memberRole: 'OWNER' }, select: { userId: true } });

@@ -22,7 +22,7 @@ function linkFor(base: { customer: string; shop: string }, payload: Record<strin
     case 'Installation': return userIsCustomer ? `${c}/mijoz/montajlar/${id}` : `${s}/dokon/montajlar/${id}`;
     case 'InstalledSystem': return `${c}/mijoz/tizimim/${id}`;
     case 'SupportTicket': return `${c}/mijoz/murojaatlar/${id}`;
-    case 'ShopCertification': return `${s}/dokon/sertifikatlar`;
+    case 'ShopCertification': return `${s}/dokon`;
     default: return null;
   }
 }

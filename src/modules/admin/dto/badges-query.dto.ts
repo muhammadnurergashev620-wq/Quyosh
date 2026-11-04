@@ -5,8 +5,4 @@ export class AdminBadgesQueryDto {
   @IsOptional()
   @IsDateString()
   usersSince?: string;
-
-  @IsOptional()
-  @IsDateString()
-  verificationsSince?: string;
 }

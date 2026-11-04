@@ -1,33 +1,12 @@
 import { Type } from 'class-transformer';
-import { ArrayMaxSize, IsArray, IsEmail, IsEnum, IsIn, IsInt, IsNumber, IsObject, IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength } from 'class-validator';
-import { BranchStatus, PricingModel, ServiceType, ShopDocType, Currency } from '@prisma/client';
+import { IsArray, IsBoolean, IsEmail, IsEnum, IsIn, IsInt, IsNumber, IsObject, IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { BranchStatus, PricingModel, ServiceType, Currency } from '@prisma/client';
 import { IsUUID } from '../../../common/validators/any-uuid';
 import { SHOP_PERMISSIONS } from '../../../common/constants/shop-permissions';
 import { REGION_KEYS } from '../../../common/constants/regions';
 
 const STIR = /^\d{9}$/;
 const PHONE = /^\+?998[\s-]?\d{2}[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/;
-
-/** TZ 3.5: «Do‘kon ochish» — nom, telefon, faoliyat turi, STIR. */
-export class CreateShopDto {
-  @IsString()
-  @MinLength(2)
-  @MaxLength(120)
-  name!: string;
-
-  @Matches(PHONE, { message: 'PHONE_INVALID' })
-  phone!: string;
-
-  @IsOptional()
-  @Matches(STIR, { message: 'STIR_INVALID' })
-  stir?: string;
-
-  @IsOptional()
-  @IsArray()
-  @ArrayMaxSize(5)
-  @IsEnum(ServiceType, { each: true })
-  activities?: ServiceType[];
-}
 
 export class UpdateShopDto {
   @IsOptional()
@@ -61,29 +40,6 @@ export class UpdateShopDto {
   @IsOptional()
   @IsUUID()
   coverAssetId?: string;
-}
-
-export class VerificationDocumentDto {
-  @IsUUID()
-  fileId!: string;
-
-  @IsEnum(ShopDocType)
-  docType!: ShopDocType;
-}
-
-export class InviteMemberDto {
-  /** Telefon (+998…) yoki email. */
-  @IsString()
-  @MaxLength(255)
-  target!: string;
-
-  @IsIn(['MANAGER', 'STAFF'])
-  memberRole!: 'MANAGER' | 'STAFF';
-
-  @IsOptional()
-  @IsArray()
-  @IsIn([...SHOP_PERMISSIONS], { each: true })
-  permissions?: string[];
 }
 
 export class UpdateMemberDto {
@@ -225,26 +181,81 @@ export class AdminShopQueryDto {
   limit?: number;
 }
 
-/** TZ 3.7.1: superadmin do‘kon yaratadi; egasi taklif orqali biriktiriladi. */
-export class AdminCreateShopDto extends CreateShopDto {
-  /** Bo‘lajak egasining telefoni yoki emaili (taklif yuboriladi). */
+/** TZ 3.7.1: admin do‘kon + egasining hisobini yaratadi (parolni tizim yaratadi). */
+export class AdminCreateShopDto {
   @IsString()
-  @MaxLength(255)
-  ownerTarget!: string;
+  @MinLength(2)
+  @MaxLength(120)
+  name!: string;
 
-  /** Takroriy STIR/telefon ogohlantirishini tasdiqlab o‘tish (STIR to‘qnashuvi baribir bloklanadi). */
+  @Matches(STIR, { message: 'STIR_INVALID' })
+  stir!: string;
+
+  @Matches(PHONE, { message: 'PHONE_INVALID' })
+  phone!: string;
+
+  @IsIn(REGION_KEYS)
+  regionCode!: string;
+
+  /** Birinchi filial manzili. */
+  @IsString()
+  @MinLength(5)
+  @MaxLength(500)
+  address!: string;
+
+  @IsString()
+  @MinLength(2)
+  @MaxLength(100)
+  ownerFirstName!: string;
+
   @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  ownerLastName?: string;
+
+  /** Egasining logini — telefon raqami. */
+  @Matches(PHONE, { message: 'PHONE_INVALID' })
+  ownerPhone!: string;
+
+  /** Shu telefon bilan boshqa do‘kon bo‘lsa ogohlantirishni tasdiqlab o‘tish (STIR to‘qnashuvi baribir bloklanadi). */
+  @IsOptional()
+  @IsBoolean()
   confirmDuplicates?: boolean;
-
-  /** Yaratilishi bilan faollashtirish (DRAFT → ACTIVE, faqat superadmin). */
-  @IsOptional()
-  activate?: boolean;
 }
 
-export class OwnerTargetDto {
+/** TZ 3.7.2: admin do‘konga xodim qo‘shadi (login + vaqtincha parol). */
+export class AdminAddMemberDto {
   @IsString()
-  @MaxLength(255)
-  target!: string;
+  @MinLength(2)
+  @MaxLength(100)
+  firstName!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  lastName?: string;
+
+  @Matches(PHONE, { message: 'PHONE_INVALID' })
+  phone!: string;
+
+  @IsIn(['MANAGER', 'STAFF'])
+  memberRole!: 'MANAGER' | 'STAFF';
+
+  @IsOptional()
+  @IsArray()
+  @IsIn([...SHOP_PERMISSIONS], { each: true })
+  permissions?: string[];
+}
+
+/** Egani almashtirish: mavjud a’zo yangi OWNER bo‘ladi, eski ega MANAGER. */
+export class ChangeOwnerDto {
+  @IsUUID()
+  userId!: string;
+
+  @IsString()
+  @MinLength(3)
+  @MaxLength(2000)
+  reason!: string;
 }
 
 export class DuplicateQueryDto {

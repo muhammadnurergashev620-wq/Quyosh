@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -12,6 +13,17 @@ import { AUTH_OPTIONAL_KEY, AUTH_PUBLIC_KEY } from '../constants/auth.constants'
 import { authCookieNames, panelOf } from '../utils/panel';
 import { AccessClaims, verifyJwt } from '../types/auth.types';
 import { ERRORS } from '../constants/error-messages';
+
+/**
+ * Vaqtincha parol bilan kirgan (User.mustPasswordChange) foydalanuvchi uchun ochiq yo‘llar (TZ 6.4):
+ * o‘z profili, do‘konlar ro‘yxati, yangi parol o‘rnatish va chiqish. Qolgan hamma narsa — 403 PASSWORD_CHANGE_REQUIRED.
+ */
+const PASSWORD_CHANGE_ALLOWED: Array<{ method: string; path: RegExp }> = [
+  { method: 'GET', path: /^\/api\/v1\/users\/me$/ },
+  { method: 'GET', path: /^\/api\/v1\/me\/shops$/ },
+  { method: 'POST', path: /^\/api\/v1\/users\/me\/password\/first$/ },
+  { method: 'POST', path: /^\/api\/v1\/auth\/logout$/ },
+];
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -38,7 +50,7 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 
-  private async authenticate(request: { headers?: Record<string, unknown>; user?: unknown }): Promise<void> {
+  private async authenticate(request: { headers?: Record<string, unknown>; user?: unknown; method?: string; originalUrl?: string }): Promise<void> {
     const accessToken = this.getCookie(request.headers?.cookie, authCookieNames(panelOf(request as never)).access) ?? this.getBearerToken(request.headers?.authorization);
     if (!accessToken) throw new UnauthorizedException(ERRORS.ACCESS_TOKEN_MISSING);
 
@@ -74,6 +86,7 @@ export class AuthGuard implements CanActivate {
           select: {
             status: true,
             deletedAt: true,
+            mustPasswordChange: true,
             userRoles: { select: { role: true } },
           },
         },
@@ -88,6 +101,14 @@ export class AuthGuard implements CanActivate {
       session.user.status !== UserStatus.ACTIVE
     ) {
       throw new UnauthorizedException(ERRORS.AUTHENTICATION_REQUIRED);
+    }
+
+    if (session.user.mustPasswordChange) {
+      const path = (request.originalUrl ?? '').split('?')[0]!.replace(/\/+$/, '');
+      const method = (request.method ?? '').toUpperCase();
+      if (!PASSWORD_CHANGE_ALLOWED.some((rule) => rule.method === method && rule.path.test(path))) {
+        throw new ForbiddenException({ code: 'PASSWORD_CHANGE_REQUIRED', message: ERRORS.PASSWORD_CHANGE_REQUIRED });
+      }
     }
 
     await this.prisma.deviceSession.updateMany({

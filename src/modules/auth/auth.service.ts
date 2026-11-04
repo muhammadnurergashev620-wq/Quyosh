@@ -54,6 +54,8 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto, req: Request) {
+    // v3.1: do‘kon o‘zi ro‘yxatdan o‘ta olmaydi — hisobni admin yaratadi (TZ 3.7).
+    if (panelOf(req) === 'SHOP') throw new ForbiddenException(ERRORS.SHOP_PANEL_SELF_SIGNUP_DISABLED);
     const phone = this.normalizePhone(dto.phone);
     const email = dto.email?.trim().toLowerCase() || null;
     const policyIds = [...new Set(dto.acceptedPolicyIds)];
@@ -398,6 +400,7 @@ export class AuthService {
    * Aks holda telefon raqami va shartlarni qabul qilish kerak: `needsPhone` va qisqa muddatli `signupToken` qaytadi.
    */
   async googleSignIn(dto: GoogleSignInDto, req: Request, res: Response) {
+    if (panelOf(req) === 'SHOP') throw new ForbiddenException(ERRORS.SHOP_PANEL_SELF_SIGNUP_DISABLED);
     const profile = dto.accessToken
       ? await this.verifyGoogleAccessToken(dto.accessToken)
       : { ...(await this.verifyGoogleCredential(dto.credential ?? '')), phone: null as string | null };
@@ -435,6 +438,7 @@ export class AuthService {
 
   /** Google orqali yangi hisob: telefon raqam OTP bilan tasdiqlanadi (platforma identifikatori — telefon). */
   async googleRegister(dto: GoogleRegisterDto, req: Request, res: Response, opts: { phoneVerified?: boolean } = {}) {
+    if (panelOf(req) === 'SHOP') throw new ForbiddenException(ERRORS.SHOP_PANEL_SELF_SIGNUP_DISABLED);
     const raw = await this.redis.get(`google:signup:${dto.signupToken}`);
     if (!raw) throw new BadRequestException(ERRORS.GOOGLE_SIGNUP_EXPIRED);
     const profile = JSON.parse(raw) as { sub: string; email: string | null; picture: string | null; firstName: string | null; lastName: string | null };
@@ -571,6 +575,7 @@ export class AuthService {
         status: true,
         deletedAt: true,
         twoFactorEnabled: true,
+        mustPasswordChange: true,
         accountNumber: true,
         firstName: true,
         lastName: true,
@@ -600,6 +605,18 @@ export class AuthService {
 
     if (user.status !== UserStatus.ACTIVE) {
       throw new ForbiddenException(ERRORS.ACCOUNT_VERIFICATION_REQUIRED);
+    }
+
+    // v3.1: do‘kon paneli — faqat login (telefon) + parol, OTP yo‘q. Kirish uchun SHOP roli kerak (hisobni admin yaratadi);
+    // boshqa akkaunt (masalan, mijoz) do‘kon paneliga kira olmaydi va sababi oshkor qilinmaydi.
+    if (panelOf(req) === 'SHOP') {
+      if (!res || !user.userRoles.some((item) => item.role === Role.SHOP)) {
+        await this.registerLoginFailure(attemptKey);
+        throw new UnauthorizedException(ERRORS.INVALID_CREDENTIALS);
+      }
+      const session = await this.createSession(user.id, user.userRoles.map((item) => item.role), user.status, req, res);
+      this.notifySession('login', user, req);
+      return { verificationRequired: false as const, mustPasswordChange: user.mustPasswordChange, ...session };
     }
 
     // Ikki bosqichli autentifikatsiya o‘chirilgan bo‘lsa (administrator uchun ham): faqat login va parol — OTP so‘ralmaydi.

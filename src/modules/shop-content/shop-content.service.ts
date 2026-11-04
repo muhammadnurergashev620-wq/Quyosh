@@ -9,13 +9,13 @@ import { MediaService } from '../media/media.service';
 import { ShopService } from '../shop/shop.service';
 import { M6Notifier } from '../quote-request/m6-notifier.service';
 import { activeCertWhere } from './cert-filter';
-import type { AdminCertQueryDto, CertificationDto, ProjectDto, ReviewCertificationDto } from './dto/shop-content.dto';
+import type { AdminBadgeDto, ProjectDto } from './dto/shop-content.dto';
 
 const DAY = 86_400_000;
 const unprocessable = (code: keyof typeof ERRORS) => new DomainException(HttpStatus.UNPROCESSABLE_ENTITY, code, ERRORS[code] as string);
 const dateOnly = (s: string) => new Date(`${s.slice(0, 10)}T00:00:00Z`);
 
-/** Portfolio va sertifikatlar (TZ 4.11, 7.3, U11.10, U11.12). */
+/** Portfolio va do‘kon belgilari (TZ 4.11, 7.3, U11.10, U12.11). */
 @Injectable()
 export class ShopContentService {
   constructor(
@@ -108,52 +108,40 @@ export class ShopContentService {
     }));
   }
 
-  // ───────────── Sertifikatlar ─────────────
+  // ───────────── Belgilar (v3.1: faqat admin qo‘yadi) ─────────────
 
-  private validateCert(dto: CertificationDto) {
-    if (dto.certType === 'OFFICIAL_DEALER' && !dto.brand?.trim()) throw unprocessable('CERTIFICATION_BRAND_REQUIRED');
-    if (dto.validUntil && dateOnly(dto.validUntil) <= dateOnly(dto.validFrom)) throw unprocessable('CERTIFICATION_DATES_INVALID');
+  private validateBadge(certType: string, brand: string | undefined, validFrom: string, validUntil?: string) {
+    if (certType === 'OFFICIAL_DEALER' && !brand?.trim()) throw unprocessable('CERTIFICATION_BRAND_REQUIRED');
+    if (validUntil && dateOnly(validUntil) <= dateOnly(validFrom)) throw unprocessable('CERTIFICATION_DATES_INVALID');
   }
 
-  private async assertCertFile(shopId: string, fileId: string) {
-    const ok = await this.db.mediaAsset.count({ where: { id: fileId, kind: 'CERTIFICATE', linkedResourceType: 'Shop', linkedResourceId: shopId, status: { notIn: ['REJECTED', 'FAILED'] } } });
-    if (!ok) throw unprocessable('CERTIFICATION_FILE_INVALID');
-  }
-
-  async certifications(ctx: ShopContext) {
-    const rows = await this.db.shopCertification.findMany({ where: { shopId: ctx.shopId }, orderBy: { createdAt: 'desc' } });
-    const today = dateOnly(tashkentDate());
-    return rows.map((r) => ({ ...r, expiringSoon: r.status === 'APPROVED' && !!r.validUntil && r.validUntil.getTime() - today.getTime() <= 30 * DAY }));
-  }
-
-  async createCertification(ctx: ShopContext, dto: CertificationDto, actorId: string) {
-    this.validateCert(dto);
-    await this.assertCertFile(ctx.shopId, dto.fileId);
-    const row = await this.db.shopCertification.create({
-      data: { shopId: ctx.shopId, certType: dto.certType, brand: dto.brand?.trim() || null, issuer: dto.issuer.trim(), certNumber: dto.certNumber?.trim() || null, fileId: dto.fileId, validFrom: dateOnly(dto.validFrom), validUntil: dto.validUntil ? dateOnly(dto.validUntil) : null },
-    });
-    await this.db.auditLog.create({ data: { actorId, action: 'CERTIFICATION_SUBMITTED', targetType: 'ShopCertification', targetId: row.id, after: { certType: row.certType, shopId: ctx.shopId } } });
-    return row;
-  }
-
-  /** Tahrir/yangilash — yangi tekshiruvga (PENDING). */
-  async updateCertification(ctx: ShopContext, id: string, dto: CertificationDto) {
-    const row = await this.db.shopCertification.findFirst({ where: { id, shopId: ctx.shopId } });
-    if (!row) throw new NotFoundException(ERRORS.CERTIFICATION_NOT_FOUND);
-    this.validateCert(dto);
-    await this.assertCertFile(ctx.shopId, dto.fileId);
-    return this.db.shopCertification.update({
-      where: { id },
-      data: {
-        certType: dto.certType, brand: dto.brand?.trim() || null, issuer: dto.issuer.trim(), certNumber: dto.certNumber?.trim() || null, fileId: dto.fileId,
-        validFrom: dateOnly(dto.validFrom), validUntil: dto.validUntil ? dateOnly(dto.validUntil) : null, status: 'PENDING', reviewerId: null, reviewedAt: null, reason: null, expiringNotifiedAt: null,
-      },
+  /** Do‘kon belgisi (rasmiy diler, sertifikatli montajchi, litsenziya): admin qo‘yadi, darhol APPROVED; hujjat shart emas. */
+  async addBadge(adminId: string, shopId: string, dto: AdminBadgeDto) {
+    const shop = await this.db.shop.findFirst({ where: { id: shopId, archivedAt: null }, select: { id: true } });
+    if (!shop) throw new NotFoundException(ERRORS.SHOP_NOT_FOUND);
+    const validFrom = dto.validFrom ?? tashkentDate();
+    this.validateBadge(dto.certType, dto.brand, validFrom, dto.validUntil);
+    const now = new Date();
+    return this.db.$transaction(async (tx) => {
+      const row = await tx.shopCertification.create({
+        data: {
+          shopId: shop.id, certType: dto.certType, brand: dto.brand?.trim() || null, issuer: dto.issuer?.trim() || 'Quyosh.uz',
+          certNumber: dto.certNumber?.trim() || null, validFrom: dateOnly(validFrom), validUntil: dto.validUntil ? dateOnly(dto.validUntil) : null,
+          status: 'APPROVED', reviewerId: adminId, reviewedAt: now,
+        },
+      });
+      await tx.auditLog.create({ data: { actorId: adminId, action: 'SHOP_BADGE_SET', targetType: 'Shop', targetId: shop.id, after: { badgeId: row.id, certType: row.certType, brand: row.brand, validUntil: row.validUntil } } });
+      return row;
     });
   }
 
-  async deleteCertification(ctx: ShopContext, id: string) {
-    const res = await this.db.shopCertification.deleteMany({ where: { id, shopId: ctx.shopId } });
-    if (!res.count) throw new NotFoundException(ERRORS.CERTIFICATION_NOT_FOUND);
+  async removeBadge(adminId: string, shopId: string, badgeId: string) {
+    const row = await this.db.shopCertification.findFirst({ where: { id: badgeId, shopId } });
+    if (!row) throw new NotFoundException(ERRORS.SHOP_BADGE_NOT_FOUND);
+    await this.db.$transaction(async (tx) => {
+      await tx.shopCertification.delete({ where: { id: badgeId } });
+      await tx.auditLog.create({ data: { actorId: adminId, action: 'SHOP_BADGE_REMOVED', targetType: 'Shop', targetId: shopId, before: { badgeId, certType: row.certType, brand: row.brand } } });
+    });
     return { deleted: true };
   }
 
@@ -165,36 +153,6 @@ export class ShopContentService {
     return map;
   }
 
-  async adminCertifications(query: AdminCertQueryDto) {
-    return this.db.shopCertification.findMany({
-      where: { status: query.status ?? 'PENDING' },
-      orderBy: { createdAt: 'asc' },
-      take: 200,
-      include: { shop: { select: { id: true, name: true, slug: true } } },
-    });
-  }
-
-  async reviewCertification(adminId: string, id: string, dto: ReviewCertificationDto) {
-    const row = await this.db.shopCertification.findUnique({ where: { id } });
-    if (!row) throw new NotFoundException(ERRORS.CERTIFICATION_NOT_FOUND);
-    if (row.status !== 'PENDING') throw new DomainException(HttpStatus.CONFLICT, 'INVALID_STATUS_TRANSITION', ERRORS.INVALID_STATUS_TRANSITION);
-    if (dto.decision === 'REJECTED' && !dto.reason?.trim()) throw new DomainException(HttpStatus.UNPROCESSABLE_ENTITY, 'DECLINE_REASON_REQUIRED', ERRORS.DECLINE_REASON_REQUIRED);
-    const expired = dto.decision === 'APPROVED' && row.validUntil && row.validUntil < dateOnly(tashkentDate());
-    const status = expired ? 'EXPIRED' : dto.decision;
-    await this.db.$transaction(async (tx) => {
-      await tx.shopCertification.update({ where: { id }, data: { status, reviewerId: adminId, reviewedAt: new Date(), reason: dto.reason?.trim() || null } });
-      await tx.auditLog.create({ data: { actorId: adminId, action: 'CERTIFICATION_REVIEWED', targetType: 'ShopCertification', targetId: id, before: { status: row.status }, after: { status, reason: dto.reason ?? null } } });
-      await this.notify.toShop(tx, row.shopId, {
-        type: 'CERTIFICATION_RESULT',
-        title: status === 'APPROVED' ? 'Sertifikat tasdiqlandi' : 'Sertifikat rad etildi',
-        body: status === 'APPROVED' ? 'Belgi do‘kon profilida ko‘rinadi.' : (dto.reason?.trim() || 'Muddati o‘tgan'),
-        entityType: 'ShopCertification',
-        entityId: id,
-      }, { permission: 'shop.profile' });
-    });
-    return { id, status };
-  }
-
   /** Job certification-expiry (14.1, kunlik): 30 kun qolganda eslatma; o‘tganda EXPIRED (belgi yashiriladi). */
   async certificationExpiry(now = new Date()) {
     const today = dateOnly(tashkentDate(now));
@@ -203,7 +161,7 @@ export class ShopContentService {
       await this.db.$transaction(async (tx) => {
         const res = await tx.shopCertification.updateMany({ where: { id: c.id, status: 'APPROVED' }, data: { status: 'EXPIRED' } });
         if (!res.count) return;
-        await this.notify.toShop(tx, c.shopId, { type: 'CERTIFICATION_EXPIRING', title: 'Sertifikat muddati o‘tdi', body: 'Belgi profildan yashirildi. Yangi sertifikatni yuklang.', entityType: 'ShopCertification', entityId: c.id }, { permission: 'shop.profile' });
+        await this.notify.toShop(tx, c.shopId, { type: 'CERTIFICATION_EXPIRING', title: 'Belgi muddati o‘tdi', body: 'Belgi profildan yashirildi. Yangilash uchun administratorga murojaat qiling.', entityType: 'ShopCertification', entityId: c.id }, { permission: 'shop.profile' });
       });
     }
     const soon = await this.db.shopCertification.findMany({ where: { status: 'APPROVED', expiringNotifiedAt: null, validUntil: { gte: today, lte: new Date(today.getTime() + 30 * DAY) } }, select: { id: true, shopId: true, validUntil: true } });
@@ -211,7 +169,7 @@ export class ShopContentService {
       await this.db.$transaction(async (tx) => {
         const res = await tx.shopCertification.updateMany({ where: { id: c.id, expiringNotifiedAt: null }, data: { expiringNotifiedAt: now } });
         if (!res.count) return;
-        await this.notify.toShop(tx, c.shopId, { type: 'CERTIFICATION_EXPIRING', title: 'Sertifikat muddati tugayapti', body: `Muddati: ${c.validUntil!.toISOString().slice(0, 10)}. Yangilang — aks holda belgi yashiriladi.`, entityType: 'ShopCertification', entityId: c.id }, { permission: 'shop.profile' });
+        await this.notify.toShop(tx, c.shopId, { type: 'CERTIFICATION_EXPIRING', title: 'Belgi muddati tugayapti', body: `Muddati: ${c.validUntil!.toISOString().slice(0, 10)}. Yangilash uchun administratorga murojaat qiling, aks holda belgi yashiriladi.`, entityType: 'ShopCertification', entityId: c.id }, { permission: 'shop.profile' });
       });
     }
     return { expired: expired.length, warned: soon.length };

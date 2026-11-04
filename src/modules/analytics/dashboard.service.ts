@@ -109,9 +109,7 @@ export class DashboardService {
   async adminQueues() {
     const now = new Date();
     const today = new Date(`${tashkentDate()}T00:00:00Z`);
-    const [shops, certs, models, reviews, complaints, disputes, ticketsOpen, ticketsBreaching, tariffsExpiring, rate] = await Promise.all([
-      this.db.shop.count({ where: { status: 'PENDING_REVIEW', archivedAt: null } }),
-      this.db.shopCertification.count({ where: { status: 'PENDING' } }),
+    const [models, reviews, complaints, disputes, ticketsOpen, ticketsBreaching, tariffsExpiring, rate] = await Promise.all([
       this.db.productModel.count({ where: { status: 'PENDING' } }),
       this.db.review.count({ where: { moderationStatus: 'PENDING' } }),
       this.db.complaint.count({ where: { status: 'OPEN' } }),
@@ -123,8 +121,6 @@ export class DashboardService {
     ]);
     return {
       queues: [
-        { key: 'shops', permission: 'SHOPS', count: shops, to: '/admin/tasdiqlash' },
-        { key: 'certifications', permission: 'SHOPS', count: certs, to: '/admin/sertifikatlar' },
         { key: 'models', permission: 'CATALOG', count: models, to: '/admin/katalog' },
         { key: 'reviews', permission: 'REVIEWS', count: reviews, to: '/admin/sharhlar' },
         { key: 'complaints', permission: 'REVIEWS', count: complaints, to: '/admin/sharhlar' },

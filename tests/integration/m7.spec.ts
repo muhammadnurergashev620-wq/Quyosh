@@ -66,8 +66,7 @@ describe('M7 integration', () => {
     });
   });
 
-  describe('portfolio and certifications', () => {
-    let certId: string;
+  describe('portfolio and badges', () => {
     it('portfolio with images is public; foreign images are rejected', async () => {
       const img = await uploadImage(h, shop.owner.token, 'PORTFOLIO', 'Shop', shop.shopId);
       const p = await h.post(`/manage/shops/${shop.shopId}/projects`, shop.owner.token, { title: 'Chilonzor, 8 kVt', city: 'Toshkent', systemPowerKw: 8, systemType: 'HYBRID', imageIds: [img] });
@@ -81,20 +80,30 @@ describe('M7 integration', () => {
       expect(pub.data[0].images[0].url).toContain('/media/file/');
     });
 
-    it('certification: dealer needs brand; admin approves; badge public; expired hidden', async () => {
-      const file = await uploadImage(h, shop.owner.token, 'CERTIFICATE', 'Shop', shop.shopId);
-      expect((await h.post(`/manage/shops/${shop.shopId}/certifications`, shop.owner.token, { certType: 'OFFICIAL_DEALER', issuer: 'Longi', fileId: file, validFrom: '2026-01-01' })).body.code).toBe('CERTIFICATION_BRAND_REQUIRED');
-      const c = await h.post(`/manage/shops/${shop.shopId}/certifications`, shop.owner.token, { certType: 'OFFICIAL_DEALER', brand: 'Longi', issuer: 'Longi Solar', fileId: file, validFrom: '2026-01-01', validUntil: '2030-01-01' });
-      certId = c.data.id;
-      expect(c.data.status).toBe('PENDING');
+    it('badges are set by admin only: dealer needs brand; badge public at once; expired hidden; shop has no certification API', async () => {
+      const base = `/admin/shops/${shop.shopId}/badges`;
+      expect((await h.post(base, admin.token, { certType: 'OFFICIAL_DEALER' })).body.code).toBe('CERTIFICATION_BRAND_REQUIRED');
+      expect((await h.post(base, admin.token, { certType: 'LICENSE', validFrom: '2026-05-01', validUntil: '2026-04-01' })).body.code).toBe('CERTIFICATION_DATES_INVALID');
       expect((await h.get('/shops?cert=OFFICIAL_DEALER')).data.items.map((s: any) => s.id)).not.toContain(shop.shopId);
-      expect((await h.api('PATCH', `/admin/certifications/${certId}`, { token: admin.token, body: { decision: 'APPROVED' } })).data.status).toBe('APPROVED');
+      const c = await h.post(base, admin.token, { certType: 'OFFICIAL_DEALER', brand: 'Longi', issuer: 'Longi Solar', validFrom: '2026-01-01', validUntil: '2030-01-01' });
+      expect(c.status).toBe(201);
+      expect(c.data.status).toBe('APPROVED');
+      expect(c.data.fileId).toBeNull();
+      const certId = c.data.id;
       const listed = await h.get('/shops?cert=OFFICIAL_DEALER');
       expect(listed.data.items.find((s: any) => s.id === shop.shopId).certifications).toEqual([{ certType: 'OFFICIAL_DEALER', brand: 'Longi' }]);
+      // Do‘kon tomonda sertifikat yuborish ham, admin tekshiruv navbati ham yo‘q.
+      expect((await h.post(`/manage/shops/${shop.shopId}/certifications`, shop.owner.token, { certType: 'LICENSE' })).status).toBe(404);
+      expect((await h.get('/admin/certifications', admin.token)).status).toBe(404);
+      // Faqat SHOPS huquqli admin; mijoz 403.
+      expect((await h.post(base, (await createUser(h)).token, { certType: 'LICENSE' })).status).toBe(403);
       await h.db.shopCertification.update({ where: { id: certId }, data: { validUntil: new Date('2026-01-02') } });
       const job = await h.app.get(ShopContentService).certificationExpiry();
       expect(job.expired).toBeGreaterThanOrEqual(1);
       expect((await h.get('/shops?cert=OFFICIAL_DEALER')).data.items.map((s: any) => s.id)).not.toContain(shop.shopId);
+      expect((await h.api('DELETE', `${base}/${certId}`, { token: admin.token })).data).toEqual({ deleted: true });
+      expect((await h.api('DELETE', `${base}/${certId}`, { token: admin.token })).status).toBe(404);
+      expect(await h.db.auditLog.count({ where: { targetId: shop.shopId, action: { in: ['SHOP_BADGE_SET', 'SHOP_BADGE_REMOVED'] } } })).toBe(2);
     });
   });
 

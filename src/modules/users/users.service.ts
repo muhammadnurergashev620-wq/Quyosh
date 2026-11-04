@@ -38,6 +38,7 @@ export class UsersService {
         googleId: true,
         googleEmail: true,
         passwordHash: true,
+        mustPasswordChange: true,
         isSuperAdmin: true,
         adminPermissions: true,
         canCreateAdmins: true,
@@ -107,6 +108,29 @@ export class UsersService {
       return sessions.count;
     });
     return { changed: true, revokedSessions: revoked };
+  }
+
+  /**
+   * Birinchi kirish (TZ 3.5): admin bergan vaqtincha parol yangisiga almashtiriladi, `mustPasswordChange = false`.
+   * Yangi parol vaqtinchadan farq qilishi shart; boshqa qurilmalar tizimdan chiqariladi (joriy qoladi).
+   */
+  async setFirstPassword(userId: string, currentDeviceId: string | undefined, newPassword: string) {
+    const user = await this.db.user.findUnique({ where: { id: userId }, select: { id: true, passwordHash: true, mustPasswordChange: true } });
+    if (!user) throw new NotFoundException(ERRORS.USER_NOT_FOUND);
+    if (!user.mustPasswordChange || !user.passwordHash) throw new ConflictException(ERRORS.PASSWORD_CHANGE_NOT_REQUIRED);
+    if (await verifySecret(newPassword, user.passwordHash)) throw new BadRequestException(ERRORS.PASSWORD_SAME_AS_CURRENT);
+    const passwordHash = await hashSecret(newPassword, 12);
+    const revokedAt = new Date();
+    const others = currentDeviceId ? { deviceId: { not: currentDeviceId } } : {};
+    await this.db.$transaction(async (tx) => {
+      const updated = await tx.user.updateMany({ where: { id: userId, mustPasswordChange: true }, data: { passwordHash, mustPasswordChange: false } });
+      if (updated.count !== 1) throw new ConflictException(ERRORS.PASSWORD_CHANGE_NOT_REQUIRED);
+      await tx.refreshToken.updateMany({ where: { userId, status: SessionStatus.ACTIVE, ...others }, data: { status: SessionStatus.REVOKED, revokedAt } });
+      await tx.deviceSession.updateMany({ where: { userId, status: SessionStatus.ACTIVE, ...others }, data: { status: SessionStatus.REVOKED, revokedAt } });
+      // Parol audit’ga yozilmaydi.
+      await tx.auditLog.create({ data: { actorId: userId, action: 'USER_PASSWORD_CHANGED', targetType: 'User', targetId: userId, after: { first: true } } });
+    });
+    return this.findMe(userId);
   }
 
   /** Faqat parol hali yo‘q akkauntga: birinchi parol o‘rnatiladi (mavjud parolni almashtirish boshqa yo‘l bilan). */

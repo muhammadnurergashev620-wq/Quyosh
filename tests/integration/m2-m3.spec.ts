@@ -1,41 +1,52 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { bootHarness, createSuperAdmin, createUser, MISSING_UUID, type Harness, type TestUser } from '../helpers/harness';
+import { bootHarness, createAdmin, createSuperAdmin, createUser, MISSING_UUID, tokenFor, type Harness, type TestUser } from '../helpers/harness';
 
 /**
  * M2 (do‘konlar, katalog, import) va M3 (PostGIS: obyektlar, xizmat hududi, xarita) — haqiqiy Postgres + PostGIS bilan.
  */
 describe('M2/M3 integration', () => {
   let h: Harness;
-  let owner: TestUser;
+  let owner!: TestUser;
   let shopId: string;
   let branchId: string;
   const PANEL = 'Quyosh Test Montaj';
 
   beforeAll(async () => {
     h = await bootHarness();
-    owner = await createUser(h);
   });
   afterAll(async () => h?.close());
 
   describe('shops', () => {
-    it('creates a DRAFT shop, makes the user OWNER and grants the SHOP role', async () => {
-      const res = await h.post('/shops', owner.token, { name: PANEL, phone: '+998 90 111 22 33', stir: '312345678' });
+    it('admin creates an ACTIVE/VERIFIED shop with an owner account and a first branch', async () => {
+      const admin = await createAdmin(h);
+      const res = await h.post('/admin/shops', admin.token, { name: PANEL, stir: '312345678', phone: '+998 90 111 22 33', regionCode: 'toshkent-shahri', address: 'Toshkent, Chilonzor 9', ownerFirstName: 'Aziz', ownerPhone: '+998 90 555 00 01' });
       expect(res.status).toBe(201);
-      expect(res.data.status).toBe('DRAFT');
-      shopId = res.data.id;
+      expect(res.data.shop).toMatchObject({ status: 'ACTIVE', verificationStatus: 'VERIFIED', createdSource: 'ADMIN' });
+      shopId = res.data.shop.id;
+      // Qolgan testlar uchun: egasi parolni almashtirgan deb hisoblaymiz (to‘liq oqim — m7-shop-admin.spec.ts).
+      await h.db.user.update({ where: { id: res.data.owner.id }, data: { mustPasswordChange: false } });
+      owner = { id: res.data.owner.id, phone: res.data.owner.phone, roles: ['SHOP'], token: await tokenFor(h, res.data.owner.id, ['SHOP']) };
       const roles = await h.db.userRole.findMany({ where: { userId: owner.id } });
-      expect(roles.map((r) => r.role)).toContain('SHOP');
+      expect(roles.map((r) => r.role)).toEqual(['SHOP']);
       const mine = await h.get('/me/shops', owner.token);
       expect(mine.data[0]).toMatchObject({ id: shopId, memberRole: 'OWNER' });
+      expect(await h.db.shopBranch.count({ where: { shopId } })).toBe(1);
     });
 
-    it('rejects a duplicate STIR and a fourth owned shop', async () => {
-      expect((await h.post('/shops', owner.token, { name: 'Dup', phone: '+998901112234', stir: '312345678' })).body.code).toBe('SHOP_STIR_TAKEN');
-      await h.post('/shops', owner.token, { name: 'Ikkinchi', phone: '+998901112235' });
-      await h.post('/shops', owner.token, { name: 'Uchinchi', phone: '+998901112236' });
-      const fourth = await h.post('/shops', owner.token, { name: 'To‘rtinchi', phone: '+998901112237' });
-      expect(fourth.status).toBe(409);
-      expect(fourth.body.code).toBe('SHOP_LIMIT_REACHED');
+    it('rejects a duplicate STIR and a login phone that already belongs to an account', async () => {
+      const admin = await createAdmin(h);
+      const base = { name: 'Dup', phone: '+998901112234', regionCode: 'toshkent-shahri', address: 'Toshkent, Yunusobod', ownerFirstName: 'Vali' };
+      expect((await h.post('/admin/shops', admin.token, { ...base, stir: '312345678', ownerPhone: '+998905550002' })).body.code).toBe('SHOP_STIR_TAKEN');
+      const taken = await h.post('/admin/shops', admin.token, { ...base, stir: '312345679', ownerPhone: owner.phone });
+      expect(taken.status).toBe(409);
+      expect(taken.body.code).toBe('PHONE_TAKEN');
+    });
+
+    it('a customer cannot open a shop and the old self-service endpoints are gone', async () => {
+      const customer = await createUser(h);
+      expect((await h.post('/shops', customer.token, { name: 'Mening do‘konim', phone: '+998901112299' })).status).toBe(404);
+      expect((await h.post(`/manage/shops/${shopId}/submit`, owner.token)).status).toBe(404);
+      expect((await h.post(`/manage/shops/${shopId}/members/invitations`, owner.token, { target: '+998901112298', memberRole: 'STAFF' })).status).toBe(404);
     });
 
     it('hides other shops behind 404 (no existence leak)', async () => {
@@ -58,24 +69,15 @@ describe('M2/M3 integration', () => {
       branchId = res.data.id;
       expect(res.data.regionCode).toBe('toshkent-shahri');
       const list = await h.get(`/manage/shops/${shopId}/branches`, owner.token);
-      expect(list.data[0]).toMatchObject({ lat: 41.2856, lon: 69.2034, hasServiceArea: false });
+      expect(list.data.find((b: { id: string }) => b.id === branchId)).toMatchObject({ lat: 41.2856, lon: 69.2034, hasServiceArea: false });
       const first = await h.api('PUT', `/manage/shops/${shopId}/branches/${branchId}`, { token: owner.token, body: { name: 'Chilonzor-1', address: 'Toshkent', version: 1, lat: 41.2856, lon: 69.2034 } });
       expect(first.status).toBe(200);
       const stale = await h.api('PUT', `/manage/shops/${shopId}/branches/${branchId}`, { token: owner.token, body: { name: 'Eski', address: 'Toshkent', version: 1 } });
       expect(stale.body.code).toBe('VERSION_CONFLICT');
     });
 
-    it('requires a verification document before review; admin approval publishes the shop', async () => {
-      expect((await h.post(`/manage/shops/${shopId}/submit`, owner.token)).status).toBe(422);
-      const asset = await h.db.mediaAsset.create({ data: { uploaderId: owner.id, kind: 'VERIFICATION_DOC', status: 'READY', originalName: 'guvohnoma.pdf', declaredMimeType: 'application/pdf', sizeBytes: 10, linkedResourceType: 'Shop', linkedResourceId: shopId } });
-      expect((await h.post(`/manage/shops/${shopId}/verification-documents`, owner.token, { fileId: asset.id, docType: 'REGISTRATION' })).status).toBe(201);
-      expect((await h.post(`/manage/shops/${shopId}/submit`, owner.token)).data.status).toBe('PENDING_REVIEW');
-      expect((await h.get('/shops')).data.items.some((s: { id: string }) => s.id === shopId)).toBe(false);
-
-      const admin = await createSuperAdmin(h);
-      const approved = await h.post(`/admin/shops/${shopId}/approve`, admin.token);
-      expect(approved.data).toMatchObject({ status: 'ACTIVE', verificationStatus: 'VERIFIED' });
-      const pub = await h.get(`/shops/${approved.data.slug}`);
+    it('an admin-created shop is public right away and hides the phone', async () => {
+      const pub = await h.get('/shops/' + (await h.db.shop.findUniqueOrThrow({ where: { id: shopId } })).slug);
       expect(pub.status).toBe(200);
       expect(pub.data.phone).toBeUndefined();
       expect(pub.data.phoneMasked).toMatch(/\*\*\*/);

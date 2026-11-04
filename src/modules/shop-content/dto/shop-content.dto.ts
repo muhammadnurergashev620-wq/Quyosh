@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { ArrayMaxSize, IsArray, IsBoolean, IsDateString, IsEnum, IsIn, IsNumber, IsObject, IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength, ValidateNested } from 'class-validator';
-import { CertStatus, CertType, SystemType } from '@prisma/client';
+import { CertType, SystemType } from '@prisma/client';
 import { IsUUID } from '../../../common/validators/any-uuid';
 
 export class ProjectDto {
@@ -16,23 +16,14 @@ export class ProjectDto {
   @IsOptional() @IsArray() @ArrayMaxSize(20) @IsUUID('all', { each: true }) imageIds?: string[];
 }
 
-export class CertificationDto {
+/** Do‘kon belgisi (v3.1): faqat admin qo‘yadi; fayl shart emas. */
+export class AdminBadgeDto {
   @IsEnum(CertType) certType!: CertType;
   @IsOptional() @IsString() @MaxLength(120) brand?: string;
-  @IsString() @MinLength(2) @MaxLength(200) issuer!: string;
+  @IsOptional() @IsString() @MinLength(2) @MaxLength(200) issuer?: string;
   @IsOptional() @IsString() @MaxLength(120) certNumber?: string;
-  @IsUUID() fileId!: string;
-  @IsDateString() validFrom!: string;
+  @IsOptional() @IsDateString() validFrom?: string;
   @IsOptional() @IsDateString() validUntil?: string;
-}
-
-export class ReviewCertificationDto {
-  @IsIn(['APPROVED', 'REJECTED']) decision!: 'APPROVED' | 'REJECTED';
-  @IsOptional() @IsString() @MaxLength(1000) reason?: string;
-}
-
-export class AdminCertQueryDto {
-  @IsOptional() @IsEnum(CertStatus) status?: CertStatus;
 }
 
 class WidgetThemeDto {

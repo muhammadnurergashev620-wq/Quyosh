@@ -14,12 +14,11 @@ export class AdminService {
       ...(query.dateTo ? { lte: new Date(query.dateTo) } : {}),
     };
     const createdAt = Object.keys(range).length ? range : undefined;
-    const [users, newUsers, shops, shopsPending] = await Promise.all([
+    const [users, newUsers, shops] = await Promise.all([
       this.db.user.count({ where: { deletedAt: null, status: { not: UserStatus.DELETED } } }),
       this.db.user.count({ where: { deletedAt: null, createdAt } }),
       this.db.shop.count({ where: { archivedAt: null } }),
-      this.db.shop.count({ where: { archivedAt: null, status: 'PENDING_REVIEW' } }),
     ]);
-    return { users: { total: users, new: newUsers }, shops: { total: shops, pendingReview: shopsPending } };
+    return { users: { total: users, new: newUsers }, shops: { total: shops } };
   }
 }

@@ -12,7 +12,6 @@ import { CalcService } from '../calc/calc.service';
 import { CalculationsService } from '../calc/calculations.service';
 import { OtpService } from '../otp/otp.service';
 import { QuoteRequestService } from '../quote-request/quote-request.service';
-import { ShopService } from '../shop/shop.service';
 import { AnalyticsService } from '../analytics/analytics.service';
 import type { WidgetConfigDto, WidgetEstimateDto, WidgetLeadDto } from './dto/shop-content.dto';
 
