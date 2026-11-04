@@ -49,6 +49,8 @@ postgresql-18-postgis-3-scripts libgeos-c1t64 libgeos3.14.1 libproj25 proj-data 
 `postgis.control → postgis-3.control` havolasi, so‘ng `initdb`. Boshqarish: `scripts/quyosh-db.sh start|stop|status|psql`.
 S3 (MinIO o‘rniga): `scripts/quyosh-s3.sh start|stop|status` — s3rver, `:59100`, `$HOME/.local/share/quyosh/s3` (`.env`: `STORAGE_ENDPOINT=http://localhost:59100`, kalitlar `S3RVER`). Integratsion testlar ham `.env`dagi `STORAGE_ENDPOINT`ni ishlatadi (`TEST_STORAGE_ENDPOINT` bilan almashtirish mumkin).
 
+pm2 bilan (mahalliy): `pnpm build && pm2 start ecosystem.config.cjs` — S3 (`:59100`), API (`:3100`) va to‘rt sayt (`:5180` asosiy, `:5183` mijoz, `:5184` do‘kon, `:5185` admin) birga ko‘tariladi. Oldindan PostgreSQL (`scripts/quyosh-db.sh start`) va Redis kerak. Holat: `pm2 ls`, jurnal: `pm2 logs quyosh-api`, qayta ishga tushirish: `pm2 restart quyosh-api` (backend o‘zgargach avval `pnpm build`), to‘xtatish: `pm2 delete ecosystem.config.cjs`. Kompyuter qayta yoqilgach: `scripts/quyosh-db.sh start && pm2 resurrect`.
+
 Demo ma’lumot (xaritada 6 ta do‘kon): `SEED_DEMO=true DEMO_USER_PASSWORD=… pnpm db:seed`.
 
 Birinchi Super Admin: `ADMIN_PHONE` / `ADMIN_PASSWORD` (≥ 12 belgi) `pnpm db:seed` orqali yaratiladi.
