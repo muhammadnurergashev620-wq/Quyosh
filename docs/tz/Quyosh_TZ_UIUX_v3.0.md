@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Versiya | 3.0 — TZ v1.1 va UI/UX v2.1 birlashtirildi; stek va UI GetMaster'ga moslandi |
+| Versiya | 3.1 — v3.0 ustiga: do'konni faqat admin yaratadi, do'kon login + parol bilan kiradi, bosh sayt faqat mijoz uchun, do'kon panelida sertifikat yuborish yo'q (Ilova B, 13-qator). **v3.1 qoidalari hujjatdagi eski qoidalardan ustun.** |
 | Sana | 30.10.2026 |
 | Namuna loyiha | GetMaster (NestJS + Prisma + Vite/React, 4 panel) |
 | Qamrov | Bosh sayt, mijoz paneli, do'kon paneli, admin paneli, API, worker · uz / oz / ru |
@@ -97,7 +97,7 @@ Platforma — quyosh paneli o‘rnatishni rejalashtirayotgan mijozlarni quyosh u
 
 ## 1.3. V1.0 ichiga kiradigan modullar
 
-- Public website, ro‘yxatdan o‘tish (telefon OTP yoki email), login; uch tilli interfeys (o‘zbek lotin, o‘zbek kirill, rus).
+- Public website (faqat mijozga qaratilgan), mijozning ro‘yxatdan o‘tishi (telefon OTP) va logini; uch tilli interfeys (o‘zbek lotin, o‘zbek kirill, rus). Do‘kon o‘zi ro‘yxatdan o‘tmaydi: do‘konni admin yaratadi, do‘kon login (telefon) + parol bilan kiradi (3.7).
 
 - Mijoz kabineti, bir nechta obyekt/manzil boshqaruvi, jismoniy va yuridik shaxs hisoblari.
 
@@ -135,7 +135,7 @@ Platforma — quyosh paneli o‘rnatishni rejalashtirayotgan mijozlarni quyosh u
 
 - Do‘kon obunalari/paketlari, mahalliy to‘lov tizimlari (Click, Payme, Uzum), admin panel, audit, platforma analitikasi va konversiya funnel’i.
 
-- Super Admin: do‘konni platforma nomidan yaratish va egasiga topshirish, do‘konni to‘xtatish va qayta yoqish, egalikni o‘tkazish, rejani tayinlash (3.7).
+- Admin: do‘kon va egasining hisobini yaratish (vaqtincha parol), parolni qayta tiklash, xodim qo‘shish, do‘konni to‘xtatish va qayta yoqish, egani almashtirish, belgilar (rasmiy diler va h.k.) qo‘yish (3.7).
 
 - Super Admin DevOps paneli: xizmatlar holati, so‘rovlar va xatolar grafiklari, navbatlar, ma’lumotlar bazasi, deploylar, alertlar, backup va tashqi provayder kvotalari (19.1).
 
@@ -147,7 +147,7 @@ Platforma — quyosh paneli o‘rnatishni rejalashtirayotgan mijozlarni quyosh u
 
 - Bilimlar markazi: qo‘llanmalar, maqolalar, FAQ va videoqo‘llanmalar (SEO uchun).
 
-- Do‘kon sertifikatlari va belgilar: rasmiy diler, sertifikatli montajchi, litsenziya.
+- Do‘kon belgilari: rasmiy diler, sertifikatli montajchi, litsenziya — faqat admin belgilaydi (do‘kon panelida sertifikat yuborish yo‘q).
 
 - Soxta sharhlarga qarshi qoidalar (AI’siz).
 
@@ -183,7 +183,7 @@ Barcha bosqichlar bitta V1.0 relizga kiradi. Bosqichlar faqat ish tartibi va ora
 
 ## 2.1. Rol modeli
 
-- Platforma rollari GetMaster naqshida `UserRole[]` jadvali orqali: CUSTOMER, SHOP, ADMIN. Har bir ro‘yxatdan o‘tgan foydalanuvchi CUSTOMER; do‘kon ochganda yoki taklifni qabul qilganda SHOP qo‘shiladi. **SUPER_ADMIN** = ADMIN roli + `User.isSuperAdmin = true`; oddiy admin bo‘limlari `User.adminPermissions[]` bilan cheklanadi (6.4).
+- Platforma rollari GetMaster naqshida `UserRole[]` jadvali orqali: CUSTOMER, SHOP, ADMIN. Mijoz o‘zi ro‘yxatdan o‘tadi (CUSTOMER). Do‘kon egasi va xodimlarining hisobini faqat admin yaratadi va ularga faqat SHOP roli beriladi (CUSTOMER roli yo‘q); do‘kon o‘zi ro‘yxatdan o‘ta olmaydi. **SUPER_ADMIN** = ADMIN roli + `User.isSuperAdmin = true`; oddiy admin bo‘limlari `User.adminPermissions[]` bilan cheklanadi (6.4).
 
 - Do‘kon rollari faqat ShopMember.memberRole orqali beriladi: OWNER, MANAGER, STAFF. Bitta foydalanuvchi bir vaqtda mijoz va bir yoki bir nechta do‘konning a’zosi bo‘lishi mumkin.
 
@@ -193,11 +193,11 @@ Barcha bosqichlar bitta V1.0 relizga kiradi. Bosqichlar faqat ish tartibi va ora
 |--------------|-----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | Guest        | Public katalog, do‘kon, xarita, kalkulyator, qo‘llanmalar             | Tez/Batafsil hisob (saqlamasdan), mahsulotlarni ko‘rish va solishtirish                                                                                                        | Saqlash, PDF, taklif so‘rovi, yozishma, sharh va sevimlilar uchun login shart                 |
 | Customer     | O‘z profili, obyektlari, hisoblari, so‘rovlari, o‘rnatilgan tizimlari | Obyekt va maydon saqlash, hisob saqlash/ulashish, PDF, taklif so‘rash, yozishish, uchrashuv band qilish, montajni tasdiqlash, sharh, sevimlilar                                | Boshqa foydalanuvchi ma’lumotlariga kirish taqiqlanadi                                        |
-| Shop OWNER   | O‘z do‘koni, filiallari, takliflari, so‘rovlari, analitikasi          | Barcha do‘kon amallari, xodimlarni boshqarish, obuna va to‘lov, vidjet sozlash                                                                                                 | Boshqa do‘konni tahrirlay olmaydi; verifikatsiya admin tasdig‘ini talab qiladi                |
+| Shop OWNER   | O‘z do‘koni, filiallari, takliflari, so‘rovlari, analitikasi          | Barcha do‘kon amallari, xodimlar ro‘yxati va ruxsatlarini boshqarish (xodim qo‘shishni admin qiladi), vidjet sozlash                                                                                                 | Boshqa do‘konni tahrirlay olmaydi; verifikatsiya admin tasdig‘ini talab qiladi                |
 | Shop MANAGER | O‘ziga biriktirilgan do‘kon ma’lumotlari                              | permissions ro‘yxatidagi amallar (katalog, so‘rovlar, takliflar, yozishma, portfolio, analitika)                                                                               | Obuna, to‘lov, xodim qo‘shish/o‘chirish, egani almashtirish va do‘konni o‘chirish taqiqlanadi |
 | Shop STAFF   | Biriktirilgan so‘rovlar va katalog                                    | Faqat permissions ro‘yxatidagi amallar (default: yozishma va taklif qoralamasi)                                                                                                | Taklifni yuborish uchun quote.send ruxsati kerak                                              |
 | Admin        | Moderatsiya va operatsion panel                                       | Do‘kon verifikatsiyasi, shikoyatlar, katalog va ProductModel moderatsiyasi, tariflar, eksport qoidalari, moliyalashtirish mahsulotlari, maishiy texnika katalogi, qo‘llanmalar | SUPER_ADMIN huquqlarini avtomatik olmaydi                                                     |
-| Super Admin  | Tizim boshqaruvi                                                      | Rollar, adminlar, tizim konfiguratsiyasi, audit va platforma sozlamalari; do‘kon yaratish, to‘xtatish va egalikni o‘tkazish (3.7); DevOps paneli (19.1)                        | Barcha yuqori xavfli amallar audit qilinadi; 2FA (parol + OTP) majburiy                                |
+| Super Admin  | Tizim boshqaruvi                                                      | Rollar, adminlar, tizim konfiguratsiyasi, audit va platforma sozlamalari; do‘kon yaratish, parolni tiklash, to‘xtatish va egani almashtirish (3.7); DevOps paneli (19.1)                        | Barcha yuqori xavfli amallar audit qilinadi; 2FA (parol + OTP) majburiy                                |
 
 ## 2.2. Do‘kon ruxsatlari ro‘yxati
 
@@ -279,15 +279,17 @@ ShopMember.permissions — quyidagi kalitlar massivi (OWNER hammasiga ega): cata
 
 Barcha status enumlari va o‘tish jadvallari 13-bo‘limda. Ular yagona haqiqat manbai.
 
-## 3.5. Do‘kon onboarding workflow
+## 3.5. Do‘konning birinchi kirishi (v3.1: onboarding olib tashlangan)
 
-1.  Foydalanuvchi "Do‘kon ochish" sahifasida asosiy ma’lumotlarni kiritadi: nom, telefon, faoliyat turi, STIR.
+Do‘kon o‘zi ochilmaydi va "Do‘kon ochish" sahifasi, wizard hamda tekshiruvga yuborish yo‘q. Do‘konni admin yaratadi (3.7), shuning uchun u darhol `ACTIVE` va `VERIFIED`.
 
-2.  Wizard qadamlari: profil (logo, tavsif) → birinchi filial (manzil, ish vaqti) → xizmat hududi → verifikatsiya hujjatlari va sertifikatlar (ixtiyoriy) → birinchi mahsulotlar (qo‘lda yoki CSV/XLSX import).
+1.  Admin egasining login (telefon) va tizim yaratgan vaqtincha parolini oladi va do‘kon egasiga o‘zi yetkazadi (parol faqat bir marta ko‘rsatiladi).
 
-3.  Har bir qadamni o‘tkazib yuborish mumkin; bosh panelda "Profil to‘liqligi: N%" chek-listi ko‘rsatiladi.
+2.  Ega do‘kon panelida login + parol bilan kiradi (SMS/OTP yo‘q). `User.mustPasswordChange = true` bo‘lgani uchun faqat "Yangi parol o‘rnating" ekrani ochiladi; parol almashtirilmaguncha panelning boshqa sahifalari va API endpointlari 403 `PASSWORD_CHANGE_REQUIRED` qaytaradi.
 
-4.  Do‘kon verifikatsiyadan o‘tmaguncha public ro‘yxatda ko‘rinmaydi (status = PENDING_REVIEW).
+3.  Parol almashtirilgach `mustPasswordChange = false` bo‘ladi va ega bosh panelga o‘tadi. Profil, filial, xizmat hududi, katalog va importni ega o‘zi panel bo‘limlaridan to‘ldiradi (alohida wizard yo‘q); bosh panelda "Profil to‘liqligi: N%" chek-listi ko‘rsatiladi.
+
+4.  Parol yo‘qolsa "Parolni unutdim" yo‘q: ega administratorga murojaat qiladi, admin yangi vaqtincha parol beradi (3.7.2).
 
 ## 3.6. Montajdan keyingi workflow
 
@@ -297,45 +299,34 @@ Barcha status enumlari va o‘tish jadvallari 13-bo‘limda. Ular yagona haqiqat
 
 3.  Tizim xizmat eslatmalarini yuboradi: panel tozalash (default 90 kun), yillik ko‘rik, kafolat tugashiga 60 kun qolganda.
 
-## 3.7. Super Admin tomonidan do‘kon yaratish va do‘kon hayot sikli
+## 3.7. Do‘konni admin yaratishi va do‘kon hayot sikli
 
-Odatda do‘konni foydalanuvchining o‘zi ochadi (3.5). Yirik dilerlar, hamkorlar va savdo bo‘limi orqali kelgan do‘konlar uchun Super Admin do‘konni platforma nomidan yaratib, keyin egasiga topshiradi. Har bir amal AuditLog‘ga yoziladi va sabab maydoni majburiy.
+Do‘konni faqat admin yaratadi (ADMIN roli va `SHOPS` huquqi). Do‘kon ro‘yxatdan o‘ta olmaydi, ShopInvitation (taklif havolasi) olib tashlangan. Har bir amal AuditLog’ga yoziladi.
 
 ### 3.7.1. Do‘kon yaratish
 
-1.  Super Admin Admin → Do'konlar → Do'kon yaratish formasida: nom, STIR, telefon, email (ixtiyoriy), faoliyat turi, viloyat, logo (ixtiyoriy), izoh va yaratish sababi.
+1.  Admin → Do‘konlar → "+ Do‘kon yaratish" formasi: **do‘kon ma’lumotlari** — nomi, STIR, telefon, viloyat, manzil (birinchi filial sifatida saqlanadi); **egasining hisobi** — ism, login (telefon raqami). Parolni admin kiritmaydi.
 
-2.  Server dublikatni tekshiradi: shu STIR yoki telefon bilan mavjud do‘kon yoki foydalanuvchi topilsa, ro‘yxati qaytariladi. Davom etish uchun Super Admin "Baribir yaratish" ni sabab bilan tasdiqlaydi.
+2.  Server dublikatni tekshiradi: shu STIR bilan do‘kon bo‘lsa 409 `SHOP_STIR_TAKEN` (bloklaydi); shu telefon bilan do‘kon bo‘lsa — ogohlantirish va tasdiq. Egasining login telefoni boshqa akkauntda band bo‘lsa 409 `PHONE_TAKEN`: mavjud akkaunt do‘konga bog‘lanmaydi.
 
-3.  Do‘kon status = DRAFT, createdSource = ADMIN, createdByUserId bilan yaratiladi. Bu bosqichda do‘konning OWNER a’zosi yo‘q.
+3.  Bitta tranzaksiyada: Shop (`createdSource = ADMIN`, `status = ACTIVE`, `verificationStatus = VERIFIED`), birinchi filial, egasining User (faqat SHOP roli, `mustPasswordChange = true`) va `ShopMember(OWNER)` yaratiladi. Tizim kamida 12 belgili vaqtincha parol yaratadi.
 
-4.  Super Admin "admin rejimida" onboarding ma’lumotlarini to‘ldirishi mumkin: filial, xizmat hududi, xizmatlar, mahsulotlar importi, sertifikatlar. Har bir o‘zgarish actorId va "admin rejimi" belgisi bilan audit qilinadi.
+4.  Vaqtincha parol javobda **bir marta** qaytadi va adminga "Nusxa olish" tugmasi bilan ko‘rsatiladi; qayta ko‘rsatilmaydi. Bazada faqat hash (bcrypt) saqlanadi; parol log, audit yozuvi va xato jurnaliga tushmaydi.
 
-5.  Verifikatsiya alohida amal: hujjatlar yuklanadi va PATCH /admin/shops/:id/verification bilan tasdiqlanadi (yaratgan va tasdiqlagan Super Admin bir odam bo‘lishi mumkin, lekin ikkala amal alohida audit yozuvi).
+### 3.7.2. Parol topshirish, tiklash, xodim qo‘shish, egani almashtirish
 
-### 3.7.2. Egani taklif qilish va topshirish
+- **Parolni tiklash:** admin do‘kon a’zosi uchun yangi vaqtincha parol yaratadi; `mustPasswordChange = true`, a’zoning barcha sessiyalari bekor qilinadi. Parol yana faqat bir marta ko‘rsatiladi.
+- **Xodim qo‘shish:** admin xodim uchun login (telefon), ism, do‘kondagi rol (MANAGER/STAFF), ruxsatlar va vaqtincha parol bilan hisob yaratadi. Ega xodim qo‘sha olmaydi; ro‘yxatni ko‘radi, ruxsatlarni o‘zgartiradi va xodimni chiqaradi.
+- **Egani almashtirish:** admin mavjud a’zoni OWNER qiladi; eski OWNER avtomatik MANAGER bo‘ladi. Har do‘konda aynan bitta OWNER (partial unique).
+- **Belgilar:** "Rasmiy diler", "Sertifikatli montajchi", "Litsenziya" kabi belgilarni faqat admin qo‘yadi va olib tashlaydi (do‘kon yuborolmaydi, tekshiruv navbati yo‘q).
 
-1.  Super Admin egani telefon yoki email bo‘yicha taklif qiladi: ShopInvitation (bir martalik token, amal qilish muddati 7 kun). Taklif SMS, email va (ulangan bo‘lsa) Telegram orqali yuboriladi.
+### 3.7.3. To‘xtatish va qayta yoqish
 
-2.  Taklif havolasini ochgan foydalanuvchi kiradi yoki ro‘yxatdan o‘tadi (telefon OTP). Taklif qilingan raqam yoki email foydalanuvchining tasdiqlangan kontaktiga mos kelishi shart; aks holda taklif qabul qilinmaydi.
+- **To‘xtatish** (ACTIVE → SUSPENDED): sabab majburiy. Ta’siri: do‘kon public ro‘yxat, xarita va katalogdan yashiriladi; yangi so‘rov qabul qilmaydi; ochiq so‘rovlar bo‘yicha mijozlarga "Do‘kon vaqtincha faol emas" xabari ketadi; a’zolar kabinetga faqat o‘qish rejimida kiradi.
 
-3.  Qabul qilinganda bitta tranzaksiyada: ShopMember(memberRole = OWNER) yaratiladi, ShopInvitation.status = ACCEPTED, OWNER uchun partial unique cheklov saqlanadi. Foydalanuvchining do‘konlar soni limiti (3 ta) admin yaratgan do‘konlarga ham qo‘llanadi; oshsa — SHOP_LIMIT_REACHED.
+- **Qayta yoqish** (SUSPENDED → ACTIVE): sabab bilan.
 
-4.  Muddati o‘tgan yoki bekor qilingan taklif EXPIRED / REVOKED; Super Admin yangisini yuboradi. Bir do‘konda bir vaqtda bitta faol taklif.
-
-5.  **Qoida:** OWNER’i yo‘q do‘kon ACTIVE holatiga o‘tkazilmaydi va public ro‘yxatda ko‘rinmaydi.
-
-### 3.7.3. To‘xtatish, qayta yoqish va egalikni o‘tkazish
-
-- **To‘xtatish** (ACTIVE → SUSPENDED): sabab majburiy (ro‘yxatdan + izoh). Ta’siri: do‘kon public ro‘yxat, xarita va katalogdan yashiriladi; yangi so‘rovlarni qabul qilmaydi; ochiq so‘rovlari bo‘yicha mijozlarga "Do‘kon vaqtincha faol emas" xabari ketadi; do‘kon a’zolari kabinetga kira oladi (faqat o‘qish), lekin taklif yubora olmaydi. OWNER’ga SMS va email.
-
-- **Qayta yoqish** (SUSPENDED → ACTIVE): sabab bilan; do‘kon avvalgi holatiga qaytadi.
-
-- **Egalikni o‘tkazish:** yangi egaga ShopInvitation yuboriladi; qabul qilinganda eski OWNER avtomatik MANAGER bo‘ladi (Super Admin "a’zolikdan chiqarish" ni tanlashi mumkin). Ikkala tomonga bildirishnoma.
-
-- **Rejani tayinlash:** Super Admin do‘konga istalgan rejani yoki individual sinov muddatini qo‘yadi (PATCH /admin/shops/:id/subscription); to‘lov talab qilinmaydigan individual reja ham audit bilan.
-
-Shop holatlari o‘tish jadvali: DRAFT → PENDING_REVIEW (ega tekshiruvga yuboradi) yoki DRAFT → ACTIVE (Super Admin, OWNER bor va VERIFIED bo‘lsa); PENDING_REVIEW → ACTIVE / DRAFT (admin qarori); ACTIVE ⇄ SUSPENDED (Super Admin). Jadvalda yo‘q o‘tish — 409 INVALID_STATUS_TRANSITION.
+Shop holatlari: ACTIVE ⇄ SUSPENDED (admin). `DRAFT` va `PENDING_REVIEW` faqat v3.0 dan qolgan eski yozuvlar uchun; yangi do‘kon ularga tushmaydi. Jadvalda yo‘q o‘tish — 409 `INVALID_STATUS_TRANSITION`.
 
 # 4. UI/UX
 
@@ -351,7 +342,7 @@ Foydalanuvchi interfeysi, dizayn tizimi, ekranlar va animatsiyalar — ushbu huj
 | 4.7 | Tez hisob javobi va natija ierarxiyasi | U8.1, U8.10 |
 | 4.9 | Elektr uzilishi kalkulyatori | U8.13 |
 | 4.10 | Xarita UX, mobil poligon chizish | U7.3, U8.4 |
-| 4.11 | Do'kon sertifikatlari va belgilar | U7.4, U11.12 |
+| 4.11 | Do'kon belgilari (faqat admin belgilaydi; do'kon panelida sertifikat yo'q) | U7.4, U12.11 |
 | 4.12 | Takliflarni solishtirish | U9.6 |
 | 4.14 | Telegram orqali do'kon amallari | U14.3 |
 | 4.18 | PDF va QR-kod | U15 |
@@ -388,7 +379,7 @@ Worker: alohida jarayon emas, GetMaster'dagi kabi BullMQ processorlari API ichid
 
 | Ilova | Vite rejimi | Dev port | Production | Kim uchun |
 |---|---|---|---|---|
-| Bosh sayt | (rejimsiz) | 5170 | `quyosh.uz/` | Hamma — faqat tushuntirish va yo'naltirish (U7.1) |
+| Bosh sayt | (rejimsiz) | 5170 | `quyosh.uz/` | Faqat mijoz — tushuntirish va mijoz paneliga yo'naltirish (U7.1) |
 | Mijoz paneli | `customer` | 5173 | `quyosh.uz/mijoz` | Guest va CUSTOMER — kalkulyator, xarita, katalog, hisoblar, takliflar |
 | Do'kon paneli | `shop` | 5174 | `quyosh.uz/dokon` | SHOP (ShopMember) |
 | Admin paneli | `admin` | 5175 | `admin.quyosh.uz` (ichki) | ADMIN, Super Admin |
@@ -398,9 +389,8 @@ Worker: alohida jarayon emas, GetMaster'dagi kabi BullMQ processorlari API ichid
 flowchart LR
   V[Tashrif buyuruvchi] --> S["Bosh sayt /"]
   S -- "Hisoblab ko'rish" --> C["Mijoz paneli /mijoz/kalkulyator (guest)"]
-  S -- "Men do'kon egasiman" --> D["Do'kon paneli /dokon/login"]
   C -- "saqlash / taklif so'rash" --> CL[Kirish: telefon + OTP]
-  D --> DL[Kirish: telefon + parol + OTP]
+  D["Do'kon paneli /dokon (bosh saytdan havola yo'q)"] --> DL[Kirish: telefon + parol, OTP yo'q; birinchi kirishda parol almashtirish]
   A[Admin] --> AL["Admin /login (parol + 2FA)"]
   CL --> API[(NestJS API /api/v1)]
   DL --> API
@@ -441,8 +431,8 @@ GetMaster'dagi kabi: `portalRouter` (bosh sayt) va `panelRouter` (panellar) — 
 | Umumiy (har panelda) | `/login`, `/register`, `/otp`, `/bildirishnomalar`, `/sozlamalar[/:section]` |
 | Mijoz — guest ham ko'radi | `/mijoz/kalkulyator`, `/mijoz/kalkulyator/batafsil?qadam=1..6`, `/mijoz/natija/:id`, `/mijoz/ulashish/:token`, `/mijoz/uzilish`, `/mijoz/kredit`, `/mijoz/xarita`, `/mijoz/dokonlar`, `/mijoz/dokonlar/:slug`, `/mijoz/mahsulotlar`, `/mijoz/mahsulotlar/:slug`, `/mijoz/solishtirish`, `/mijoz/bilim/:category/:slug`, `/mijoz/yordam` |
 | Mijoz — kirish shart | `/mijoz/hisoblar`, `/mijoz/obyektlar[/:id]`, `/mijoz/sorovlar[/:id]`, `/mijoz/takliflar/:id`, `/mijoz/montaj/:id`, `/mijoz/tizimim`, `/mijoz/chat`, `/mijoz/sevimlilar`, `/mijoz/murojaatlar`, `/mijoz/profil[/:section]` |
-| Do'kon | `/dokon` (bosh panel), `/dokon/sorovlar[/:id]`, `/dokon/takliflar[/:id]`, `/dokon/montajlar[/:id]`, `/dokon/katalog`, `/dokon/import`, `/dokon/filiallar`, `/dokon/xizmatlar`, `/dokon/portfolio`, `/dokon/sharhlar`, `/dokon/sertifikatlar`, `/dokon/vidjet`, `/dokon/analitika`, `/dokon/xodimlar`, `/dokon/obuna`, `/dokon/onboarding` |
-| Admin | `/admin`, `/admin/hisobot`, `/admin/devops`, `/admin/foydalanuvchilar[/:id]`, `/admin/adminlar`, `/admin/dokonlar[/:id]`, `/admin/tasdiqlash`, `/admin/katalog`, `/admin/sharhlar`, `/admin/shikoyatlar`, `/admin/montajlar`, `/admin/tariflar`, `/admin/eksport`, `/admin/moliyalashtirish`, `/admin/kalkulyator`, `/admin/malumotnomalar`, `/admin/kontent`, `/admin/bosh-sahifa`, `/admin/yordam`, `/admin/obunalar`, `/admin/siyosatlar`, `/admin/audit`, `/admin/errorlar`, `/admin/profil` |
+| Do'kon | `/dokon` (bosh panel), `/dokon/sorovlar[/:id]`, `/dokon/takliflar[/:id]`, `/dokon/montajlar[/:id]`, `/dokon/katalog`, `/dokon/import`, `/dokon/filiallar`, `/dokon/xizmatlar`, `/dokon/portfolio`, `/dokon/sharhlar`, `/dokon/vidjet`, `/dokon/analitika`, `/dokon/xodimlar` (kirish: `/login`; birinchi kirishda majburiy parol almashtirish) |
+| Admin | `/admin`, `/admin/hisobot`, `/admin/devops`, `/admin/foydalanuvchilar[/:id]`, `/admin/adminlar`, `/admin/dokonlar[/:id]`, `/admin/katalog`, `/admin/sharhlar`, `/admin/shikoyatlar`, `/admin/montajlar`, `/admin/tariflar`, `/admin/eksport`, `/admin/moliyalashtirish`, `/admin/kalkulyator`, `/admin/malumotnomalar`, `/admin/kontent`, `/admin/bosh-sahifa`, `/admin/yordam`, `/admin/obunalar`, `/admin/siyosatlar`, `/admin/audit`, `/admin/errorlar`, `/admin/profil` |
 
 Bir nechta do'konga a'zo foydalanuvchi uchun do'kon paneli headerida do'kon almashtirgich; tanlangan `shopId` URL'da emas, Zustand'da va `X-Shop-Id` header'da yuboriladi (API yo'li baribir `/manage/shops/:shopId/*`, TZ 9.3).
 
@@ -569,6 +559,8 @@ Tashqi ma'lumot provayderlari `src/infrastructure/solar/` (PVGIS asosiy, NASA PO
 | Parametr | Qiymat |
 |---|---|
 | Kirish | Telefon (+998) + parol. Ro'yxatdan o'tish va ishonchsiz qurilmadan kirishda OTP. Email ixtiyoriy (OTP email orqali ham kelishi mumkin) |
+| Do'kon kirishi (v3.1) | Telefon + parol, **OTP yo'q**. Hisobni admin yaratadi (3.7); birinchi kirishda vaqtincha parolni almashtirish majburiy (`User.mustPasswordChange`). Ro'yxatdan o'tish, Google va "Parolni unutdim" do'kon panelida yo'q — parolni admin tiklaydi. Login blok, rate-limit, panel bo'yicha sessiya va refresh cookie boshqa panellardagidek |
+| Vaqtincha parol | Tizim yaratadi (≥ 12 belgi, kriptografik tasodifiy), adminga bir marta ko'rsatiladi, bazada faqat bcrypt hash, log/audit/xatolar jurnaliga yozilmaydi; `mustPasswordChange=true` bo'lganda do'kon API'si faqat `GET /users/me`, `POST /users/me/password/first` va chiqish uchun ochiq (qolgani 403 `PASSWORD_CHANGE_REQUIRED`) |
 | Admin kirishi | Telefon + parol → 2FA OTP (`twoFactorEnabled`, superadmin boshqaradi). Birinchi admin `ADMIN_PHONE` / `ADMIN_PASSWORD` seed'dan (parol ≥ 12 belgi) |
 | Access token | JWT, 900 s, faqat xotirada (JS o'zgaruvchisi), `Authorization: Bearer` |
 | Refresh token | HttpOnly, Secure, SameSite=Lax cookie; **har panel o'z cookie nomi bilan** (`authCookieNames(panel)`); rotation va reuse detection (`familyId`) |
@@ -581,7 +573,7 @@ Tashqi ma'lumot provayderlari `src/infrastructure/solar/` (PVGIS asosiy, NASA PO
 | Parol | ≥ 8 belgi, bcrypt cost 12 |
 | CSRF | Access token cookie'da emas, shuning uchun alohida CSRF token kerak emas; refresh endpointi SameSite=Lax va `Origin` tekshiruvi bilan himoyalanadi |
 
-Rollar (`UserRole[]`): `CUSTOMER`, `SHOP`, `ADMIN`. Super Admin = `ADMIN` + `isSuperAdmin=true`. Do'kon ichidagi rol (`OWNER/MANAGER/STAFF`) — `ShopMember` orqali (TZ 2). Do'kon paneliga kirish uchun `SHOP` roli **va** kamida bitta faol `ShopMember` (yoki onboarding jarayonidagi do'kon) kerak.
+Rollar (`UserRole[]`): `CUSTOMER`, `SHOP`, `ADMIN`. Super Admin = `ADMIN` + `isSuperAdmin=true`. Do'kon ichidagi rol (`OWNER/MANAGER/STAFF`) — `ShopMember` orqali (TZ 2). Do'kon paneliga kirish uchun `SHOP` roli **va** kamida bitta `ShopMember` kerak; hisobni faqat admin yaratadi (3.7).
 
 ## 6.5. Background jobs va outbox
 
@@ -630,7 +622,7 @@ Quyidagi maydonlar mantiqiy spetsifikatsiya. Prisma schema’da nomlar camelCase
 
 | **Model**              | **Maydonlar**                                                                                                                                                                                                                                                                     | **Indeks/constraint**                                                                                          |
 |------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
-| User                   | id; fullName; email nullable; emailVerifiedAt nullable; phone nullable (E.164); phoneVerifiedAt nullable; passwordHash nullable; roles (UserRole[]: CUSTOMER/SHOP/ADMIN); isSuperAdmin; adminPermissions[]; status (ACTIVE/BLOCKED/DELETED); accountType (INDIVIDUAL/BUSINESS); locale (uz/oz/ru); twoFactorEnabled | email unique (partial, NOT NULL); phone unique (partial); email yoki phone’dan kamida bittasi majburiy (CHECK) |
+| User                   | id; fullName; email nullable; emailVerifiedAt nullable; phone nullable (E.164); phoneVerifiedAt nullable; passwordHash nullable; roles (UserRole[]: CUSTOMER/SHOP/ADMIN); isSuperAdmin; adminPermissions[]; status (ACTIVE/BLOCKED/DELETED); accountType (INDIVIDUAL/BUSINESS); locale (uz/oz/ru); twoFactorEnabled; mustPasswordChange boolean (default false; admin yaratgan/tiklagan vaqtincha parolda true) | email unique (partial, NOT NULL); phone unique (partial); email yoki phone’dan kamida bittasi majburiy (CHECK) |
 | Organization           | id; userId; name; stir (9 raqam); address nullable                                                                                                                                                                                                                                | userId unique                                                                                                  |
 | RefreshSession         | id; userId; panel (CUSTOMER/SHOP/ADMIN); deviceId; tokenHash; familyId; expiresAt; revokedAt; userAgentSummary; ipHash; lastUsedAt                                                                                                                                                                                       | tokenHash unique; userId index; raw token saqlanmaydi                                                          |
 | VerificationCode       | id; target (phone/email); purpose (REGISTER/LOGIN/RESET/CHANGE_CONTACT); codeHash; attempts; expiresAt; consumedAt                                                                                                                                                                | target+purpose+createdAt index                                                                                 |
@@ -643,11 +635,10 @@ Quyidagi maydonlar mantiqiy spetsifikatsiya. Prisma schema’da nomlar camelCase
 
 | **Model**                | **Maydonlar**                                                                                                                                                                                                                                                                                                                                   | **Indeks/constraint**                                                                                   |
 |--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| Shop                     | id; slug; name; description; logoFileId; coverFileId; stir; verificationStatus (NOT_SUBMITTED/PENDING/VERIFIED/REJECTED); status (DRAFT/PENDING_REVIEW/ACTIVE/SUSPENDED); createdSource (SELF/ADMIN); createdByUserId nullable; suspendedAt nullable; suspendReason nullable; phone; email; avgResponseMinutes nullable; ratingAvg; ratingCount | slug unique; status index                                                                               |
+| Shop                     | id; slug; name; description; logoFileId; coverFileId; stir; verificationStatus (NOT_SUBMITTED/PENDING/VERIFIED/REJECTED); status (DRAFT/PENDING_REVIEW/ACTIVE/SUSPENDED); createdSource (ADMIN; SELF faqat v3.0 dan qolgan yozuvlar); createdByUserId nullable; suspendedAt nullable; suspendReason nullable; phone; email; avgResponseMinutes nullable; ratingAvg; ratingCount | slug unique; status index                                                                               |
 | ShopMember               | id; shopId; userId; memberRole (OWNER/MANAGER/STAFF); permissions text\[\]                                                                                                                                                                                                                                                                      | unique(shopId,userId); partial unique(shopId) WHERE memberRole=OWNER                                    |
-| ShopVerificationDocument | id; shopId; fileId; docType (REGISTRATION/LICENSE/OTHER); status (PENDING/ACCEPTED/REJECTED); reviewerId nullable; reviewedAt; reason                                                                                                                                                                                                           | shopId index                                                                                            |
-| ShopInvitation           | id; shopId; invitedByUserId; target (E.164 telefon yoki email); memberRole (OWNER/MANAGER/STAFF); purpose (INITIAL_OWNER/TRANSFER/MEMBER); tokenHash; status (PENDING/ACCEPTED/EXPIRED/REVOKED); expiresAt; acceptedAt; acceptedUserId nullable                                                                                                 | tokenHash unique; partial unique(shopId) WHERE status = PENDING AND memberRole = OWNER; expiresAt index |
-| ShopCertification        | id; shopId; certType (OFFICIAL_DEALER/CERTIFIED_INSTALLER/LICENSE); brand nullable (OFFICIAL_DEALER uchun majburiy); issuer; certNumber nullable; fileId; validFrom; validUntil nullable; status (PENDING/APPROVED/REJECTED/EXPIRED); reviewerId; reviewedAt; reason                                                                            | shopId/status index; validUntil index                                                                   |
+| ShopVerificationDocument (eski, v3.1 da yangi yozuv yaratilmaydi) | id; shopId; fileId; docType (REGISTRATION/LICENSE/OTHER); status (PENDING/ACCEPTED/REJECTED); reviewerId nullable; reviewedAt; reason                                                                                                                                                                                                           | shopId index                                                                                            |
+| ShopCertification (v3.1: faqat admin yaratadi, darhol APPROVED; fileId ixtiyoriy) | id; shopId; certType (OFFICIAL_DEALER/CERTIFIED_INSTALLER/LICENSE); brand nullable (OFFICIAL_DEALER uchun majburiy); issuer; certNumber nullable; fileId; validFrom; validUntil nullable; status (PENDING/APPROVED/REJECTED/EXPIRED); reviewerId; reviewedAt; reason                                                                            | shopId/status index; validUntil index                                                                   |
 | ShopBranch               | id; shopId; name; address; location geography(Point,4326); phone; openingHoursJson; holidayExceptionsJson; status; version                                                                                                                                                                                                                      | shopId index; GiST(location). Alohida latitude/longitude ustunlari yo‘q                                 |
 | ServiceArea              | id; branchId; geom geography(MultiPolygon,4326); serviceTypes text\[\]; active                                                                                                                                                                                                                                                                  | GiST(geom); branchId index                                                                              |
 | ShopProject (portfolio)  | id; shopId; title; city; systemPowerKw; systemType; completedAt; installationId nullable; description                                                                                                                                                                                                                                           | shopId index                                                                                            |
@@ -896,11 +887,9 @@ POST /quote-requests, POST .../quotes, POST .../quotes/:id/send, POST /payments/
 
 | **Method + path**                                        | **Vazifa**                             | **Ruxsat/validatsiya**                                                |
 |----------------------------------------------------------|----------------------------------------|-----------------------------------------------------------------------|
-| POST /api/v1/shops (create)                              | Do‘kon yaratish                        | Logged-in; OWNER a’zolik yaratiladi; foydalanuvchi uchun max 3 do‘kon |
 | PATCH /                                                  | Profilni tahrirlash                    | shop.profile (OWNER/MANAGER)                                          |
-| POST /verification-documents; POST /verification/submit  | Hujjat yuklash va tekshiruvga yuborish | OWNER                                                                 |
-| GET/POST/DELETE /certifications                          | Sertifikatlar                          | OWNER; yangi yozuv PENDING                                            |
-| GET/POST/PATCH/DELETE /members                           | Xodimlar va permissions                | members.manage                                                        |
+| POST /api/v1/users/me/password/first                     | Birinchi kirishda yangi parol (mustPasswordChange) | Faqat `mustPasswordChange=true`; yangi parol ≥ 8 belgi, vaqtinchadan farqli |
+| GET/PATCH/DELETE /members                                | Xodimlar ro‘yxati, permissions, chiqarish | members.manage; xodimni faqat admin qo‘shadi (9.11)                |
 | CRUD /branches                                           | Filiallar                              | branches.write; valid koordinata                                      |
 | PUT /branches/:id/service-area                           | Xizmat hududi                          | Polygon valid, max 500 vertex, max 20 000 km²                         |
 | CRUD /products                                           | ShopProduct                            | catalog.write; ProductModel APPROVED                                  |
@@ -918,7 +907,6 @@ POST /quote-requests, POST .../quotes, POST .../quotes/:id/send, POST /payments/
 | POST /reviews/:id/reply                                  | Sharhga javob                          | reviews.reply                                                         |
 | GET/PUT /widget                                          | Vidjet sozlamalari                     | widget.manage; plan                                                   |
 | GET /dashboard; GET /analytics                           | KPI va analitika                       | analytics.read; date range max 366 kun                                |
-| GET /subscription; POST /subscription/checkout           | Obuna va to‘lov                        | billing.manage                                                        |
 
 ## 9.8. Xarita va obyekt API
 
@@ -984,13 +972,13 @@ POST /quote-requests, POST .../quotes, POST .../quotes/:id/send, POST /payments/
 
 | **Method + path**                                                                                                          | **Vazifa**                                                                                                                                                |
 |----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| GET /api/v1/admin/shops; PATCH /api/v1/admin/shops/:id/verification                                                        | Verifikatsiya navbati; approve/reject + sabab + audit                                                                                                     |
-| POST /api/v1/admin/shops; GET /api/v1/admin/shops/duplicates?stir=&phone=                                                  | Do‘kon yaratish (SUPER_ADMIN, 3.7.1): dublikat tekshiruvi, DRAFT, sabab, audit                                                                            |
-| POST /api/v1/admin/shops/:id/invitations; DELETE …/invitations/:invId; POST …/invitations/:invId/resend                    | Egani yoki a’zoni taklif qilish, bekor qilish, qayta yuborish (3.7.2)                                                                                     |
-| POST /api/v1/shop-invitations/:token/accept                                                                                | Taklifni qabul qilish — foydalanuvchi tomoni (Logged-in, kontakt mosligi tekshiriladi)                                                                    |
-| POST /api/v1/admin/shops/:id/suspend; POST /api/v1/admin/shops/:id/resume                                                  | To‘xtatish va qayta yoqish (SUPER_ADMIN, sabab majburiy, 3.7.3)                                                                                           |
-| POST /api/v1/admin/shops/:id/transfer-ownership; PATCH /api/v1/admin/shops/:id/subscription                                | Egalikni o‘tkazish; rejani yoki individual sinov muddatini tayinlash                                                                                      |
-| PUT /api/v1/admin/shops/:id/… (admin rejimi)                                                                               | Ega qabul qilmaguncha filial, xizmat hududi, xizmatlar va importni admin to‘ldiradi; do‘kon endpointlari bilan bir xil validatsiya, alohida audit belgisi |
+| GET /api/v1/admin/shops; GET /api/v1/admin/shops/:id | Do‘konlar ro‘yxati va tafsiloti (a’zolar, belgilar) |
+| POST /api/v1/admin/shops; GET /api/v1/admin/shops/duplicates?stir=&phone= | Do‘kon + egasining hisobi + vaqtincha parol yaratish (3.7.1): dublikat tekshiruvi, ACTIVE/VERIFIED, parol javobda bir marta, audit |
+| POST /api/v1/admin/shops/:id/members; POST /api/v1/admin/shops/:id/members/:userId/reset-password | Xodim qo‘shish (login + vaqtincha parol); a’zo parolini qayta tiklash (3.7.2) |
+| POST /api/v1/admin/shops/:id/owner | Egani almashtirish: mavjud a’zo OWNER, eski ega MANAGER (3.7.2) |
+| POST /api/v1/admin/shops/:id/suspend; POST /api/v1/admin/shops/:id/resume | To‘xtatish va qayta yoqish (sabab majburiy, 3.7.3) |
+| POST /api/v1/admin/shops/:id/badges; DELETE /api/v1/admin/shops/:id/badges/:badgeId | Do‘kon belgisi (rasmiy diler, sertifikatli montajchi, litsenziya) qo‘yish va olib tashlash |
+| PUT /api/v1/admin/shops/:id/… (admin rejimi) | Filial, xizmat hududi, xizmatlar va importni admin ham to‘ldira oladi; do‘kon endpointlari bilan bir xil validatsiya, audit |
 | CRUD /api/v1/admin/categories                                                                                              | Kategoriyalar va attribute schema                                                                                                                         |
 | GET/PATCH /api/v1/admin/product-models; POST /api/v1/admin/product-models/:id/merge                                        | Model moderatsiyasi va dublikatlarni birlashtirish                                                                                                        |
 | CRUD /api/v1/admin/tariff-schedules (+tiers, tou-periods); POST .../:id/preview; POST .../:id/publish                      | Tarif, preview va nashr                                                                                                                                   |
@@ -1000,7 +988,7 @@ POST /quote-requests, POST .../quotes, POST .../quotes/:id/send, POST /payments/
 | CRUD /api/v1/admin/calculation-settings                                                                                    | Versiyalangan parametrlar                                                                                                                                 |
 | GET /api/v1/admin/exchange-rates; POST .../refresh                                                                         | Kurslar                                                                                                                                                   |
 | CRUD /api/v1/admin/knowledge/categories; CRUD /api/v1/admin/knowledge/articles                                             | Bilimlar markazi                                                                                                                                          |
-| GET/PATCH /api/v1/admin/certifications                                                                                     | Sertifikatlarni tekshirish                                                                                                                                |
+| (olib tashlangan) /api/v1/admin/certifications | v3.1: sertifikat tekshiruvi navbati yo‘q; belgilar `…/shops/:id/badges` orqali |
 | CRUD /api/v1/admin/acceptance-checklists                                                                                   | Montaj chek-listi shablonlari                                                                                                                             |
 | GET/PATCH /api/v1/admin/support/tickets; POST .../:id/messages; CRUD /api/v1/admin/support/reply-templates                 | Yordam navbati                                                                                                                                            |
 | GET/PATCH /api/v1/admin/reviews (riskFlags filtri); GET/PATCH /api/v1/admin/complaints                                     | Moderatsiya                                                                                                                                               |
@@ -2020,7 +2008,7 @@ Ish tartibi 1.5-bo‘limdagi M1–M7 bosqichlari bo‘yicha. Har bir bosqich oxi
 
 13. Tarif, eksport qoidasi, ulanish limiti, moliyalashtirish mahsuloti va valyuta kursi manba/effective date/status bilan boshqariladi; tarif nashridan oldin preview ishlaydi.
 
-14. Do‘kon onboarding, katalog (ProductModel orqali), import, narx, zaxira, filial, xizmat, xizmat hududi, portfolio va vidjetni boshqaradi.
+14. Do‘kon (admin yaratgan hisob bilan kirib) katalog (ProductModel orqali), import, narx, zaxira, filial, xizmat, xizmat hududi, portfolio va vidjetni boshqaradi.
 
 15. Do‘kon a’zosi Telegram’dan so‘rovni ko‘rdim/bog‘landim/rad etish va o‘lchov vaqtini taklif qilish amallarini bajara oladi; bu amallar web’dagi bilan bir xil ruxsat va status qoidalariga bo‘ysunadi.
 
@@ -2491,11 +2479,11 @@ Uchala panel bitta qobiqdan foydalanadi (`MainLayout`): chapda **Sidebar** (288 
 | | Muloqot | Chat, O'rnatilgan tizim, Murojaatlar |
 | | Hisob | **Profil**, Bildirishnomalar, Sozlamalar |
 | Do'kon | Ish | **Bosh panel**, **So'rovlar**, **Takliflar**, Montajlar |
-| | Katalog | Mahsulotlar, Import, Filiallar va hudud, Xizmatlar, Portfolio, Sertifikatlar |
+| | Katalog | Mahsulotlar, Import, Filiallar va hudud, Xizmatlar, Portfolio |
 | | Muloqot | **Chat**, Sharhlar |
-| | Hisob | Analitika, Xodimlar, Obuna, Vidjet, Sozlamalar |
+| | Hisob | Analitika, Xodimlar, Vidjet, Sozlamalar |
 | Admin | Umumiy | Boshqaruv paneli, Hisobotlar, DevOps (`DEVOPS`) |
-| | Boshqaruv | Foydalanuvchilar, Adminlar (superadmin), Do'konlar, Tasdiqlash, Shikoyat va e'tirozlar, Montajlar, Yordam navbati, Obunalar |
+| | Boshqaruv | Foydalanuvchilar, Adminlar (superadmin), Do'konlar, Shikoyat va e'tirozlar, Montajlar, Yordam navbati |
 | | Kalkulyator | Tariflar, Eksport qoidalari, Moliyalashtirish, Kalkulyator sozlamalari, Ma'lumotnomalar |
 | | Kontent | Katalog moderatsiyasi, Bilimlar markazi, Bosh sahifa bloklari, Siyosatlar, Audit, Errorlar (superadmin) |
 | | Hisob | Profil, Bildirishnomalar, Sozlamalar |
@@ -2638,7 +2626,7 @@ Reduced motion: film o'rniga 8 ta statik kadr (SVG) ro'yxati; video yo'q.
 
 ## U7.1. Bosh sayt (GetMaster `PortalPage` bo'yicha)
 
-**Maqsad:** platformani tushuntirish va tashrif buyuruvchini to'g'ri panelga yo'naltirish. Bosh sayt **bitta** va unda **funksional qism yo'q**: kalkulyator, xarita, katalog, takliflar — mijoz panelida (guest ham ochadi); do'kon amallari — do'kon panelida. TZ 5.6 texnik talablari amal qiladi.
+**Maqsad (v3.1):** platformani **faqat mijozga** tushuntirish va uni mijoz paneliga yo'naltirish. Bosh saytda funksional qism yo'q: kalkulyator, xarita, katalog, takliflar — mijoz panelida (guest ham ochadi). Do'kon va admin paneli manzillari bosh saytda hech qayerda ko'rsatilmaydi; do'konga oid matn, bo'lim va tugma yo'q. TZ 5.6 texnik talablari amal qiladi.
 
 ![Rasm 5. Bosh sayt hero: qorong'i kinematografik fon, Three.js sahna (quyosh, izometrik tom va panellar), JetBrains Mono eyebrow, ikki qatorli sarlavha (2-qator quyosh gradientida), chiplar, ikki CTA, bob sarlavhasi va 01–08 progress chizig'i.](design/g-hero.png)
 
@@ -2646,17 +2634,17 @@ Reduced motion: film o'rniga 8 ta statik kadr (SVG) ro'yxati; video yo'q.
 
 | # | Bo'lim | Tarkib | Harakat | Ma'lumot |
 |---|---|---|---|---|
-| 1 | Header | Logo, anchor havolalar (Qanday ishlaydi · Mijozlar uchun · Do'konlar uchun · Ishonch), tema, til, "Kirish ▾" (Mijoz / Do'kon), "Hisoblab ko'rish" | Hero ustida shaffof; film tugagach qattiq fon + soya (A15) | — |
-| 2 | Hero + "Quyosh filmi" | Eyebrow "QUYOSH ENERGIYASI · O'ZBEKISTON", sarlavha "Tomingiz quyoshdan / pul ishlab chiqaradi", 1 jumla, 4 chip (Kalkulyator, Do'konlar xaritasi, Narx takliflari, Montaj kafolati), CTA: "Hisoblab ko'rish →" (mijoz paneli kalkulyatori) va "Men do'kon egasiman" (do'kon paneli); pastda bob sarlavhasi va 01–08 progress | 6.9 jadvali bo'yicha 8 bob, skrollga bog'langan; birinchi kirishda sarlavha so'zma-so'z (A1) | Quyosh vaqtlari klientda |
+| 1 | Header | Logo, anchor havolalar (Qanday ishlaydi · Mijozlar uchun · Ishonch), tema, til, "Kirish" va "Ro'yxatdan o'tish" (ikkalasi mijoz paneliga), "Hisoblab ko'rish" | Hero ustida shaffof; film tugagach qattiq fon + soya (A15) | — |
+| 2 | Hero + "Quyosh filmi" | Eyebrow "QUYOSH ENERGIYASI · O'ZBEKISTON", sarlavha "Tomingiz quyoshdan / pul ishlab chiqaradi", 1 jumla, 4 chip (Kalkulyator, Do'konlar xaritasi, Narx takliflari, Montaj kafolati), CTA: "Hisoblab ko'rish →" (mijoz paneli kalkulyatori) — ikkinchi CTA yo'q; pastda bob sarlavhasi va 01–08 progress | 6.9 jadvali bo'yicha 8 bob, skrollga bog'langan; birinchi kirishda sarlavha so'zma-so'z (A1) | Quyosh vaqtlari klientda |
 | 3 | Raqamlar | Tasdiqlangan do'konlar, bajarilgan hisoblar, tasdiqlangan montajlar, CO₂ prognozi | 0 dan sanaladi (A12); ma'lumot kelmasa blok yashiriladi | `GET /public/stats` |
 | 4 | Xizmatlar lentasi | Cheksiz aylanuvchi lenta (GetMaster `ServiceBelt`/`Marquee`): Tarmoqqa ulangan · Gibrid · Avtonom · Akkumulyator · Suv isitgich · Ko'cha chirog'i | Doimiy sekin harakat, hover'da to'xtaydi | Statik |
 | 5 | Statement | Bitta katta jumla, skroll bilan so'zma-so'z yonadi (GetMaster `Statement`): "Quyosh har kuni tomingizga tushadi. Biz faqat uni hisoblaymiz." | Skroll-scrub | — |
-| 6 | Ikki yo'l | "Men mijozman" va "Men do'kon egasiman" kartalari: har birida 3 foyda va panelga o'tish tugmasi | Kartada spotlight (sichqoncha nuri) va kichik 3D obyekt (quyosh / do'kon belgisi), hover'da aylanadi | — |
+| 6 | Mijoz uchun | Faqat "Men mijozman" kartasi: 3 foyda va "Hisoblab ko'rish" tugmasi (do'kon kartasi yo'q) | Kartada spotlight (sichqoncha nuri) va kichik 3D obyekt (quyosh / do'kon belgisi), hover'da aylanadi | — |
 | 7 | Qanday ishlaydi — mijoz | Journey: Manzil → Maydon → Sarf → Natija → Takliflar → Montaj (GetMaster `Journey`) | Har qadam skroll bilan, mini SVG sahna | — |
 | 8 | Ishonch | 4 karta: tasdiqlangan do'konlar, faqat montajdan keyingi sharhlar, ma'lumot manbalari (PVGIS, tariflar), ma'lumotlar O'zbekistonda | Ikonkalar chiziq bo'lib chiziladi; tilt | — |
 | 9 | FAQ | 6–8 savol, accordion, schema.org FAQPage | Accordion 260 ms | SiteBlock |
-| 10 | Yakuniy CTA | Shader fon (GetMaster `ShaderBackground`, quyosh ranglari), dinamik sarlavha "Bugun quyosh 11 soat 21 daqiqa porlaydi. Uning qancha qismi sizniki?", 2 CTA | Shader sekin oqadi | Klient hisobi |
-| 11 | Footer | Bo'limlar, do'kon ochish, yordam, shartlar va maxfiylik, aloqa, "Powered by Esri" | — | — |
+| 10 | Yakuniy CTA | Shader fon (GetMaster `ShaderBackground`, quyosh ranglari), dinamik sarlavha "Bugun quyosh 11 soat 21 daqiqa porlaydi. Uning qancha qismi sizniki?", 1 CTA ("Hisoblab ko'rish") | Shader sekin oqadi | Klient hisobi |
+| 11 | Footer | Bo'limlar, yordam, shartlar va maxfiylik, kichik "Hamkorlik uchun aloqa" (faqat telefon/email, forma yo'q), "Powered by Esri" | — | — |
 
 ### U7.1.2. Media qoidasi
 
@@ -2670,7 +2658,7 @@ Reduced motion: film o'rniga 8 ta statik kadr (SVG) ro'yxati; video yo'q.
 
 ### U7.1.4. Mobil
 
-Hero: sarlavha 42 px, CTA'lar to'liq kenglikda, 3D sahna yengillashtirilgan (kamroq zarracha, panel to'ri kichik); film boblari vertikal kartalar bo'lib skrollga bog'langan; "Ikki yo'l" kartalari ustma-ust. Hero CTA ko'rinmay qolganda pastda sticky "Hisoblab ko'rish" (fade 160 ms).
+Hero: sarlavha 42 px, CTA'lar to'liq kenglikda, 3D sahna yengillashtirilgan (kamroq zarracha, panel to'ri kichik); film boblari vertikal kartalar bo'lib skrollga bog'langan; mijoz kartasi to'liq kenglikda. Hero CTA ko'rinmay qolganda pastda sticky "Hisoblab ko'rish" (fade 160 ms).
 
 ### U7.1.5. Admin boshqaruvi
 
@@ -2682,8 +2670,9 @@ Hero matni, chiplar, FAQ, bo'limlarni yoqish/o'chirish va tartibi — admin pane
 
 ![Rasm 6. Do'kon paneli kirishi: OTP qadami va "Test rejimi" kartasi (SMS ulanmaguncha kod ekranda).](design/g-login.png)
 
-- **Kirish:** telefon (+998 maska) + parol → (2FA yoki ishonchsiz qurilma bo'lsa) OTP. "Parolni unutdim" — OTP orqali tiklash.
-- **Ro'yxatdan o'tish:** ism, telefon, parol, shartlarga rozilik (oldindan belgilanmagan) → OTP → mijoz paneli. Do'kon panelida ro'yxatdan o'tgach — onboarding (11.1).
+- **Mijoz kirishi:** telefon (+998 maska) + parol → (2FA yoki ishonchsiz qurilma bo'lsa) OTP. "Parolni unutdim" — OTP orqali tiklash.
+- **Do'kon kirishi (v3.1):** faqat telefon + parol, OTP qadami yo'q. Ro'yxatdan o'tish havolasi, Google tugmasi va "Parolni unutdim" yo'q; o'rnida: "Parolni tiklash uchun administratorga murojaat qiling" va aloqa ma'lumotlari. Birinchi kirishda vaqtincha parol bo'lsa, "Yangi parol o'rnating" ekrani ochiladi (U11.1).
+- **Ro'yxatdan o'tish (faqat mijoz):** ism, telefon, parol, shartlarga rozilik (oldindan belgilanmagan) → OTP → mijoz paneli. Do'kon va admin panelida ro'yxatdan o'tish yo'q. Bosh saytdagi "Kirish" va "Ro'yxatdan o'tish" mijoz paneliga olib boradi.
 - **OTP ekrani:** 6 katak, avto-o'tish, `autocomplete="one-time-code"`, qayta yuborish taymeri 120 s, qolgan urinishlar soni.
 - **Test rejimi (TZ 6.4):** `OTP_DEV_ECHO` yoqilgan bo'lsa, katakchalar ostida sariq karta: "Test rejimi: SMS yuborilmadi. Sizning kodingiz: 481 207" va "Kodni qo'yish" tugmasi. Production'da bu karta hech qachon chiqmaydi.
 - **Holatlar:** noto'g'ri kod, eskirgan kod, urinishlar tugagan, so'rovlar limiti, login bloki (qolgan vaqt bilan), server xatosi. Javob raqam mavjudligini oshkor qilmaydi.
@@ -3031,12 +3020,11 @@ Navigatsiya: Bosh panel · Obyektlar · Hisoblar · So'rovlar va takliflar · Mo
 
 Navigatsiya: Bosh panel · So'rovlar · Takliflar · Montajlar · Katalog · Filiallar va hudud · Xizmatlar · Portfolio · Sharhlar · Sertifikatlar · Analitika · Vidjet · Xodimlar · Obuna · Sozlamalar. Element foydalanuvchi ruxsati (TZ 2.2) bo'lmasa ko'rinmaydi.
 
-## U11.1. Onboarding (TZ 3.5)
-
-- "Do'kon ochish" sahifasi: nom, telefon, faoliyat turi, STIR.
-- Wizard 5 qadam (StepArc'ning gorizontal varianti): Profil (logo, cover, tavsif) → Birinchi filial (manzil xaritada, ish vaqti) → Xizmat hududi (xaritada chizish yoki "Viloyat bo'yicha" tez tanlov) → Verifikatsiya hujjatlari va sertifikatlar (ixtiyoriy) → Birinchi mahsulotlar (qo'lda yoki import).
-- Har qadam "Keyinroq" bilan o'tkaziladi. Bosh panelda "Profil to'liqligi: 60 %" halqasi va yetishmaganlar ro'yxati.
-- Holat banneri: DRAFT — "Do'koningiz hali ko'rinmaydi"; PENDING_REVIEW — "Tekshiruvda · odatda 1–2 ish kuni"; REJECTED — sabab va "Tuzatib qayta yuborish".
+## U11.1. Birinchi kirish: yangi parol o'rnatish (TZ 3.5)
+- Onboarding wizard va "Do'kon ochish" sahifasi olib tashlangan (v3.1): do'konni admin yaratadi, u `ACTIVE`.
+- **SHP-01 "Yangi parol o'rnating"** (`mustPasswordChange = true` bo'lganda): to'liq ekranli karta — yangi parol va takrori, parol talablari (≥ 8 belgi), "Saqlash". Parol almashtirilmaguncha sidebar va boshqa sahifalar ochilmaydi (har qanday yo'l shu ekranga qaytaradi); "Chiqish" ishlaydi.
+- Saqlangach bosh panelga o'tadi. Bosh panelda "Profil to'liqligi: N %" halqasi va yetishmaganlar ro'yxati (profil, filial, xizmat hududi, mahsulotlar) — bo'limlarga havolalar.
+- Holat banneri: SUSPENDED — qizil banner va faqat o'qish rejimi.
 
 ## U11.2. Bosh panel
 
@@ -3091,9 +3079,8 @@ Loyiha: sarlavha, shahar, quvvat, tizim turi, sana, rasmlar (drag-and-drop tarti
 
 Ro'yxat (yangi, javobsiz filtrlari), reyting taqsimoti; har sharhga bitta ommaviy javob (yozish, tahrirlash). Moderatsiyadagi sharhlar do'konga ko'rinmaydi.
 
-## U11.12. Sertifikatlar (TZ 4.11)
-
-Ro'yxat: tur, brend (rasmiy diler uchun), beruvchi, raqam, muddat, status badge. Qo'shish formasi + fayl. Muddati 30 kun qolganda diqqat banneri; o'tganda belgi profildan yashiriladi va "Yangilash" taklifi.
+## U11.12. Sertifikatlar (olib tashlangan, v3.1)
+Do'kon panelida "Sertifikatlar" bo'limi, hujjat/sertifikat yuklash formalari va ularga tegishli API yo'q (TZ 4.11). Belgilar (rasmiy diler, sertifikatli montajchi, litsenziya) do'kon profilida ko'rinadi, lekin ularni faqat admin do'kon sahifasidan qo'yadi (U12.11).
 
 ## U11.13. Vidjet konfiguratori
 
@@ -3107,7 +3094,7 @@ Davr tanlagichi (max 366 kun); grafiklar: ko'rishlar, so'rovlar, javob vaqti, ta
 
 ## U11.15. Xodimlar va obuna
 
-- **Xodimlar**: ro'yxat (ism, rol, ruxsatlar, oxirgi faollik); taklif qilish (telefon/email); ruxsatlar — guruhlangan checkbox'lar (Katalog, So'rovlar, Takliflar, Montaj, Marketing, Analitika); OWNER faqat bitta va o'zgartirilmaydi (egalikni topshirish alohida oqim).
+- **Xodimlar**: ro'yxat (ism, rol, ruxsatlar, oxirgi faollik); xodimni faqat admin qo'shadi (taklif tugmasi yo'q); ruxsatlar — guruhlangan checkbox'lar (Katalog, So'rovlar, Takliflar, Montaj, Marketing, Analitika); OWNER faqat bitta va o'zgartirilmaydi (egalikni topshirish alohida oqim).
 - **Obuna**: joriy reja, holat (Sinov · 30 kun · 12 kun qoldi), limitlar va ishlatilgani (progress), keyingi to'lov sanasi, to'lovlar tarixi va kvitansiyalar. Rejani o'zgartirish — taqqoslash jadvali; o'zgarish qachon kuchga kirishi, narx va limitlar oldindan.
 - **Limit oshganda (402 PLAN_LIMIT_EXCEEDED)**: amal joyida modal — qaysi limit, hozirgi va reja qiymati, "Rejani yangilash" va "Keyinroq". Ma'lumot yo'qolmaydi (masalan mahsulot qoralama sifatida saqlanadi).
 - **To'lov**: Click / Payme / Uzum tanlovi → provayder sahifasi → qaytish sahifasi holatlari: kutilmoqda (3 s da tekshirish, 60 s gacha), muvaffaqiyatli, muvaffaqiyatsiz (sabab ma'lum bo'lsa), bekor qilindi.
@@ -3165,25 +3152,15 @@ Ro'yxat — raqam, mavzu, kategoriya, ustuvorlik, holat, mas'ul, birinchi javob 
 - Audit jurnali: cursor, filtrlar (aktyor, entity, amal, sana); yozuv sahifasi — before/after farqi (maskalangan PII bilan).
 
 ## U12.11. Do'kon yaratish va do'kon hayot sikli (TZ 3.7)
-
-Super Admin do'konni o'zi yaratishi mumkin (hamkorlik shartnomasi, savdo bo'limi orqali kelgan do'konlar). Do'kon admin tomonidan yaratilsa ham, **egasi bo'lmagan do'kon hech qachon public'da ko'rinmaydi**.
-
-![Rasm 9. Admin: do'konlar ro'yxati va «Do'kon yaratish» paneli, takroriy yozuv ogohlantirishi bilan.](design/g-adm.png)
-
-- **Kirish nuqtasi**: Do'konlar ro'yxati (ADM-25) yuqorisida "+ Do'kon yaratish" (primary). Ro'yxat filtrlari: Hammasi · Faol · Tekshiruvda · Qoralama · Ega kutilmoqda · To'xtatilgan; "Manba" ustuni (O'zi / Admin).
-- **Yaratish paneli (ADM-26)** — o'ngdan 470 px drawer, 3 qadam (StepArc ixcham ko'rinishi):
-  1. *Ma'lumot*: nom, yuridik nom, STIR (9 raqam, maska), telefon, email (ixtiyoriy), viloyat, asosiy filial manzili (xaritadan pin), tarif rejasi.
-  2. *Tekshiruv*: STIR va telefon bo'yicha takroriy qidiruv natijasi. Topilsa — sariq ogohlantirish kartasi: mavjud do'kon (havola, "Bu do'konni ochish") yoki mavjud foydalanuvchi ("taklif unga boradi"). STIR bo'yicha faol do'kon topilsa "Yaratish" bloklanadi. "Yaratish sababi" maydoni majburiy.
-  3. *Ega taklifi*: taklif yuboriladigan kontakt (telefon/email), kanal (SMS, email, Telegram), xabar matni preview'si, muddat 7 kun. "Hozircha taklifsiz saqlash" — do'kon QORALAMA bo'lib qoladi.
-- **Admin rejimi**: yaratilgandan keyin admin do'kon kabinetini "Admin rejimi" banneri bilan (sun-100 fon, "Siz admin sifatida tahrirlayapsiz · Chiqish") ochib, filial, xizmat, katalogni to'ldirishi mumkin; har amal auditga yoziladi.
-- **Taklif holati kartasi (do'kon sahifasida)**: Yuborildi · Ochildi · Qabul qilindi · Muddati o'tdi · Bekor qilindi; amallar "Qayta yuborish", "Kontaktni o'zgartirish", "Bekor qilish". Qolgan muddat taymeri.
-- **Egasi uchun qabul sahifasi (AUTH-09)**: "Sizni «SunLine Diler» do'konining egasi sifatida taklif qilishdi" — kirish/ro'yxatdan o'tish (kontakt mos kelishi shart, mos kelmasa INVITATION_CONTACT_MISMATCH matni), shartlarga rozilik, keyin Onboarding (11.1) oldindan to'ldirilgan ma'lumot bilan. Foydalanuvchida 3 ta do'kon bo'lsa — SHOP_LIMIT_REACHED matni.
-- **Hayot sikli amallari** (12.3 naqshi — tasdiq oynasi, sabab, ta'sir, nom yozib tasdiqlash):
-  - *To'xtatish*: ta'siri ("do'kon public'dan yashiriladi, 4 ta ochiq so'rov mijozlarga «do'kon vaqtincha mavjud emas» deb ko'rsatiladi"); sabab shablonlari; ixtiyoriy muddat. Do'kon kabinetida qizil banner va faqat o'qish rejimi (SHOP_SUSPENDED).
-  - *Qayta faollashtirish*: oldingi holatga qaytaradi, egaga bildirishnoma.
-  - *Egalikni o'tkazish*: yangi ega qidiruvi (do'kon xodimlaridan yoki telefon bo'yicha), eski ega MANAGER bo'lib qolishi aniq yoziladi.
-  - *Tarifni belgilash*: reja va muddat, preview "keyingi to'lov sanasi".
-- **Holat badge'lari** (5.3 ga qo'shimcha): Qoralama (neytral) · Ega kutilmoqda (sun) · Tekshiruvda (sun) · Faol (leaf) · To'xtatilgan (error).
+Do'konni faqat admin yaratadi; do'kon o'zi ro'yxatdan o'ta olmaydi. Admin yaratgan do'kon darhol faol va tasdiqlangan.
+- **Kirish nuqtasi**: Do'konlar ro'yxati (ADM-25) yuqorisida "+ Do'kon yaratish" (primary). Filtrlar: Hammasi · Faol · To'xtatilgan; "Manba" ustuni.
+- **Yaratish paneli (ADM-26)** — o'ngdan drawer, 2 qadam:
+  1. *Do'kon ma'lumoti*: nom, STIR (9 raqam, maska), telefon, viloyat, manzil. Tarif maydoni yo'q.
+  2. *Egasining hisobi*: ism, login (telefon raqami). STIR/telefon bo'yicha takroriy qidiruv natijasi shu yerda: STIR bo'yicha do'kon topilsa "Yaratish" bloklanadi; telefon bo'yicha do'kon topilsa sariq ogohlantirish va tasdiq; ega raqami band bo'lsa — xato.
+- **Natija oynasi**: tizim yaratgan vaqtincha parol **bir marta** ko'rsatiladi, "Nusxa olish" tugmasi bilan; oyna yopilgach parolni qayta ko'rib bo'lmaydi (faqat tiklash).
+- **Do'kon sahifasidagi amallar** (12.3 naqshi — tasdiq oynasi, sabab, ta'sir): *Parolni qayta tiklash* (a'zo tanlanadi, yangi vaqtincha parol bir marta), *Xodim qo'shish* (ism, telefon, rol, ruxsatlar, vaqtincha parol), *Egani almashtirish* (a'zolardan tanlanadi; eski ega MANAGER bo'lishi yoziladi), *To'xtatish / Qayta yoqish* (sabab majburiy), *Belgilar* (rasmiy diler va h.k. qo'yish/olib tashlash). Har amal auditga yoziladi.
+- **Holat badge'lari**: Faol (leaf) · To'xtatilgan (error). Eski yozuvlar uchun Qoralama/Tekshiruvda ko'rsatilishi mumkin.
+- AUTH-09 (taklifni qabul qilish sahifasi) va "Ega taklifi holati" kartasi olib tashlangan.
 
 ## U12.12. DevOps paneli (TZ 19.1)
 
@@ -3410,13 +3387,13 @@ TZ 9.2 katalogidagi har kod uchun UI matni. Texnik kod foydalanuvchiga ko'rsatil
 
 | Guruh | ID va ekranlar |
 |---|---|
-| Public | PUB-01 Bosh sahifa · PUB-02 Kalkulyator landing · PUB-03 Xarita · PUB-04 Do'konlar ro'yxati · PUB-05 Do'kon profili · PUB-06 Katalog · PUB-07 Mahsulot · PUB-08 Mahsulotlarni solishtirish · PUB-09 Bilimlar markazi · PUB-10 Maqola · PUB-11 Atamalar lug'ati · PUB-12 FAQ · PUB-13 Yordam markazi · PUB-14 Murojaat yaratish · PUB-15 Ulashilgan hisob · PUB-16 Do'kon ochish · PUB-17 Bosh sahifa video pleyer (tushuntiruvchi video, boblar) |
-| Auth | AUTH-01 Kirish (telefon) · AUTH-02 Kirish (email) · AUTH-03 OTP · AUTH-04 Ro'yxatdan o'tish · AUTH-05 Parolni tiklash · AUTH-06 Login modal · AUTH-07 Sessiya tugadi · AUTH-08 Admin TOTP · AUTH-09 Do'kon egaligi taklifini qabul qilish |
+| Public | PUB-01 Bosh sahifa · PUB-02 Kalkulyator landing · PUB-03 Xarita · PUB-04 Do'konlar ro'yxati · PUB-05 Do'kon profili · PUB-06 Katalog · PUB-07 Mahsulot · PUB-08 Mahsulotlarni solishtirish · PUB-09 Bilimlar markazi · PUB-10 Maqola · PUB-11 Atamalar lug'ati · PUB-12 FAQ · PUB-13 Yordam markazi · PUB-14 Murojaat yaratish · PUB-15 Ulashilgan hisob · PUB-17 Bosh sahifa video pleyer (tushuntiruvchi video, boblar) |
+| Auth | AUTH-01 Kirish (telefon) · AUTH-02 Kirish (email) · AUTH-03 OTP · AUTH-04 Ro'yxatdan o'tish · AUTH-05 Parolni tiklash · AUTH-06 Login modal · AUTH-07 Sessiya tugadi · AUTH-08 Admin TOTP · AUTH-09 Do'kon: yangi parol o'rnatish (birinchi kirish; SHP-01 bilan bir ekran) |
 | Kalkulyator | CALC-01 Tez hisob · CALC-02..07 Batafsil 1–6 qadam · CALC-08 Maishiy texnika · CALC-09 Natija · CALC-10 Kredit kalkulyatori · CALC-11 Uzilish kalkulyatori · CALC-12 Saqlash · CALC-13 Ulashish · CALC-14 Hisoblarni solishtirish · CALC-15 PDF oynasi · CALC-16 Draft tiklash |
 | Takliflar | QT-01 So'rov wizard (4 qadam) · QT-02 So'rov yuborildi · QT-03 So'rov sahifasi · QT-04 Yozishma · QT-05 O'lchov uchrashuvi · QT-06 Taklif tafsiloti va tahrirlar · QT-07 Takliflarni solishtirish · QT-08 Tanlash tasdig'i · QT-09 Montaj kuzatuvi · QT-10 Qabul chek-listi · QT-11 E'tiroz · QT-12 Sharh |
 | Mijoz | CUS-01 Bosh panel · CUS-02 Obyektlar · CUS-03 Obyekt sahifasi · CUS-04 Hisoblar · CUS-05 So'rovlar · CUS-06 O'rnatilgan tizim · CUS-07 Ishlab chiqarishni kiritish · CUS-08 Bildirishnomalar · CUS-09 Sevimlilar · CUS-10 Profil · CUS-11 Bildirishnoma sozlamalari · CUS-12 Telegram ulash · CUS-13 Sessiyalar · CUS-14 Hisobni o'chirish · CUS-15 Murojaatlarim |
-| Do'kon | SHP-01 Onboarding (5 qadam) · SHP-02 Bosh panel · SHP-03 So'rovlar ro'yxati · SHP-04 Pipeline · SHP-05 So'rov sahifasi · SHP-06 Taklif tayyorlash · SHP-07 Taklif shablonlari · SHP-08 Montajlar · SHP-09 Katalog · SHP-10 Mahsulot qo'shish/tahrirlash · SHP-11 Model taklif qilish · SHP-12 Import · SHP-13 Filiallar · SHP-14 Xizmat hududi · SHP-15 Xizmatlar · SHP-16 Portfolio · SHP-17 Sharhlar · SHP-18 Sertifikatlar · SHP-19 Vidjet · SHP-20 Analitika · SHP-21 Xodimlar · SHP-22 Obuna · SHP-23 To'lov natijasi · SHP-24 Do'kon sozlamalari |
-| Admin | ADM-01 Dashboard · ADM-02 Do'kon verifikatsiyasi · ADM-03 Sertifikatlar · ADM-04 ProductModel moderatsiyasi va birlashtirish · ADM-05 Sharhlar · ADM-06 Shikoyatlar · ADM-07 E'tirozli montajlar · ADM-08 Tariflar va preview · ADM-09 Eksport qoidalari · ADM-10 Ulanish limitlari · ADM-11 Moliyalashtirish mahsulotlari · ADM-12 Kalkulyator sozlamalari · ADM-13 Maishiy texnika va shablonlar · ADM-14 Yuklama profillari · ADM-15 Kategoriyalar · ADM-16 Chek-list shablonlari · ADM-17 Kontent · ADM-18 Yordam navbati · ADM-19 Foydalanuvchilar · ADM-20 Obuna rejalari · ADM-21 Funnel · ADM-22 Audit · ADM-23 Valyuta kurslari · ADM-24 Platforma sozlamalari · ADM-25 Do'konlar ro'yxati · ADM-26 Do'kon yaratish · ADM-27 Ega taklifi holati · ADM-28 Do'kon admin rejimi · ADM-29 To'xtatish / qayta faollashtirish · ADM-30 Egalikni o'tkazish · ADM-31 Bosh sahifa bloklari va media (SiteBlock) · ADM-32 DevOps paneli · ADM-33 DevOps: navbat tafsiloti · ADM-34 DevOps: alertlar tarixi |
+| Do'kon | SHP-01 Yangi parol o'rnatish (birinchi kirish) · SHP-02 Bosh panel · SHP-03 So'rovlar ro'yxati · SHP-04 Pipeline · SHP-05 So'rov sahifasi · SHP-06 Taklif tayyorlash · SHP-07 Taklif shablonlari · SHP-08 Montajlar · SHP-09 Katalog · SHP-10 Mahsulot qo'shish/tahrirlash · SHP-11 Model taklif qilish · SHP-12 Import · SHP-13 Filiallar · SHP-14 Xizmat hududi · SHP-15 Xizmatlar · SHP-16 Portfolio · SHP-17 Sharhlar · (SHP-18 olib tashlangan) · SHP-19 Vidjet · SHP-20 Analitika · SHP-21 Xodimlar · (SHP-22, SHP-23 olib tashlangan) · SHP-24 Do'kon sozlamalari |
+| Admin | ADM-01 Dashboard · ADM-02 (olib tashlangan: verifikatsiya navbati) · ADM-03 Do'kon belgilari (do'kon sahifasida) · ADM-04 ProductModel moderatsiyasi va birlashtirish · ADM-05 Sharhlar · ADM-06 Shikoyatlar · ADM-07 E'tirozli montajlar · ADM-08 Tariflar va preview · ADM-09 Eksport qoidalari · ADM-10 Ulanish limitlari · ADM-11 Moliyalashtirish mahsulotlari · ADM-12 Kalkulyator sozlamalari · ADM-13 Maishiy texnika va shablonlar · ADM-14 Yuklama profillari · ADM-15 Kategoriyalar · ADM-16 Chek-list shablonlari · ADM-17 Kontent · ADM-18 Yordam navbati · ADM-19 Foydalanuvchilar · ADM-20 Obuna rejalari · ADM-21 Funnel · ADM-22 Audit · ADM-23 Valyuta kurslari · ADM-24 Platforma sozlamalari · ADM-25 Do'konlar ro'yxati · ADM-26 Do'kon yaratish · ADM-27 Parolni tiklash va xodim qo'shish · ADM-28 Do'kon admin rejimi · ADM-29 To'xtatish / qayta faollashtirish · ADM-30 Egalikni o'tkazish · ADM-31 Bosh sahifa bloklari va media (SiteBlock) · ADM-32 DevOps paneli · ADM-33 DevOps: navbat tafsiloti · ADM-34 DevOps: alertlar tarixi |
 | Boshqa | WID-01 Vidjet (hisob, OTP, yuborildi) · PDF-01 Hisob PDF · PDF-02 Taklif PDF · MSG-01 Email shablonlari · MSG-02 SMS · MSG-03 Telegram (mijoz, do'kon) |
 | Tizim holatlari | SYS-01 404 · SYS-02 500 · SYS-03 Texnik ishlar · SYS-04 Offline · SYS-05 Cookie banneri · SYS-06 Ruxsat yo'q · SYS-07 Limit (402) · SYS-08 Provayder ishlamayapti · SYS-09 Skeleton to'plami · SYS-10 Bo'sh holat illyustratsiyalari (8 ta) |
 
@@ -3467,3 +3444,4 @@ UI/UX ishlab chiqishda topilgan, TZ darajasida qaror talab qiladigan masalalar. 
 | 10 | Kabinet sidebar 248 px | GetMaster qobig'i: sidebar 288, header 64, mobil navigatsiya, nav-items | U5.5 |
 | 11 | Kirish — modal/sahifa | Split-screen AuthLayout | U7.2 |
 | 12 | Konsept rasmlar qumrang | GetMaster uslubida qayta chizildi | Rasmlar |
+| 13 | v3.1: do'kon o'zi ro'yxatdan o'tadi va onboarding'dan o'tadi; egasi ShopInvitation havolasi orqali kiradi (SMS/OTP); do'kon hujjat va sertifikat yuboradi; bosh sayt mijoz va do'konga | **Do'konni faqat admin yaratadi** (3.7: do'kon + egasining hisobi + vaqtincha parol, `POST /admin/shops`); **do'kon login + parol bilan kiradi**, OTP yo'q, birinchi kirishda parol almashtirish majburiy (`User.mustPasswordChange`, 6.4); ShopInvitation, do'kon ro'yxatdan o'tishi, onboarding va hujjat/sertifikat yuborish olib tashlangan; verifikatsiya hujjat bilan emas — admin yaratgan do'kon `VERIFIED`, belgilarni faqat admin qo'yadi; **bosh sayt faqat mijoz uchun**; do'kon formasida tarif yo'q | TZ 1.3, 2.1, 3.5, 3.7, 4.11, 6.4, 7.3, 9.7, 9.11; U5.5, U7.1, U7.2, U11.1, U11.12, U12.11, U21 |
