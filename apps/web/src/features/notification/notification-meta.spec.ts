@@ -13,7 +13,7 @@ describe('notificationMeta', () => {
     expect(notificationMeta(n('NEW_MESSAGE', { entityType: 'RequestShop', entityId: id })).to).toBe(`/mijoz/chat/${id}`);
     expect(notificationMeta(n('INSTALLATION_ISSUE_REPORTED', { entityId: id }), '/dokon').to).toBe(`/dokon/montajlar/${id}`);
     expect(notificationMeta(n('SUPPORT_REPLY', { entityId: id })).to).toBe(`/mijoz/murojaatlar/${id}`);
-    expect(notificationMeta(n('CERTIFICATION_RESULT', {}), '/dokon').to).toBe('/dokon/sertifikatlar');
+    expect(notificationMeta(n('CERTIFICATION_EXPIRING', {}), '/dokon').to).toBe('/dokon');
   });
 
   it('never builds a link from a malformed id or for admins; unknown types stay inert', () => {

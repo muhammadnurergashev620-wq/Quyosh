@@ -11,10 +11,6 @@ export function useManagedShop(shopId: string | null) {
   return useQuery({ queryKey: shopKey(shopId), queryFn: () => shopService.get(shopId!), enabled: !!shopId });
 }
 
-export function useShopDocuments(shopId: string | null) {
-  return useQuery({ queryKey: shopKey(shopId, 'documents'), queryFn: () => shopService.documents(shopId!), enabled: !!shopId });
-}
-
 export function useShopBranches(shopId: string | null) {
   return useQuery({ queryKey: shopKey(shopId, 'branches'), queryFn: () => shopService.branches(shopId!), enabled: !!shopId });
 }

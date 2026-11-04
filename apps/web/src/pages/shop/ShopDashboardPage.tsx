@@ -1,13 +1,11 @@
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { CheckCircle2, Circle } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import { PageLoader } from '@/components/common/PageLoader';
 import { useCurrentShop } from '@/features/shop/current-shop';
-import { useManagedShop, useShopMutation } from '@/features/shop/hooks';
-import { shopService } from '@/features/shop/shop.service';
-import { SHOP_STATUS, VERIFICATION_STATUS } from '@/features/shop/labels';
+import { useManagedShop } from '@/features/shop/hooks';
+import { SHOP_STATUS } from '@/features/shop/labels';
 import { ShopSwitcher } from '@/features/shop/components/ShopSwitcher';
 import type { ManagedShop } from '@/features/shop/types';
 import { getErrorMessage } from '@/lib/error-messages';
@@ -17,10 +15,9 @@ import { ShopKpis } from '@/pages/m7/ShopM7Pages';
 import '@/features/shop/shop.css';
 
 const CHECKLIST: Record<ManagedShop['checklist'][number]['key'], { label: string; to: string }> = {
-  profile: { label: t('Logo va tavsif'), to: '/dokon/onboarding' },
+  profile: { label: t('Logo va tavsif'), to: '/dokon/profil' },
   branch: { label: t('Birinchi filial'), to: '/dokon/filiallar' },
   serviceArea: { label: t('Xizmat hududi'), to: '/dokon/filiallar' },
-  verification: { label: t('Verifikatsiya hujjatlari'), to: '/dokon/onboarding' },
   products: { label: t('Birinchi mahsulotlar'), to: '/dokon/katalog' },
 };
 
@@ -28,9 +25,8 @@ const CHECKLIST: Record<ManagedShop['checklist'][number]['key'], { label: string
 export function ShopDashboardPage() {
   const { shop: current, isLoading, can } = useCurrentShop();
   const managed = useManagedShop(current?.id ?? null);
-  const submit = useShopMutation(current?.id ?? null, (shopId) => shopService.submit(shopId), { success: t('Do‘kon tekshiruvga yuborildi') });
   if (isLoading || managed.isLoading) return <PageLoader />;
-  if (!current) return <Navigate to="/dokon/onboarding" replace />;
+  if (!current) return <Alert tone="info" title={t('Do‘kon topilmadi')}>{t('Hisobingiz hali do‘konga biriktirilmagan. Administratorga murojaat qiling.')}</Alert>;
   if (managed.isError || !managed.data) return <Alert tone="danger">{getErrorMessage(managed.error)}</Alert>;
   const shop = managed.data;
   const isOwner = shop.membership.memberRole === 'OWNER';
@@ -45,19 +41,12 @@ export function ShopDashboardPage() {
         <div className="qs-page__actions">
           <ShopSwitcher />
           <Badge tone={SHOP_STATUS[shop.status].tone}>{SHOP_STATUS[shop.status].label}</Badge>
-          <Badge tone={VERIFICATION_STATUS[shop.verificationStatus].tone}>{VERIFICATION_STATUS[shop.verificationStatus].label}</Badge>
         </div>
       </div>
 
       {shop.status === 'SUSPENDED' && (
         <Alert tone="danger" title={t('Do‘kon vaqtincha to‘xtatilgan')}>
           {t('Faqat ko‘rish mumkin. Sabab: {reason}', { reason: shop.suspendReason ?? '—' })}
-        </Alert>
-      )}
-      {shop.status === 'PENDING_REVIEW' && <Alert tone="warning" title={t('Tekshiruvda')}>{t('Administrator hujjatlaringizni ko‘rib chiqmoqda. Natija bildirishnoma orqali keladi.')}</Alert>}
-      {shop.rejection && shop.status === 'DRAFT' && (
-        <Alert tone="danger" title={t('Tekshiruv rad etildi')}>
-          {shop.rejection.reason} — {t('kamchiliklarni tuzatib, qayta yuboring.')}
         </Alert>
       )}
 
@@ -79,13 +68,6 @@ export function ShopDashboardPage() {
               ))}
             </ul>
           </div>
-          {shop.status === 'DRAFT' && isOwner && (
-            <div className="qs-form__actions" style={{ marginTop: 16 }}>
-              <Button loading={submit.isPending} disabled={shop.counts.verificationDocs === 0} onClick={() => submit.mutate(undefined)}>
-                {t('Tekshiruvga yuborish')}
-              </Button>
-            </div>
-          )}
         </section>
         <section className="qs-card">
           <header><h2>{t('Ko‘rsatkichlar')}</h2></header>
@@ -104,7 +86,7 @@ export function ShopDashboardPage() {
           {can('catalog.write') && <Link className="gm-button gm-button--secondary gm-button--md" to="/dokon/katalog">{t('Mahsulot qo‘shish')}</Link>}
           {can('catalog.write') && <Link className="gm-button gm-button--secondary gm-button--md" to="/dokon/import">{t('Narxlarni import qilish')}</Link>}
           {can('branches.write') && <Link className="gm-button gm-button--secondary gm-button--md" to="/dokon/filiallar">{t('Filial qo‘shish')}</Link>}
-          {isOwner && <Link className="gm-button gm-button--secondary gm-button--md" to="/dokon/xodimlar">{t('Xodim taklif qilish')}</Link>}
+          {isOwner && <Link className="gm-button gm-button--secondary gm-button--md" to="/dokon/xodimlar">{t('Xodimlar')}</Link>}
         </div>
       </section>
     </div>

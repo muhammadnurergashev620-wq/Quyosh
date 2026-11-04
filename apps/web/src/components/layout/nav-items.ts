@@ -18,7 +18,6 @@ import {
   Receipt,
   ScrollText,
   Settings,
-  ShieldCheck,
   Store,
   UserCog,
   UserRound,
@@ -26,7 +25,6 @@ import {
   Wrench,
   Zap,
   Heart,
-  BadgeCheck,
   BookOpen,
   Images,
   Code2,
@@ -50,15 +48,6 @@ export interface NavItem {
 
 const ACCOUNT = 'Hisob';
 
-/**
- * Do‘kon hali yaratilmagan bo‘lsa, do‘kon paneli bo‘limlari bosilganda to‘g‘ridan-to‘g‘ri do‘kon ochish va
- * tekshiruvga yuborish sahifasiga (`/dokon/onboarding`) olib boradi. Boshqa bandlar (bildirishnoma, sozlamalar) o‘zgarmaydi.
- */
-export function navTarget(to: string, needsShopOnboarding: boolean): { to: string; redirected: boolean } {
-  const redirected = needsShopOnboarding && to.startsWith('/dokon') && to !== '/dokon/onboarding';
-  return { to: redirected ? '/dokon/onboarding' : to, redirected };
-}
-
 /** Menyu elementlari joriy tilda (yorliq, qisqa nom va guruh nomi tarjima qilinadi). Guruhlar — TZ U5.5. */
 export function getNavItems(role: Role | null, options: { superAdmin?: boolean; permissions?: string[]; canCreateAdmins?: boolean } = {}): NavItem[] {
   return rawNavItems(role, options).map((item) => ({ ...item, label: t(item.label), short: item.short ? t(item.short) : undefined, group: t(item.group) }));
@@ -74,8 +63,6 @@ function rawNavItems(role: Role | null, options: { superAdmin?: boolean; permiss
       { to: '/admin/foydalanuvchilar', label: 'Foydalanuvchilar', icon: Users, group: 'Boshqaruv', permission: 'USERS' },
       ...(options.superAdmin || options.canCreateAdmins ? [{ to: '/admin/adminlar', label: 'Adminlar', icon: UserCog, group: 'Boshqaruv' } satisfies NavItem] : []),
       { to: '/admin/dokonlar', label: 'Do‘konlar', icon: Store, group: 'Boshqaruv', primary: true, permission: 'SHOPS' },
-      { to: '/admin/tasdiqlash', label: 'Tasdiqlash', icon: ShieldCheck, group: 'Boshqaruv', primary: true, permission: 'SHOPS' },
-      { to: '/admin/sertifikatlar', label: 'Sertifikatlar', icon: BadgeCheck, group: 'Boshqaruv', permission: 'SHOPS' },
       { to: '/admin/bosh-sahifa', label: 'Bosh sahifa', icon: LayoutTemplate, group: 'Kontent', permission: 'CONTENT' },
       { to: '/admin/kontent', label: 'Bilimlar markazi', icon: BookOpen, group: 'Kontent', permission: 'CONTENT' },
       { to: '/admin/katalog', label: 'Katalog moderatsiyasi', short: 'Katalog', icon: Package, group: 'Kontent', permission: 'CATALOG' },
@@ -103,10 +90,10 @@ function rawNavItems(role: Role | null, options: { superAdmin?: boolean; permiss
       { to: '/dokon/filiallar', label: 'Filiallar va hudud', icon: MapPin, group: 'Katalog' },
       { to: '/dokon/xizmatlar', label: 'Xizmatlar', icon: Wrench, group: 'Katalog' },
       { to: '/dokon/portfolio', label: 'Portfolio', icon: Images, group: 'Katalog' },
-      { to: '/dokon/sertifikatlar', label: 'Sertifikatlar', icon: ShieldCheck, group: 'Katalog' },
       { to: '/dokon/vidjet', label: 'Vidjet', icon: Code2, group: 'Katalog' },
       { to: '/dokon/analitika', label: 'Analitika', icon: BarChart3, group: ACCOUNT },
       { to: '/dokon/xodimlar', label: 'Xodimlar', icon: Users, group: ACCOUNT },
+      { to: '/dokon/profil', label: 'Do‘kon profili', icon: Store, group: ACCOUNT },
       { to: '/bildirishnomalar', label: 'Bildirishnomalar', icon: Bell, group: ACCOUNT },
       { to: '/sozlamalar', label: 'Sozlamalar', icon: Settings, group: ACCOUNT },
     ];

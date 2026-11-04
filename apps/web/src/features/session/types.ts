@@ -17,6 +17,8 @@ export interface Me {
   phoneVerifiedAt?: string | null;
   /** Kirishda OTP so‘ralishi (ikki bosqichli autentifikatsiya). */
   twoFactorEnabled?: boolean;
+  /** Admin bergan vaqtincha parol: birinchi kirishda majburiy almashtiriladi (do‘kon paneli, TZ 3.5). */
+  mustPasswordChange?: boolean;
   /** Google akkaunt ulanganmi (ulangan bo‘lsa Google orqali ham kirish mumkin). */
   googleLinked?: boolean;
   /** Akkauntda parol bormi (Google orqali ochilgan akkauntda dastlab yo‘q). */

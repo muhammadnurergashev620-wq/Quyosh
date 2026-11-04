@@ -1,4 +1,4 @@
-import { BadgeCheck, Bell, FileText, LifeBuoy, MessageSquare, ScrollText, ShieldCheck, Siren, Star, Store, Sun, Wrench } from 'lucide-react';
+import { BadgeCheck, Bell, FileText, LifeBuoy, MessageSquare, ScrollText, ShieldCheck, Siren, Star, Sun, Wrench } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { AppNotification } from './types';
 
@@ -12,7 +12,7 @@ export interface NotificationMeta {
 
 /** Admin audit bildirishnomasi turiga mos bo‘lim: bildirishnoma ochilmasa ham shu sahifaga kirilsa o‘qilgan bo‘ladi. */
 export function adminAuditPath(action: string, fallback?: unknown): string {
-  if (action.startsWith('SHOP_') || action.startsWith('VERIFICATION_')) return '/admin/tasdiqlash';
+  if (action.startsWith('SHOP_') || action.startsWith('VERIFICATION_')) return '/admin/dokonlar';
   if (action === 'AUTH_REGISTERED' || action === 'AUTH_REGISTRATION_VERIFIED' || action.startsWith('ADMIN_USER_')) return '/admin/foydalanuvchilar';
   return typeof fallback === 'string' ? fallback : '/admin/audit';
 }
@@ -45,7 +45,7 @@ export function entityPath(entityType: string | undefined, id: string | undefine
     case 'Review': return shop ? '/dokon/sharhlar' : '/mijoz/montajlar';
     case 'InstalledSystem': return shop ? undefined : safeId ? `/mijoz/tizimim/${safeId}` : '/mijoz/tizimim';
     case 'SupportTicket': return shop ? undefined : safeId ? `/mijoz/murojaatlar/${safeId}` : '/mijoz/murojaatlar';
-    case 'ShopCertification': return shop ? '/dokon/sertifikatlar' : undefined;
+    case 'ShopCertification': return shop ? '/dokon' : undefined;
     default: return undefined;
   }
 }
@@ -61,8 +61,6 @@ export function notificationMeta(item: AppNotification, base: '/mijoz' | '/dokon
     }
     case 'shop.verification':
       return { icon: ShieldCheck, tone: data.decision === 'APPROVE' ? 'success' : 'warning', to: '/dokon' };
-    case 'shop.invitation':
-      return { icon: Store, tone: 'primary' };
     case 'OPS_ALERT':
       return { icon: Siren, tone: 'danger', to: admin ? '/admin/devops' : undefined };
     case 'report.ready':

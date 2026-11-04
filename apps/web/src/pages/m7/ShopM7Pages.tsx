@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, BadgeCheck, Copy, Download, FileText, Image as ImageIcon, Monitor, Plus, Smartphone, Trash2 } from 'lucide-react';
+import { AlertTriangle, BadgeCheck, Copy, Download, Image as ImageIcon, Monitor, Plus, Smartphone, Trash2 } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Badge, type BadgeTone } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
@@ -14,7 +14,7 @@ import { PageLoader } from '@/components/common/PageLoader';
 import { kw, SYSTEM_TYPE } from '@/features/calc/labels';
 import type { SystemType } from '@/features/calc/types';
 import { m7Service, uploadMedia } from '@/features/m7/m7.service';
-import type { Certification, CertType, Project } from '@/features/m7/types';
+import type { Project } from '@/features/m7/types';
 import { useCurrentShop } from '@/features/shop/current-shop';
 import { REGIONS } from '@/lib/regions';
 import { getErrorMessage } from '@/lib/error-messages';
@@ -24,11 +24,6 @@ import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
 import '@/features/m7/m7.css';
 
-export { CERT_TYPE } from './cert-labels';
-import { CERT_TYPE } from './cert-labels';
-export const CERT_STATUS: Record<Certification['status'], { label: string; tone: BadgeTone }> = {
-  PENDING: { label: t('Tekshiruvda'), tone: 'warning' }, APPROVED: { label: t('Tasdiqlangan'), tone: 'success' }, REJECTED: { label: t('Rad etilgan'), tone: 'danger' }, EXPIRED: { label: t('Muddati o‘tgan'), tone: 'neutral' },
-};
 const regionName = (code: string) => REGIONS.find((r) => r.code === code)?.name ?? (code === 'unknown' ? t('Ko‘rsatilmagan') : code);
 const minutes = (m: number | null) => (m === null ? '—' : m < 60 ? t('{n} daq', { n: m }) : t('{n} soat', { n: Math.round(m / 60) }));
 const share = (v: number | null) => (v === null ? '—' : `${Math.round(v * 100)} %`);
@@ -150,71 +145,6 @@ export function PortfolioPage() {
       )}
       {edit && <ProjectForm shopId={shopId} project={edit === 'new' ? null : edit} installations={list.data?.confirmedInstallations ?? []} onClose={() => setEdit(null)} />}
       <ConfirmDialog open={!!remove} title={t('Loyihani o‘chirish')} description={remove?.title ?? ''} tone="danger" confirmLabel={t('O‘chirish')} loading={del.isPending} onConfirm={() => remove && del.mutate(remove.id)} onCancel={() => setRemove(null)} />
-    </div>
-  );
-}
-
-/** U11.12: sertifikatlar — 30 kun qolganda banner; o‘tganda belgi yashiriladi va «Yangilash». */
-export function CertificationsPage() {
-  const { shopId, can } = useCurrentShop();
-  const queryClient = useQueryClient();
-  const list = useQuery({ queryKey: ['certs', shopId], queryFn: () => m7Service.certifications(shopId!), enabled: !!shopId });
-  const [edit, setEdit] = useState<Certification | null | 'new'>(null);
-  const [f, setF] = useState({ certType: 'CERTIFIED_INSTALLER' as CertType, brand: '', issuer: '', certNumber: '', validFrom: '', validUntil: '', fileId: '', fileName: '' });
-  useEffect(() => {
-    if (edit && edit !== 'new') setF({ certType: edit.certType, brand: edit.brand ?? '', issuer: edit.issuer, certNumber: edit.certNumber ?? '', validFrom: edit.validFrom.slice(0, 10), validUntil: edit.validUntil?.slice(0, 10) ?? '', fileId: edit.fileId, fileName: t('Yuklangan fayl') });
-    if (edit === 'new') setF({ certType: 'CERTIFIED_INSTALLER', brand: '', issuer: '', certNumber: '', validFrom: '', validUntil: '', fileId: '', fileName: '' });
-  }, [edit]);
-  const upload = useMutation({ mutationFn: (file: File) => uploadMedia('CERTIFICATE', 'Shop', shopId!, file), onSuccess: (r, file) => setF((x) => ({ ...x, fileId: r.id, fileName: file.name })) });
-  const save = useMutation({
-    mutationFn: () => m7Service.saveCertification(shopId!, edit && edit !== 'new' ? edit.id : null, { certType: f.certType, brand: f.brand.trim() || undefined, issuer: f.issuer.trim(), certNumber: f.certNumber.trim() || undefined, fileId: f.fileId, validFrom: f.validFrom, validUntil: f.validUntil || undefined }),
-    onSuccess: () => { setEdit(null); void queryClient.invalidateQueries({ queryKey: ['certs', shopId] }); },
-  });
-  const del = useMutation({ mutationFn: (id: string) => m7Service.deleteCertification(shopId!, id), onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['certs', shopId] }) });
-  if (!shopId || list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
-  const expiring = list.data?.filter((c) => c.expiringSoon) ?? [];
-  return (
-    <div className="qs-page">
-      <div className="qs-page__head"><div><h1>{t('Sertifikatlar')}</h1><p>{t('Belgilar admin tasdig‘idan keyin profilda ko‘rinadi va muddati o‘tganda avtomatik yashiriladi.')}</p></div>{can('shop.profile') && <div className="qs-page__actions"><Button onClick={() => setEdit('new')}><Plus size={16} /> {t('Sertifikat qo‘shish')}</Button></div>}</div>
-      {expiring.length > 0 && <Alert tone="warning" title={t('Muddati tugayapti')}>{expiring.map((c) => `${CERT_TYPE[c.certType]} — ${formatDate(c.validUntil)}`).join('; ')}</Alert>}
-      {!list.data?.length ? <EmptyState icon={<BadgeCheck size={30} />} title={t('Sertifikat yo‘q')} description={t('Rasmiy diler, sertifikatli montajchi yoki litsenziya hujjatini yuklang.')} /> : (
-        <div className="qs-table-wrap">
-          <table className="qs-table">
-            <thead><tr><th>{t('Tur')}</th><th>{t('Beruvchi')}</th><th>{t('Raqam')}</th><th>{t('Muddat')}</th><th>{t('Holat')}</th><th /></tr></thead>
-            <tbody>
-              {list.data.map((c) => (
-                <tr key={c.id}>
-                  <td><div className="qs-cell-title"><strong>{CERT_TYPE[c.certType]}</strong>{c.brand && <small>{c.brand}</small>}</div></td>
-                  <td>{c.issuer}</td>
-                  <td>{c.certNumber ?? '—'}</td>
-                  <td className="qs-num">{formatDate(c.validFrom)} — {c.validUntil ? formatDate(c.validUntil) : t('muddatsiz')}</td>
-                  <td><Badge tone={CERT_STATUS[c.status].tone}>{CERT_STATUS[c.status].label}</Badge>{c.reason && <small className="qs-muted"> {c.reason}</small>}</td>
-                  <td className="qs-right">
-                    {can('shop.profile') && <div className="qs-page__actions" style={{ justifyContent: 'flex-end' }}>
-                      <Button size="sm" variant="secondary" onClick={() => setEdit(c)}>{c.status === 'EXPIRED' ? t('Yangilash') : t('Tahrirlash')}</Button>
-                      <Button size="sm" variant="ghost" aria-label={t('O‘chirish')} onClick={() => del.mutate(c.id)}><Trash2 size={14} /></Button>
-                    </div>}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      <Modal open={!!edit} onClose={() => setEdit(null)} title={edit === 'new' ? t('Sertifikat qo‘shish') : t('Sertifikatni yangilash')} footer={<Button disabled={!f.issuer.trim() || !f.validFrom || !f.fileId || (f.certType === 'OFFICIAL_DEALER' && !f.brand.trim())} loading={save.isPending} onClick={() => save.mutate()}>{t('Tekshiruvga yuborish')}</Button>}>
-        <div className="qs-form">
-          <label className="gm-field__label" htmlFor="ctype">{t('Tur')}</label>
-          <select id="ctype" className="qs-select" value={f.certType} onChange={(e) => setF({ ...f, certType: e.target.value as CertType })}>{Object.entries(CERT_TYPE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select>
-          {f.certType === 'OFFICIAL_DEALER' && <Input label={t('Brend')} required value={f.brand} onChange={(e) => setF({ ...f, brand: e.target.value })} />}
-          <Input label={t('Beruvchi tashkilot')} value={f.issuer} onChange={(e) => setF({ ...f, issuer: e.target.value })} />
-          <Input label={t('Raqam (ixtiyoriy)')} value={f.certNumber} onChange={(e) => setF({ ...f, certNumber: e.target.value })} />
-          <div className="qs-form__row"><Input label={t('Amal qiladi (dan)')} type="date" value={f.validFrom} onChange={(e) => setF({ ...f, validFrom: e.target.value })} /><Input label={t('Gacha (ixtiyoriy)')} type="date" value={f.validUntil} onChange={(e) => setF({ ...f, validUntil: e.target.value })} /></div>
-          <label className="gm-button gm-button--secondary gm-button--md" style={{ cursor: 'pointer', justifySelf: 'start' }}><FileText size={15} /> {f.fileName || t('Fayl yuklash (PDF yoki rasm)')}<input type="file" hidden accept="application/pdf,image/*" onChange={(e) => { const file = e.target.files?.[0]; if (file) upload.mutate(file); }} /></label>
-          <small className="qs-muted">{t('O‘zgartirilgan sertifikat qayta tekshiruvga tushadi.')}</small>
-          {(save.isError || upload.isError) && <Alert tone="danger">{getErrorMessage(save.error ?? upload.error)}</Alert>}
-        </div>
-      </Modal>
     </div>
   );
 }

@@ -5,7 +5,8 @@ describe('getNavItems', () => {
   it('gives admins only admin sections plus shared ones', () => {
     const paths = getNavItems('ADMIN', { superAdmin: true }).map((item) => item.to);
     expect(paths[0]).toBe('/admin');
-    expect(paths).toContain('/admin/tasdiqlash');
+    expect(paths).toContain('/admin/dokonlar');
+    expect(paths).not.toContain('/admin/tasdiqlash');
     expect(paths).not.toContain('/mijoz/sorovlar');
     expect(paths).not.toContain('/dokon/sorovlar');
   });
@@ -56,17 +57,5 @@ describe('getNavItems — admin permissions', () => {
   it('a superadmin sees everything including the admins section', () => {
     const paths = getNavItems('ADMIN', { superAdmin: true }).map((item) => item.to);
     expect(paths).toEqual(expect.arrayContaining(['/admin/adminlar', '/admin/audit', '/admin/foydalanuvchilar']));
-  });
-});
-
-describe('navTarget', () => {
-  it('sends shop sections to onboarding only while the shop is not created', async () => {
-    const { navTarget } = await import('./nav-items');
-    expect(navTarget('/dokon/sorovlar', true)).toEqual({ to: '/dokon/onboarding', redirected: true });
-    expect(navTarget('/dokon', true)).toEqual({ to: '/dokon/onboarding', redirected: true });
-    expect(navTarget('/dokon/onboarding', true)).toEqual({ to: '/dokon/onboarding', redirected: false });
-    expect(navTarget('/sozlamalar', true)).toEqual({ to: '/sozlamalar', redirected: false });
-    expect(navTarget('/bildirishnomalar', true).redirected).toBe(false);
-    expect(navTarget('/dokon/sorovlar', false)).toEqual({ to: '/dokon/sorovlar', redirected: false });
   });
 });

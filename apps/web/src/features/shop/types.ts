@@ -6,7 +6,6 @@ export type PricingModel = 'FIXED' | 'FROM' | 'PER_KW' | 'PER_UNIT' | 'QUOTE_REQ
 export type Currency = 'UZS' | 'USD';
 export type StockStatus = 'IN_STOCK' | 'ON_ORDER' | 'OUT_OF_STOCK';
 export type ShopProductStatus = 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
-export type ShopDocType = 'REGISTRATION' | 'LICENSE' | 'OTHER';
 export type I18nText = { uz: string; oz?: string; ru?: string };
 
 export interface MyShop {
@@ -40,20 +39,10 @@ export interface Shop {
 }
 
 export interface ManagedShop extends Shop {
-  counts: { branches: number; products: number; verificationDocs: number; services: number };
+  counts: { branches: number; products: number; services: number };
   completeness: number;
-  checklist: Array<{ key: 'profile' | 'branch' | 'serviceArea' | 'verification' | 'products'; done: boolean }>;
-  rejection: { reason: string | null; createdAt: string } | null;
+  checklist: Array<{ key: 'profile' | 'branch' | 'serviceArea' | 'products'; done: boolean }>;
   membership: { memberRole: ShopMemberRole; permissions: string[] };
-}
-
-export interface VerificationDocument {
-  id: string;
-  fileId: string;
-  docType: ShopDocType;
-  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
-  reason: string | null;
-  createdAt: string;
 }
 
 export interface Branch {
@@ -112,6 +101,8 @@ export interface MemberUser {
   phone: string | null;
   email: string | null;
   avatarAssetId: string | null;
+  /** Vaqtincha parol hali almashtirilmagan (admin ko‘rinishi). */
+  mustPasswordChange?: boolean;
 }
 
 export interface ShopMember {
@@ -122,28 +113,3 @@ export interface ShopMember {
   user: MemberUser;
 }
 
-export interface ShopInvitation {
-  id: string;
-  target: string;
-  memberRole: ShopMemberRole;
-  permissions: string[];
-  purpose: 'INITIAL_OWNER' | 'TRANSFER' | 'MEMBER';
-  expiresAt: string;
-  createdAt: string;
-}
-
-export interface InvitationResult {
-  id: string;
-  target: string;
-  expiresAt: string;
-  developmentLink?: string;
-}
-
-export interface InvitationPreview {
-  shop: { name: string; slug: string };
-  memberRole: ShopMemberRole;
-  purpose: ShopInvitation['purpose'];
-  target: string;
-  expiresAt: string;
-  expired: boolean;
-}

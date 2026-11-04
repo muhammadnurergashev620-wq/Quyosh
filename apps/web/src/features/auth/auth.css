@@ -523,3 +523,7 @@
 .gm-auth-delivery strong { font-size: 0.98rem; font-weight: 800; }
 .gm-auth-delivery span { font-weight: 700; overflow-wrap: anywhere; }
 .gm-auth-delivery small { color: var(--qs-color-text-muted); font-size: 0.84rem; }
+
+.gm-link-button { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; color: var(--qs-color-primary); font: inherit; font-weight: 600; cursor: pointer; }
+.gm-link-button:hover { text-decoration: underline; }
+.gm-link-button:disabled { opacity: 0.6; cursor: default; }

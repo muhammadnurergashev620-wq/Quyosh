@@ -15,7 +15,6 @@ export interface CurrentRole {
   /** Profilni yuklashdagi xato (tarmoq/server/avtorizatsiya). */
   error: unknown;
   refetch: () => void;
-  needsShopOnboarding: boolean;
 }
 
 const WRONG_APP_MESSAGE: Record<Role, string> = {
@@ -36,21 +35,17 @@ export function useCurrentRole(): CurrentRole {
   const wanted = env.appRole ?? preferredRole;
 
   let role: Role | null = null;
-  let needsShopOnboarding = false;
   if (me.data) {
     if (wanted && actual.includes(wanted)) {
       role = wanted;
-    } else if (wanted === 'SHOP' && actual.includes('CUSTOMER')) {
-      role = 'SHOP';
-      needsShopOnboarding = true;
     } else if (!env.appRole) {
       role = actual[0] ?? null;
     }
   }
 
   useEffect(() => {
-    if (!env.appRole && role && !needsShopOnboarding && role !== preferredRole) setPreferredRole(role);
-  }, [role, needsShopOnboarding, preferredRole, setPreferredRole]);
+    if (!env.appRole && role && role !== preferredRole) setPreferredRole(role);
+  }, [role, preferredRole, setPreferredRole]);
 
   const wrongApp = !!env.appRole && !!me.data && role === null;
   useEffect(() => {
@@ -61,5 +56,5 @@ export function useCurrentRole(): CurrentRole {
     pushToast(WRONG_APP_MESSAGE[env.appRole], 'error');
   }, [wrongApp, clear, queryClient, pushToast]);
 
-  return { role, isLoading: me.isLoading, isError: me.isError, error: me.error, refetch: () => void me.refetch(), needsShopOnboarding };
+  return { role, isLoading: me.isLoading, isError: me.isError, error: me.error, refetch: () => void me.refetch() };
 }

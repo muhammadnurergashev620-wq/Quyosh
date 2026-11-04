@@ -17,6 +17,10 @@ export const sessionService = {
   changePassword(input: { currentPassword: string; newPassword: string }) {
     return apiPost<{ changed: true; revokedSessions: number }>('/users/me/password/change', input);
   },
+  /** Birinchi kirish: vaqtincha parolni yangisiga almashtirish. */
+  firstPassword(newPassword: string) {
+    return apiPost<Me>('/users/me/password/first', { newPassword });
+  },
   setPassword(password: string) {
     return apiPost<Me>('/users/me/password', { password });
   },

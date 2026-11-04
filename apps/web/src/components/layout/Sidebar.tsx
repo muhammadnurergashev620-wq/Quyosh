@@ -2,8 +2,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { badgeText, useNavBadges } from '@/features/admin/hooks/useNavBadges';
 import { useAuthStore } from '@/store/auth.store';
 import { useMe } from '@/features/session/hooks/useMe';
-import { useCurrentRole } from '@/features/session/hooks/useCurrentRole';
-import { getNavItems, navTarget } from './nav-items';
+import { getNavItems } from './nav-items';
 import type { NavItem } from './nav-items';
 import { t } from '@/i18n';
 import './Sidebar.css';
@@ -17,7 +16,6 @@ function groupItems(items: NavItem[]): Array<[string, NavItem[]]> {
 export function Sidebar() {
   const preferredRole = useAuthStore((state) => state.preferredRole);
   const me = useMe();
-  const { needsShopOnboarding } = useCurrentRole();
   const groups = groupItems(getNavItems(preferredRole, { superAdmin: !!me.data?.isSuperAdmin, permissions: me.data?.adminPermissions, canCreateAdmins: !!me.data?.canCreateAdmins }));
   const { pathname } = useLocation();
   const badges = useNavBadges(preferredRole, pathname);
@@ -28,15 +26,12 @@ export function Sidebar() {
         <div key={group} className="gm-sidebar__group">
           <p className="gm-sidebar__heading">{group}</p>
           <ul className="gm-sidebar__list">
-            {items.map((item) => {
-              const target = navTarget(item.to, needsShopOnboarding);
-              return (
+            {items.map((item) => (
               <li key={item.to}>
                 <NavLink
-                  to={target.to}
+                  to={item.to}
                   end={item.to === '/admin' || item.to === '/dokon'}
-                  // Hammasi onboarding’ga olib borsa, hammasi «faol» bo‘lib qolmasin.
-                  className={({ isActive }) => `gm-sidebar__link${isActive && !target.redirected ? ' gm-sidebar__link--active' : ''}`}
+                  className={({ isActive }) => `gm-sidebar__link${isActive ? ' gm-sidebar__link--active' : ''}`}
                 >
                   <item.icon size={19} strokeWidth={2} aria-hidden="true" />
                   <span>{item.label}</span>
@@ -47,8 +42,7 @@ export function Sidebar() {
                   )}
                 </NavLink>
               </li>
-              );
-            })}
+            ))}
           </ul>
         </div>
       ))}

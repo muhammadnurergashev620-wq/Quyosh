@@ -3,13 +3,12 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Role } from '@/types/common';
 
-const state: { role: Role | null; isLoading: boolean; isError: boolean; error: unknown; refetch: () => void; needsShopOnboarding: boolean } = {
+const state: { role: Role | null; isLoading: boolean; isError: boolean; error: unknown; refetch: () => void } = {
   role: null,
   isLoading: false,
   isError: false,
   error: null,
   refetch: () => undefined,
-  needsShopOnboarding: false,
 };
 vi.mock('@/features/session/hooks/useCurrentRole', () => ({ useCurrentRole: () => state }));
 
@@ -24,7 +23,6 @@ function renderGuard(roles: Role[]) {
         <Route path="/login" element={<p>kirish</p>} />
         <Route path="/admin" element={<p>admin bosh sahifa</p>} />
         <Route path="/mijoz/bosh" element={<p>mijoz bosh sahifa</p>} />
-        <Route path="/dokon/onboarding" element={<RoleGuard roles={['SHOP']}>do‘kon onboarding</RoleGuard>} />
       </Routes>
     </MemoryRouter>,
   );
@@ -36,7 +34,6 @@ describe('RoleGuard', () => {
     state.isLoading = false;
     state.isError = false;
     state.error = null;
-    state.needsShopOnboarding = false;
   });
 
   it('shows a loader while the role is unknown', () => {
@@ -76,13 +73,5 @@ describe('RoleGuard', () => {
     renderGuard(['ADMIN']);
     expect(screen.getByText('Serverga ulanib bo‘lmadi')).toBeInTheDocument();
     expect(screen.queryByText('kirish')).not.toBeInTheDocument();
-  });
-
-  it('lets a not-yet-onboarded master reach only the profile page', () => {
-    state.role = 'SHOP';
-    state.needsShopOnboarding = true;
-    renderGuard(['SHOP']);
-    expect(screen.getByText('do‘kon onboarding')).toBeInTheDocument();
-    expect(screen.queryByText('maxfiy')).not.toBeInTheDocument();
   });
 });

@@ -1,6 +1,6 @@
 import { apiDelete, apiDownload, apiGet, apiPatch, apiPost, apiPut, apiUpload } from '@/services/api.client';
 import type {
-  AdminArticle, AdminQueues, Article, ArticleCard, ArticleType, Certification, CustomerDashboard, Funnel, KCategory, Project, ReplyTemplate, ShopAnalytics,
+  AdminArticle, AdminQueues, Article, ArticleCard, ArticleType, CustomerDashboard, Funnel, KCategory, Project, ReplyTemplate, ShopAnalytics,
   ShopDashboard, SystemDetail, SystemRow, Ticket, WidgetConfig,
 } from './types';
 
@@ -41,11 +41,6 @@ export const m7Service = {
   saveProject: (shopId: string, id: string | null, body: Record<string, unknown>) => (id ? apiPut<Project>(`${shop(shopId)}/projects/${id}`, body) : apiPost<Project>(`${shop(shopId)}/projects`, body)),
   deleteProject: (shopId: string, id: string) => apiDelete(`${shop(shopId)}/projects/${id}`),
   publicProjects: (slug: string) => apiGet<Project[]>(`/shops/${encodeURIComponent(slug)}/projects`),
-  certifications: (shopId: string) => apiGet<Certification[]>(`${shop(shopId)}/certifications`),
-  saveCertification: (shopId: string, id: string | null, body: Record<string, unknown>) => (id ? apiPut<Certification>(`${shop(shopId)}/certifications/${id}`, body) : apiPost<Certification>(`${shop(shopId)}/certifications`, body)),
-  deleteCertification: (shopId: string, id: string) => apiDelete(`${shop(shopId)}/certifications/${id}`),
-  adminCertifications: (status: string) => apiGet<Certification[]>(`/admin/certifications?status=${status}`),
-  reviewCertification: (id: string, decision: 'APPROVED' | 'REJECTED', reason?: string) => apiPatch(`/admin/certifications/${id}`, { decision, reason }),
   widget: (shopId: string) => apiGet<WidgetConfig>(`${shop(shopId)}/widget`),
   saveWidget: (shopId: string, body: Partial<Pick<WidgetConfig, 'allowedDomains' | 'active'>> & { theme?: Partial<WidgetConfig['theme']> }) => apiPut<WidgetConfig>(`${shop(shopId)}/widget`, body),
   mediaUrl: (id: string, variant: 'thumbnail' | 'medium' | 'original' = 'original') => apiGet<{ url: string }>(`/media/${id}/${variant}`),

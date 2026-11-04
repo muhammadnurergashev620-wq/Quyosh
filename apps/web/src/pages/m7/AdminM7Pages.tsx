@@ -6,14 +6,13 @@ import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
 import { m7Service } from '@/features/m7/m7.service';
 import { Markdown } from '@/features/m7/Markdown';
 import { tr } from '@/features/m7/i18n-text';
-import type { ArticleType, CtaType, Certification, I18n } from '@/features/m7/types';
+import type { ArticleType, CtaType, I18n } from '@/features/m7/types';
 import { useMe } from '@/features/session/hooks/useMe';
 import { REGIONS } from '@/lib/regions';
 import { env } from '@/lib/env';
@@ -21,13 +20,12 @@ import { getErrorMessage } from '@/lib/error-messages';
 import { cx, formatDate, formatDateTime } from '@/lib/utils';
 import { t } from '@/i18n';
 import { CATEGORY_LABEL, TICKET_STATUS } from './SupportPages';
-import { CERT_STATUS, CERT_TYPE } from './ShopM7Pages';
 import { TYPE_LABEL } from './KnowledgePages';
 import '@/features/shop/shop.css';
 import '@/features/m7/m7.css';
 
 const QUEUE_LABEL: Record<string, string> = {
-  shops: t('Do‘kon verifikatsiyasi'), certifications: t('Sertifikatlar'), models: t('ProductModel takliflari'), reviews: t('Moderatsiyadagi sharhlar'),
+  models: t('ProductModel takliflari'), reviews: t('Moderatsiyadagi sharhlar'),
   complaints: t('Shikoyatlar'), disputes: t('E’tirozli montajlar'), support: t('Yordam murojaatlari'), tariffs: t('Muddati yaqin tariflar'),
 };
 
@@ -51,48 +49,6 @@ export function AdminQueues() {
         {q.data.exchangeRate && <div className="qs-kpi"><small>{t('USD kursi (MB)')}</small><strong>{Math.round(Number(q.data.exchangeRate.rateToUzs)).toLocaleString('ru-RU')}</strong><small className={cx(q.data.exchangeRate.stale && 'qs-sla is-breach')}>{formatDate(q.data.exchangeRate.rateDate)}{q.data.exchangeRate.stale ? ` · ${t('eskirgan')}` : ''}</small></div>}
       </div>
     </section>
-  );
-}
-
-/** Sertifikatlarni tekshirish (TZ 9.11). */
-export function AdminCertificationsPage() {
-  const queryClient = useQueryClient();
-  const [status, setStatus] = useState<Certification['status']>('PENDING');
-  const [reject, setReject] = useState<Certification | null>(null);
-  const [reason, setReason] = useState('');
-  const list = useQuery({ queryKey: ['admin-certs', status], queryFn: () => m7Service.adminCertifications(status) });
-  const review = useMutation({ mutationFn: ({ id, decision, reason: r }: { id: string; decision: 'APPROVED' | 'REJECTED'; reason?: string }) => m7Service.reviewCertification(id, decision, r), onSuccess: () => { setReject(null); setReason(''); void queryClient.invalidateQueries({ queryKey: ['admin-certs'] }); } });
-  const open = async (fileId: string) => { const r = await m7Service.mediaUrl(fileId); window.open(r.url, '_blank', 'noopener'); };
-  return (
-    <div className="qs-page">
-      <div className="qs-page__head"><div><h1>{t('Sertifikatlar')}</h1><p>{t('Tasdiqlangan va muddati o‘tmagan sertifikatlar do‘kon profilida belgi sifatida ko‘rinadi.')}</p></div></div>
-      <div className="qs-tabs">{(['PENDING', 'APPROVED', 'REJECTED', 'EXPIRED'] as const).map((s) => <button key={s} type="button" className={cx(status === s && 'is-on')} onClick={() => setStatus(s)}>{CERT_STATUS[s].label}</button>)}</div>
-      {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<FileText size={28} />} title={t('Ro‘yxat bo‘sh')} /> : (
-        <div className="qs-table-wrap">
-          <table className="qs-table">
-            <thead><tr><th>{t('Do‘kon')}</th><th>{t('Tur')}</th><th>{t('Beruvchi')}</th><th>{t('Muddat')}</th><th /></tr></thead>
-            <tbody>
-              {list.data.map((c) => (
-                <tr key={c.id}>
-                  <td><Link to={`/admin/dokonlar/${c.shop?.id}`}>{c.shop?.name}</Link></td>
-                  <td><div className="qs-cell-title"><strong>{CERT_TYPE[c.certType]}</strong>{c.brand && <small>{c.brand}</small>}{c.certNumber && <small>№ {c.certNumber}</small>}</div></td>
-                  <td>{c.issuer}</td>
-                  <td className="qs-num">{formatDate(c.validFrom)} — {c.validUntil ? formatDate(c.validUntil) : t('muddatsiz')}</td>
-                  <td className="qs-right"><div className="qs-page__actions" style={{ justifyContent: 'flex-end' }}>
-                    <Button size="sm" variant="ghost" onClick={() => void open(c.fileId)}><Eye size={14} /> {t('Hujjat')}</Button>
-                    {c.status === 'PENDING' && <><Button size="sm" loading={review.isPending} onClick={() => review.mutate({ id: c.id, decision: 'APPROVED' })}>{t('Tasdiqlash')}</Button><Button size="sm" variant="ghost" onClick={() => setReject(c)}>{t('Rad etish')}</Button></>}
-                  </div></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      <Modal open={!!reject} onClose={() => setReject(null)} title={t('Sertifikatni rad etish')} footer={<Button variant="danger" disabled={!reason.trim()} loading={review.isPending} onClick={() => reject && review.mutate({ id: reject.id, decision: 'REJECTED', reason: reason.trim() })}>{t('Rad etish')}</Button>}>
-        <Textarea label={t('Sabab (do‘konga ko‘rinadi)')} value={reason} onChange={(e) => setReason(e.target.value)} />
-      </Modal>
-      {review.isError && <Alert tone="danger">{getErrorMessage(review.error)}</Alert>}
-    </div>
   );
 }
 

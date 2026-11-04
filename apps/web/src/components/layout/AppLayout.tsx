@@ -9,7 +9,6 @@ import { Footer } from './Footer';
 import { useCurrentRole } from '@/features/session/hooks/useCurrentRole';
 import { useAutoReadNotifications } from '@/features/notification/hooks/useAutoReadNotifications';
 import { OfflineBanner } from '@/components/common/OfflineBanner';
-import { Alert } from '@/components/ui/Alert';
 import { PhoneRequiredBanner } from '@/features/session/components/PhoneRequiredBanner';
 import { NameRequiredDialog } from '@/features/session/components/NameRequiredDialog';
 import { usePushNotifications } from '@/features/push/usePushNotifications';
@@ -18,7 +17,7 @@ import { t } from '@/i18n';
 import './AppLayout.css';
 
 export function AppLayout() {
-  const { role, needsShopOnboarding } = useCurrentRole();
+  const { role } = useCurrentRole();
   useAutoReadNotifications();
   // Telefon ilovasida push yoqiladi (mijoz, do‘kon va admin).
   usePushNotifications(role === 'CUSTOMER' || role === 'SHOP' || role === 'ADMIN');
@@ -33,11 +32,6 @@ export function AppLayout() {
         <Sidebar />
         <main id="gm-main-content" className="gm-app-layout__content">
           <WebPushPrompt />
-                    {role === 'SHOP' && needsShopOnboarding && (
-            <Alert tone="info" title={t('Avval do‘kon profilini yarating')}>
-              {t('So‘rovlar, takliflar, katalog va boshqa bo‘limlar do‘kon yaratilgach ochiladi. Do‘kon nomi, STIR va telefonni kiriting.')}
-            </Alert>
-          )}
           {role === 'CUSTOMER' && <PhoneRequiredBanner />}
           <Suspense fallback={<PageLoader />}>
             <DeletionBanner />

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Store } from 'lucide-react';
@@ -8,75 +7,81 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
+import { Select } from '@/components/ui/Select';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
 import { adminShopsService, type AdminShopFilters, type Duplicates } from '@/features/admin/shops/service';
-import { personName, SHOP_STATUS, VERIFICATION_STATUS } from '@/features/shop/labels';
-import type { InvitationResult, ShopStatus } from '@/features/shop/types';
-import { useMe } from '@/features/session/hooks/useMe';
+import { IssuedCredentials } from '@/features/admin/shops/IssuedCredentials';
+import { personName, SHOP_STATUS } from '@/features/shop/labels';
+import type { ShopStatus } from '@/features/shop/types';
+import { REGIONS } from '@/lib/regions';
 import { getErrorMessage } from '@/lib/error-messages';
 import { cx, formatDate } from '@/lib/utils';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 
-/** TZ 3.7.1: superadmin do‘kon yaratadi — dublikat tekshiruvi, egaga taklif. */
+/** TZ 3.7.1: admin do‘kon + egasining hisobini yaratadi; vaqtincha parolni tizim yaratadi va bir marta ko‘rsatiladi. */
 function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [stir, setStir] = useState('');
-  const [owner, setOwner] = useState('');
-  const [activate, setActivate] = useState(false);
+  const [form, setForm] = useState({ name: '', stir: '', phone: '', regionCode: 'toshkent-shahri', address: '', ownerFirstName: '', ownerLastName: '', ownerPhone: '' });
   const [duplicates, setDuplicates] = useState<Duplicates | null>(null);
   const [confirmDup, setConfirmDup] = useState(false);
-  const [result, setResult] = useState<{ shopId: string; invitation: InvitationResult } | null>(null);
-  const digits = phone.replace(/\D/g, '');
+  const [result, setResult] = useState<{ shopId: string; login: string | null; password: string } | null>(null);
+  const set = (patch: Partial<typeof form>) => setForm((current) => ({ ...current, ...patch }));
+  const digits = (value: string) => value.replace(/\D/g, '');
+  const phone = digits(form.phone);
+  const ownerPhone = digits(form.ownerPhone);
 
   useEffect(() => {
-    if (!open || (!/^\d{9}$/.test(stir) && digits.length !== 9)) return setDuplicates(null);
+    if (!open || (!/^\d{9}$/.test(form.stir) && phone.length !== 9)) return setDuplicates(null);
     const timer = setTimeout(() => {
-      void adminShopsService.duplicates(/^\d{9}$/.test(stir) ? stir : undefined, digits.length === 9 ? `+998${digits}` : undefined).then(setDuplicates).catch(() => setDuplicates(null));
+      void adminShopsService.duplicates(/^\d{9}$/.test(form.stir) ? form.stir : undefined, phone.length === 9 ? `+998${phone}` : undefined).then(setDuplicates).catch(() => setDuplicates(null));
     }, 400);
     return () => clearTimeout(timer);
-  }, [open, stir, digits]);
+  }, [open, form.stir, phone]);
 
   const create = useMutation({
-    mutationFn: () => adminShopsService.create({ name: name.trim(), phone: `+998${digits}`, stir: stir || undefined, ownerTarget: owner.trim(), confirmDuplicates: confirmDup, activate }),
+    gcTime: 0,
+    mutationFn: () =>
+      adminShopsService.create({
+        name: form.name.trim(), stir: form.stir, phone: `+998${phone}`, regionCode: form.regionCode, address: form.address.trim(),
+        ownerFirstName: form.ownerFirstName.trim(), ownerLastName: form.ownerLastName.trim() || undefined, ownerPhone: `+998${ownerPhone}`, confirmDuplicates: confirmDup,
+      }),
     onSuccess: (data) => {
-      setResult({ shopId: data.shop.id, invitation: data.invitation });
+      setResult({ shopId: data.shop.id, login: data.owner.phone, password: data.temporaryPassword });
       void queryClient.invalidateQueries({ queryKey: ['admin', 'shops'] });
     },
   });
   const close = () => {
-    setName(''); setPhone(''); setStir(''); setOwner(''); setActivate(false); setDuplicates(null); setConfirmDup(false); setResult(null); create.reset();
+    setForm({ name: '', stir: '', phone: '', regionCode: 'toshkent-shahri', address: '', ownerFirstName: '', ownerLastName: '', ownerPhone: '' });
+    setDuplicates(null); setConfirmDup(false); setResult(null); create.reset();
     onClose();
   };
-  const submit = (event: FormEvent) => {
-    event.preventDefault();
-    create.mutate();
-  };
   const needsConfirm = !!duplicates?.shops.length && !duplicates.blocking;
+  const valid = form.name.trim().length >= 2 && /^\d{9}$/.test(form.stir) && phone.length === 9 && form.address.trim().length >= 5 && form.ownerFirstName.trim().length >= 2 && ownerPhone.length === 9;
 
   return (
-    <Modal open={open} onClose={close} title={t('Do‘kon yaratish')} wide>
+    <Modal open={open} onClose={result ? () => undefined : close} title={t('Do‘kon yaratish')} wide dismissible={!result}>
       {result ? (
-        <div className="qs-form">
-          <Alert tone="success" title={t('Do‘kon yaratildi')}>{t('Egasiga taklif yuborildi: {target}. U qabul qilgach do‘kon egali bo‘ladi.', { target: result.invitation.target })}</Alert>
-          {result.invitation.developmentLink && <code style={{ overflowWrap: 'anywhere' }}>{result.invitation.developmentLink}</code>}
-          <div className="qs-form__actions">
-            <Button variant="ghost" onClick={close}>{t('Yopish')}</Button>
-            <Button onClick={() => { const id = result.shopId; close(); navigate(`/admin/dokonlar/${id}`); }}>{t('Do‘konni ochish')}</Button>
-          </div>
-        </div>
+        <IssuedCredentials
+          title={t('Do‘kon yaratildi')}
+          login={result.login}
+          password={result.password}
+          onClose={() => { const id = result.shopId; close(); navigate(`/admin/dokonlar/${id}`); }}
+        />
       ) : (
-        <form className="qs-form" onSubmit={submit} noValidate>
-          <Input label={t('Do‘kon nomi')} value={name} onChange={(e) => setName(e.target.value)} required maxLength={120} />
+        <form className="qs-form" onSubmit={(e) => { e.preventDefault(); create.mutate(); }} noValidate>
+          <h3 style={{ margin: 0 }}>{t('Do‘kon ma’lumotlari')}</h3>
+          <Input label={t('Do‘kon nomi')} value={form.name} onChange={(e) => set({ name: e.target.value })} required maxLength={120} />
           <div className="qs-form__row">
-            <Input label={t('Do‘kon telefoni')} prefix="+998" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
-            <Input label={t('STIR')} inputMode="numeric" value={stir} onChange={(e) => setStir(e.target.value.replace(/\D/g, '').slice(0, 9))} />
+            <Input label={t('STIR')} inputMode="numeric" value={form.stir} onChange={(e) => set({ stir: e.target.value.replace(/\D/g, '').slice(0, 9) })} required placeholder="123456789" />
+            <Input label={t('Do‘kon telefoni')} prefix="+998" inputMode="tel" value={form.phone} onChange={(e) => set({ phone: e.target.value })} required placeholder="90 123 45 67" />
           </div>
-          <Input label={t('Egasi (telefon yoki email)')} value={owner} onChange={(e) => setOwner(e.target.value)} required hint={t('Egasiga 7 kunlik taklif havolasi yuboriladi')} />
+          <div className="qs-form__row">
+            <Select label={t('Viloyat')} value={form.regionCode} onChange={(e) => set({ regionCode: e.target.value })} options={REGIONS.map((region) => ({ value: region.code, label: region.name }))} />
+            <Input label={t('Manzil')} value={form.address} onChange={(e) => set({ address: e.target.value })} required maxLength={500} hint={t('Birinchi filial sifatida saqlanadi')} />
+          </div>
           {duplicates && (duplicates.shops.length > 0 || duplicates.users.length > 0) && (
             <Alert tone={duplicates.blocking ? 'danger' : 'warning'} title={duplicates.blocking ? t('Bu STIR bilan do‘kon mavjud') : t('O‘xshash yozuvlar topildi')}>
               <ul style={{ margin: '4px 0', paddingLeft: 18 }}>
@@ -86,11 +91,16 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
               {needsConfirm && <label className="qs-check"><input type="checkbox" checked={confirmDup} onChange={(e) => setConfirmDup(e.target.checked)} /> {t('Baribir yaratish')}</label>}
             </Alert>
           )}
-          <label className="qs-check"><input type="checkbox" checked={activate} onChange={(e) => setActivate(e.target.checked)} /> {t('Darhol faollashtirish (hujjatlar tekshirilgan)')}</label>
+          <h3 style={{ margin: '8px 0 0' }}>{t('Egasining hisobi')}</h3>
+          <div className="qs-form__row">
+            <Input label={t('Ism')} value={form.ownerFirstName} onChange={(e) => set({ ownerFirstName: e.target.value })} required maxLength={100} />
+            <Input label={t('Familiya (ixtiyoriy)')} value={form.ownerLastName} onChange={(e) => set({ ownerLastName: e.target.value })} maxLength={100} />
+          </div>
+          <Input label={t('Login (telefon raqami)')} prefix="+998" inputMode="tel" value={form.ownerPhone} onChange={(e) => set({ ownerPhone: e.target.value })} required placeholder="90 123 45 67" hint={t('Vaqtincha parolni tizim yaratadi va keyingi oynada bir marta ko‘rsatadi')} />
           {create.isError && <Alert tone="danger">{getErrorMessage(create.error)}</Alert>}
           <div className="qs-form__actions">
             <Button type="button" variant="ghost" onClick={close}>{t('Bekor qilish')}</Button>
-            <Button type="submit" loading={create.isPending} disabled={!name.trim() || digits.length !== 9 || !owner.trim() || !!duplicates?.blocking || (needsConfirm && !confirmDup)}>{t('Yaratish')}</Button>
+            <Button type="submit" loading={create.isPending} disabled={!valid || !!duplicates?.blocking || (needsConfirm && !confirmDup)}>{t('Yaratish')}</Button>
           </div>
         </form>
       )}
@@ -98,11 +108,10 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
   );
 }
 
-/** U12.3: do‘konlar ro‘yxati. `preset="review"` — «Tasdiqlash» navbati (PENDING_REVIEW). */
-export function AdminShopsPage({ preset }: { preset?: 'review' }) {
+/** U12.3 / U12.11: do‘konlar ro‘yxati; do‘konni faqat admin yaratadi (v3.1). */
+export function AdminShopsPage() {
   const navigate = useNavigate();
-  const me = useMe();
-  const [filters, setFilters] = useState<AdminShopFilters>(preset === 'review' ? { status: 'PENDING_REVIEW' } : {});
+  const [filters, setFilters] = useState<AdminShopFilters>({});
   const [search, setSearch] = useState('');
   const [creating, setCreating] = useState(false);
   useEffect(() => {
@@ -110,25 +119,23 @@ export function AdminShopsPage({ preset }: { preset?: 'review' }) {
     return () => clearTimeout(timer);
   }, [search]);
   const list = useQuery({ queryKey: ['admin', 'shops', filters], queryFn: () => adminShopsService.list(filters), placeholderData: keepPreviousData });
-  const superAdmin = !!me.data?.isSuperAdmin;
 
   if (list.isLoading) return <PageLoader />;
   if (list.isError || !list.data) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
   const counts = list.data.counts;
-  const statuses: Array<ShopStatus | undefined> = [undefined, 'PENDING_REVIEW', 'ACTIVE', 'DRAFT', 'SUSPENDED'];
+  const statuses: Array<ShopStatus | undefined> = [undefined, 'ACTIVE', 'SUSPENDED'];
 
   return (
     <div className="qs-page">
       <div className="qs-page__head">
         <div>
-          <h1>{preset === 'review' ? t('Tasdiqlash navbati') : t('Do‘konlar')}</h1>
-          <p>{preset === 'review' ? t('Tekshiruvga yuborilgan do‘konlar: hujjatlarni ko‘rib, tasdiqlang yoki sabab bilan rad eting.') : t('Barcha do‘konlar, holati va egalari.')}</p>
+          <h1>{t('Do‘konlar')}</h1>
+          <p>{t('Do‘konni faqat administrator yaratadi: do‘kon, egasining hisobi va vaqtincha parol.')}</p>
         </div>
-        {superAdmin && preset !== 'review' && <Button onClick={() => setCreating(true)}><Plus size={18} /> {t('Do‘kon yaratish')}</Button>}
+        <Button onClick={() => setCreating(true)}><Plus size={18} /> {t('Do‘kon yaratish')}</Button>
       </div>
       <div className="qs-toolbar">
         <Input label={t('Qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('Nom, STIR yoki telefon')} />
-        {preset !== 'review' && (
           <div className="qs-chips" role="group" aria-label={t('Holat')}>
             {statuses.map((status) => (
               <button key={status ?? 'all'} type="button" className={cx('qs-chip', filters.status === status && 'is-on')} onClick={() => setFilters({ ...filters, status, page: 1 })}>
@@ -137,22 +144,20 @@ export function AdminShopsPage({ preset }: { preset?: 'review' }) {
               </button>
             ))}
           </div>
-        )}
       </div>
       {!list.data.items.length ? (
-        <EmptyState icon={<Store size={30} />} title={preset === 'review' ? t('Navbat bo‘sh') : t('Do‘kon topilmadi')} />
+        <EmptyState icon={<Store size={30} />} title={t('Do‘kon topilmadi')} />
       ) : (
         <div className="qs-table-wrap">
           <table className="qs-table">
-            <thead><tr><th>{t('Do‘kon')}</th><th>{t('Egasi')}</th><th>{t('Holat')}</th><th>{t('Verifikatsiya')}</th><th className="qs-right">{t('Filial / mahsulot / hujjat')}</th><th>{t('Yaratilgan')}</th></tr></thead>
+            <thead><tr><th>{t('Do‘kon')}</th><th>{t('Egasi')}</th><th>{t('Holat')}</th><th className="qs-right">{t('Filial / mahsulot')}</th><th>{t('Yaratilgan')}</th></tr></thead>
             <tbody>
               {list.data.items.map((shop) => (
                 <tr key={shop.id} className="is-clickable" onClick={() => navigate(`/admin/dokonlar/${shop.id}`)}>
                   <td><div className="qs-cell-title"><strong>{shop.name}</strong><small>{[shop.stir && `STIR ${shop.stir}`, shop.phone].filter(Boolean).join(' · ')}</small></div></td>
                   <td>{shop.owner ? personName(shop.owner) : <Badge tone="warning">{t('Egasiz')}</Badge>}</td>
                   <td><Badge tone={SHOP_STATUS[shop.status].tone}>{SHOP_STATUS[shop.status].label}</Badge></td>
-                  <td><Badge tone={VERIFICATION_STATUS[shop.verificationStatus].tone}>{VERIFICATION_STATUS[shop.verificationStatus].label}</Badge></td>
-                  <td className="qs-right qs-num">{shop._count.branches} / {shop._count.products} / {shop._count.verificationDocs}</td>
+                  <td className="qs-right qs-num">{shop._count.branches} / {shop._count.products}</td>
                   <td className="qs-muted">{formatDate(shop.createdAt)}{shop.createdSource === 'ADMIN' && <div><small>{t('admin yaratgan')}</small></div>}</td>
                 </tr>
               ))}

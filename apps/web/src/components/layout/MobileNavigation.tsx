@@ -4,8 +4,7 @@ import { LayoutGrid, Plus, X } from 'lucide-react';
 import { useAuthStore } from '@/store/auth.store';
 import { useMe } from '@/features/session/hooks/useMe';
 import { badgeText, useNavBadges } from '@/features/admin/hooks/useNavBadges';
-import { useCurrentRole } from '@/features/session/hooks/useCurrentRole';
-import { getNavItems, navTarget } from './nav-items';
+import { getNavItems } from './nav-items';
 import { useSheetDrag } from '@/hooks/useSheetDrag';
 import { t } from '@/i18n';
 import './MobileNavigation.css';
@@ -13,7 +12,6 @@ import './MobileNavigation.css';
 export function MobileNavigation() {
   const preferredRole = useAuthStore((state) => state.preferredRole);
   const me = useMe();
-  const { needsShopOnboarding } = useCurrentRole();
   const items = getNavItems(preferredRole, { superAdmin: !!me.data?.isSuperAdmin, permissions: me.data?.adminPermissions, canCreateAdmins: !!me.data?.canCreateAdmins });
   const primary = items.filter((item) => item.primary).slice(0, 5);
   // «Yangi buyurtma» — markazda ko‘tarilgan asosiy amal tugmasi (FAB), qolganlari ikki yonida.
@@ -42,9 +40,9 @@ export function MobileNavigation() {
           ) : (
             <NavLink
               key={item.to}
-              to={navTarget(item.to, needsShopOnboarding).to}
+              to={item.to}
               end={item.to === '/admin' || item.to === '/dokon'}
-              className={({ isActive }) => `gm-mobile-nav__link${isActive && !navTarget(item.to, needsShopOnboarding).redirected ? ' gm-mobile-nav__link--active' : ''}`}
+              className={({ isActive }) => `gm-mobile-nav__link${isActive ? ' gm-mobile-nav__link--active' : ''}`}
             >
               <span className="gm-mobile-nav__icon">
                 <item.icon size={22} strokeWidth={2} aria-hidden="true" />
@@ -81,7 +79,7 @@ export function MobileNavigation() {
             </div>
             <div className="gm-sheet__grid">
               {items.map((item) => (
-                <NavLink key={item.to} to={navTarget(item.to, needsShopOnboarding).to} end={item.to === '/admin' || item.to === '/dokon'} className="gm-sheet__item">
+                <NavLink key={item.to} to={item.to} end={item.to === '/admin' || item.to === '/dokon'} className="gm-sheet__item">
                   <span className="gm-sheet__icon">
                     <item.icon size={22} strokeWidth={2} aria-hidden="true" />
                     {badges[item.to] && <span className="gm-nav-badge gm-nav-badge--corner">{badgeText(badges[item.to]!)}</span>}

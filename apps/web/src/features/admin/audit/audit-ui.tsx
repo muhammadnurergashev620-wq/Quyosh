@@ -46,9 +46,9 @@ export function targetPath(log: AuditLog): string | null {
       return `/admin/buyurtmalar/${log.targetId}`;
     case 'Case':
       return '/admin/shikoyatlar';
-    case 'MasterVerification':
-    case 'MasterPortfolio':
-      return '/admin/tasdiqlash';
+    case 'Shop':
+    case 'ShopCertification':
+      return `/admin/dokonlar/${log.targetId}`;
     case 'Service':
     case 'ServiceCategory':
       return '/admin/katalog';

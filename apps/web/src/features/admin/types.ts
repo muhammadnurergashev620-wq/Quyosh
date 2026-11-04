@@ -78,7 +78,7 @@ export interface DevOpsSnapshot {
 
 export interface Dashboard {
   users: { total: number; new: number };
-  shops: { total: number; pendingReview: number };
+  shops: { total: number };
 }
 
 export type ManagedStatus = 'ACTIVE' | 'PENDING' | 'SUSPENDED' | 'BLOCKED' | 'DELETED';
@@ -191,7 +191,6 @@ export interface AdminUserDetail {
 }
 
 export interface AdminBadges {
-  verifications: number;
   users: number;
   pendingModels?: number;
   now: string;

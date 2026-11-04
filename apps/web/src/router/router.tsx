@@ -6,7 +6,7 @@ import { RouteError } from '@/components/common/RouteError';
 import { RootShell } from './RootShell';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { MainLayout } from '@/layouts/MainLayout';
-import { ProtectedRoute, RedirectIfAuthed } from './ProtectedRoute';
+import { FIRST_PASSWORD_PATH, ProtectedRoute, RedirectIfAuthed } from './ProtectedRoute';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { RoleGuard } from './RoleGuard';
 import { PublicCustomerRoute } from './PublicCustomerRoute';
@@ -77,10 +77,8 @@ const CustomerDashboardPage = lazy(() => import('@/pages/m7/CabinetPages').then(
 const SystemsPage = lazy(() => import('@/pages/m7/CabinetPages').then((m) => ({ default: m.SystemsPage })));
 const SystemPage = lazy(() => import('@/pages/m7/CabinetPages').then((m) => ({ default: m.SystemPage })));
 const PortfolioPage = lazy(() => import('@/pages/m7/ShopM7Pages').then((m) => ({ default: m.PortfolioPage })));
-const CertificationsPage = lazy(() => import('@/pages/m7/ShopM7Pages').then((m) => ({ default: m.CertificationsPage })));
 const WidgetPage = lazy(() => import('@/pages/m7/ShopM7Pages').then((m) => ({ default: m.WidgetPage })));
 const AnalyticsPage = lazy(() => import('@/pages/m7/ShopM7Pages').then((m) => ({ default: m.AnalyticsPage })));
-const AdminCertificationsPage = lazy(() => import('@/pages/m7/AdminM7Pages').then((m) => ({ default: m.AdminCertificationsPage })));
 const AdminSupportPage = lazy(() => import('@/pages/m7/AdminM7Pages').then((m) => ({ default: m.AdminSupportPage })));
 const AdminTicketPage = lazy(() => import('@/pages/m7/AdminM7Pages').then((m) => ({ default: m.AdminTicketPage })));
 const AdminContentPage = lazy(() => import('@/pages/m7/AdminM7Pages').then((m) => ({ default: m.AdminContentPage })));
@@ -89,13 +87,13 @@ const AdminHomeBlocksPage = lazy(() => import('@/pages/m7/AdminHomeBlocksPage').
 const PortalPreviewPage = lazy(() => import('@/pages/landing/portal/PortalPage').then((m) => ({ default: () => <m.PortalPage preview /> })));
 const AdminReportsPage = lazy(() => import('@/pages/m7/AdminM7Pages').then((m) => ({ default: m.AdminReportsPage })));
 const ShopDashboardPage = lazy(() => import('@/pages/shop/ShopDashboardPage').then((m) => ({ default: m.ShopDashboardPage })));
-const ShopOnboardingPage = lazy(() => import('@/pages/shop/ShopOnboardingPage').then((m) => ({ default: m.ShopOnboardingPage })));
 const ShopCatalogPage = lazy(() => import('@/pages/shop/ShopCatalogPage').then((m) => ({ default: m.ShopCatalogPage })));
 const ShopImportPage = lazy(() => import('@/pages/shop/ShopImportPage').then((m) => ({ default: m.ShopImportPage })));
 const ShopBranchesPage = lazy(() => import('@/pages/shop/ShopBranchesPage').then((m) => ({ default: m.ShopBranchesPage })));
 const ShopServicesPage = lazy(() => import('@/pages/shop/ShopServicesPage').then((m) => ({ default: m.ShopServicesPage })));
+const ShopOwnProfilePage = lazy(() => import('@/pages/shop/ShopOwnProfilePage').then((m) => ({ default: m.ShopOwnProfilePage })));
+const FirstPasswordPage = lazy(() => import('@/pages/auth/FirstPasswordPage').then((m) => ({ default: m.FirstPasswordPage })));
 const ShopMembersPage = lazy(() => import('@/pages/shop/ShopMembersPage').then((m) => ({ default: m.ShopMembersPage })));
-const ShopInvitationPage = lazy(() => import('@/pages/shop/ShopInvitationPage').then((m) => ({ default: m.ShopInvitationPage })));
 
 const only = (roles: Role[], element: ReactNode) => <RoleGuard roles={roles}>{element}</RoleGuard>;
 const customer = (el: ReactNode) => only(['CUSTOMER'], el);
@@ -125,15 +123,16 @@ const panelRouter = createBrowserRouter([
       { path: '/', element: <PanelRoot /> },
       { path: '/shartlar', element: <TermsPage /> },
       { path: '/maxfiylik', element: <TermsPage /> },
-      { path: '/taklif/:token', element: <Suspense fallback={<PageLoader />}><ShopInvitationPage /></Suspense> },
       // Admin: bosh sahifani qoralamalar bilan to‘liq ekranda ko‘rish (panel menyusisiz).
       { path: '/admin/bosh-sahifa/korinish', element: <ProtectedRoute>{admin(<Suspense fallback={<PageLoader />}><PortalPreviewPage /></Suspense>)}</ProtectedRoute> },
       {
         element: <AuthLayout />,
         children: [
           { path: '/login', element: <RedirectIfAuthed><LoginPage /></RedirectIfAuthed> },
-          { path: '/register', element: <RedirectIfAuthed><RegisterPage /></RedirectIfAuthed> },
-          { path: '/otp', element: <OtpPage /> },
+          // Do‘kon paneli: ro‘yxatdan o‘tish va OTP yo‘q — hisobni admin yaratadi, kirish login + parol (TZ 6.4).
+          { path: '/register', element: env.appRole === 'SHOP' ? <Navigate to="/login" replace /> : <RedirectIfAuthed><RegisterPage /></RedirectIfAuthed> },
+          { path: '/otp', element: env.appRole === 'SHOP' ? <Navigate to="/login" replace /> : <OtpPage /> },
+          { path: FIRST_PASSWORD_PATH, element: <Suspense fallback={<PageLoader />}><FirstPasswordPage /></Suspense> },
         ],
       },
       {
@@ -190,18 +189,17 @@ const panelRouter = createBrowserRouter([
           { path: '/mijoz/profil/:section', element: customer(<SettingsPage />) },
           // ── Do‘kon paneli ──
           { path: '/dokon', element: shop(<ShopDashboardPage />) },
-          { path: '/dokon/onboarding', element: shop(<ShopOnboardingPage />) },
           { path: '/dokon/sorovlar', element: shop(<ShopRequestsPage key="all" />) },
           { path: '/dokon/sorovlar/:rsId', element: shop(<ShopRequestDetailPage />) },
           { path: '/dokon/takliflar', element: shop(<ShopRequestsPage key="quoted" quotedOnly />) },
           { path: '/dokon/montajlar', element: shop(<ShopInstallationsPage />) },
           { path: '/dokon/montajlar/:id', element: shop(<InstallationPage />) },
           { path: '/dokon/sharhlar', element: shop(<ShopReviewsPage />) },
+          { path: '/dokon/profil', element: shop(<ShopOwnProfilePage />) },
           { path: '/dokon/katalog', element: shop(<ShopCatalogPage />) },
           { path: '/dokon/import', element: shop(<ShopImportPage />) },
           { path: '/dokon/xizmatlar', element: shop(<ShopServicesPage />) },
           { path: '/dokon/filiallar', element: shop(<ShopBranchesPage />) },
-          { path: '/dokon/sertifikatlar', element: shop(<CertificationsPage />) },
           { path: '/dokon/portfolio', element: shop(<PortfolioPage />) },
           { path: '/dokon/vidjet', element: shop(<WidgetPage />) },
           { path: '/dokon/chat', element: <Navigate to="/dokon/sorovlar" replace /> },
@@ -215,14 +213,12 @@ const panelRouter = createBrowserRouter([
           { path: '/admin/adminlar', element: admin(<AdminAdminsPage />) },
           { path: '/admin/dokonlar', element: admin(<AdminShopsPage key="all" />) },
           { path: '/admin/dokonlar/:id', element: admin(<AdminShopDetailPage />) },
-          { path: '/admin/tasdiqlash', element: admin(<AdminShopsPage key="review" preset="review" />) },
           { path: '/admin/katalog', element: admin(<AdminCatalogPage />) },
           { path: '/admin/sharhlar', element: admin(<AdminModerationPage />) },
           { path: '/admin/tariflar', element: admin(<AdminTariffsPage />) },
           { path: '/admin/kalkulyator', element: admin(<AdminCalcSettingsPage />) },
           { path: '/admin/yordam', element: admin(<AdminSupportPage />) },
           { path: '/admin/yordam/:id', element: admin(<AdminTicketPage />) },
-          { path: '/admin/sertifikatlar', element: admin(<AdminCertificationsPage />) },
           { path: '/admin/bosh-sahifa', element: admin(<AdminHomeBlocksPage />) },
           { path: '/admin/kontent', element: admin(<AdminContentPage />) },
           { path: '/admin/kontent/:id', element: admin(<AdminArticleEditorPage />) },

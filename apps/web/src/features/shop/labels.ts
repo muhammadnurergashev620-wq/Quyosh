@@ -1,6 +1,6 @@
 import type { BadgeTone } from '@/components/ui/Badge';
 import { t } from '@/i18n';
-import type { PricingModel, ServiceType, ShopDocType, ShopMemberRole, ShopProductStatus, ShopStatus, ShopVerificationStatus, StockStatus, Weekday } from './types';
+import type { PricingModel, ServiceType, ShopMemberRole, ShopProductStatus, ShopStatus, ShopVerificationStatus, StockStatus, Weekday } from './types';
 
 export const SHOP_STATUS: Record<ShopStatus, { label: string; tone: BadgeTone }> = {
   DRAFT: { label: t('Qoralama'), tone: 'neutral' },
@@ -36,12 +36,6 @@ export const PRICING_MODEL: Record<PricingModel, string> = {
   PER_KW: t('Har kW uchun'),
   PER_UNIT: t('Dona uchun'),
   QUOTE_REQUIRED: t('So‘rov orqali'),
-};
-
-export const DOC_TYPE: Record<ShopDocType, string> = {
-  REGISTRATION: t('Davlat ro‘yxatidan o‘tganlik guvohnomasi'),
-  LICENSE: t('Litsenziya / ruxsatnoma'),
-  OTHER: t('Boshqa hujjat'),
 };
 
 export const STOCK_STATUS: Record<StockStatus, { label: string; tone: BadgeTone }> = {

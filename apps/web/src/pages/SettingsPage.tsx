@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { Bell, FileText, Languages, LogOut, Lock, MonitorSmartphone, ScrollText, ShieldCheck, SlidersHorizontal, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { env } from '@/lib/env';
 import { DeviceList } from '@/features/auth/components/DeviceList';
 import { LogoutDialog } from '@/features/auth/components/LogoutDialog';
 import { TwoFactorSettings } from '@/features/session/components/TwoFactorSettings';
@@ -113,7 +114,8 @@ export function SettingsPage() {
           { key: 'lang', icon: Languages, label: t('Til'), value: LANGUAGES.find((item) => item.code === lang)?.label, to: `${BASE}/til` },
           { key: 'view', icon: SlidersHorizontal, label: t('Tugmalar o‘lchami'), value: UI_SIZES.find((item) => item.value === size)?.label, to: `${BASE}/korinish` },
           { key: 'notifications', icon: Bell, label: t('Bildirishnoma kanallari'), value: t('SMS, email'), to: `${BASE}/bildirishnomalar` },
-          { key: 'security', icon: ShieldCheck, label: t('Ikki bosqichli himoya'), to: `${BASE}/xavfsizlik` },
+          // Do‘kon paneli: kirish faqat login + parol (OTP yo‘q), ikki bosqichli himoya sozlamasi ko‘rsatilmaydi.
+          ...(env.appRole === 'SHOP' ? [] : [{ key: 'security', icon: ShieldCheck, label: t('Ikki bosqichli himoya'), to: `${BASE}/xavfsizlik` }]),
           { key: 'devices', icon: MonitorSmartphone, label: t('Faol qurilmalar'), to: `${BASE}/qurilmalar` },
           ...DOCUMENTS.map((item) => ({ key: item.section, icon: item.icon, label: item.label, to: `${BASE}/${item.section}` })),
           { key: 'logout', icon: LogOut, label: t('Tizimdan chiqish'), danger: true, onClick: () => setLogoutOpen(true) },

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { WifiOff } from 'lucide-react';
 import { PageLoader } from '@/components/common/PageLoader';
 import { Button } from '@/components/ui/Button';
@@ -39,15 +39,11 @@ function ExpiredSession() {
 }
 
 export function RoleGuard({ roles, children }: { roles: Role[]; children: ReactNode }) {
-  const { role, isLoading, isError, error, refetch, needsShopOnboarding } = useCurrentRole();
-  const { pathname } = useLocation();
+  const { role, isLoading, isError, error, refetch } = useCurrentRole();
 
   if (isLoading) return <PageLoader label="Yuklanmoqda…" />;
   if (isError && isConnectionProblem(error)) return <ConnectionProblem onRetry={refetch} />;
   if (isError || !role) return <ExpiredSession />;
-  if (needsShopOnboarding && roles.includes('SHOP') && !roles.includes('CUSTOMER') && !pathname.startsWith('/dokon/onboarding')) {
-    return <Navigate to="/dokon/onboarding" replace />;
-  }
   if (!roles.includes(role)) {
     const [first] = getNavItems(role, { superAdmin: true }); // bosh sahifa; bo‘lim huquqlarini «/admin» o‘zi tekshiradi
     return <Navigate to={first?.to ?? '/'} replace />;

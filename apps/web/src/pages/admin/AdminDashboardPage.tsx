@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Store, ShieldCheck, UserPlus, Users } from 'lucide-react';
+import { Store, UserPlus, Users } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { PageLoader } from '@/components/common/PageLoader';
 import { Alert } from '@/components/ui/Alert';
@@ -33,7 +33,6 @@ export function AdminDashboardPage() {
         <Kpi to="/admin/foydalanuvchilar" icon={<Users size={20} />} value={d.users.total} label={t('Foydalanuvchilar')} />
         <Kpi to="/admin/foydalanuvchilar" icon={<UserPlus size={20} />} value={d.users.new} label={t('Yangi foydalanuvchilar')} />
         <Kpi to="/admin/dokonlar" icon={<Store size={20} />} value={d.shops.total} label={t('Do‘konlar')} />
-        <Kpi to="/admin/tasdiqlash" icon={<ShieldCheck size={20} />} value={d.shops.pendingReview} label={t('Tekshiruv kutmoqda')} />
       </div>
       <AdminQueues />
     </div>

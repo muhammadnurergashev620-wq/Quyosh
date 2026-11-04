@@ -21,8 +21,6 @@ export interface SystemDetail {
 
 export interface Project { id: string; title: string; city: string | null; systemPowerKw: string | null; systemType: SystemType | null; completedAt: string | null; installationId?: string | null; description: string | null; published?: boolean; verifiedInstallation?: boolean; images: Array<{ fileId: string; url: string | null; thumb: string | null }> }
 export type CertType = 'OFFICIAL_DEALER' | 'CERTIFIED_INSTALLER' | 'LICENSE';
-export interface Certification { id: string; shopId: string; certType: CertType; brand: string | null; issuer: string; certNumber: string | null; fileId: string; validFrom: string; validUntil: string | null; status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'EXPIRED'; reason: string | null; expiringSoon?: boolean; shop?: { id: string; name: string; slug: string } }
-
 export interface WidgetConfig {
   publicKey: string; allowedDomains: string[]; active: boolean;
   theme: { primaryColor: string; title: string; lang: 'uz' | 'oz' | 'ru'; showLogo: boolean };
