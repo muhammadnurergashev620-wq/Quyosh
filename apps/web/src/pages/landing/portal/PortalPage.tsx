@@ -15,7 +15,6 @@ import {
   Receipt,
   ShieldCheck,
   Star,
-  Store,
   Sun,
   Wrench,
   Zap,
@@ -39,7 +38,9 @@ import './portal.css';
 /** Panel manzili: dev'da alohida port (VITE_DEV_*_URL), production'da shu domendagi yo‘l (TZ 5.2). */
 const origin = (url: string) => (/^https?:\/\//.test(url) ? url.replace(/\/$/, '') : '');
 const CUSTOMER_CALC = `${origin(env.customerUrl)}/mijoz/kalkulyator`;
-const SHOP_PANEL = `${origin(env.shopUrl)}/dokon`;
+/** Kirish va ro‘yxatdan o‘tish — faqat mijoz paneliga (v3.1: bosh sayt faqat mijoz uchun, do‘kon paneli manzili ko‘rsatilmaydi). */
+const CUSTOMER_LOGIN = `${origin(env.customerUrl)}/login`;
+const CUSTOMER_REGISTER = `${origin(env.customerUrl)}/register`;
 
 interface PublicStats {
   verifiedShops: number;
@@ -105,17 +106,16 @@ function Header() {
       <nav aria-label={t('Bo‘limlar')}>
         <a href="#qanday">{t('Qanday ishlaydi')}</a>
         <a href="#mijozlar">{t('Mijozlar uchun')}</a>
-        <a href="#dokonlar">{t('Do‘konlar uchun')}</a>
         <a href="#ishonch">{t('Ishonch')}</a>
       </nav>
       <div className="qs-portal__tools">
         <ThemeToggle />
         <LanguageSwitcher />
-        <a className="gm-button gm-button--secondary gm-button--sm qs-portal__login" href={SHOP_PANEL}>
-          {t('Do‘kon uchun kirish')}
+        <a className="gm-button gm-button--secondary gm-button--sm qs-portal__login" href={CUSTOMER_LOGIN}>
+          {t('Kirish')}
         </a>
-        <a className="gm-button gm-button--primary gm-button--sm" href={CUSTOMER_CALC}>
-          {t('Hisoblab ko‘rish')}
+        <a className="gm-button gm-button--primary gm-button--sm" href={CUSTOMER_REGISTER}>
+          {t('Ro‘yxatdan o‘tish')}
         </a>
       </div>
     </header>
@@ -124,7 +124,6 @@ function Header() {
 
 function Hero({ f }: F) {
   const chips = list(f, 'chips', [t('Kalkulyator'), t('Do‘konlar xaritasi'), t('Narx takliflari'), t('Montaj kafolati')]);
-  const secondary = str(f, 'ctaSecondary', f ? '' : t('Men do‘kon egasiman'));
   const titleB = str(f, 'titleB', f ? '' : t('pul ishlab chiqaradi'));
   return (
     <>
@@ -144,11 +143,6 @@ function Hero({ f }: F) {
         <a href={CUSTOMER_CALC} className="gm-button gm-button--primary gm-button--md">
           {str(f, 'ctaPrimary', t('Hisoblab ko‘rish'))} <ArrowRight size={16} aria-hidden="true" />
         </a>
-        {secondary && (
-          <a href={SHOP_PANEL} className="gm-button gm-button--secondary gm-button--md">
-            {secondary}
-          </a>
-        )}
       </div>
       <p className="gm-film__sunline">{sunLine()}</p>
     </>
@@ -177,20 +171,13 @@ function Stats({ f, stats }: F & { stats: PublicStats | null | undefined }) {
 
 function Paths({ f }: F) {
   const customerPoints = list(f, 'customerPoints', [t('3 daqiqada dastlabki hisob — ro‘yxatdan o‘tmasdan'), t('Naqd va kredit variantlarini solishtirish'), t('Bir nechta do‘kondan narx taklifi')]);
-  const shopPoints = list(f, 'shopPoints', [t('Tayyor hisobli so‘rovlar: tizim parametrlari va iste’mol bilan'), t('Katalog, filiallar va xizmat hududi bir joyda'), t('Tasdiqlangan do‘kon belgisi va montajdan keyingi sharhlar')]);
   return (
-    <section className="qs-portal__paths">
+    <section className="qs-portal__paths qs-portal__paths--single">
       <article id="mijozlar" className="qs-path">
         <span className="qs-path__icon" aria-hidden="true"><Sun size={26} /></span>
         <h2>{str(f, 'customerTitle', t('Men mijozman'))}</h2>
         <ul>{customerPoints.map((point) => <li key={point}>{point}</li>)}</ul>
         <a href={CUSTOMER_CALC} className="gm-button gm-button--primary gm-button--md">{str(f, 'customerCta', t('Hisoblab ko‘rish'))} <ArrowRight size={16} aria-hidden="true" /></a>
-      </article>
-      <article id="dokonlar" className="qs-path qs-path--shop">
-        <span className="qs-path__icon" aria-hidden="true"><Store size={26} /></span>
-        <h2>{str(f, 'shopTitle', t('Men do‘kon egasiman'))}</h2>
-        <ul>{shopPoints.map((point) => <li key={point}>{point}</li>)}</ul>
-        <a href={SHOP_PANEL} className="gm-button gm-button--secondary gm-button--md">{str(f, 'shopCta', t('Do‘kon ochish'))} <ArrowRight size={16} aria-hidden="true" /></a>
       </article>
     </section>
   );
@@ -287,7 +274,6 @@ function Finale({ f }: F) {
         <h2>{f ? fill(str(f, 'title', ''), { h, m }) : t('Bugun quyosh {h} soat {m} daqiqa porlaydi. Uning qancha qismi sizniki?', { h, m })}</h2>
         <div className="gm-film__cta">
           <a href={CUSTOMER_CALC} className="gm-button gm-button--primary gm-button--md">{str(f, 'ctaPrimary', t('Hisoblab ko‘rish'))} <ArrowRight size={16} aria-hidden="true" /></a>
-          {str(f, 'ctaSecondary', f ? '' : t('Men do‘kon egasiman')) && <a href={SHOP_PANEL} className="gm-button gm-button--secondary gm-button--md">{str(f, 'ctaSecondary', t('Men do‘kon egasiman'))}</a>}
         </div>
       </div>
     </section>
@@ -303,10 +289,17 @@ function Footer() {
       </div>
       <nav aria-label={t('Pastki menyu')}>
         <a href="#qanday">{t('Qanday ishlaydi')}</a>
-        <a href={SHOP_PANEL}>{t('Do‘kon ochish')}</a>
         <Link to="/shartlar">{t('Foydalanish shartlari')}</Link>
         <Link to="/maxfiylik">{t('Maxfiylik siyosati')}</Link>
       </nav>
+      {(env.support.phone || env.support.email) && (
+        <p className="qs-portal__partner">
+          {t('Hamkorlik uchun aloqa')}:{' '}
+          {env.support.phone && <a href={`tel:${env.support.phone.replace(/\s+/g, '')}`}>{env.support.phone}</a>}
+          {env.support.phone && env.support.email && ' · '}
+          {env.support.email && <a href={`mailto:${env.support.email}`}>{env.support.email}</a>}
+        </p>
+      )}
       <small className="qs-portal__esri">
         <ShieldCheck size={12} aria-hidden="true" /> {t('Xarita ma’lumotlari:')}{' '}
         <a href="https://www.esri.com" target="_blank" rel="noreferrer">Powered by Esri</a> · © {new Date().getFullYear()} Quyosh.uz
@@ -316,7 +309,7 @@ function Footer() {
 }
 
 /**
- * Bosh sayt (TZ U7.1, 5.6): funksional qism yo‘q — tushuntirish va panelga yo‘naltirish. Fotosurat/video ishlatilmaydi.
+ * Bosh sayt (TZ U7.1, 5.6): faqat mijoz uchun, funksional qism yo‘q — tushuntirish va mijoz paneliga yo‘naltirish. Fotosurat/video ishlatilmaydi.
  * Matn, tartib va ko‘rinish admin "Bosh sahifa" bo‘limidan (SiteBlock); API javob bermasa — standart matn.
  * `preview` — admin ko‘rinishi: nashr qilinmagan qoralamalar bilan.
  */

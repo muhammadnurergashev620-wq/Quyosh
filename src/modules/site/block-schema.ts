@@ -1,4 +1,4 @@
-/** Bosh sahifa bloklari tuzilmasi: har tur uchun maydonlar va uzunlik chegaralari (admin tahririda tekshiriladi). */
+/** Bosh sahifa bloklari tuzilmasi (v3.1: faqat mijozga qaratilgan — do‘kon maydonlari yo‘q): har tur uchun maydonlar va uzunlik chegaralari (admin tahririda tekshiriladi). */
 type Field =
   | { kind: 'text'; max: number; required?: boolean }
   | { kind: 'list'; max: number; itemMax: number }
@@ -15,19 +15,18 @@ export const BLOCK_SCHEMA: Record<BlockType, Record<string, Field>> = {
   HERO: {
     label: { kind: 'text', max: 80 }, titleA: { kind: 'text', max: 80, required: true }, titleB: { kind: 'text', max: 80 },
     text: { kind: 'text', max: 400 }, chips: { kind: 'list', max: 6, itemMax: 40 },
-    ctaPrimary: { kind: 'text', max: 40, required: true }, ctaSecondary: { kind: 'text', max: 40 },
+    ctaPrimary: { kind: 'text', max: 40, required: true },
   },
   STATS: { title: { kind: 'text', max: 80 } },
   STATEMENT: { label: { kind: 'text', max: 40 }, text: { kind: 'text', max: 300, required: true } },
   PATHS: {
     customerTitle: { kind: 'text', max: 80, required: true }, customerPoints: { kind: 'list', max: 5, itemMax: 140 }, customerCta: { kind: 'text', max: 40, required: true },
-    shopTitle: { kind: 'text', max: 80, required: true }, shopPoints: { kind: 'list', max: 5, itemMax: 140 }, shopCta: { kind: 'text', max: 40, required: true },
   },
   HOW_IT_WORKS: { eyebrow: { kind: 'text', max: 40 }, title: { kind: 'text', max: 120, required: true }, items: { kind: 'items', max: 8, titleMax: 60, textMax: 240 } },
   TRUST: { eyebrow: { kind: 'text', max: 40 }, title: { kind: 'text', max: 120, required: true }, items: { kind: 'items', max: 6, titleMax: 80, textMax: 300 } },
   TESTIMONIALS: { eyebrow: { kind: 'text', max: 40 }, title: { kind: 'text', max: 120, required: true } },
   FAQ: { eyebrow: { kind: 'text', max: 40 }, title: { kind: 'text', max: 120, required: true }, items: { kind: 'items', max: 12, titleMax: 160, textMax: 1200 } },
-  FINALE: { title: { kind: 'text', max: 200, required: true }, ctaPrimary: { kind: 'text', max: 40, required: true }, ctaSecondary: { kind: 'text', max: 40 } },
+  FINALE: { title: { kind: 'text', max: 200, required: true }, ctaPrimary: { kind: 'text', max: 40, required: true } },
 };
 
 export type BlockContent = Partial<Record<(typeof BLOCK_LANGS)[number], Record<string, unknown>>>;

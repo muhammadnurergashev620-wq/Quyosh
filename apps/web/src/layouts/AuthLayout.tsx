@@ -48,7 +48,7 @@ const PITCH: Record<Role, Pitch> = {
     title: t('So‘rovlar o‘zi keladi — siz faqat o‘rnatasiz'),
     text: t('Hisobini qilgan mijozlar tayyor parametrlar bilan narx so‘raydi. Taklif yuboring, montajni kuzating, reyting yig‘ing.'),
     points: [
-      { icon: ClipboardCheck, text: t('Hujjat bilan tasdiqlangan do‘kon belgisi') },
+      { icon: ClipboardCheck, text: t('Platforma tasdiqlagan do‘kon belgisi') },
       { icon: Wallet, text: t('Tayyor hisobli so‘rovlar') },
       { icon: Star, text: t('Faqat montajdan keyingi sharhlar') },
     ],

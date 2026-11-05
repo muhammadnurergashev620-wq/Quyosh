@@ -58,7 +58,6 @@ const FIELDS: Record<BlockType, FieldSpec[]> = {
     { name: 'text', kind: 'long', label: () => t('Matn'), max: 400 },
     { name: 'chips', kind: 'list', label: () => t('Belgilar (har qatorda bittasi)'), max: 6 },
     { name: 'ctaPrimary', kind: 'text', label: () => t('Asosiy tugma'), max: 40, required: true },
-    { name: 'ctaSecondary', kind: 'text', label: () => t('Ikkinchi tugma'), max: 40 },
   ],
   STATS: [{ name: 'title', kind: 'text', label: () => t('Sarlavha (ekran o‘quvchi uchun)'), max: 80 }],
   STATEMENT: [
@@ -69,9 +68,6 @@ const FIELDS: Record<BlockType, FieldSpec[]> = {
     { name: 'customerTitle', kind: 'text', label: () => t('Mijoz: sarlavha'), max: 80, required: true },
     { name: 'customerPoints', kind: 'list', label: () => t('Mijoz: afzalliklar (har qatorda bittasi)'), max: 5 },
     { name: 'customerCta', kind: 'text', label: () => t('Mijoz: tugma'), max: 40, required: true },
-    { name: 'shopTitle', kind: 'text', label: () => t('Do‘kon: sarlavha'), max: 80, required: true },
-    { name: 'shopPoints', kind: 'list', label: () => t('Do‘kon: afzalliklar (har qatorda bittasi)'), max: 5 },
-    { name: 'shopCta', kind: 'text', label: () => t('Do‘kon: tugma'), max: 40, required: true },
   ],
   HOW_IT_WORKS: [
     { name: 'eyebrow', kind: 'text', label: () => t('Ustki yozuv'), max: 40 },
@@ -95,7 +91,6 @@ const FIELDS: Record<BlockType, FieldSpec[]> = {
   FINALE: [
     { name: 'title', kind: 'long', label: () => t('Sarlavha ({h} va {m} — bugungi quyosh soati va daqiqasi)'), max: 200, required: true },
     { name: 'ctaPrimary', kind: 'text', label: () => t('Asosiy tugma'), max: 40, required: true },
-    { name: 'ctaSecondary', kind: 'text', label: () => t('Ikkinchi tugma'), max: 40 },
   ],
 };
 

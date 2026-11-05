@@ -392,4 +392,5 @@ export const ruM7: Record<string, string> = {
   "Yangi xodim qo‘shish va parolini tiklash uchun administratorga murojaat qiling. Bu yerda ruxsatlarni o‘zgartirish va xodimni chiqarish mumkin.": "Чтобы добавить сотрудника или восстановить его пароль, обратитесь к администратору. Здесь можно менять права и удалять сотрудника.",
   "Hisobingiz hali do‘konga biriktirilmagan. Administratorga murojaat qiling.": "Ваш аккаунт пока не привязан к магазину. Обратитесь к администратору.",
   "{name} uchun yangi vaqtincha parol yaratiladi, barcha qurilmalardan chiqariladi va birinchi kirishda parolni almashtiradi.": "Для {name} будет создан новый временный пароль, все устройства будут выведены, при первом входе пароль нужно заменить.",
+  "Platforma tasdiqlagan do‘kon belgisi": "Значок магазина, подтверждённого платформой",
 };

@@ -18,18 +18,13 @@ const CUSTOMER: Qa[] = [
   { q: () => t('Montajdan keyin nima bo‘ladi?'), a: () => t('Montajni chek-list bilan qabul qilasiz, sharh qoldirasiz va o‘rnatilgan tizimingizni kabinetda kuzatasiz: kafolatlar, tozalash eslatmalari, haqiqiy ishlab chiqarish.') },
 ];
 
-const MASTER: Qa[] = [
-  { q: () => t('Do‘konni qanday ochaman?'), a: () => t('Do‘kon panelida ro‘yxatdan o‘ting: nom, telefon va STIR kiriting, filial va xizmat hududini belgilang. Hujjatlar tekshirilgach, do‘kon katalog va xaritada ko‘rinadi.') },
-  { q: () => t('So‘rovlar qanday keladi?'), a: () => t('Mijoz tayyor hisob bilan narx so‘raydi; siz tizim parametrlari va iste’molni ko‘rib, taklif yuborasiz yoki o‘lchov uchrashuvini taklif qilasiz.') },
-];
-
 const GENERAL: Qa[] = [
   { q: () => t('Ma’lumotlarim qayerda saqlanadi?'), a: () => t('Shaxsiy ma’lumotlar O‘zbekiston hududidagi serverlarda saqlanadi.') },
   { q: () => t('Sharhlar haqiqiymi?'), a: () => t('Sharhni faqat montaji tasdiqlangan mijoz yozadi; shubhali sharhlar moderatsiyadan o‘tadi.') },
 ];
 
-export const FAQ_PREVIEW: Qa[] = [CUSTOMER[0]!, CUSTOMER[1]!, CUSTOMER[3]!, CUSTOMER[4]!, CUSTOMER[5]!, MASTER[0]!, GENERAL[0]!, GENERAL[1]!];
-const ALL: Qa[] = [...CUSTOMER, ...MASTER, ...GENERAL];
+export const FAQ_PREVIEW: Qa[] = [CUSTOMER[0]!, CUSTOMER[1]!, CUSTOMER[3]!, CUSTOMER[4]!, CUSTOMER[5]!, GENERAL[0]!, GENERAL[1]!];
+const ALL: Qa[] = [...CUSTOMER, ...GENERAL];
 
 export function Column({ items }: { items: Qa[] }) {
   const [open, setOpen] = useState<number | null>(null);

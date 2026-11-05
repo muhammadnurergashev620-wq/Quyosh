@@ -15,11 +15,9 @@ function resolveApiBaseUrl(): string {
 /** Asosiy sayt (quyosh.uz) yo‘naltiradigan panellar manzili. Bir domenda: quyosh.uz/mijoz va quyosh.uz/dokon. Dev'da ildizdagi .env ichida VITE_DEV_CUSTOMER_URL / VITE_DEV_SHOP_URL beriladi (productionga ta’sir qilmaydi). */
 const devOnly = (value: unknown) => (import.meta.env.DEV ? (value as string | undefined) : undefined);
 const customerUrl = devOnly(import.meta.env.VITE_DEV_CUSTOMER_URL) || (import.meta.env.VITE_CUSTOMER_URL as string | undefined) || '/mijoz';
-const shopUrl = devOnly(import.meta.env.VITE_DEV_SHOP_URL) || (import.meta.env.VITE_SHOP_URL as string | undefined) || '/dokon';
 
 export const env = {
   customerUrl,
-  shopUrl,
   apiBaseUrl: resolveApiBaseUrl(),
   /** Google profilidan telefonni ham so‘rash (Google Cloud'da People API va user.phonenumbers.read ruxsati sozlangan bo‘lsa). */
   googlePhone: import.meta.env.VITE_GOOGLE_PHONE === '1',

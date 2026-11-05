@@ -652,7 +652,7 @@
 
 /* Admin eslatmasi chap paneldagi matn bilan takrorlanmasligi uchun faqat telefon/planshetda ko‘rsatiladi */
 @media (min-width: 900px) {
-  .gm-auth-page__note {
+  .gm-auth-page__note:not(.gm-auth-page__note--always) {
     display: none;
   }
 }

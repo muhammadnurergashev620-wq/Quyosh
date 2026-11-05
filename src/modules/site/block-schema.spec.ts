@@ -25,4 +25,14 @@ describe('sanitizeBlock', () => {
     expect(r.content.oz).toBeUndefined();
     expect(sanitizeBlock('FAQ', { uz: { title: 'S', items: [{ title: '', text: 'A' }] }, ru: { title: 'В' } }).errors).toEqual(['uz.items']);
   });
+
+  it('bosh sayt faqat mijoz uchun: standart matnda do‘kon tugmasi, kartasi va savoli yo‘q', () => {
+    const all = JSON.stringify(HOME_DEFAULTS);
+    expect(all).not.toMatch(/ctaSecondary|shopTitle|shopPoints|shopCta/);
+    expect(all).not.toMatch(/Men do‘kon egasiman|Do‘kon ochish|Do‘konni qanday ochaman|Я владелец магазина|Как открыть магазин/);
+    // Eski do‘kon maydonlari kelsa tozalanadi (sxemada yo‘q).
+    const r = sanitizeBlock('PATHS', { uz: { customerTitle: 'M', customerCta: 'C', shopTitle: 'Do‘kon' }, ru: { customerTitle: 'К', customerCta: 'Р', shopCta: 'x' } });
+    expect(r.errors).toEqual([]);
+    expect(JSON.stringify(r.content)).not.toContain('shop');
+  });
 });

@@ -144,3 +144,8 @@
 .qs-portal__reviews small a { color: inherit; }
 .qs-reviews__stars { color: #f5b83d; letter-spacing: 2px; }
 .qs-reviews__stars i { font-style: normal; color: rgba(231, 238, 255, 0.2); }
+
+/* Faqat mijoz kartasi (v3.1): ikki yo‘l o‘rniga bitta, o‘rtada */
+.qs-portal__paths--single { grid-template-columns: minmax(0, 560px); justify-content: center; }
+.qs-portal__partner { margin: 0; color: rgba(231, 238, 255, 0.7); font-size: 13px; }
+.qs-portal__partner a { color: inherit; }

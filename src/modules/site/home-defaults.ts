@@ -16,8 +16,7 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
         "Narx takliflari",
         "Montaj kafolati"
       ],
-      "ctaPrimary": "Hisoblab ko‘rish",
-      "ctaSecondary": "Men do‘kon egasiman"
+      "ctaPrimary": "Hisoblab ko‘rish"
     },
     "ru": {
       "label": "Солнечная энергия · Узбекистан",
@@ -30,8 +29,7 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
         "Коммерческие предложения",
         "Гарантия на монтаж"
       ],
-      "ctaPrimary": "Рассчитать",
-      "ctaSecondary": "Я владелец магазина"
+      "ctaPrimary": "Рассчитать"
     }
   },
   "STATS": {
@@ -60,14 +58,7 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
         "Naqd va kredit variantlarini solishtirish",
         "Bir nechta do‘kondan narx taklifi"
       ],
-      "customerCta": "Hisoblab ko‘rish",
-      "shopTitle": "Men do‘kon egasiman",
-      "shopPoints": [
-        "Tayyor hisobli so‘rovlar: tizim parametrlari va iste’mol bilan",
-        "Katalog, filiallar va xizmat hududi bir joyda",
-        "Tasdiqlangan do‘kon belgisi va montajdan keyingi sharhlar"
-      ],
-      "shopCta": "Do‘kon ochish"
+      "customerCta": "Hisoblab ko‘rish"
     },
     "ru": {
       "customerTitle": "Я клиент",
@@ -76,14 +67,7 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
         "Сравнение оплаты наличными и в кредит",
         "Предложения от нескольких магазинов"
       ],
-      "customerCta": "Рассчитать",
-      "shopTitle": "Я владелец магазина",
-      "shopPoints": [
-        "Готовые запросы с параметрами системы и потреблением",
-        "Каталог, филиалы и зона обслуживания в одном месте",
-        "Знак проверенного магазина и отзывы только после монтажа"
-      ],
-      "shopCta": "Открыть магазин"
+      "customerCta": "Рассчитать"
     }
   },
   "HOW_IT_WORKS": {
@@ -230,10 +214,6 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
           "text": "Montajni chek-list bilan qabul qilasiz, sharh qoldirasiz va o‘rnatilgan tizimingizni kabinetda kuzatasiz: kafolatlar, tozalash eslatmalari, haqiqiy ishlab chiqarish."
         },
         {
-          "title": "Do‘konni qanday ochaman?",
-          "text": "Do‘kon panelida ro‘yxatdan o‘ting: nom, telefon va STIR kiriting, filial va xizmat hududini belgilang. Hujjatlar tekshirilgach, do‘kon katalog va xaritada ko‘rinadi."
-        },
-        {
           "title": "Ma’lumotlarim qayerda saqlanadi?",
           "text": "Shaxsiy ma’lumotlar O‘zbekiston hududidagi serverlarda saqlanadi."
         },
@@ -268,10 +248,6 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
           "text": "Вы принимаете монтаж по чек-листу, оставляете отзыв и следите за системой в кабинете: гарантии, напоминания об очистке, реальная выработка."
         },
         {
-          "title": "Как открыть магазин?",
-          "text": "Зарегистрируйтесь в панели магазина: укажите название, телефон и ИНН, филиал и зону обслуживания. После проверки документов магазин появится в каталоге и на карте."
-        },
-        {
           "title": "Где хранятся мои данные?",
           "text": "Персональные данные хранятся на серверах в Узбекистане."
         },
@@ -285,13 +261,11 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
   "FINALE": {
     "uz": {
       "title": "Bugun quyosh {h} soat {m} daqiqa porlaydi. Uning qancha qismi sizniki?",
-      "ctaPrimary": "Hisoblab ko‘rish",
-      "ctaSecondary": "Men do‘kon egasiman"
+      "ctaPrimary": "Hisoblab ko‘rish"
     },
     "ru": {
       "title": "Сегодня солнце светит {h} ч {m} мин. Сколько из этого — ваше?",
-      "ctaPrimary": "Рассчитать",
-      "ctaSecondary": "Я владелец магазина"
+      "ctaPrimary": "Рассчитать"
     }
   }
 };

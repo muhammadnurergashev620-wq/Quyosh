@@ -20,7 +20,7 @@ export function LoginPage() {
       {!isShop && <GoogleAuth />}
       {isShop ? (
         <>
-          <p className="gm-auth-page__note">
+          <p className="gm-auth-page__note gm-auth-page__note--always">
             <Lock size={14} aria-hidden="true" /> {t('Parolni tiklash uchun administratorga murojaat qiling.')}
           </p>
           <SupportContacts compact />
