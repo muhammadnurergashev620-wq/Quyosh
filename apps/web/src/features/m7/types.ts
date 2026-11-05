@@ -1,6 +1,6 @@
 import type { SystemType } from '@/features/calc/types';
 
-export type I18n = Partial<Record<'uz' | 'oz' | 'ru', string>>;
+export type I18n = Partial<Record<'uz' | 'oz' | 'ru' | 'en', string>>;
 export type ReminderType = 'CLEANING' | 'INSPECTION' | 'WARRANTY_EXPIRY';
 
 export interface Reminder { id: string; type: ReminderType; intervalDays: number | null; nextAt: string; lastSentAt: string | null; lastDoneAt: string | null; active: boolean; warrantyItemId: string | null }
@@ -23,7 +23,7 @@ export interface Project { id: string; title: string; city: string | null; syste
 export type CertType = 'OFFICIAL_DEALER' | 'CERTIFIED_INSTALLER' | 'LICENSE';
 export interface WidgetConfig {
   publicKey: string; allowedDomains: string[]; active: boolean;
-  theme: { primaryColor: string; title: string; lang: 'uz' | 'oz' | 'ru'; showLogo: boolean };
+  theme: { primaryColor: string; title: string; lang: 'uz' | 'oz' | 'ru' | 'en'; showLogo: boolean };
   contrast: { ratio: number; ok: boolean; suggestion: string | null }; embed: string; frameUrl: string;
 }
 

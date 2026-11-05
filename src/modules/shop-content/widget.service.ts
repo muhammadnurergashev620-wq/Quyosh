@@ -18,7 +18,7 @@ import type { WidgetConfigDto, WidgetEstimateDto, WidgetLeadDto } from './dto/sh
 export interface WidgetTheme {
   primaryColor: string;
   title: string;
-  lang: 'uz' | 'oz' | 'ru';
+  lang: 'uz' | 'oz' | 'ru' | 'en';
   showLogo: boolean;
 }
 

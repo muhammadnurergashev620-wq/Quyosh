@@ -50,10 +50,20 @@ describe('t()', () => {
 });
 
 describe('languages (TZ U18)', () => {
-  it('offers exactly uz, oz (uz-Cyrl) and ru; a stale «en» choice falls back to Uzbek', async () => {
+  it('offers uz, oz (uz-Cyrl), ru and en; an unknown stored choice falls back to Uzbek', async () => {
     const { LANGUAGES, lang } = await load('en');
-    expect(LANGUAGES.map((item) => item.code)).toEqual(['uz', 'uz-Cyrl', 'ru']);
-    expect(lang).toBe('uz');
+    expect(LANGUAGES.map((item) => item.code)).toEqual(['uz', 'uz-Cyrl', 'ru', 'en']);
+    expect(lang).toBe('en');
+    expect((await load('fr')).lang).toBe('uz');
+  });
+
+  it('translates to English, keeps params, falls back to Uzbek and formats dates/times in English', async () => {
+    const en = await load('en');
+    expect(en.t('Kirish')).toBe('Sign in');
+    expect(en.t('{count} ta yangi', { count: 3 })).toBe('3 new');
+    expect(en.t('Bu matn lug‘atda yo‘q')).toBe('Bu matn lug‘atda yo‘q');
+    expect(en.MONTHS.en[9]).toBe('Oct');
+    expect(en.CONTENT_LANG).toBe('en');
   });
 
   it('translates Quyosh terms from the U3 glossary', async () => {

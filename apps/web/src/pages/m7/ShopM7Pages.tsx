@@ -155,7 +155,7 @@ export function WidgetPage() {
   const queryClient = useQueryClient();
   const cfg = useQuery({ queryKey: ['widget', shopId], queryFn: () => m7Service.widget(shopId!), enabled: !!shopId });
   const [domains, setDomains] = useState('');
-  const [theme, setTheme] = useState({ primaryColor: '#1d4ed8', title: '', lang: 'uz' as 'uz' | 'oz' | 'ru' });
+  const [theme, setTheme] = useState({ primaryColor: '#1d4ed8', title: '', lang: 'uz' as 'uz' | 'oz' | 'ru' | 'en' });
   const [active, setActive] = useState(false);
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [copied, setCopied] = useState(false);
@@ -187,7 +187,7 @@ export function WidgetPage() {
           {!c.contrast.ok && <Alert tone="warning">{t('Oq matn bilan kontrast {r}:1 (kamida 4,5:1 kerak). Vidjetda yaqin mos rang ishlatiladi:', { r: c.contrast.ratio })} <button type="button" className="gm-link" onClick={() => setTheme({ ...theme, primaryColor: c.contrast.suggestion! })}>{c.contrast.suggestion}</button></Alert>}
           <Input label={t('Sarlavha')} value={theme.title} maxLength={80} onChange={(e) => setTheme({ ...theme, title: e.target.value })} />
           <label className="gm-field__label" htmlFor="wlang">{t('Til')}</label>
-          <select id="wlang" className="qs-select" value={theme.lang} onChange={(e) => setTheme({ ...theme, lang: e.target.value as 'uz' | 'oz' | 'ru' })}><option value="uz">O‘zbekcha</option><option value="oz">Ўзбекча</option><option value="ru">Русский</option></select>
+          <select id="wlang" className="qs-select" value={theme.lang} onChange={(e) => setTheme({ ...theme, lang: e.target.value as 'uz' | 'oz' | 'ru' | 'en' })}><option value="uz">O‘zbekcha</option><option value="oz">Ўзбекча</option><option value="ru">Русский</option><option value="en">English</option></select>
           <label className="qs-check"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} /> {t('Vidjet faol')}</label>
           {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}
           {save.isSuccess && <Alert tone="success">{t('Saqlandi')}</Alert>}

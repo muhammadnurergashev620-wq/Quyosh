@@ -4,7 +4,7 @@ import { lang, t } from '@/i18n';
 import { toUzbekCyrillic } from '@/i18n/translit';
 
 export type BlockType = 'HERO' | 'STATS' | 'STATEMENT' | 'HOW_IT_WORKS' | 'TRUST' | 'TESTIMONIALS' | 'FAQ' | 'FINALE';
-export type BlockLang = 'uz' | 'ru' | 'oz';
+export type BlockLang = 'uz' | 'ru' | 'oz' | 'en';
 export type BlockFields = Record<string, unknown>;
 export type BlockContent = Partial<Record<BlockLang, BlockFields>>;
 
@@ -47,6 +47,14 @@ const cyr = (value: unknown): unknown => {
   return value;
 };
 
+/** Ingliz tili: matn bazada ingliz tilida berilmagan bo‘lsa, o‘zbekcha asl matn lug‘at orqali tarjima qilinadi. */
+const tx = (value: unknown): unknown => {
+  if (typeof value === 'string') return t(value);
+  if (Array.isArray(value)) return value.map(tx);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, tx(v)]));
+  return value;
+};
+
 /**
  * Joriy tilga mos maydonlar: ru → ru; kirill → oz (bo‘lmasa o‘zbek lotinidan avtomatik o‘giriladi); uz → uz.
  * Bo‘sh maydon o‘zbekcha matn bilan to‘ldiriladi.
@@ -55,6 +63,7 @@ export function localize(content: BlockContent | undefined, current: typeof lang
   if (!content?.uz) return null;
   const base = content.uz;
   if (current === 'ru') return { ...base, ...(content.ru ?? {}) };
+  if (current === 'en') return { ...(tx(base) as BlockFields), ...(content.en ?? {}) };
   if (current === 'uz-Cyrl') return { ...(cyr(base) as BlockFields), ...(content.oz ?? {}) };
   return base;
 }

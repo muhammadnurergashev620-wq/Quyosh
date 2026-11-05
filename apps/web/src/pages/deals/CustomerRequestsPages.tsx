@@ -214,7 +214,7 @@ export function CustomerQuotePage() {
   const [accepting, setAccepting] = useState(false);
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
-  const [lang, setLang] = useState<'uz' | 'oz' | 'ru'>('uz');
+  const [lang, setLang] = useState<'uz' | 'oz' | 'ru' | 'en'>('uz');
   const accept = useMutation({
     mutationFn: () => dealsService.acceptQuote(id),
     onSuccess: (res) => {
@@ -252,7 +252,7 @@ export function CustomerQuotePage() {
         {open && <Button onClick={() => setAccepting(true)}>{t('Tanlash')}</Button>}
         {open && <Button variant="ghost" onClick={() => setRejecting(true)}>{t('Rad etish')}</Button>}
         <select className="qs-select" aria-label={t('PDF tili')} value={lang} onChange={(e) => setLang(e.target.value as typeof lang)}>
-          <option value="uz">O‘zbekcha</option><option value="oz">Ўзбекча</option><option value="ru">Русский</option>
+          <option value="uz">O‘zbekcha</option><option value="oz">Ўзбекча</option><option value="ru">Русский</option><option value="en">English</option>
         </select>
         <Button variant="secondary" onClick={() => void dealsService.quotePdf(q.id, lang, q.request.number)}><Download size={15} /> PDF</Button>
         {q.installation && <Button variant="secondary" onClick={() => navigate(`/mijoz/montajlar/${q.installation!.id}`)}>{t('Montajga o‘tish')}</Button>}

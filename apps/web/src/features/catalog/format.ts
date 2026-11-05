@@ -1,4 +1,4 @@
-import { lang, t } from '@/i18n';
+import { NUMBER_LOCALE, contentText, lang, t } from '@/i18n';
 import { formatMoney, formatNumber } from '@/lib/utils';
 import type { I18nText } from '@/features/shop/types';
 import type { ExchangeRate, SpecKey, Specs } from './types';
@@ -6,8 +6,7 @@ import type { ExchangeRate, SpecKey, Specs } from './types';
 /** I18n matn: joriy tilda, bo‘lmasa o‘zbekcha (TZ 7.2: uz / oz / ru). */
 export function i18nText(value: Partial<I18nText> | null | undefined): string {
   if (!value) return '';
-  const key = lang === 'ru' ? 'ru' : lang === 'uz-Cyrl' ? 'oz' : 'uz';
-  return value[key] || value.uz || '';
+  return contentText(value);
 }
 
 export const SPEC_META: Record<SpecKey, { label: string; unit?: string; digits?: number }> = {
@@ -44,7 +43,7 @@ export function specValue(key: SpecKey, raw: string | number | null | undefined)
   if (!Number.isFinite(value)) return String(raw);
   if (key === 'batteryUsableDod') value *= 100;
   const digits = meta.digits ?? 2;
-  const text = digits === 0 ? formatNumber(value) : value.toLocaleString(lang === 'ru' ? 'ru-RU' : 'uz-UZ', { maximumFractionDigits: digits });
+  const text = digits === 0 ? formatNumber(value) : value.toLocaleString(NUMBER_LOCALE[lang], { maximumFractionDigits: digits });
   return meta.unit ? `${text} ${meta.unit}` : text;
 }
 

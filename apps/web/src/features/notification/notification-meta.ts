@@ -1,3 +1,4 @@
+import { t } from '@/i18n';
 import { BadgeCheck, Bell, FileText, LifeBuoy, MessageSquare, ScrollText, ShieldCheck, Siren, Star, Sun, Wrench } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { AppNotification } from './types';
@@ -78,5 +79,5 @@ export function notificationMeta(item: AppNotification, base: '/mijoz' | '/dokon
 
 /** Ko‘rinadigan sarlavha va matn (serverda tayyor yoziladi). */
 export function notificationText(item: AppNotification, _base: '/mijoz' | '/dokon' = '/mijoz'): { title: string; body: string } {
-  return { title: item.title, body: item.body };
+  return { title: t(item.title), body: t(item.body) };
 }

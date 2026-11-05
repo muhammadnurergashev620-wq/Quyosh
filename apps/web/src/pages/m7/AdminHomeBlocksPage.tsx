@@ -96,7 +96,7 @@ const BLOCK_HINT: Partial<Record<BlockType, () => string>> = {
   FINALE: () => t('Sahifa oxiridagi chaqiriq: joyi va ko‘rinishi o‘zgarmaydi.'),
 };
 
-const LANGS: Array<[BlockLang, string]> = [['uz', 'O‘zbekcha'], ['ru', 'Русский'], ['oz', 'Ўзбекча']];
+const LANGS: Array<[BlockLang, string]> = [['uz', 'O‘zbekcha'], ['ru', 'Русский'], ['oz', 'Ўзбекча'], ['en', 'English']];
 
 /** Tarjima to‘liqligi: majburiy maydonlar to‘ldirilganmi (oz ixtiyoriy — bo‘sh bo‘lsa avtomatik o‘giriladi). */
 function complete(type: BlockType, fields: BlockFields | undefined) {
@@ -219,11 +219,12 @@ function BlockEditor({ block, onSaved }: { block: AdminBlock; onSaved: (b: Admin
       <div className="qs-tabs" role="tablist" aria-label={t('Til')}>
         {LANGS.map(([code, label]) => (
           <button key={code} type="button" role="tab" aria-selected={lang === code} className={cx(lang === code && 'is-on')} onClick={() => setLang(code)}>
-            {label} {code === 'oz' ? (value.oz ? '✓' : '·') : complete(block.type, value[code]) ? '✓' : '!'}
+            {label} {code === 'oz' || code === 'en' ? (value[code] ? '✓' : '·') : complete(block.type, value[code]) ? '✓' : '!'}
           </button>
         ))}
       </div>
       {lang === 'oz' && <p className="qs-muted" style={{ margin: 0 }}>{t('Kirill matni ixtiyoriy: bo‘sh maydonlar o‘zbek lotinidan avtomatik o‘giriladi.')}</p>}
+      {lang === 'en' && <p className="qs-muted" style={{ margin: 0 }}>English text is optional: empty fields are translated automatically from the built-in dictionary.</p>}
       <div className="qs-form">
         {FIELDS[block.type].map((spec) => (
           <FieldEditor key={`${lang}:${spec.name}`} spec={spec} value={fields[spec.name]} placeholder={lang === 'oz' ? (value.uz ?? {})[spec.name] : undefined} onChange={(v) => set(spec.name, v)} />

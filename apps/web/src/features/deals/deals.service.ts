@@ -77,7 +77,7 @@ export const dealsService = {
   revision: (id: string, revision: number) => apiGet<QuoteRevisionSnapshot>(`/quotes/${id}/revisions/${revision}`),
   acceptQuote: (id: string) => apiPost<{ status: string; installationId: string }>(`/quotes/${id}/accept`),
   rejectQuote: (id: string, reason?: string) => apiPost<{ status: string }>(`/quotes/${id}/reject`, { reason }),
-  quotePdf: (id: string, lang: 'uz' | 'oz' | 'ru', number: number) => apiDownload(`/quotes/${id}/pdf?lang=${lang}`, `taklif-${number}.pdf`),
+  quotePdf: (id: string, lang: 'uz' | 'oz' | 'ru' | 'en', number: number) => apiDownload(`/quotes/${id}/pdf?lang=${lang}`, `taklif-${number}.pdf`),
 
   // Montaj
   installations: (status?: InstallationStatus) => apiGet<InstallationRow[]>(`/installations${status ? `?status=${status}` : ''}`),

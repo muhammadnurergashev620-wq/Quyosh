@@ -6,7 +6,7 @@ type Field =
 
 export const BLOCK_TYPES = ['HERO', 'STATS', 'STATEMENT', 'HOW_IT_WORKS', 'TRUST', 'TESTIMONIALS', 'FAQ', 'FINALE'] as const;
 export type BlockType = (typeof BLOCK_TYPES)[number];
-export const BLOCK_LANGS = ['uz', 'ru', 'oz'] as const;
+export const BLOCK_LANGS = ['uz', 'ru', 'oz', 'en'] as const;
 
 /** HERO va FINALE joyi qat’iy (kino-scroll boshi va oxiri); qolganlari tartiblanadi. */
 export const FIXED_BLOCKS: BlockType[] = ['HERO', 'FINALE'];
@@ -30,7 +30,7 @@ export type BlockContent = Partial<Record<(typeof BLOCK_LANGS)[number], Record<s
 
 /**
  * Tarkibni tekshiradi va tozalaydi: noma’lum maydonlar tashlanadi, matnlar trim qilinadi.
- * O‘zbekcha (uz) majburiy; ru majburiy maydonlari ham to‘ldirilishi shart; oz ixtiyoriy (bo‘sh bo‘lsa avtomatik o‘giriladi).
+ * O‘zbekcha (uz) majburiy; ru majburiy maydonlari ham to‘ldirilishi shart; oz va en ixtiyoriy (oz bo‘sh bo‘lsa avtomatik o‘giriladi, en bo‘sh bo‘lsa lug‘at orqali tarjima qilinadi).
  * Xato bo‘lsa — `lang.field` ko‘rinishidagi yo‘llar ro‘yxati.
  */
 export function sanitizeBlock(type: BlockType, input: unknown): { content: BlockContent; errors: string[] } {
@@ -41,7 +41,7 @@ export function sanitizeBlock(type: BlockType, input: unknown): { content: Block
   for (const lang of BLOCK_LANGS) {
     const raw = source[lang];
     if (raw == null) {
-      if (lang !== 'oz') errors.push(`${lang}`);
+      if (lang !== 'oz' && lang !== 'en') errors.push(`${lang}`);
       continue;
     }
     if (typeof raw !== 'object' || Array.isArray(raw)) { errors.push(lang); continue; }
@@ -54,7 +54,7 @@ export function sanitizeBlock(type: BlockType, input: unknown): { content: Block
         const s = typeof v === 'string' ? v.trim() : '';
         if (v != null && typeof v !== 'string') errors.push(path);
         else if (s.length > field.max) errors.push(path);
-        else if (!s && field.required && lang !== 'oz') errors.push(path);
+        else if (!s && field.required && lang !== 'oz' && lang !== 'en') errors.push(path);
         if (s) out[name] = s;
       } else if (field.kind === 'list') {
         const list = Array.isArray(v) ? v : v == null ? [] : null;
@@ -72,7 +72,7 @@ export function sanitizeBlock(type: BlockType, input: unknown): { content: Block
         if (clean.length) out[name] = clean;
       }
     }
-    if (lang === 'oz' && !Object.keys(out).length) continue;
+    if ((lang === 'oz' || lang === 'en') && !Object.keys(out).length) continue;
     content[lang] = out;
   }
   return { content, errors };

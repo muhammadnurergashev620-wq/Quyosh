@@ -1,4 +1,5 @@
 import { ArticleType, CtaType, PrismaClient } from '@prisma/client';
+import { KNOWLEDGE_CATEGORIES_EN, KNOWLEDGE_EN } from './seed-knowledge-en';
 
 /**
  * Bilimlar markazi boshlang‘ich kontenti (TZ 22.26: ishga tushishda kamida 20 material, 3 tilda).
@@ -242,19 +243,24 @@ const A: Seed[] = [
 ];
 
 export async function seedKnowledge(prisma: PrismaClient) {
+  const nameEn = (c: (typeof CATS)[number]) => (KNOWLEDGE_CATEGORIES_EN[c.slug] ? { ...c.name, en: KNOWLEDGE_CATEGORIES_EN[c.slug] } : c.name);
   const catIds = new Map<string, string>();
   for (const [i, c] of CATS.entries()) {
-    const row = await prisma.knowledgeCategory.upsert({ where: { slug: c.slug }, update: { nameI18n: c.name, icon: c.icon, sortOrder: i }, create: { slug: c.slug, nameI18n: c.name, icon: c.icon, sortOrder: i } });
+    const row = await prisma.knowledgeCategory.upsert({ where: { slug: c.slug }, update: { nameI18n: nameEn(c), icon: c.icon, sortOrder: i }, create: { slug: c.slug, nameI18n: nameEn(c), icon: c.icon, sortOrder: i } });
     catIds.set(c.slug, row.id);
   }
   const now = new Date();
   for (const a of A) {
     const words = a.body.uz.split(/\s+/).length;
+    const en = KNOWLEDGE_EN[a.slug];
+    const title = en ? { ...a.title, en: en.title } : a.title;
+    const summary = en ? { ...a.summary, en: en.summary } : a.summary;
+    const body = en ? { ...a.body, en: en.body } : a.body;
     const data = {
-      articleType: a.type, categoryId: catIds.get(a.cat)!, titleI18n: a.title, summaryI18n: a.summary, bodyI18n: a.body,
+      articleType: a.type, categoryId: catIds.get(a.cat)!, titleI18n: title, summaryI18n: summary, bodyI18n: body,
       searchText: [a.title.uz, a.title.ru, a.summary.uz, a.summary.ru, a.body.uz, a.body.ru, ...(a.tags ?? [])].join(' \n '),
       ctaType: a.cta ?? 'NONE', readingMinutes: Math.max(1, Math.round(words / 180)), sourceUrls: a.sources ?? [], beginnerOrder: a.beginner ?? null,
-      seoTitleI18n: a.title, seoDescriptionI18n: a.summary, status: 'PUBLISHED' as const, verifiedAt: now,
+      seoTitleI18n: title, seoDescriptionI18n: summary, status: 'PUBLISHED' as const, verifiedAt: now,
     };
     await prisma.guideArticle.upsert({ where: { slug: a.slug }, update: data, create: { slug: a.slug, ...data, publishedAt: now } });
   }

@@ -45,8 +45,20 @@ const RU: Texts = {
   error: 'Ошибка. Попробуйте ещё раз.', notCalculated: '—',
 };
 
+const EN: Texts = {
+  subtitle: 'Solar panel calculator', region: 'Region', monthly: 'Monthly consumption, kWh', calc: 'Calculate', calculating: 'Calculating…',
+  power: 'Recommended capacity', saving: 'Monthly savings', cost: 'Approximate price', payback: 'Payback', years: 'years', kw: 'kW', sum: 'UZS',
+  estimateNote: 'Preliminary result. You will get the exact price in the shop\'s offer.', getQuote: 'Get an offer from the shop',
+  phone: 'Your phone', sendCode: 'Send code', code: 'Code from SMS', name: 'Your name', consentPrefix: 'I agree to the', terms: 'terms of use', and: 'and',
+  privacy: 'privacy policy', consentSuffix: 'of the platform', accountNote: 'An account will be created on the platform — there you will follow your request and offers.',
+  submit: 'Submit', sent: 'Request sent', sentText: 'The shop will contact you shortly. Request number', open: 'Open on the platform', powered: 'On the Quyosh platform',
+  error: 'Error. Please try again.', notCalculated: '—',
+};
+
+
 function texts(lang: string): Texts {
   if (lang === 'ru') return RU;
+  if (lang === 'en') return EN;
   if (lang !== 'oz') return UZ;
   return Object.fromEntries(Object.entries(UZ).map(([k, v]) => [k, toUzbekCyrillic(v)])) as Texts;
 }
@@ -57,7 +69,7 @@ export interface FrameInput {
   publicKey: string;
   nonce: string;
   shopName: string;
-  theme: { primaryColor: string; title: string; lang: 'uz' | 'oz' | 'ru' };
+  theme: { primaryColor: string; title: string; lang: 'uz' | 'oz' | 'ru' | 'en' };
   regions: Array<{ key: string; name: string }>;
   platformUrl: string;
 }

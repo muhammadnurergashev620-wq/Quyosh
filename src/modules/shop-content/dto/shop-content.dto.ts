@@ -29,7 +29,7 @@ export class AdminBadgeDto {
 class WidgetThemeDto {
   @IsOptional() @Matches(/^#[0-9a-fA-F]{6}$/) primaryColor?: string;
   @IsOptional() @IsString() @MaxLength(80) title?: string;
-  @IsOptional() @IsIn(['uz', 'oz', 'ru']) lang?: 'uz' | 'oz' | 'ru';
+  @IsOptional() @IsIn(['uz', 'oz', 'ru', 'en']) lang?: 'uz' | 'oz' | 'ru' | 'en';
   @IsOptional() @IsBoolean() showLogo?: boolean;
 }
 

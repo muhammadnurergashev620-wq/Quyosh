@@ -58,7 +58,7 @@ export function UnsavedResultPage() {
 
 /** U8.14: PDF — til, QR (ulashish / kabinet / yo‘q), fon tayyorlash va yuklab olish. */
 function PdfModal({ id, open, onClose }: { id: string; open: boolean; onClose: () => void }) {
-  const [lang, setLang] = useState<'uz' | 'oz' | 'ru'>(currentLang === 'ru' ? 'ru' : currentLang === 'uz-Cyrl' ? 'oz' : 'uz');
+  const [lang, setLang] = useState<'uz' | 'oz' | 'ru' | 'en'>(currentLang === 'ru' ? 'ru' : currentLang === 'uz-Cyrl' ? 'oz' : currentLang === 'en' ? 'en' : 'uz');
   const [qr, setQr] = useState<'SHARE' | 'CABINET' | 'NONE'>('SHARE');
   const [jobId, setJobId] = useState<string | null>(null);
   const create = useMutation({ mutationFn: () => calcService.report(id, lang, qr), onSuccess: (job) => setJobId(job.id) });
@@ -74,7 +74,7 @@ function PdfModal({ id, open, onClose }: { id: string; open: boolean; onClose: (
   return (
     <Modal open={open} onClose={close} title={t('PDF hisobot')}>
       <div className="qs-form">
-        <Select label={t('Til')} value={lang} onChange={(e) => setLang(e.target.value as 'uz' | 'oz' | 'ru')} options={[{ value: 'uz', label: 'O‘zbekcha' }, { value: 'oz', label: 'Ўзбекча' }, { value: 'ru', label: 'Русский' }]} />
+        <Select label={t('Til')} value={lang} onChange={(e) => setLang(e.target.value as 'uz' | 'oz' | 'ru' | 'en')} options={[{ value: 'uz', label: 'O‘zbekcha' }, { value: 'oz', label: 'Ўзбекча' }, { value: 'ru', label: 'Русский' }, { value: 'en', label: 'English' }]} />
         <div className="qs-segment" role="group" aria-label={t('QR-kod')}>
           {([['SHARE', t('QR: ulashish havolasi')], ['CABINET', t('QR: kabinetga')], ['NONE', t('QR yo‘q')]] as const).map(([value, label]) => <button key={value} type="button" className={cx(qr === value && 'is-on')} onClick={() => setQr(value)}>{label}</button>)}
         </div>

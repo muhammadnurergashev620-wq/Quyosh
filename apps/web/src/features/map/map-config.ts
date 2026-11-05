@@ -37,7 +37,7 @@ const OSM_STYLE: StyleSpecification = {
 export function styleFor(config: MapConfig | undefined, satellite: boolean): string | StyleSpecification {
   if (config?.provider === 'ESRI' && config.apiKey) {
     const style = satellite ? config.satelliteStyle : config.basemapStyle;
-    const language = lang === 'ru' ? 'ru' : 'uz';
+    const language = lang === 'ru' ? 'ru' : lang === 'en' ? 'en' : 'uz';
     return `https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/${style}?token=${encodeURIComponent(config.apiKey)}&language=${language}`;
   }
   return config?.fallbackStyleUrl || OSM_STYLE;

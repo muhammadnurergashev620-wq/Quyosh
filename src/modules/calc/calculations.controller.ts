@@ -13,7 +13,7 @@ import { CompareCalculationsDto, DraftDto, SaveCalculationDto, ShareDto } from '
 const DRAFT_COOKIE = 'qs_calc_draft';
 
 class ReportDto {
-  @IsOptional() @IsIn(['uz', 'oz', 'ru']) lang?: 'uz' | 'oz' | 'ru';
+  @IsOptional() @IsIn(['uz', 'oz', 'ru', 'en']) lang?: 'uz' | 'oz' | 'ru' | 'en';
   @IsOptional() @IsIn(['SHARE', 'CABINET', 'NONE']) qrMode?: 'SHARE' | 'CABINET' | 'NONE';
 }
 

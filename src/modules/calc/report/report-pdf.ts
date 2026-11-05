@@ -110,8 +110,62 @@ const RU: Texts = {
   months: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
 };
 
+const EN: Texts = {
+  ...UZ,
+  title: 'Solar system calculation',
+  generated: 'Generated',
+  region: 'Region',
+  system: 'System',
+  systemTypes: { ON_GRID: 'Grid-tied', HYBRID: 'Hybrid', OFF_GRID: 'Off-grid' },
+  power: 'Capacity',
+  panels: 'Number of panels',
+  inverter: 'Inverter',
+  battery: 'Battery',
+  generation: 'Annual production',
+  monthlySaving: 'Monthly savings',
+  cost: 'Approximate price',
+  payback: 'Payback',
+  years: 'years',
+  notCalculated: 'Not calculated',
+  noTariff: 'There is no tariff data for the region — financial results were not calculated.',
+  monthlyTitle: 'Energy and payments by month',
+  month: 'Month',
+  gen: 'Production, kWh',
+  load: 'Consumption, kWh',
+  imp: 'From grid, kWh',
+  exp: 'To grid, kWh',
+  billWithout: 'Bill without solar',
+  billWith: 'With solar',
+  lifetimeTitle: 'Cash flow over 25 years',
+  year: 'Year',
+  saving: 'Savings',
+  cashflow: 'Flow',
+  cumulative: 'Cumulative',
+  co2: 'CO₂ reduction',
+  financingTitle: 'Credit',
+  payment: 'Monthly payment',
+  overpayment: 'Overpayment',
+  outageTitle: 'During a power outage',
+  noBackup: 'A grid-tied system shuts off during an outage for safety.',
+  backupNight: 'Backup at night',
+  hours: 'h',
+  howTitle: 'How it was calculated',
+  source: 'Solar data',
+  tariff: 'Tariff',
+  model: 'Model version',
+  rate: 'Exchange rate',
+  disclaimer: 'The results are a forecast. Actual production depends on weather, shading, equipment and installation quality. The credit calculation is approximate: final terms are set by the bank or seller.',
+  qrShare: 'Open the calculation on your phone',
+  qrCabinet: 'Open in your account',
+  methods: { A_PV_YIELD: 'PVGIS (JRC)', B_IRRADIANCE: 'NASA POWER + model', DEFAULT: 'Regional average' },
+  sum: 'UZS',
+  months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+};
+
+
 function textsFor(lang: string): Texts {
   if (lang === 'ru') return RU;
+  if (lang === 'en') return EN;
   if (lang !== 'oz') return UZ;
   const convert = (value: unknown): unknown => (typeof value === 'string' ? toUzbekCyrillic(value) : Array.isArray(value) ? value.map(convert) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).map(([k, v]) => [k, convert(v)])) : value);
   return convert(UZ) as Texts;

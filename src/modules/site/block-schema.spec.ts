@@ -26,6 +26,14 @@ describe('sanitizeBlock', () => {
     expect(sanitizeBlock('FAQ', { uz: { title: 'S', items: [{ title: '', text: 'A' }] }, ru: { title: 'В' } }).errors).toEqual(['uz.items']);
   });
 
+  it('en ixtiyoriy: berilsa tozalanadi, bo‘sh bo‘lsa saqlanmaydi, uz/ru majburiyligi o‘zgarmaydi', () => {
+    const ok = sanitizeBlock('STATEMENT', { uz: { text: 'a' }, ru: { text: 'b' }, en: { text: '  c  ' } });
+    expect(ok.errors).toEqual([]);
+    expect(ok.content.en).toEqual({ text: 'c' });
+    expect(sanitizeBlock('STATEMENT', { uz: { text: 'a' }, ru: { text: 'b' }, en: { text: '' } }).content.en).toBeUndefined();
+    expect(sanitizeBlock('STATEMENT', { uz: { text: 'a' }, en: { text: 'c' } }).errors).toEqual(['ru']);
+  });
+
   it('bosh sayt faqat mijoz uchun: standart matnda do‘kon tugmasi, kartasi va savoli yo‘q', () => {
     const all = JSON.stringify(HOME_DEFAULTS);
     expect(all).not.toMatch(/ctaSecondary|shopTitle|shopPoints|shopCta/);

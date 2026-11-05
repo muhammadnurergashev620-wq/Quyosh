@@ -7,14 +7,16 @@ import { ruM3 } from './ru.m3';
 import { ruM5 } from './ru.m5';
 import { ruM6 } from './ru.m6';
 import { ruM7 } from './ru.m7';
+import { en } from './en';
 
-/** TZ 1.3 / U18: o‘zbek lotin, o‘zbek kirill, rus. */
-export type Lang = 'uz' | 'uz-Cyrl' | 'ru';
+/** TZ 1.3 / U18: o‘zbek lotin, o‘zbek kirill, rus, ingliz. */
+export type Lang = 'uz' | 'uz-Cyrl' | 'ru' | 'en';
 
 export const LANGUAGES: Array<{ code: Lang; label: string; short: string }> = [
   { code: 'uz', label: 'O‘zbekcha', short: 'UZ' },
   { code: 'uz-Cyrl', label: 'Ўзбекча', short: 'ЎЗ' },
   { code: 'ru', label: 'Русский', short: 'RU' },
+  { code: 'en', label: 'English', short: 'EN' },
 ];
 
 const KEY = 'quyosh.lang';
@@ -59,6 +61,7 @@ function buildIndex(source: Record<string, string>): Map<string, string> {
   return new Map(Object.entries(source).map(([key, value]) => [norm(key), value]));
 }
 const RU = buildIndex({ ...ru, ...ruExtra, ...ruQuyosh, ...ruM2, ...ruM3, ...ruM5, ...ruM6, ...ruM7 });
+const EN = buildIndex(en);
 
 function interpolate(text: string, params?: Record<string, string | number | null | undefined>): string {
   if (!params) return text;
@@ -79,7 +82,7 @@ function matchTrailingPeriod(source: string, translated: string): string {
 export function t(key: string, params?: Record<string, string | number | null | undefined>): string {
   if (lang === 'uz') return interpolate(key, params);
   if (lang === 'uz-Cyrl') return toUzbekCyrillic(interpolate(key, params));
-  const dict = RU;
+  const dict = lang === 'en' ? EN : RU;
   const core = norm(key);
   let text = dict.get(core);
   if (text === undefined) text = matchPattern(dict, core, key);
@@ -131,6 +134,19 @@ export const MONTHS: Record<Lang, string[]> = {
   uz: ['yan', 'fev', 'mar', 'apr', 'may', 'iyn', 'iyl', 'avg', 'sen', 'okt', 'noy', 'dek'],
   'uz-Cyrl': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'],
   ru: ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'],
+  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 };
 
-export const NUMBER_LOCALE: Record<Lang, string> = { uz: 'uz-UZ', 'uz-Cyrl': 'uz-Cyrl-UZ', ru: 'ru-RU' };
+export const NUMBER_LOCALE: Record<Lang, string> = { uz: 'uz-UZ', 'uz-Cyrl': 'uz-Cyrl-UZ', ru: 'ru-RU', en: 'en-GB' };
+
+/** Serverdagi ko‘p tilli maydonlar kaliti (uz-Cyrl → oz). Ingliz matni bo‘lmasa o‘zbekchasi ko‘rsatiladi. */
+export type ContentLang = 'uz' | 'oz' | 'ru' | 'en';
+export const CONTENT_LANG: ContentLang = lang === 'ru' ? 'ru' : lang === 'uz-Cyrl' ? 'oz' : lang === 'en' ? 'en' : 'uz';
+
+/** Serverdagi ko‘p tilli matn: joriy tildagi qiymat; ingliz tilida u bo‘lmasa — o‘zbekcha matn lug‘at orqali tarjima qilinadi. */
+export function contentText(value: Partial<Record<ContentLang, string>> | null | undefined): string {
+  if (!value) return '';
+  const own = value[CONTENT_LANG];
+  if (own) return own;
+  return lang === 'en' && value.uz ? t(value.uz) : value.uz || '';
+}

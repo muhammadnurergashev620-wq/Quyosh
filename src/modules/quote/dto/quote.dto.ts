@@ -56,7 +56,7 @@ export class RejectQuoteDto {
 }
 
 export class QuotePdfQueryDto {
-  @IsOptional() @IsIn(['uz', 'oz', 'ru']) lang?: 'uz' | 'oz' | 'ru';
+  @IsOptional() @IsIn(['uz', 'oz', 'ru', 'en']) lang?: 'uz' | 'oz' | 'ru' | 'en';
 }
 
 export class BuilderCatalogQueryDto {

@@ -12,7 +12,7 @@ export const calcService = {
   compare: (ids: string[]) => apiGet<Array<SavedCalculationRow>>(`/calculations/compare?ids=${ids.join(',')}`),
   share: (id: string, expiresDays: 7 | 30 | null) => apiPost<{ token: string; expiresAt: string | null }>(`/calculations/${id}/share`, { expiresDays }),
   revokeShare: (id: string) => apiDelete(`/calculations/${id}/share`),
-  report: (id: string, lang: 'uz' | 'oz' | 'ru', qrMode: 'SHARE' | 'CABINET' | 'NONE') => apiPost<{ id: string; status: string }>(`/calculations/${id}/report`, { lang, qrMode }),
+  report: (id: string, lang: 'uz' | 'oz' | 'ru' | 'en', qrMode: 'SHARE' | 'CABINET' | 'NONE') => apiPost<{ id: string; status: string }>(`/calculations/${id}/report`, { lang, qrMode }),
   reportStatus: (jobId: string) => apiGet<{ id: string; status: 'QUEUED' | 'RUNNING' | 'READY' | 'FAILED'; error: string | null }>(`/reports/${jobId}`),
   reportDownload: (jobId: string) => apiGet<{ url: string }>(`/reports/${jobId}/download`),
   shared: (token: string) => apiGet<{ mode: string; createdAt: string; result: EstimateResult }>(`/shared/${encodeURIComponent(token)}`),

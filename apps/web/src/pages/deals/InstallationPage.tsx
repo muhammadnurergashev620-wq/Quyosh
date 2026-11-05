@@ -18,13 +18,12 @@ import { INSTALLATION_STATUS, months, num, TIMELINE } from '@/features/deals/lab
 import type { ChecklistAnswer, ChecklistTemplateItem, InstallationStatus, InstallationView } from '@/features/deals/types';
 import { getErrorMessage } from '@/lib/error-messages';
 import { cx, formatDate, formatDateTime } from '@/lib/utils';
-import { lang, t } from '@/i18n';
+import { contentText, t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
 
 const ORDER: InstallationStatus[] = ['AGREED', 'SITE_VISIT_SCHEDULED', 'INSTALLATION_SCHEDULED', 'INSTALLED', 'CONFIRMED'];
-const LOCALE_KEY = lang === 'ru' ? 'ru' : lang === 'uz-Cyrl' ? 'oz' : 'uz';
-const i18n = (value: Record<string, string> | undefined) => (value ? value[LOCALE_KEY] ?? value.uz ?? '' : '');
+const i18n = (value: Record<string, string> | undefined) => contentText(value);
 
 /** U9.8: vertikal timeline — har bosqichda sana, kim belgiladi, izoh. */
 function Timeline({ view }: { view: InstallationView }) {

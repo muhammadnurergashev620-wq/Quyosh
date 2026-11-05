@@ -95,6 +95,7 @@ function relativeText(amount: number, unit: string, past: boolean): string {
     const short: Record<string, string> = { yil: 'г.', oy: 'мес.', kun: 'дн.', soat: 'ч.', daqiqa: 'мин.' };
     return past ? `${amount} ${short[unit]} назад` : `через ${amount} ${short[unit]}`;
   }
+  if (lang === 'en') return past ? `${amount} ${t(unit)} ago` : `in ${amount} ${t(unit)}`;
   const label = t(unit);
   if (lang === 'uz-Cyrl') return past ? `${amount} ${label} олдин` : `${amount} ${label}дан кейин`;
   return past ? `${amount} ${label} oldin` : t('{amount} {label}dan keyin', { amount, label });

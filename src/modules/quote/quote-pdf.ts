@@ -57,8 +57,21 @@ const RU: Texts = {
   types: { ON_GRID: 'Сетевая', HYBRID: 'Гибридная', OFF_GRID: 'Автономная' },
 };
 
+const EN: Texts = {
+  ...UZ,
+  title: 'Commercial offer', request: 'Request', revision: 'Revision', date: 'Date', validUntil: 'Valid until', shop: 'Shop', phone: 'Phone', stir: 'TIN',
+  system: 'System', power: 'Capacity', items: 'Offer contents', item: 'Item', qty: 'Qty', price: 'Price', sum: 'Amount', equipment: 'Equipment',
+  installation: 'Installation', delivery: 'Delivery', other: 'Other', discount: 'Discount', vatIncl: 'incl. VAT', vatAdd: 'VAT', total: 'Total', perKw: 'Price per 1 kW',
+  warranty: 'Warranty', warrantyEq: 'Equipment', warrantyInst: 'Installation', months: 'mo.', duration: 'Installation time', days: 'd.', included: 'Included in the price',
+  excluded: 'Not included in the price', financing: 'Financing', rate: 'Annual rate', term: 'Term', monthly: 'Monthly payment', fx: 'Exchange rate (CB)', currency: 'UZS',
+  disclaimer: 'Choosing an offer is not a contract or a payment on the platform: next steps (contract, payment) are agreed with the shop. Prices and terms are provided by the shop.',
+  types: { ON_GRID: 'Grid-tied', HYBRID: 'Hybrid', OFF_GRID: 'Off-grid' },
+};
+
+
 function textsFor(lang: string): Texts {
   if (lang === 'ru') return RU;
+  if (lang === 'en') return EN;
   if (lang !== 'oz') return UZ;
   const convert = (value: unknown): unknown => (typeof value === 'string' ? toUzbekCyrillic(value) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).map(([k, v]) => [k, convert(v)])) : value);
   return convert(UZ) as Texts;

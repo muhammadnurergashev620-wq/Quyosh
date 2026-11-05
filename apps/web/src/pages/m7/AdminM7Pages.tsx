@@ -159,7 +159,7 @@ export function AdminTicketPage() {
   );
 }
 
-const LANGS: Array<['uz' | 'oz' | 'ru', string]> = [['uz', 'O‘zbekcha'], ['oz', 'Ўзбекча'], ['ru', 'Русский']];
+const LANGS: Array<['uz' | 'oz' | 'ru' | 'en', string]> = [['uz', 'O‘zbekcha'], ['oz', 'Ўзбекча'], ['ru', 'Русский'], ['en', 'English']];
 
 /** U12.8: kontent — ro‘yxat. */
 export function AdminContentPage() {
@@ -199,9 +199,9 @@ export function AdminArticleEditorPage() {
   const queryClient = useQueryClient();
   const cats = useQuery({ queryKey: ['k-cats'], queryFn: m7Service.kCategories });
   const existing = useQuery({ queryKey: ['admin-article', id], queryFn: () => m7Service.adminArticle(id), enabled: !isNew });
-  const [lang, setLang] = useState<'uz' | 'oz' | 'ru'>('uz');
+  const [lang, setLang] = useState<'uz' | 'oz' | 'ru' | 'en'>('uz');
   const [preview, setPreview] = useState(false);
-  const empty = { uz: '', oz: '', ru: '' };
+  const empty = { uz: '', oz: '', ru: '', en: '' };
   const [f, setF] = useState({ slug: '', articleType: 'ARTICLE' as ArticleType, categoryId: '', ctaType: 'NONE' as CtaType, status: 'DRAFT' as 'DRAFT' | 'PUBLISHED' | 'ARCHIVED', sourceUrls: '', tags: '', verifiedAt: '', title: { ...empty } as I18n, summary: { ...empty } as I18n, body: { ...empty } as I18n, seoTitle: { ...empty } as I18n, seoDesc: { ...empty } as I18n });
   useEffect(() => {
     const a = existing.data;
@@ -239,8 +239,9 @@ export function AdminArticleEditorPage() {
       <div className="qs-grid-2" style={{ gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', alignItems: 'start' }}>
         <section className="qs-card qs-form">
           <div className="qs-tabs" role="tablist">
-            {LANGS.map(([l, label]) => <button key={l} type="button" role="tab" aria-selected={lang === l} className={cx(lang === l && 'is-on')} onClick={() => setLang(l)}>{label} <Badge tone={completeness[l] === 3 ? 'success' : l === 'oz' ? 'neutral' : 'warning'}>{completeness[l]}/3</Badge></button>)}
+            {LANGS.map(([l, label]) => <button key={l} type="button" role="tab" aria-selected={lang === l} className={cx(lang === l && 'is-on')} onClick={() => setLang(l)}>{label} <Badge tone={completeness[l] === 3 ? 'success' : l === 'oz' || l === 'en' ? 'neutral' : 'warning'}>{completeness[l]}/3</Badge></button>)}
           </div>
+          {lang === 'en' && <small className="qs-muted">English text is optional: if empty, the Uzbek text is shown to English readers.</small>}
           {lang === 'oz' && <small className="qs-muted">{t('Kirill matni bo‘sh bo‘lsa, lotin matnidan avtomatik transliteratsiya qilinadi.')}</small>}
           <Input label={t('Sarlavha')} value={f.title[lang] ?? ''} onChange={(e) => setL('title', e.target.value)} />
           <Textarea label={t('Qisqa tavsif')} value={f.summary[lang] ?? ''} onChange={(e) => setL('summary', e.target.value)} />
