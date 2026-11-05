@@ -202,7 +202,7 @@ describe('M7 channels, ops, quote templates, site CMS', () => {
       await mk('PENDING', 'Bu sharh hali moderatsiyada, ko‘rinmasligi kerak.');
       const home = await h.get('/site/home');
       expect(home.status).toBe(200);
-      expect(home.data.blocks.map((b: { type: string }) => b.type)).toEqual(['HERO', 'STATS', 'STATEMENT', 'PATHS', 'HOW_IT_WORKS', 'TRUST', 'TESTIMONIALS', 'FAQ', 'FINALE']);
+      expect(home.data.blocks.map((b: { type: string }) => b.type)).toEqual(['HERO', 'STATS', 'STATEMENT', 'HOW_IT_WORKS', 'TRUST', 'TESTIMONIALS', 'FAQ', 'FINALE']);
       expect(home.data.blocks[0].content.ru.titleA).toBeTruthy();
       // v3.1: bosh sayt faqat mijoz uchun — migratsiya va standart matnlarda do‘konga oid narsa yo‘q.
       expect(JSON.stringify(home.data.blocks)).not.toMatch(/ctaSecondary|shopTitle|shopCta|Men do‘kon egasiman|Do‘konni qanday ochaman/);
@@ -250,7 +250,7 @@ describe('M7 channels, ops, quote templates, site CMS', () => {
 
       const movable = blocks.filter((b) => !['HERO', 'FINALE'].includes(b.type)).map((b) => b.id).reverse();
       const reordered = await h.post('/admin/site-blocks/reorder', admin.token, { ids: movable });
-      expect(reordered.data.map((b: { type: string }) => b.type)).toEqual(['HERO', 'FAQ', 'TESTIMONIALS', 'TRUST', 'HOW_IT_WORKS', 'PATHS', 'STATEMENT', 'STATS', 'FINALE']);
+      expect(reordered.data.map((b: { type: string }) => b.type)).toEqual(['HERO', 'FAQ', 'TESTIMONIALS', 'TRUST', 'HOW_IT_WORKS', 'STATEMENT', 'STATS', 'FINALE']);
       expect((await h.post('/admin/site-blocks/reorder', admin.token, { ids: movable.slice(1) })).status).toBe(400);
       expect((await h.post(`/admin/site-blocks/${MISSING_UUID}/publish`, admin.token)).status).toBe(404);
     });

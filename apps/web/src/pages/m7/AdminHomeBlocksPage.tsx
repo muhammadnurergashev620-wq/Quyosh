@@ -64,11 +64,6 @@ const FIELDS: Record<BlockType, FieldSpec[]> = {
     { name: 'label', kind: 'text', label: () => t('Belgi'), max: 40 },
     { name: 'text', kind: 'long', label: () => t('Shior matni'), max: 300, required: true },
   ],
-  PATHS: [
-    { name: 'customerTitle', kind: 'text', label: () => t('Mijoz: sarlavha'), max: 80, required: true },
-    { name: 'customerPoints', kind: 'list', label: () => t('Mijoz: afzalliklar (har qatorda bittasi)'), max: 5 },
-    { name: 'customerCta', kind: 'text', label: () => t('Mijoz: tugma'), max: 40, required: true },
-  ],
   HOW_IT_WORKS: [
     { name: 'eyebrow', kind: 'text', label: () => t('Ustki yozuv'), max: 40 },
     { name: 'title', kind: 'text', label: () => t('Sarlavha'), max: 120, required: true },

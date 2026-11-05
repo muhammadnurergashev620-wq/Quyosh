@@ -105,7 +105,6 @@ function Header() {
       <LogoLink />
       <nav aria-label={t('Bo‘limlar')}>
         <a href="#qanday">{t('Qanday ishlaydi')}</a>
-        <a href="#mijozlar">{t('Mijozlar uchun')}</a>
         <a href="#ishonch">{t('Ishonch')}</a>
       </nav>
       <div className="qs-portal__tools">
@@ -165,20 +164,6 @@ function Stats({ f, stats }: F & { stats: PublicStats | null | undefined }) {
           <small>{item.label}</small>
         </div>
       ))}
-    </section>
-  );
-}
-
-function Paths({ f }: F) {
-  const customerPoints = list(f, 'customerPoints', [t('3 daqiqada dastlabki hisob — ro‘yxatdan o‘tmasdan'), t('Naqd va kredit variantlarini solishtirish'), t('Bir nechta do‘kondan narx taklifi')]);
-  return (
-    <section className="qs-portal__paths qs-portal__paths--single">
-      <article id="mijozlar" className="qs-path">
-        <span className="qs-path__icon" aria-hidden="true"><Sun size={26} /></span>
-        <h2>{str(f, 'customerTitle', t('Men mijozman'))}</h2>
-        <ul>{customerPoints.map((point) => <li key={point}>{point}</li>)}</ul>
-        <a href={CUSTOMER_CALC} className="gm-button gm-button--primary gm-button--md">{str(f, 'customerCta', t('Hisoblab ko‘rish'))} <ArrowRight size={16} aria-hidden="true" /></a>
-      </article>
     </section>
   );
 }
@@ -326,7 +311,6 @@ export function PortalPage({ preview = false }: { preview?: boolean }) {
     switch (type) {
       case 'STATS': return <Stats key={type} f={f} stats={home.data?.stats} />;
       case 'STATEMENT': return <Statement key={type} label={str(f, 'label', t('Quyosh'))} text={str(f, 'text', t('Quyosh har kuni tomingizga tushadi. Biz faqat uni hisoblaymiz.'))} />;
-      case 'PATHS': return <Paths key={type} f={f} />;
       case 'HOW_IT_WORKS': return <HowItWorks key={type} f={f} />;
       case 'TRUST': return <Trust key={type} f={f} />;
       case 'TESTIMONIALS': return <Testimonials key={type} f={f} reviews={home.data?.testimonials} />;

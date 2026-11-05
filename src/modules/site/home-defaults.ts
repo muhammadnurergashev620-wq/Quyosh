@@ -50,26 +50,6 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
       "text": "Солнце каждый день светит на вашу крышу. Мы его просто считаем."
     }
   },
-  "PATHS": {
-    "uz": {
-      "customerTitle": "Men mijozman",
-      "customerPoints": [
-        "3 daqiqada dastlabki hisob — ro‘yxatdan o‘tmasdan",
-        "Naqd va kredit variantlarini solishtirish",
-        "Bir nechta do‘kondan narx taklifi"
-      ],
-      "customerCta": "Hisoblab ko‘rish"
-    },
-    "ru": {
-      "customerTitle": "Я клиент",
-      "customerPoints": [
-        "Предварительный расчёт за 3 минуты — без регистрации",
-        "Сравнение оплаты наличными и в кредит",
-        "Предложения от нескольких магазинов"
-      ],
-      "customerCta": "Рассчитать"
-    }
-  },
   "HOW_IT_WORKS": {
     "uz": {
       "eyebrow": "Qanday ishlaydi",

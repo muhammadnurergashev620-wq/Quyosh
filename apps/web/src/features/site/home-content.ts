@@ -3,7 +3,7 @@ import { apiGet } from '@/services/api.client';
 import { lang, t } from '@/i18n';
 import { toUzbekCyrillic } from '@/i18n/translit';
 
-export type BlockType = 'HERO' | 'STATS' | 'STATEMENT' | 'PATHS' | 'HOW_IT_WORKS' | 'TRUST' | 'TESTIMONIALS' | 'FAQ' | 'FINALE';
+export type BlockType = 'HERO' | 'STATS' | 'STATEMENT' | 'HOW_IT_WORKS' | 'TRUST' | 'TESTIMONIALS' | 'FAQ' | 'FINALE';
 export type BlockLang = 'uz' | 'ru' | 'oz';
 export type BlockFields = Record<string, unknown>;
 export type BlockContent = Partial<Record<BlockLang, BlockFields>>;
@@ -28,7 +28,7 @@ export interface HomeData {
 export interface Item { title: string; text: string }
 
 /** Bloklar standart tartibi (API javob bermasa ham sahifa shu tartibda chiqadi). */
-export const DEFAULT_ORDER: BlockType[] = ['HERO', 'STATS', 'STATEMENT', 'PATHS', 'HOW_IT_WORKS', 'TRUST', 'TESTIMONIALS', 'FAQ', 'FINALE'];
+export const DEFAULT_ORDER: BlockType[] = ['HERO', 'STATS', 'STATEMENT', 'HOW_IT_WORKS', 'TRUST', 'TESTIMONIALS', 'FAQ', 'FINALE'];
 
 /** Bosh sahifa ma’lumoti: ommaviy (`/site/home`) yoki admin ko‘rinishi (qoralamalar bilan). */
 export function useHomeData(preview = false) {
@@ -79,7 +79,6 @@ export const BLOCK_LABEL: Record<BlockType, () => string> = {
   HERO: () => t('Bosh ekran'),
   STATS: () => t('Raqamlar'),
   STATEMENT: () => t('Shior'),
-  PATHS: () => t('Mijoz va do‘kon yo‘llari'),
   HOW_IT_WORKS: () => t('Qanday ishlaydi'),
   TRUST: () => t('Ishonch'),
   TESTIMONIALS: () => t('Mijozlar sharhlari'),

@@ -35,12 +35,6 @@
 .qs-portal .gm-statement__label { color: #ffd27a; }
 .qs-portal .gm-statement__word { color: color-mix(in srgb, #fff calc(14% + var(--on) * 86%), transparent); }
 
-.qs-portal__paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
-.qs-path { display: grid; gap: 16px; align-content: start; padding: 32px; border-radius: 26px; border: 1px solid rgba(160, 185, 255, 0.2); background: radial-gradient(120% 120% at 0% 0%, rgba(37, 99, 235, 0.22), rgba(255, 255, 255, 0.03) 60%); }
-.qs-path--shop { background: radial-gradient(120% 120% at 0% 0%, rgba(5, 150, 105, 0.22), rgba(255, 255, 255, 0.03) 60%); }
-.qs-path__icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 16px; background: rgba(240, 184, 75, 0.16); color: #f0b84b; }
-.qs-path ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: rgba(231, 238, 255, 0.8); line-height: 1.5; }
-.qs-path .gm-button { justify-self: start; }
 
 .qs-portal__how, .qs-portal__trust, .qs-portal__faq { max-width: 1200px; margin: 0 auto; padding: 72px 24px; }
 .qs-portal__how ol { margin: 32px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; }
@@ -145,7 +139,5 @@
 .qs-reviews__stars { color: #f5b83d; letter-spacing: 2px; }
 .qs-reviews__stars i { font-style: normal; color: rgba(231, 238, 255, 0.2); }
 
-/* Faqat mijoz kartasi (v3.1): ikki yo‘l o‘rniga bitta, o‘rtada */
-.qs-portal__paths--single { grid-template-columns: minmax(0, 560px); justify-content: center; }
 .qs-portal__partner { margin: 0; color: rgba(231, 238, 255, 0.7); font-size: 13px; }
 .qs-portal__partner a { color: inherit; }

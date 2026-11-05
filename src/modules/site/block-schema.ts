@@ -4,7 +4,7 @@ type Field =
   | { kind: 'list'; max: number; itemMax: number }
   | { kind: 'items'; max: number; titleMax: number; textMax: number };
 
-export const BLOCK_TYPES = ['HERO', 'STATS', 'STATEMENT', 'PATHS', 'HOW_IT_WORKS', 'TRUST', 'TESTIMONIALS', 'FAQ', 'FINALE'] as const;
+export const BLOCK_TYPES = ['HERO', 'STATS', 'STATEMENT', 'HOW_IT_WORKS', 'TRUST', 'TESTIMONIALS', 'FAQ', 'FINALE'] as const;
 export type BlockType = (typeof BLOCK_TYPES)[number];
 export const BLOCK_LANGS = ['uz', 'ru', 'oz'] as const;
 
@@ -19,9 +19,6 @@ export const BLOCK_SCHEMA: Record<BlockType, Record<string, Field>> = {
   },
   STATS: { title: { kind: 'text', max: 80 } },
   STATEMENT: { label: { kind: 'text', max: 40 }, text: { kind: 'text', max: 300, required: true } },
-  PATHS: {
-    customerTitle: { kind: 'text', max: 80, required: true }, customerPoints: { kind: 'list', max: 5, itemMax: 140 }, customerCta: { kind: 'text', max: 40, required: true },
-  },
   HOW_IT_WORKS: { eyebrow: { kind: 'text', max: 40 }, title: { kind: 'text', max: 120, required: true }, items: { kind: 'items', max: 8, titleMax: 60, textMax: 240 } },
   TRUST: { eyebrow: { kind: 'text', max: 40 }, title: { kind: 'text', max: 120, required: true }, items: { kind: 'items', max: 6, titleMax: 80, textMax: 300 } },
   TESTIMONIALS: { eyebrow: { kind: 'text', max: 40 }, title: { kind: 'text', max: 120, required: true } },
