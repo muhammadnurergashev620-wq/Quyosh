@@ -34,6 +34,5 @@
 .gm-auth-layout .gm-auth-layout__panel:has(.gm-otp-page) .gm-panel-badge { align-self: center; }
 
 /* Kod kelmadimi? — qayta yuborish qatori tugmalar ostida, o‘rtada */
-.gm-otp__resendrow { margin: 0; color: var(--qs-color-text-muted); font-size: 0.95rem; line-height: 1.6; }
-.gm-otp__resendrow .gm-otp__resend { font-size: 0.95rem; }
+.gm-otp__resendrow { display: grid; gap: 10px; margin: 0; color: var(--qs-color-text-muted); font-size: 0.95rem; line-height: 1.6; }
 .gm-otp__limit { margin: 0; padding: 12px 14px; border-radius: 14px; background: var(--qs-color-danger-bg); color: var(--qs-color-danger); font-size: 0.9rem; font-weight: 700; line-height: 1.45; }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { Mail, ShieldCheck, Smartphone } from 'lucide-react';
+import { Mail, RotateCw, ShieldCheck, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { getErrorMessage } from '@/lib/error-messages';
 import { ApiError } from '@/types/api';
@@ -150,12 +150,12 @@ export function OtpForm({ phone, loading, error, onSubmit, onResend, delivery, o
             </Button>
           )}
           {onResend && (
-            <p className="gm-otp__resendrow">
-              {t('Kod kelmadimi?')}{' '}
-              <button type="button" className="gm-otp__resend" disabled={resendIn > 0 || resending} onClick={() => void resend()}>
-                {resendIn > 0 ? t('Qayta yuborish ({time})', { time: clock(resendIn) }) : t('Qayta yuborish')}
-              </button>
-            </p>
+            <div className="gm-otp__resendrow">
+              <span>{t('Kod kelmadimi?')}</span>
+              <Button type="button" variant="secondary" size="lg" fullWidth loading={resending} disabled={resendIn > 0} onClick={() => void resend()}>
+                <RotateCw size={17} aria-hidden="true" /> {resendIn > 0 ? t('Qayta yuborish ({time})', { time: clock(resendIn) }) : t('Qayta yuborish')}
+              </Button>
+            </div>
           )}
         </>
       )}
