@@ -1,7 +1,13 @@
-# Render Blueprint — Quyosh API (NestJS) bepul tarifda. Baza: Neon PostgreSQL, Redis: Upstash.
-# Ishlatish: Render → New → Blueprint → shu repo. `sync: false` qiymatlarni dashboard'da o'zingiz kiritasiz (repo'ga yozilmaydi).
-# Batafsil qadamlar: docs/runbooks/deploy-render.md
+# Render Blueprint — Quyosh: API (NestJS, bepul web service) + 4 ta frontend (statik sayt). Baza: Neon PostgreSQL, Redis: Upstash.
+# Ishlatish: Render → New → Blueprint → shu repo. Faqat `sync: false` qiymatlarni kiritasiz (DATABASE_URL, DIRECT_URL, REDIS_URL,
+# ADMIN_PHONE, ADMIN_PASSWORD); qolganini (JWT_SECRET, METRICS_TOKEN, OPS_WEBHOOK_SECRET) Render o'zi yaratadi.
+# Batafsil: docs/runbooks/deploy-render.md
+#
+# Servis nomlari (quyosh-api, quyosh-portal, quyosh-customer, quyosh-shop, quyosh-admin) onrender.com manzillarini belgilaydi.
+# Agar nom band bo'lib Render boshqa manzil bersa — ichidagi *.onrender.com qiymatlarni (CORS_ORIGINS, VITE_*, *_PANEL_URL,
+# PUBLIC_API_URL) haqiqiy manzillarga almashtiring.
 services:
+  # ── API (NestJS) ──
   - type: web
     name: quyosh-api
     runtime: node
@@ -12,12 +18,15 @@ services:
     startCommand: node dist/main.js
     healthCheckPath: /api/v1/health
     autoDeploy: true
+    buildFilter:
+      ignoredPaths:
+        - apps/web/**
+        - docs/**
     envVars:
-      # ── Qat'iy qiymatlar (maxfiy emas) ──
-      - key: NODE_VERSION
-        value: "22"
       # HOZIRCHA staging: OTP kodi ekranda ko'rinadi (production'da bu taqiqlangan — ilova ishga tushmaydi).
       # Haqiqiy foydalanuvchilarga ochishdan oldin: NODE_ENV=production, OTP_DEV_ECHO* ni o'chiring va SMTP/Eskiz/Telegram ulang.
+      - key: NODE_VERSION
+        value: "22"
       - key: NODE_ENV
         value: staging
       - key: OTP_DEV_ECHO
@@ -26,35 +35,47 @@ services:
         value: "true"
       - key: TRUST_PROXY            # Render proksi ortida: bitta qatlam (haqiqiy IP rate-limit va audit uchun)
         value: "1"
+      # Frontend'lar boshqa (onrender.com) subdomenlarda: cross-site cookie (SameSite=None; Secure) va CORS.
+      # Eslatma: Safari/iOS uchinchi tomon cookie'sini bloklaydi — o'z domeningizni ulagach (bir registrable domen) AUTH_COOKIE_SAME_SITE=lax qiling.
       - key: AUTH_COOKIE_SECURE
         value: "true"
+      - key: AUTH_COOKIE_SAME_SITE
+        value: none
+      - key: CORS_ORIGINS
+        value: https://quyosh-portal.onrender.com,https://quyosh-customer.onrender.com,https://quyosh-shop.onrender.com,https://quyosh-admin.onrender.com
+      - key: PUBLIC_API_URL
+        value: https://quyosh-api.onrender.com
+      - key: CUSTOMER_PANEL_URL
+        value: https://quyosh-customer.onrender.com
+      - key: SHOP_PANEL_URL
+        value: https://quyosh-shop.onrender.com
       - key: METRICS_DIR
         value: /tmp/quyosh-metrics
       - key: STORAGE_FORCE_PATH_STYLE
         value: "false"              # Cloudflare R2 / AWS S3 uchun; MinIO/s3rver'da "true"
       - key: STORAGE_REGION
         value: auto                 # R2: auto; AWS S3: masalan eu-central-1
-      # ── Maxfiy yoki muhitga bog'liq (qiymatlarni dashboard'da kiriting) ──
+      # ── Render o'zi yaratadi (maxfiy) ──
+      - key: JWT_SECRET
+        generateValue: true
+      - key: METRICS_TOKEN
+        generateValue: true
+      - key: OPS_WEBHOOK_SECRET
+        generateValue: true
+      # ── Siz kiritasiz ──
       - key: DATABASE_URL           # Neon POOLED ulanish (host'da -pooler), oxirida: ?sslmode=require&pgbouncer=true&connect_timeout=15&connection_limit=5
         sync: false
       - key: DIRECT_URL             # Neon DIRECT ulanish (pooler'siz) — faqat migratsiya/seed uchun (build'da)
         sync: false
       - key: REDIS_URL              # Upstash: rediss://default:<parol>@<host>.upstash.io:6379
         sync: false
-      - key: JWT_SECRET             # kamida 32 belgi, tasodifiy (masalan: openssl rand -base64 48)
+      - key: ADMIN_PHONE            # birinchi super admin (seed faqat baza bo'sh bo'lganda ishlaydi), masalan 998901234567
         sync: false
-      - key: CORS_ORIGINS           # faqat https, vergul bilan: frontend manzillari
+      - key: ADMIN_PASSWORD         # kamida 12 belgi
         sync: false
-      - key: PUBLIC_API_URL         # bu servisning https manzili (vidjet/embed havolalari uchun)
-        sync: false
-      - key: CUSTOMER_PANEL_URL
-        sync: false
-      - key: SHOP_PANEL_URL
-        sync: false
-      - key: AUTH_COOKIE_SAME_SITE  # frontend boshqa domenda bo'lsa: none; bir sayt (bir registrable domen) bo'lsa: lax
-        sync: false
-      # S3-mos saqlash — hozircha bo'sh qolishi mumkin (ilova ishlaydi), lekin rasm/fayl yuklash ishlamaydi.
-      - key: STORAGE_ENDPOINT       # Cloudflare R2: https://<account>.r2.cloudflarestorage.com
+      # ── Keyinroq (hozircha bo'sh qolishi mumkin) ──
+      # S3-mos saqlash: bo'sh bo'lsa ilova ishlaydi, lekin rasm/fayl yuklash ishlamaydi (Cloudflare R2: https://<account>.r2.cloudflarestorage.com).
+      - key: STORAGE_ENDPOINT
         sync: false
       - key: STORAGE_BUCKET
         sync: false
@@ -62,18 +83,7 @@ services:
         sync: false
       - key: STORAGE_SECRET_ACCESS_KEY
         sync: false
-      - key: METRICS_TOKEN
-        sync: false
-      - key: OPS_WEBHOOK_SECRET
-        sync: false
-      # ── Faqat birinchi deploy uchun (keyin RUN_SEED va ADMIN_PASSWORD ni o'chiring) ──
-      - key: RUN_SEED
-        sync: false
-      - key: ADMIN_PHONE
-        sync: false
-      - key: ADMIN_PASSWORD         # kamida 12 belgi
-        sync: false
-      # ── Kod yetkazish: hozircha shart emas (kod ekranda). Production'ga o'tishda kamida bittasi kerak ──
+      # Kod yetkazish (production'ga o'tishda kamida bittasi kerak)
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
@@ -88,7 +98,175 @@ services:
         sync: false
       - key: ESKIZ_PASSWORD
         sync: false
-      - key: TELEGRAM_BOT_TOKEN     # ixtiyoriy: operatorga OTP nusxasi va alertlar
+      - key: TELEGRAM_BOT_TOKEN
         sync: false
       - key: TELEGRAM_OTP_CHAT_ID
         sync: false
+
+  # ── portal: asosiy sayt (faqat mijoz uchun tushuntirish) ──
+  - type: web
+    name: quyosh-portal
+    runtime: static
+    rootDir: apps/web
+    buildCommand: npm ci && npx vite build
+    staticPublishPath: dist
+    buildFilter:
+      paths:
+        - apps/web/**
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(self), geolocation=(self), payment=()
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: VITE_API_BASE_URL
+        value: https://quyosh-api.onrender.com/api/v1
+      - key: VITE_CUSTOMER_URL
+        value: https://quyosh-customer.onrender.com
+
+  # ── customer: customer paneli ──
+  - type: web
+    name: quyosh-customer
+    runtime: static
+    rootDir: apps/web
+    buildCommand: npm ci && npx vite build --mode customer
+    staticPublishPath: dist
+    buildFilter:
+      paths:
+        - apps/web/**
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(self), geolocation=(self), payment=()
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: VITE_API_BASE_URL
+        value: https://quyosh-api.onrender.com/api/v1
+      - key: VITE_CUSTOMER_URL
+        value: https://quyosh-customer.onrender.com
+
+  # ── shop: shop paneli ──
+  - type: web
+    name: quyosh-shop
+    runtime: static
+    rootDir: apps/web
+    buildCommand: npm ci && npx vite build --mode shop
+    staticPublishPath: dist
+    buildFilter:
+      paths:
+        - apps/web/**
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(self), geolocation=(self), payment=()
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: VITE_API_BASE_URL
+        value: https://quyosh-api.onrender.com/api/v1
+      - key: VITE_CUSTOMER_URL
+        value: https://quyosh-customer.onrender.com
+
+  # ── admin: admin paneli ──
+  - type: web
+    name: quyosh-admin
+    runtime: static
+    rootDir: apps/web
+    buildCommand: npm ci && npx vite build --mode admin
+    staticPublishPath: dist
+    buildFilter:
+      paths:
+        - apps/web/**
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(self), geolocation=(self), payment=()
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: VITE_API_BASE_URL
+        value: https://quyosh-api.onrender.com/api/v1
+      - key: VITE_CUSTOMER_URL
+        value: https://quyosh-customer.onrender.com

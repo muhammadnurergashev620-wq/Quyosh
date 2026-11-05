@@ -11,20 +11,21 @@ Repo ildizidagi `render.yaml` (Blueprint) shu qadamlarni avtomatlashtiradi; maxf
 2. **Upstash** (upstash.com) → Redis database → *TLS* yoqilgan `rediss://default:<parol>@<host>.upstash.io:6379` → `REDIS_URL`.
 3. **S3-mos saqlash (keyinroq, hozircha shart emas).** `STORAGE_*` bo'sh bo'lsa ilova ishlaydi, lekin rasm/fayl yuklash ishlamaydi (logo, portfolio, chat ilovalari). Bepul variant: Cloudflare R2 (bucket + API token → `STORAGE_ENDPOINT`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY_ID`, `STORAGE_SECRET_ACCESS_KEY`).
 4. **OTP kodi — hozircha ekranda.** `render.yaml` da `NODE_ENV=staging`, `OTP_DEV_ECHO=true`, `OTP_DEV_ECHO_AUTH=true`: tasdiqlash kodi javobda qaytadi va kirish ekranida ko'rinadi (SMS/email shart emas). **Bu faqat sinov uchun:** kod API javobida ochiq bo'lgani uchun telefon egaligi tekshirilmaydi (istalgan kishi istalgan raqamga ro'yxatdan o'ta oladi). Haqiqiy foydalanuvchilarga ochishdan oldin `NODE_ENV=production` qiling, `OTP_DEV_ECHO*` ni o'chiring (production'da ular yoqilgan bo'lsa ilova ishga tushmaydi) va SMTP (`SMTP_*`), Eskiz (`ESKIZ_*`) yoki Telegram (`TELEGRAM_BOT_TOKEN` + `TELEGRAM_OTP_CHAT_ID`) ulang.
-5. `JWT_SECRET` yarating (kamida 32 belgi): `openssl rand -base64 48`
+5. `JWT_SECRET` ni Render o'zi yaratadi (qo'lda kerak emas).
 
 ## Render dashboard
 
-1. **New → Blueprint** → GitHub repo'ni ulang (`render.yaml` avtomatik o'qiladi). Yoki qo'lda: **New → Web Service**:
-   - Runtime: **Node**, Region: Frankfurt, Instance Type: **Free**
-   - Build Command: `bash scripts/render-build.sh`
-   - Start Command: `node dist/main.js`
-   - Health Check Path: `/api/v1/health`
-2. **Environment** bo'limida `render.yaml` dagi `sync: false` o'zgaruvchilarni to'ldiring (nomlari faylda; qiymatlarni chatga/repo'ga yozmang):
-   `DATABASE_URL`, `DIRECT_URL`, `REDIS_URL`, `JWT_SECRET`, `CORS_ORIGINS` (faqat https), `PUBLIC_API_URL`, `CUSTOMER_PANEL_URL`, `SHOP_PANEL_URL`, `AUTH_COOKIE_SAME_SITE`, `METRICS_TOKEN`, `OPS_WEBHOOK_SECRET` (va keyinroq `STORAGE_*`, kod yetkazish `SMTP_*` / `ESKIZ_*` / `TELEGRAM_*`).
-3. **Birinchi deploy uchun qo'shimcha:** `RUN_SEED=true`, `ADMIN_PHONE` (masalan `998901234567`), `ADMIN_PASSWORD` (≥ 12 belgi). Bu siyosatlar, katalog, kalkulyator ma'lumotlari va birinchi super adminni yaratadi (ularsiz ro'yxatdan o'tish ishlamaydi).
-4. **Create / Deploy.** Build paytida: bog'liqliklar → `prisma generate` → `nest build` → `prisma migrate deploy` (→ seed).
-5. Deploy muvaffaqiyatli bo'lgach **`RUN_SEED` va `ADMIN_PASSWORD` ni o'chiring** (seed har safar admin parolini qayta yozadi) va **Manual Deploy** qiling.
+1. **New → Blueprint** → GitHub repo'ni ulang. `render.yaml` 5 ta servis yaratadi: `quyosh-api` (NestJS) va 4 ta statik sayt (`quyosh-portal`, `quyosh-customer`, `quyosh-shop`, `quyosh-admin`).
+2. Render faqat `sync: false` qiymatlarni so'raydi (qiymatlarni chatga/repo'ga yozmang):
+   `DATABASE_URL`, `DIRECT_URL`, `REDIS_URL`, `ADMIN_PHONE` (masalan `998901234567`), `ADMIN_PASSWORD` (≥ 12 belgi). `JWT_SECRET`, `METRICS_TOKEN`, `OPS_WEBHOOK_SECRET` ni Render o'zi yaratadi. `STORAGE_*`, `SMTP_*`, `ESKIZ_*`, `TELEGRAM_*` ni hozircha bo'sh qoldiring.
+3. **Apply.** API build paytida: bog'liqliklar → `prisma generate` → `nest build` → `prisma migrate deploy` → seed (**faqat baza bo'sh bo'lsa** yoki `RUN_SEED=true` bo'lganda; seed siyosatlar, katalog, kalkulyator ma'lumotlari va birinchi super adminni yaratadi). Keyingi deploy'larda admin paroli qayta yozilmaydi.
+4. **Servis nomlari.** `quyosh-*` nomlari band bo'lsa Render boshqa manzil beradi (masalan `quyosh-api-x1y2.onrender.com`). Shunda `render.yaml` dagi `*.onrender.com` qiymatlarni (`CORS_ORIGINS`, `PUBLIC_API_URL`, `CUSTOMER_PANEL_URL`, `SHOP_PANEL_URL`, `VITE_API_BASE_URL`, `VITE_CUSTOMER_URL`) haqiqiy manzillarga almashtiring va qayta deploy qiling.
+
+## Birinchi kirish
+
+- Admin: `quyosh-admin` saytida `ADMIN_PHONE` + `ADMIN_PASSWORD`; OTP kodi ekranda ko'rinadi.
+- Do'kon: admin panelda do'kon yaratadi → bir martalik vaqtinchalik parol beriladi → do'kon telefon + parol bilan `quyosh-shop` saytiga kiradi va parolni almashtiradi.
+- Mijoz: `quyosh-customer` saytida ro'yxatdan o'tadi.
 
 ## Tekshirish
 
@@ -40,6 +41,6 @@ Repo ildizidagi `render.yaml` (Blueprint) shu qadamlarni avtomatlashtiradi; maxf
 - **Upstash bepul tarifida buyruqlar limiti bor** (oyiga ~500 ming). BullMQ va rate-limit Redis'ni doimiy ishlatadi — limit tez tugashi mumkin. Tugasa, ilova Redis xatolari bilan ishlamay qoladi: kuzatib boring yoki pullik rejaga o'ting.
 - Neon bepul tarifida baza 5 daqiqa bo'sh turganda uxlaydi (birinchi so'rov bir necha soniya kechikadi).
 
-## Frontend
+## Frontend va cookie
 
-Bu qo'llanma faqat API uchun. Frontend (`apps/web`, to'rt panel) alohida deploy qilinadi (masalan, Render Static Site); u `CORS_ORIGINS` ga https manzillari bilan kiritilishi kerak. Frontend boshqa domenda bo'lsa `AUTH_COOKIE_SAME_SITE=none` (va `AUTH_COOKIE_SECURE=true`) qo'ying.
+Frontend'lar API'dan boshqa subdomenlarda (`onrender.com` ommaviy suffiks), shuning uchun cookie `SameSite=None; Secure` bilan beriladi va `CORS_ORIGINS` to'rt frontend manzilini o'z ichiga oladi (`render.yaml` da sozlangan). **Cheklov:** Safari/iOS va ba'zi brauzerlar uchinchi tomon cookie'sini bloklaydi — u yerda kirish ishlamasligi mumkin. Yechim: o'z domeningizni ulang (masalan `api.example.uz`, `app.example.uz`) va `AUTH_COOKIE_SAME_SITE=lax` qiling.
