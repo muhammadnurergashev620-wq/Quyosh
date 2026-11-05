@@ -1,6 +1,6 @@
 # Render Blueprint — Quyosh: API (NestJS, bepul web service) + 4 ta frontend (statik sayt). Baza: Neon PostgreSQL, Redis: Upstash.
 # Ishlatish: Render → New → Blueprint → shu repo. Faqat `sync: false` qiymatlarni kiritasiz (DATABASE_URL, DIRECT_URL, REDIS_URL,
-# ADMIN_PHONE, ADMIN_PASSWORD); qolganini (JWT_SECRET, METRICS_TOKEN, OPS_WEBHOOK_SECRET) Render o'zi yaratadi.
+# ADMIN_PASSWORD); qolganini (JWT_SECRET, METRICS_TOKEN, OPS_WEBHOOK_SECRET) Render o'zi yaratadi.
 # Batafsil: docs/runbooks/deploy-render.md
 #
 # Servis nomlari (quyosh-api, quyosh-portal, quyosh-customer, quyosh-shop, quyosh-admin) onrender.com manzillarini belgilaydi.
@@ -69,8 +69,8 @@ services:
         sync: false
       - key: REDIS_URL              # Upstash: rediss://default:<parol>@<host>.upstash.io:6379
         sync: false
-      - key: ADMIN_PHONE            # birinchi super admin (seed faqat baza bo'sh bo'lganda ishlaydi), masalan 998901234567
-        sync: false
+      - key: ADMIN_LOGIN            # birinchi super admin logini (seed faqat baza bo'sh bo'lganda ishlaydi)
+        value: admin
       - key: ADMIN_PASSWORD         # kamida 12 belgi
         sync: false
       # ── Keyinroq (hozircha bo'sh qolishi mumkin) ──

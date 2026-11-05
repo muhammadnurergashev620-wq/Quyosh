@@ -24,7 +24,7 @@ import '@/features/shop/shop.css';
 function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', stir: '', phone: '', regionCode: 'toshkent-shahri', address: '', ownerFirstName: '', ownerLastName: '', ownerPhone: '' });
+  const [form, setForm] = useState({ name: '', stir: '', phone: '', regionCode: 'toshkent-shahri', address: '', ownerFirstName: '', ownerLastName: '', ownerLogin: '', ownerPhone: '' });
   const [duplicates, setDuplicates] = useState<Duplicates | null>(null);
   const [confirmDup, setConfirmDup] = useState(false);
   const [result, setResult] = useState<{ shopId: string; login: string | null; password: string } | null>(null);
@@ -46,20 +46,20 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
     mutationFn: () =>
       adminShopsService.create({
         name: form.name.trim(), stir: form.stir, phone: `+998${phone}`, regionCode: form.regionCode, address: form.address.trim(),
-        ownerFirstName: form.ownerFirstName.trim(), ownerLastName: form.ownerLastName.trim() || undefined, ownerPhone: `+998${ownerPhone}`, confirmDuplicates: confirmDup,
+        ownerFirstName: form.ownerFirstName.trim(), ownerLastName: form.ownerLastName.trim() || undefined, ownerLogin: form.ownerLogin.trim(), ownerPhone: ownerPhone.length === 9 ? `+998${ownerPhone}` : undefined, confirmDuplicates: confirmDup,
       }),
     onSuccess: (data) => {
-      setResult({ shopId: data.shop.id, login: data.owner.phone, password: data.temporaryPassword });
+      setResult({ shopId: data.shop.id, login: data.owner.login ?? null, password: data.temporaryPassword });
       void queryClient.invalidateQueries({ queryKey: ['admin', 'shops'] });
     },
   });
   const close = () => {
-    setForm({ name: '', stir: '', phone: '', regionCode: 'toshkent-shahri', address: '', ownerFirstName: '', ownerLastName: '', ownerPhone: '' });
+    setForm({ name: '', stir: '', phone: '', regionCode: 'toshkent-shahri', address: '', ownerFirstName: '', ownerLastName: '', ownerLogin: '', ownerPhone: '' });
     setDuplicates(null); setConfirmDup(false); setResult(null); create.reset();
     onClose();
   };
   const needsConfirm = !!duplicates?.shops.length && !duplicates.blocking;
-  const valid = form.name.trim().length >= 2 && /^\d{9}$/.test(form.stir) && phone.length === 9 && form.address.trim().length >= 5 && form.ownerFirstName.trim().length >= 2 && ownerPhone.length === 9;
+  const valid = form.name.trim().length >= 2 && /^\d{9}$/.test(form.stir) && phone.length === 9 && form.address.trim().length >= 5 && form.ownerFirstName.trim().length >= 2 && LOGIN_RE.test(form.ownerLogin.trim()) && (ownerPhone.length === 0 || ownerPhone.length === 9);
 
   return (
     <Modal open={open} onClose={result ? () => undefined : close} title={t('Do‘kon yaratish')} wide dismissible={!result}>
@@ -96,7 +96,8 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
             <Input label={t('Ism')} value={form.ownerFirstName} onChange={(e) => set({ ownerFirstName: e.target.value })} required maxLength={100} />
             <Input label={t('Familiya (ixtiyoriy)')} value={form.ownerLastName} onChange={(e) => set({ ownerLastName: e.target.value })} maxLength={100} />
           </div>
-          <Input label={t('Login (telefon raqami)')} prefix="+998" inputMode="tel" value={form.ownerPhone} onChange={(e) => set({ ownerPhone: e.target.value })} required placeholder="90 123 45 67" hint={t('Vaqtincha parolni tizim yaratadi va keyingi oynada bir marta ko‘rsatadi')} />
+          <Input label={t('Login')} value={form.ownerLogin} onChange={(e) => set({ ownerLogin: e.target.value.replace(/\s/g, '') })} required maxLength={32} autoCapitalize="none" spellCheck={false} placeholder="masalan: quyosh.servis" hint={t('Lotin harflari, raqamlar va . _ - (3–32 belgi). Vaqtincha parolni tizim yaratadi va keyingi oynada bir marta ko‘rsatadi')} />
+          <Input label={t('Telefon (ixtiyoriy)')} prefix="+998" inputMode="tel" value={form.ownerPhone} onChange={(e) => set({ ownerPhone: e.target.value })} placeholder="90 123 45 67" />
           {create.isError && <Alert tone="danger">{getErrorMessage(create.error)}</Alert>}
           <div className="qs-form__actions">
             <Button type="button" variant="ghost" onClick={close}>{t('Bekor qilish')}</Button>
@@ -109,6 +110,8 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
 }
 
 /** U12.3 / U12.11: do‘konlar ro‘yxati; do‘konni faqat admin yaratadi (v3.1). */
+const LOGIN_RE = /^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/;
+
 export function AdminShopsPage() {
   const navigate = useNavigate();
   const [filters, setFilters] = useState<AdminShopFilters>({});

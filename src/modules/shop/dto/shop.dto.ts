@@ -1,3 +1,4 @@
+import { LOGIN_MESSAGE } from '../../../common/utils/login';
 import { Type } from 'class-transformer';
 import { IsArray, IsBoolean, IsEmail, IsEnum, IsIn, IsInt, IsNumber, IsObject, IsOptional, IsString, Matches, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { BranchStatus, PricingModel, ServiceType, Currency } from '@prisma/client';
@@ -213,9 +214,14 @@ export class AdminCreateShopDto {
   @MaxLength(100)
   ownerLastName?: string;
 
-  /** Egasining logini — telefon raqami. */
+  /** Egasining logini (administrator beradi): lotin harflari, raqamlar va . _ - */
+  @Matches(/^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/, { message: LOGIN_MESSAGE })
+  ownerLogin!: string;
+
+  /** Egasining telefoni (ixtiyoriy, aloqa uchun). */
+  @IsOptional()
   @Matches(PHONE, { message: 'PHONE_INVALID' })
-  ownerPhone!: string;
+  ownerPhone?: string;
 
   /** Shu telefon bilan boshqa do‘kon bo‘lsa ogohlantirishni tasdiqlab o‘tish (STIR to‘qnashuvi baribir bloklanadi). */
   @IsOptional()
@@ -235,8 +241,14 @@ export class AdminAddMemberDto {
   @MaxLength(100)
   lastName?: string;
 
+  /** Xodimning logini (administrator beradi). */
+  @Matches(/^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/, { message: LOGIN_MESSAGE })
+  login!: string;
+
+  /** Xodim telefoni (ixtiyoriy). */
+  @IsOptional()
   @Matches(PHONE, { message: 'PHONE_INVALID' })
-  phone!: string;
+  phone?: string;
 
   @IsIn(['MANAGER', 'STAFF'])
   memberRole!: 'MANAGER' | 'STAFF';

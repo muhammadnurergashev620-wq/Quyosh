@@ -27,6 +27,7 @@ import { PrismaService } from '../../infrastructure/database/prisma.service';
 import { OtpService } from '../otp/otp.service';
 import { TelegramAlertService } from '../../infrastructure/telegram/telegram-alert.service';
 import { SignInDto } from './dto/login.dto';
+import { normalizeLogin } from '../../common/utils/login';
 import { RegisterDto } from './dto/register.dto';
 import { GoogleRegisterDto, GoogleSignInDto } from './dto/google.dto';
 import { VerifyOTPDto } from '../otp/dto/verify-otp.dto';
@@ -563,11 +564,18 @@ export class AuthService {
   }
 
   async signIn(dto: SignInDto, req: Request, res?: Response) {
-    const phone = this.normalizePhone(dto.phone);
-    const attemptKey = `${this.clientIp(req) ?? 'unknown'}:${phone}:${panelOf(req) ?? 'any'}`;
+    // Do‘kon va admin panellari: login + parol (administrator beradi, OTP yo‘q). Mijoz paneli: telefon + parol.
+    const loginName = dto.login ? normalizeLogin(dto.login) : null;
+    const panel = panelOf(req);
+    const phone = loginName ? '' : this.normalizePhone(dto.phone ?? '');
+    const identity = loginName ? `login:${loginName}` : phone;
+    const attemptKey = `${this.clientIp(req) ?? 'unknown'}:${identity}:${panel ?? 'any'}`;
     await this.assertLoginNotLocked(attemptKey);
-    const user = await this.db.user.findUnique({
-      where: { phone },
+    const loginAllowed = !loginName || panel === 'SHOP' || panel === 'ADMIN';
+    const user = !loginAllowed
+      ? null
+      : await this.db.user.findUnique({
+      where: loginName ? { login: loginName } : { phone },
       select: {
         id: true,
         phone: true,
@@ -588,11 +596,16 @@ export class AuthService {
 
     if (!user || user.deletedAt !== null) {
       // Ro‘yxatdan o‘tmagan (yoki o‘chirilgan) akkauntga kirishga urinish: adminga ogohlantirish; foydalanuvchiga baribir umumiy xato.
-      this.warnAuth('Ro‘yxatdan o‘tmagan akkauntga kirishga urinish', 'Bunday telefon raqami tizimda ro‘yxatdan o‘tmagan', phone, req, 'Foydalanuvchiga hech narsa bildirilmadi (raqam mavjudligi sir saqlanadi).', `login-unknown:${phone}:${this.clientIp(req) ?? ''}`);
+      this.warnAuth('Ro‘yxatdan o‘tmagan akkauntga kirishga urinish', loginName ? 'Bunday login tizimda yo‘q' : 'Bunday telefon raqami tizimda ro‘yxatdan o‘tmagan', identity, req, 'Foydalanuvchiga hech narsa bildirilmadi (akkaunt mavjudligi sir saqlanadi).', `login-unknown:${identity}:${this.clientIp(req) ?? ''}`);
     }
     if (!user || user.deletedAt !== null || !validPassword) {
       await this.registerLoginFailure(attemptKey);
-      throw new UnauthorizedException(ERRORS.INVALID_CREDENTIALS);
+      throw new UnauthorizedException(loginName ? ERRORS.INVALID_LOGIN_CREDENTIALS : ERRORS.INVALID_CREDENTIALS);
+    }
+    // Login bilan admin paneliga faqat ADMIN roli kira oladi (sababi oshkor qilinmaydi).
+    if (loginName && panel === 'ADMIN' && !user.userRoles.some((item) => item.role === Role.ADMIN)) {
+      await this.registerLoginFailure(attemptKey);
+      throw new UnauthorizedException(loginName ? ERRORS.INVALID_LOGIN_CREDENTIALS : ERRORS.INVALID_CREDENTIALS);
     }
     await this.redis.del(`loginfail:${attemptKey}`);
     if (
@@ -612,7 +625,7 @@ export class AuthService {
     if (panelOf(req) === 'SHOP') {
       if (!res || !user.userRoles.some((item) => item.role === Role.SHOP)) {
         await this.registerLoginFailure(attemptKey);
-        throw new UnauthorizedException(ERRORS.INVALID_CREDENTIALS);
+        throw new UnauthorizedException(loginName ? ERRORS.INVALID_LOGIN_CREDENTIALS : ERRORS.INVALID_CREDENTIALS);
       }
       const session = await this.createSession(user.id, user.userRoles.map((item) => item.role), user.status, req, res);
       this.notifySession('login', user, req);
@@ -620,7 +633,7 @@ export class AuthService {
     }
 
     // Ikki bosqichli autentifikatsiya o‘chirilgan bo‘lsa (administrator uchun ham): faqat login va parol — OTP so‘ralmaydi.
-    if (res && !user.twoFactorEnabled) {
+    if (res && (loginName || !user.twoFactorEnabled)) {
       const session = await this.createSession(
         user.id,
         user.userRoles.map((item) => item.role),
@@ -636,7 +649,7 @@ export class AuthService {
     // Limit holati kod kiritishdan oldin foydalanuvchini ogohlantirish uchun: bu qurilma yangi bo‘lsa va limit to‘lgan bo‘lsa.
     const [issuedOrWait, deviceLimit] = await Promise.all([
       this.otp
-        .issue(phone, OtpPurpose.LOGIN, user.id, {
+        .issue(user.phone ?? phone, OtpPurpose.LOGIN, user.id, {
           ip: this.clientIp(req),
           device: this.deviceCookie(req),
           panel: panelOf(req),
@@ -646,7 +659,7 @@ export class AuthService {
         .catch(async (error: unknown) => {
           // Kod yaqinda yuborilgan (kutish oynasi): xato ko‘rsatmay, oldingi kodni kiritish bosqichiga o‘tkazamiz.
           if (error instanceof TooManyRequestsException) {
-            const wait = await this.otp.pendingResendWait(phone, OtpPurpose.LOGIN, panelOf(req));
+            const wait = await this.otp.pendingResendWait(user.phone ?? phone, OtpPurpose.LOGIN, panelOf(req));
             if (wait > 0) return { codeReused: true as const, resendIn: wait };
           }
           throw error;

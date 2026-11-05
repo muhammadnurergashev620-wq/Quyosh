@@ -27,7 +27,7 @@ export interface AdminShopRow {
   ratingAvg: string;
   ratingCount: number;
   createdAt: string;
-  owner: Pick<MemberUser, 'id' | 'accountNumber' | 'firstName' | 'lastName' | 'phone'> | null;
+  owner: Pick<MemberUser, 'id' | 'accountNumber' | 'firstName' | 'lastName' | 'phone' | 'login'> | null;
   _count: { branches: number; products: number };
 }
 
@@ -60,19 +60,21 @@ export interface CreateShopInput {
   address: string;
   ownerFirstName: string;
   ownerLastName?: string;
-  ownerPhone: string;
+  ownerLogin: string;
+  ownerPhone?: string;
   confirmDuplicates?: boolean;
 }
 
 export interface AddMemberInput {
   firstName: string;
   lastName?: string;
-  phone: string;
+  login: string;
+  phone?: string;
   memberRole: 'MANAGER' | 'STAFF';
   permissions?: string[];
 }
 
-type AccountUser = Pick<MemberUser, 'id' | 'phone' | 'firstName' | 'lastName'>;
+type AccountUser = Pick<MemberUser, 'id' | 'login' | 'phone' | 'firstName' | 'lastName'>;
 
 /** Vaqtincha parol javobda BIR MARTA keladi — saqlanmaydi, keshlanmaydi (react-query `gcTime: 0` bilan ishlating). */
 export interface IssuedPassword {

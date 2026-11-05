@@ -83,7 +83,7 @@ export function AdminDrawer({
               <Badge tone={status.tone}>{status.label}</Badge>
               {admin.isSelf && <Badge tone="success">{t('Siz')}</Badge>}
             </div>
-            <p><Phone size={13} aria-hidden="true" /> {admin.phone}</p>
+            <p><Phone size={13} aria-hidden="true" /> {admin.login ? `${admin.login}${admin.phone ? ` · ${admin.phone}` : ''}` : admin.phone}</p>
             {admin.email && <p><Mail size={13} aria-hidden="true" /> {admin.email}</p>}
             <p className="gm-udr__id">ID {admin.accountNumber}</p>
             <p>{t('Ro‘yxatdan o‘tgan: {date}', { date: formatDate(admin.createdAt) })} <small>({formatRelativeTime(admin.createdAt)})</small></p>

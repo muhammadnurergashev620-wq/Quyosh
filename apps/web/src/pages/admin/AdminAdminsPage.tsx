@@ -152,7 +152,7 @@ export function AdminAdminsPage() {
     const needle = search.trim().toLowerCase();
     const list = items.filter((admin) => {
       if (needle) {
-        const haystack = [accountName(admin), admin.phone, admin.email, String(admin.accountNumber)].join(' ').toLowerCase();
+        const haystack = [accountName(admin), admin.login, admin.phone, admin.email, String(admin.accountNumber)].join(' ').toLowerCase();
         if (!haystack.includes(needle)) return false;
       }
       if (role === 'SUPER' && !admin.isSuperAdmin) return false;
@@ -455,7 +455,7 @@ export function AdminAdminsPage() {
                       </td>
                       <td>{roleBadges(admin)}</td>
                       <td><PermissionChips admin={admin} /></td>
-                      <td className="gm-ul__c-phone">{admin.phone}</td>
+                      <td className="gm-ul__c-phone">{admin.login ?? admin.phone}</td>
                       <td><span className="gm-ul__date">{formatDate(admin.createdAt)}<small>({formatRelativeTime(admin.createdAt)})</small></span></td>
                       <td className="gm-ul__c-last">{admin.lastLoginAt ? <span className="gm-ul__date">{formatDate(admin.lastLoginAt)}<small>({formatRelativeTime(admin.lastLoginAt)})</small></span> : <span className="gm-ul__muted">{t('Hali kirmagan')}</span>}</td>
                       <td><Badge tone={st.tone}>{st.label}</Badge></td>

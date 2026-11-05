@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Migratsiya + (kerak bo'lsa) boshlang'ich ma'lumot. Neon pooler (pgbouncer) orqali emas, DIRECT_URL (bo'lmasa DATABASE_URL) bilan.
 #   - migratsiya: prisma migrate deploy (har deploy'da; faqat yangilarini qo'llaydi)
-#   - seed: baza bo'sh bo'lsa YOKI RUN_SEED=true bo'lsa. Seed admin parolini (ADMIN_PHONE/ADMIN_PASSWORD) yozadi va
+#   - seed: baza bo'sh bo'lsa YOKI RUN_SEED=true bo'lsa. Seed admin parolini (ADMIN_LOGIN/ADMIN_PASSWORD) yozadi va
 #     katalog/bilimlar matnlarini boshlang'ich holatga qaytaradi — shuning uchun to'ldirilgan bazada avtomatik ishlamaydi.
 set -euo pipefail
 

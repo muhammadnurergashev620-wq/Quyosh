@@ -99,6 +99,8 @@ export interface MemberUser {
   firstName: string | null;
   lastName: string | null;
   phone: string | null;
+  /** Kirish logini (admin beradi). */
+  login?: string | null;
   email: string | null;
   avatarAssetId: string | null;
   /** Vaqtincha parol hali almashtirilmagan (admin ko‘rinishi). */

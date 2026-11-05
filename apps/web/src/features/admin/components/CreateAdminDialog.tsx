@@ -61,6 +61,7 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
   const superAdminActor = scope?.superAdmin ?? true;
   const grantable = scope && !scope.superAdmin ? scope.grantable : undefined;
   const create = useCreateAdmin();
+  const [login, setLogin] = useState("");
   const [phone, setPhone] = useState("");
   const [fullName, setFullName] = useState("");
   const names = splitFullName(fullName);
@@ -70,7 +71,7 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
   const [canCreateAdmins, setCanCreateAdmins] = useState(false);
   const [grantablePermissions, setGrantablePermissions] = useState<string[]>([]);
   const [created, setCreated] = useState<{
-    phone: string;
+    login: string;
     password: string;
     name: string;
     isSuperAdmin: boolean;
@@ -78,8 +79,10 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
   } | null>(null);
 
   const digits = toLocalDigits(phone);
+  const loginName = login.trim();
   const valid =
-    digits.length === 9 &&
+    /^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/.test(loginName) &&
+    (digits.length === 0 || digits.length === 9) &&
     !!names &&
     password.length >= 8 &&
     (isSuperAdmin || permissions.length > 0) &&
@@ -87,10 +90,10 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
 
   function submit() {
     if (!valid) return;
-    const fullPhone = toFullPhone(digits);
     create.mutate(
       {
-        phone: fullPhone,
+        login: loginName,
+        ...(digits.length === 9 ? { phone: toFullPhone(digits) } : {}),
         password,
         firstName: names!.firstName,
         lastName: names!.lastName,
@@ -101,7 +104,7 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
       {
         onSuccess: () =>
           setCreated({
-            phone: fullPhone,
+            login: loginName.toLowerCase(),
             password,
             name: fullName.trim().replace(/\s+/g, ' '),
             isSuperAdmin,
@@ -136,7 +139,7 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
             </div>
           </div>
           <div className="gm-newadm__creds">
-            <CopyRow label={t('Login (telefon)')} value={created.phone} />
+            <CopyRow label={t('Login')} value={created.login} />
             <CopyRow label={t('Parol')} value={created.password} />
           </div>
           <p className="gm-newadm__warn" role="note">{t('Login va parolni adminga xavfsiz yo‘l bilan yetkazing.')}<strong>{t('Parol keyin qayta ko‘rsatilmaydi.')}</strong>
@@ -177,7 +180,19 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
         <section className="gm-newadm__sec" aria-labelledby="gm-newadm-s1">
           <h3 id="gm-newadm-s1" className="gm-newadm__sec-title">{t('Shaxsiy ma’lumotlar')}</h3>
           <Input
-            label={t('Telefon raqami')}
+            label={t('Login')}
+            placeholder={t('masalan: kamronbek')}
+            hint={t('Lotin harflari, raqamlar va . _ - (3–32 belgi)')}
+            maxLength={32}
+            autoCapitalize="none"
+            spellCheck={false}
+            autoComplete="off"
+            value={login}
+            onChange={(event) => setLogin(event.target.value.replace(/\s/g, ''))}
+            autoFocus
+          />
+          <Input
+            label={t('Telefon (ixtiyoriy)')}
             prefix="+998"
             inputMode="numeric"
             placeholder="90 123 45 67"
@@ -185,7 +200,6 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
             formatValue={formatLocalPhone}
             value={phone}
             onChange={(event) => setPhone(event.target.value)}
-            autoFocus
           />
           <Input
             label={t('To‘liq ism')}

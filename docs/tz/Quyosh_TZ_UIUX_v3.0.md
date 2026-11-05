@@ -97,7 +97,7 @@ Platforma — quyosh paneli o‘rnatishni rejalashtirayotgan mijozlarni quyosh u
 
 ## 1.3. V1.0 ichiga kiradigan modullar
 
-- Public website (faqat mijozga qaratilgan), mijozning ro‘yxatdan o‘tishi (telefon OTP) va logini; uch tilli interfeys (o‘zbek lotin, o‘zbek kirill, rus). Do‘kon o‘zi ro‘yxatdan o‘tmaydi: do‘konni admin yaratadi, do‘kon login (telefon) + parol bilan kiradi (3.7).
+- Public website (faqat mijozga qaratilgan), mijozning ro‘yxatdan o‘tishi (telefon OTP) va logini; uch tilli interfeys (o‘zbek lotin, o‘zbek kirill, rus). Do‘kon o‘zi ro‘yxatdan o‘tmaydi: do‘konni admin yaratadi, do‘kon login (admin bergan nom) + parol bilan kiradi (3.7).
 
 - Mijoz kabineti, bir nechta obyekt/manzil boshqaruvi, jismoniy va yuridik shaxs hisoblari.
 
@@ -305,9 +305,9 @@ Do‘konni faqat admin yaratadi (ADMIN roli va `SHOPS` huquqi). Do‘kon ro‘yx
 
 ### 3.7.1. Do‘kon yaratish
 
-1.  Admin → Do‘konlar → "+ Do‘kon yaratish" formasi: **do‘kon ma’lumotlari** — nomi, STIR, telefon, viloyat, manzil (birinchi filial sifatida saqlanadi); **egasining hisobi** — ism, login (telefon raqami). Parolni admin kiritmaydi.
+1.  Admin → Do‘konlar → "+ Do‘kon yaratish" formasi: **do‘kon ma’lumotlari** — nomi, STIR, telefon, viloyat, manzil (birinchi filial sifatida saqlanadi); **egasining hisobi** — ism, **login** (3–32 belgi: lotin harflari, raqamlar, `. _ -`; admin beradi), telefon (ixtiyoriy). Parolni admin kiritmaydi.
 
-2.  Server dublikatni tekshiradi: shu STIR bilan do‘kon bo‘lsa 409 `SHOP_STIR_TAKEN` (bloklaydi); shu telefon bilan do‘kon bo‘lsa — ogohlantirish va tasdiq. Egasining login telefoni boshqa akkauntda band bo‘lsa 409 `PHONE_TAKEN`: mavjud akkaunt do‘konga bog‘lanmaydi.
+2.  Server dublikatni tekshiradi: shu STIR bilan do‘kon bo‘lsa 409 `SHOP_STIR_TAKEN` (bloklaydi); shu telefon bilan do‘kon bo‘lsa — ogohlantirish va tasdiq. Egasining logini band bo‘lsa 409 `LOGIN_TAKEN`, telefoni boshqa akkauntda band bo‘lsa 409 `PHONE_TAKEN`: mavjud akkaunt do‘konga bog‘lanmaydi.
 
 3.  Bitta tranzaksiyada: Shop (`createdSource = ADMIN`, `status = ACTIVE`, `verificationStatus = VERIFIED`), birinchi filial, egasining User (faqat SHOP roli, `mustPasswordChange = true`) va `ShopMember(OWNER)` yaratiladi. Tizim kamida 12 belgili vaqtincha parol yaratadi.
 

@@ -17,14 +17,14 @@ Repo ildizidagi `render.yaml` (Blueprint) shu qadamlarni avtomatlashtiradi; maxf
 
 1. **New → Blueprint** → GitHub repo'ni ulang. `render.yaml` 5 ta servis yaratadi: `quyosh-api` (NestJS) va 4 ta statik sayt (`quyosh-portal`, `quyosh-customer`, `quyosh-shop`, `quyosh-admin`).
 2. Render faqat `sync: false` qiymatlarni so'raydi (qiymatlarni chatga/repo'ga yozmang):
-   `DATABASE_URL`, `DIRECT_URL`, `REDIS_URL`, `ADMIN_PHONE` (masalan `998901234567`), `ADMIN_PASSWORD` (≥ 12 belgi). `JWT_SECRET`, `METRICS_TOKEN`, `OPS_WEBHOOK_SECRET` ni Render o'zi yaratadi. `STORAGE_*`, `SMTP_*`, `ESKIZ_*`, `TELEGRAM_*` ni hozircha bo'sh qoldiring.
+   `DATABASE_URL`, `DIRECT_URL`, `REDIS_URL`, `ADMIN_PASSWORD` (≥ 12 belgi; login `admin` — `render.yaml` dagi `ADMIN_LOGIN`). `JWT_SECRET`, `METRICS_TOKEN`, `OPS_WEBHOOK_SECRET` ni Render o'zi yaratadi. `STORAGE_*`, `SMTP_*`, `ESKIZ_*`, `TELEGRAM_*` ni hozircha bo'sh qoldiring.
 3. **Apply.** API build paytida: bog'liqliklar → `prisma generate` → `nest build` → `prisma migrate deploy` → seed (**faqat baza bo'sh bo'lsa** yoki `RUN_SEED=true` bo'lganda; seed siyosatlar, katalog, kalkulyator ma'lumotlari va birinchi super adminni yaratadi). Keyingi deploy'larda admin paroli qayta yozilmaydi.
 4. **Servis nomlari.** `quyosh-*` nomlari band bo'lsa Render boshqa manzil beradi (masalan `quyosh-api-x1y2.onrender.com`). Shunda `render.yaml` dagi `*.onrender.com` qiymatlarni (`CORS_ORIGINS`, `PUBLIC_API_URL`, `CUSTOMER_PANEL_URL`, `SHOP_PANEL_URL`, `VITE_API_BASE_URL`, `VITE_CUSTOMER_URL`) haqiqiy manzillarga almashtiring va qayta deploy qiling.
 
 ## Birinchi kirish
 
-- Admin: `quyosh-admin` saytida `ADMIN_PHONE` + `ADMIN_PASSWORD`; OTP kodi ekranda ko'rinadi.
-- Do'kon: admin panelda do'kon yaratadi → bir martalik vaqtinchalik parol beriladi → do'kon telefon + parol bilan `quyosh-shop` saytiga kiradi va parolni almashtiradi.
+- Admin: `quyosh-admin` saytida login `admin` (yoki `ADMIN_LOGIN`) + `ADMIN_PASSWORD`; OTP yo'q.
+- Do'kon: admin panelda do'kon yaratadi → bir martalik vaqtinchalik parol beriladi → do'kon login + parol bilan `quyosh-shop` saytiga kiradi (egasi uchun admin login belgilaydi) va parolni almashtiradi.
 - Mijoz: `quyosh-customer` saytida ro'yxatdan o'tadi.
 
 ## Tekshirish

@@ -20,7 +20,7 @@ describe('M2/M3 integration', () => {
   describe('shops', () => {
     it('admin creates an ACTIVE/VERIFIED shop with an owner account and a first branch', async () => {
       const admin = await createAdmin(h);
-      const res = await h.post('/admin/shops', admin.token, { name: PANEL, stir: '312345678', phone: '+998 90 111 22 33', regionCode: 'toshkent-shahri', address: 'Toshkent, Chilonzor 9', ownerFirstName: 'Aziz', ownerPhone: '+998 90 555 00 01' });
+      const res = await h.post('/admin/shops', admin.token, { name: PANEL, stir: '312345678', phone: '+998 90 111 22 33', regionCode: 'toshkent-shahri', address: 'Toshkent, Chilonzor 9', ownerFirstName: 'Aziz', ownerLogin: 'Aziz.Owner', ownerPhone: '+998 90 555 00 01' });
       expect(res.status).toBe(201);
       expect(res.data.shop).toMatchObject({ status: 'ACTIVE', verificationStatus: 'VERIFIED', createdSource: 'ADMIN' });
       shopId = res.data.shop.id;
@@ -37,8 +37,8 @@ describe('M2/M3 integration', () => {
     it('rejects a duplicate STIR and a login phone that already belongs to an account', async () => {
       const admin = await createAdmin(h);
       const base = { name: 'Dup', phone: '+998901112234', regionCode: 'toshkent-shahri', address: 'Toshkent, Yunusobod', ownerFirstName: 'Vali' };
-      expect((await h.post('/admin/shops', admin.token, { ...base, stir: '312345678', ownerPhone: '+998905550002' })).body.code).toBe('SHOP_STIR_TAKEN');
-      const taken = await h.post('/admin/shops', admin.token, { ...base, stir: '312345679', ownerPhone: owner.phone });
+      expect((await h.post('/admin/shops', admin.token, { ...base, stir: '312345678', ownerLogin: 'aziz.dup', ownerPhone: '+998905550002' })).body.code).toBe('SHOP_STIR_TAKEN');
+      const taken = await h.post('/admin/shops', admin.token, { ...base, stir: '312345679', ownerLogin: 'aziz.dup2', ownerPhone: owner.phone });
       expect(taken.status).toBe(409);
       expect(taken.body.code).toBe('PHONE_TAKEN');
     });

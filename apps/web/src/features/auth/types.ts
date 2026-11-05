@@ -18,7 +18,9 @@ export type GoogleSignInResult =
   | { needsPhone: true; signupToken: string; firstName: string | null; lastName: string | null };
 
 export interface LoginInput {
-  phone: string;
+  /** Mijoz paneli: telefon. Do‘kon va admin panellarida `login` yuboriladi. */
+  phone?: string;
+  login?: string;
   password: string;
   /** Kodni SMS orqali olish (standart — email). */
   codeChannel?: 'SMS';

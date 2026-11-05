@@ -16,11 +16,12 @@ describe('Shop created by admin (TZ 3.5, 3.7, 6.4)', () => {
   let shopId: string;
   let ownerId: string;
   let ownerPhone: string;
+  let ownerLogin: string;
   let tempPassword: string;
   let session = '';
 
   const create = (over: Record<string, unknown> = {}) =>
-    h.post('/admin/shops', admin.token, { name: 'Quyosh Diler', stir: String(300_000_000 + Math.floor(Math.random() * 99_999_999)), phone: '+998901000001', regionCode: 'samarqand', address: 'Samarqand, Registon 1', ownerFirstName: 'Aziza', ownerLastName: 'Karimova', ownerPhone: `+99890${String(Math.floor(1_000_000 + Math.random() * 8_999_999))}`, ...over });
+    h.post('/admin/shops', admin.token, { name: 'Quyosh Diler', stir: String(300_000_000 + Math.floor(Math.random() * 99_999_999)), phone: '+998901000001', regionCode: 'samarqand', address: 'Samarqand, Registon 1', ownerFirstName: 'Aziza', ownerLastName: 'Karimova', ownerLogin: `egasi${Math.floor(100_000 + Math.random() * 899_999)}`, ownerPhone: `+99890${String(Math.floor(1_000_000 + Math.random() * 8_999_999))}`, ...over });
 
   beforeAll(async () => {
     h = await bootHarness();
@@ -37,6 +38,7 @@ describe('Shop created by admin (TZ 3.5, 3.7, 6.4)', () => {
     shopId = res.data.shop.id;
     ownerId = res.data.owner.id;
     ownerPhone = res.data.owner.phone;
+    ownerLogin = res.data.owner.login;
     expect(res.data.shop).toMatchObject({ status: 'ACTIVE', verificationStatus: 'VERIFIED', createdSource: 'ADMIN' });
 
     const user = await h.db.user.findUniqueOrThrow({ where: { id: ownerId }, include: { userRoles: true, shopMemberships: true } });
@@ -62,9 +64,9 @@ describe('Shop created by admin (TZ 3.5, 3.7, 6.4)', () => {
   });
 
   it('owner logs in with phone + password only (no OTP); other panels and wrong passwords are refused', async () => {
-    const wrong = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { phone: ownerPhone, password: 'Noto‘g‘ri-parol-123' } });
+    const wrong = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: 'Noto‘g‘ri-parol-123' } });
     expect(wrong.status).toBe(401);
-    const res = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { phone: ownerPhone, password: tempPassword } });
+    const res = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: tempPassword } });
     expect(res.status).toBe(201);
     expect(res.data.verificationRequired).toBe(false);
     expect(res.data.mustPasswordChange).toBe(true);
@@ -95,8 +97,23 @@ describe('Shop created by admin (TZ 3.5, 3.7, 6.4)', () => {
     // Takroriy chaqiruv — parol allaqachon almashtirilgan.
     expect((await h.api('POST', '/users/me/password/first', { ...opts, body: { newPassword: 'Yana-Boshqa-2026!' } })).status).toBe(409);
     // Eski vaqtincha parol endi ishlamaydi, yangisi ishlaydi.
-    expect((await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { phone: ownerPhone, password: tempPassword } })).status).toBe(401);
-    expect((await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { phone: ownerPhone, password: 'Yangi-Parol-2026!' } })).data.mustPasswordChange).toBe(false);
+    expect((await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: tempPassword } })).status).toBe(401);
+    expect((await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: 'Yangi-Parol-2026!' } })).data.mustPasswordChange).toBe(false);
+  });
+
+  it('login is case-insensitive, unique and validated; phone is optional; customer panel does not accept logins', async () => {
+    const owner = await h.db.user.findUniqueOrThrow({ where: { id: ownerId } });
+    expect(owner.login).toBe(ownerLogin);
+    expect((await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin.toUpperCase(), password: 'Yangi-Parol-2026!' } })).status).toBe(201);
+    expect((await create({ ownerLogin, confirmDuplicates: true })).body.code).toBe('LOGIN_TAKEN');
+    expect((await create({ ownerLogin: 'x y', confirmDuplicates: true })).status).toBe(400);
+    const noPhone = await create({ ownerLogin: `telefonsiz${Math.floor(Math.random() * 99_999)}`, ownerPhone: undefined, confirmDuplicates: true });
+    expect(noPhone.status).toBe(201);
+    expect(noPhone.data.owner.phone).toBeNull();
+    const customerPanel = await h.api('POST', '/auth/login', { headers: { 'x-app-panel': 'CUSTOMER' }, body: { login: ownerLogin, password: 'Yangi-Parol-2026!' } });
+    expect(customerPanel.status).toBe(401);
+    const adminPanel = await h.api('POST', '/auth/login', { headers: { 'x-app-panel': 'ADMIN' }, body: { login: ownerLogin, password: 'Yangi-Parol-2026!' } });
+    expect(adminPanel.status).toBe(401);
   });
 
   it('shop panel has no self-signup, no Google and a customer account cannot enter it', async () => {
@@ -110,14 +127,14 @@ describe('Shop created by admin (TZ 3.5, 3.7, 6.4)', () => {
   });
 
   it('admin adds a staff member (login + temporary password); the owner cannot invite', async () => {
-    const res = await h.post(`/admin/shops/${shopId}/members`, admin.token, { firstName: 'Bobur', phone: '+998905551122', memberRole: 'STAFF' });
+    const res = await h.post(`/admin/shops/${shopId}/members`, admin.token, { firstName: 'Bobur', login: 'bobur.xodim', phone: '+998905551122', memberRole: 'STAFF' });
     expect(res.status).toBe(201);
     expect(res.data.temporaryPassword).toHaveLength(16);
     expect(res.data.member.permissions).toContain('requests.read');
-    expect((await h.post(`/admin/shops/${shopId}/members`, admin.token, { firstName: 'Bobur', phone: '+998905551122', memberRole: 'STAFF' })).body.code).toBe('PHONE_TAKEN');
+    expect((await h.post(`/admin/shops/${shopId}/members`, admin.token, { firstName: 'Bobur', login: 'bobur.xodim', phone: '+998905551122', memberRole: 'STAFF' })).body.code).toBe('PHONE_TAKEN');
     const staff = await h.db.user.findUniqueOrThrow({ where: { id: res.data.user.id } });
     expect(staff.mustPasswordChange).toBe(true);
-    const owner = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { phone: ownerPhone, password: 'Yangi-Parol-2026!' } });
+    const owner = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: 'Yangi-Parol-2026!' } });
     const ownerCookie = [cookieOf(owner, 'accessToken_shop'), cookieOf(owner, 'deviceId_shop')].filter(Boolean).join('; ');
     expect((await h.api('POST', `/manage/shops/${shopId}/members/invitations`, { headers: shopHeaders, cookie: ownerCookie, body: { target: '+998905559999', memberRole: 'STAFF' } })).status).toBe(404);
     const list = await h.api('GET', `/manage/shops/${shopId}/members`, { headers: shopHeaders, cookie: ownerCookie });
@@ -126,15 +143,15 @@ describe('Shop created by admin (TZ 3.5, 3.7, 6.4)', () => {
   });
 
   it('admin resets the password: new temporary password, sessions revoked, change required again', async () => {
-    const old = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { phone: ownerPhone, password: 'Yangi-Parol-2026!' } });
+    const old = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: 'Yangi-Parol-2026!' } });
     const oldCookie = [cookieOf(old, 'accessToken_shop'), cookieOf(old, 'deviceId_shop')].filter(Boolean).join('; ');
     const res = await h.post(`/admin/shops/${shopId}/members/${ownerId}/reset-password`, admin.token);
     expect(res.status).toBe(201);
     expect(res.data.temporaryPassword).toHaveLength(16);
     expect(res.data.temporaryPassword).not.toBe(tempPassword);
     expect((await h.api('GET', '/users/me', { headers: shopHeaders, cookie: oldCookie })).status).toBe(401);
-    expect((await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { phone: ownerPhone, password: 'Yangi-Parol-2026!' } })).status).toBe(401);
-    const again = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { phone: ownerPhone, password: res.data.temporaryPassword } });
+    expect((await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: 'Yangi-Parol-2026!' } })).status).toBe(401);
+    const again = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: res.data.temporaryPassword } });
     expect(again.data.mustPasswordChange).toBe(true);
     // Boshqa do‘konning a’zosi yoki mavjud bo‘lmagan foydalanuvchi uchun tiklab bo‘lmaydi.
     const stranger = await createUser(h);

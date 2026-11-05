@@ -56,8 +56,10 @@ export function useLogin() {
         useAuthStore.getState().setDelivery(null, false);
         return;
       }
-      loginSecret.set(variables.phone, variables.password);
-      setPendingPhone(variables.phone);
+      // OTP bosqichi faqat telefon bilan kirishda bo‘ladi (login bilan kirishda sessiya darhol ochiladi).
+      const phone = variables.phone ?? '';
+      loginSecret.set(phone, variables.password);
+      setPendingPhone(phone);
       if (result.codeReused) {
         // Yangi kod yuborilmadi: oldingi kod (va uning ekrandagi dev ko‘rinishi) amal qiladi.
         useAuthStore.getState().setResendIn(result.resendIn ?? null);

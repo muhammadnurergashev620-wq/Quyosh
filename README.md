@@ -57,7 +57,7 @@ pm2 bilan (mahalliy): `pnpm build && pm2 start ecosystem.config.cjs` — S3 (`:5
 
 Demo ma’lumot (xaritada 6 ta do‘kon): `SEED_DEMO=true DEMO_USER_PASSWORD=… pnpm db:seed`.
 
-Birinchi Super Admin: `ADMIN_PHONE` / `ADMIN_PASSWORD` (≥ 12 belgi) `pnpm db:seed` orqali yaratiladi.
+Birinchi Super Admin: `ADMIN_LOGIN` (standart `admin`) / `ADMIN_PASSWORD` (≥ 12 belgi) `pnpm db:seed` orqali yaratiladi. Admin va do‘kon panellariga **login + parol** bilan kiriladi (telefon va OTP yo‘q); login va vaqtincha parolni administrator beradi. Mijoz telefon bilan kiradi.
 `OTP_DEV_ECHO=true` (faqat `NODE_ENV≠production`) — OTP kodi API javobida va kirish ekranida ko‘rinadi.
 
 ## Tekshiruvlar

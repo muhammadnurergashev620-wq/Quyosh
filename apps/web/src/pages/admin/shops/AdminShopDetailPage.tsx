@@ -31,12 +31,12 @@ const digits = (value: string) => value.replace(/\D/g, '');
 
 /** Xodim qo‘shish: hisob + vaqtincha parol (TZ 3.7.2). */
 function AddMemberModal({ shopId, onClose, onIssued }: { shopId: string; onClose: () => void; onIssued: (issued: Issued) => void }) {
-  const [form, setForm] = useState({ firstName: '', lastName: '', phone: '', memberRole: 'STAFF' as 'MANAGER' | 'STAFF' });
+  const [form, setForm] = useState({ firstName: '', lastName: '', login: '', phone: '', memberRole: 'STAFF' as 'MANAGER' | 'STAFF' });
   const [permissions, setPermissions] = useState<string[]>(DEFAULT_PERMISSIONS.STAFF);
   const add = useMutation({
     gcTime: 0,
-    mutationFn: () => adminShopsService.addMember(shopId, { firstName: form.firstName.trim(), lastName: form.lastName.trim() || undefined, phone: `+998${digits(form.phone)}`, memberRole: form.memberRole, permissions }),
-    onSuccess: (data) => onIssued({ title: t('Xodim qo‘shildi'), login: data.user.phone, password: data.temporaryPassword }),
+    mutationFn: () => adminShopsService.addMember(shopId, { firstName: form.firstName.trim(), lastName: form.lastName.trim() || undefined, login: form.login.trim(), phone: digits(form.phone).length === 9 ? `+998${digits(form.phone)}` : undefined, memberRole: form.memberRole, permissions }),
+    onSuccess: (data) => onIssued({ title: t('Xodim qo‘shildi'), login: data.user.login ?? null, password: data.temporaryPassword }),
   });
   return (
     <form className="qs-form" onSubmit={(e) => { e.preventDefault(); add.mutate(); }} noValidate>
@@ -44,7 +44,8 @@ function AddMemberModal({ shopId, onClose, onIssued }: { shopId: string; onClose
         <Input label={t('Ism')} value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required maxLength={100} autoFocus />
         <Input label={t('Familiya (ixtiyoriy)')} value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} maxLength={100} />
       </div>
-      <Input label={t('Login (telefon raqami)')} prefix="+998" inputMode="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required placeholder="90 123 45 67" hint={t('Vaqtincha parolni tizim yaratadi va bir marta ko‘rsatadi')} />
+      <Input label={t('Login')} value={form.login} onChange={(e) => setForm({ ...form, login: e.target.value.replace(/\s/g, '') })} required maxLength={32} autoCapitalize="none" spellCheck={false} placeholder="masalan: bobur.xodim" hint={t('Lotin harflari, raqamlar va . _ - (3–32 belgi). Vaqtincha parolni tizim yaratadi va bir marta ko‘rsatadi')} />
+      <Input label={t('Telefon (ixtiyoriy)')} prefix="+998" inputMode="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="90 123 45 67" />
       <Select
         label={t('Rol')}
         value={form.memberRole}
@@ -55,7 +56,7 @@ function AddMemberModal({ shopId, onClose, onIssued }: { shopId: string; onClose
       {add.isError && <Alert tone="danger">{getErrorMessage(add.error)}</Alert>}
       <div className="qs-form__actions">
         <Button type="button" variant="ghost" onClick={onClose}>{t('Bekor qilish')}</Button>
-        <Button type="submit" loading={add.isPending} disabled={form.firstName.trim().length < 2 || digits(form.phone).length !== 9}>{t('Qo‘shish')}</Button>
+        <Button type="submit" loading={add.isPending} disabled={form.firstName.trim().length < 2 || !/^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/.test(form.login.trim()) || (digits(form.phone).length !== 0 && digits(form.phone).length !== 9)}>{t('Qo‘shish')}</Button>
       </div>
     </form>
   );
@@ -114,7 +115,7 @@ export function AdminShopDetailPage() {
   const reset = useMutation({
     gcTime: 0,
     mutationFn: (member: Member) => adminShopsService.resetPassword(id, member.user.id),
-    onSuccess: (data) => { setResetting(null); setIssued({ title: t('Yangi vaqtincha parol'), login: data.user.phone, password: data.temporaryPassword }); refresh(); },
+    onSuccess: (data) => { setResetting(null); setIssued({ title: t('Yangi vaqtincha parol'), login: data.user.login ?? null, password: data.temporaryPassword }); refresh(); },
     onError: (error) => { setResetting(null); pushToast(getErrorMessage(error), 'error'); },
   });
   const changeOwner = useMutation({
@@ -162,7 +163,7 @@ export function AdminShopDetailPage() {
               <li key={member.id}>
                 <div>
                   <Link to={`/admin/foydalanuvchilar/${member.user.id}`}><strong>{personName(member.user)}</strong></Link>
-                  <small>{member.user.phone ?? member.user.email}{member.user.mustPasswordChange ? ` · ${t('vaqtincha parol hali almashtirilmagan')}` : ''}</small>
+                  <small>{[member.user.login, member.user.phone].filter(Boolean).join(' · ') || member.user.email}{member.user.mustPasswordChange ? ` · ${t('vaqtincha parol hali almashtirilmagan')}` : ''}</small>
                 </div>
                 <Badge tone={member.memberRole === 'OWNER' ? 'primary' : 'neutral'}>{MEMBER_ROLE[member.memberRole]}</Badge>
                 <span className="qs-page__actions">

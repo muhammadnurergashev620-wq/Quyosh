@@ -216,6 +216,8 @@ export const ERRORS = {
   OTP_LIMIT_EXCEEDED: 'Kod so‘rash limiti tugadi. Keyinroq qayta urinib ko‘ring',
   OTP_LIMIT_WAIT: (minutes: number) =>
     `Soatiga 3 martadan ortiq kod so‘rab bo‘lmaydi. ${minutes} daqiqadan so‘ng qayta urinib ko‘ring`,
+  INVALID_LOGIN_CREDENTIALS: 'Login yoki parol noto‘g‘ri',
+  LOGIN_TAKEN: 'Bu login band — boshqasini tanlang',
   OTP_WAIT: (seconds: number) => `Yangi kod so‘rashdan oldin ${seconds} soniya kuting`,
   RATE_LIMIT_BLOCKED: (seconds: number) => {
     const minutes = Math.ceil(seconds / 60);

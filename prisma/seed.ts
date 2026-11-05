@@ -43,19 +43,23 @@ async function seedPolicies(): Promise<void> {
   }
 }
 
+/** Standart superadmin: login (ADMIN_LOGIN, standart «admin») + ADMIN_PASSWORD; ADMIN_PHONE ixtiyoriy (aloqa uchun). */
 async function seedAdmin(): Promise<boolean> {
-  const rawPhone = process.env.ADMIN_PHONE?.trim();
-  const phone = rawPhone ? (rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`) : undefined;
   const password = process.env.ADMIN_PASSWORD;
-  if (!phone || !password) return false;
+  if (!password) return false;
   if (password.length < 12) throw new Error('ADMIN_PASSWORD kamida 12 ta belgidan iborat bo‘lishi kerak');
+  const login = (process.env.ADMIN_LOGIN ?? '').trim().toLowerCase() || 'admin';
+  if (!/^[a-z0-9][a-z0-9._-]{2,31}$/.test(login)) throw new Error('ADMIN_LOGIN 3–32 belgi: lotin harflari, raqamlar va . _ -');
+  const rawPhone = process.env.ADMIN_PHONE?.trim();
+  const phone = rawPhone ? (rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`) : null;
 
   const passwordHash = await bcrypt.hash(password, 12);
-  const user = await prisma.user.upsert({
-    where: { phone },
-    update: { passwordHash, status: UserStatus.ACTIVE, isSuperAdmin: true },
-    create: { phone, passwordHash, firstName: 'Admin', isSuperAdmin: true, status: UserStatus.ACTIVE, phoneVerifiedAt: new Date() },
-  });
+  const existing = await prisma.user.findFirst({ where: { OR: [{ login }, ...(phone ? [{ phone }] : [])] }, select: { id: true } });
+  const user = existing
+    ? await prisma.user.update({ where: { id: existing.id }, data: { login, passwordHash, status: UserStatus.ACTIVE, isSuperAdmin: true, twoFactorEnabled: false, mustPasswordChange: false } })
+    : await prisma.user.create({
+        data: { login, phone, passwordHash, firstName: 'Admin', isSuperAdmin: true, status: UserStatus.ACTIVE, twoFactorEnabled: false, phoneVerifiedAt: phone ? new Date() : null },
+      });
   await prisma.userRole.upsert({
     where: { userId_role: { userId: user.id, role: Role.ADMIN } },
     update: {},
@@ -66,7 +70,7 @@ async function seedAdmin(): Promise<boolean> {
 
 async function main(): Promise<void> {
   await seedPolicies();
-  if (await seedAdmin()) console.log('Admin foydalanuvchi tayyor (ADMIN_PHONE).');
+  if (await seedAdmin()) console.log('Admin foydalanuvchi tayyor (ADMIN_LOGIN + ADMIN_PASSWORD).');
   const categories = await seedCatalog(prisma);
   await seedCalc(prisma);
   await seedM6(prisma);

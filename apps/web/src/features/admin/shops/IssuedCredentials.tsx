@@ -25,7 +25,7 @@ export function IssuedCredentials({ title, login, password, onClose, extra }: { 
       <Alert tone="warning" title={title}>{t('Bu parol faqat bir marta ko‘rsatiladi. Oyna yopilgach uni qayta ko‘rib bo‘lmaydi — yo‘qolsa, yangi vaqtincha parol bering. Egasi birinchi kirishda uni almashtiradi.')}</Alert>
       {extra}
       <dl className="qs-dl">
-        <dt>{t('Login (telefon)')}</dt><dd className="qs-mono">{login ?? '—'}</dd>
+        <dt>{t('Login')}</dt><dd className="qs-mono">{login ?? '—'}</dd>
         <dt>{t('Vaqtincha parol')}</dt><dd><code className="qs-mono" style={{ fontSize: 18, letterSpacing: 1, userSelect: 'all' }}>{password}</code></dd>
       </dl>
       <div className="qs-page__actions">

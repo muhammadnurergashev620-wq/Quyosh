@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Role, ShopStatus } from '@prisma/client';
 import { PrismaService } from '../../infrastructure/database/prisma.service';
 import { OutboxService } from '../../infrastructure/outbox/outbox.service';
@@ -8,16 +8,17 @@ import { DomainException } from '../../common/exceptions/business.exception';
 import { hashSecret } from '../../common/security/hash';
 import { generateTempPassword } from '../../common/security/temp-password';
 import { normalizeUzPhone } from '../../common/utils/phone';
+import { LOGIN_MESSAGE, isValidLogin, normalizeLogin } from '../../common/utils/login';
 import { canTransition } from './shop-state-machine';
 import { conflict, invalidTransition, ShopService } from './shop.service';
 import { AdminAddMemberDto, AdminCreateShopDto, AdminShopQueryDto } from './dto/shop.dto';
 
-const OWNER_SELECT = { where: { memberRole: 'OWNER' as const }, select: { user: { select: { id: true, accountNumber: true, firstName: true, lastName: true, phone: true } } } };
-const MEMBER_USER = { id: true, accountNumber: true, firstName: true, lastName: true, phone: true, email: true, mustPasswordChange: true } as const;
+const OWNER_SELECT = { where: { memberRole: 'OWNER' as const }, select: { user: { select: { id: true, accountNumber: true, firstName: true, lastName: true, phone: true, login: true } } } };
+const MEMBER_USER = { id: true, accountNumber: true, firstName: true, lastName: true, phone: true, login: true, email: true, mustPasswordChange: true } as const;
 
 /** Vaqtincha parol bilan yaratilgan/tiklangan hisob: parol javobda BIR MARTA qaytadi (bazada faqat hash, logga yozilmaydi). */
 interface IssuedAccount {
-  user: { id: string; phone: string | null; firstName: string | null; lastName: string | null };
+  user: { id: string; login: string | null; phone: string | null; firstName: string | null; lastName: string | null };
   temporaryPassword: string;
 }
 
@@ -97,49 +98,62 @@ export class AdminShopsService {
     return this.shops.duplicates(stir, phone);
   }
 
-  /** Foydalanuvchi uchun login (telefon) band emasligini tekshiradi: mavjud akkaunt do‘konga bog‘lanmaydi. */
-  private async assertPhoneFree(phone: string, tx: Prisma.TransactionClient = this.db) {
+  /** Telefon band emasligini tekshiradi: mavjud akkaunt do‘konga bog‘lanmaydi. */
+  private async assertPhoneFree(phone: string | null, tx: Prisma.TransactionClient = this.db) {
+    if (!phone) return;
     const taken = await tx.user.findFirst({ where: { phone }, select: { id: true } });
     if (taken) throw conflict('PHONE_TAKEN', ERRORS.SHOP_PHONE_TAKEN_BY_USER);
+  }
+
+  /** Login band emasligini tekshiradi (kichik harfga keltirilgan qiymat bo‘yicha). */
+  private async assertLoginFree(login: string, tx: Prisma.TransactionClient = this.db) {
+    const taken = await tx.user.findFirst({ where: { login }, select: { id: true } });
+    if (taken) throw conflict('LOGIN_TAKEN', ERRORS.LOGIN_TAKEN);
   }
 
   /** SHOP rolli hisob + vaqtincha parol (mustPasswordChange = true). Parol faqat qaytariladi. */
   private async newShopAccount(
     tx: Prisma.TransactionClient,
-    input: { phone: string; firstName: string; lastName?: string },
+    input: { login: string; phone: string | null; firstName: string; lastName?: string },
     passwordHash: string,
   ) {
     return tx.user.create({
       data: {
+        login: input.login,
         phone: input.phone,
         firstName: input.firstName.trim(),
         lastName: input.lastName?.trim() || null,
         status: 'ACTIVE',
-        phoneVerifiedAt: new Date(),
+        phoneVerifiedAt: input.phone ? new Date() : null,
         passwordHash,
         mustPasswordChange: true,
+        twoFactorEnabled: false,
         userRoles: { create: [{ role: Role.SHOP }] },
       },
-      select: { id: true, phone: true, firstName: true, lastName: true },
+      select: { id: true, login: true, phone: true, firstName: true, lastName: true },
     });
   }
 
   /** TZ 3.7.1: do‘kon + birinchi filial + egasining hisobi (OWNER) — bitta tranzaksiyada; do‘kon darhol ACTIVE/VERIFIED. */
   async create(adminId: string, dto: AdminCreateShopDto) {
     const phone = normalizeUzPhone(dto.phone)!;
-    const ownerPhone = normalizeUzPhone(dto.ownerPhone)!;
+    const ownerPhone = dto.ownerPhone ? normalizeUzPhone(dto.ownerPhone)! : null;
+    const ownerLogin = normalizeLogin(dto.ownerLogin);
+    if (!isValidLogin(ownerLogin)) throw new BadRequestException(LOGIN_MESSAGE);
     const dup = await this.shops.duplicates(dto.stir, phone);
     if (dup.blocking) throw conflict('SHOP_STIR_TAKEN', ERRORS.SHOP_STIR_TAKEN);
     if (dup.shops.length > 0 && !dto.confirmDuplicates) {
       throw new DomainException(HttpStatus.CONFLICT, 'SHOP_DUPLICATE_WARNING', 'Shu telefon raqamli do‘kon mavjud. Davom etish uchun tasdiqlang');
     }
     await this.assertPhoneFree(ownerPhone);
+    await this.assertLoginFree(ownerLogin);
 
     const temporaryPassword = generateTempPassword();
     const passwordHash = await hashSecret(temporaryPassword, 12);
     const { shop, owner } = await this.db.$transaction(async (tx) => {
       await this.assertPhoneFree(ownerPhone, tx);
-      const user = await this.newShopAccount(tx, { phone: ownerPhone, firstName: dto.ownerFirstName, lastName: dto.ownerLastName }, passwordHash);
+      await this.assertLoginFree(ownerLogin, tx);
+      const user = await this.newShopAccount(tx, { login: ownerLogin, phone: ownerPhone, firstName: dto.ownerFirstName, lastName: dto.ownerLastName }, passwordHash);
       const created = await tx.shop.create({
         data: {
           slug: await this.shops.uniqueSlug(dto.name, tx),
@@ -167,13 +181,17 @@ export class AdminShopsService {
   /** TZ 3.7.2: xodim qo‘shish — hisob (login + vaqtincha parol) va ShopMember(MANAGER/STAFF). */
   async addMember(adminId: string, shopId: string, dto: AdminAddMemberDto) {
     const shop = await this.shops.findOrThrow(shopId);
-    const phone = normalizeUzPhone(dto.phone)!;
+    const phone = dto.phone ? normalizeUzPhone(dto.phone)! : null;
+    const login = normalizeLogin(dto.login);
+    if (!isValidLogin(login)) throw new BadRequestException(LOGIN_MESSAGE);
     await this.assertPhoneFree(phone);
+    await this.assertLoginFree(login);
     const temporaryPassword = generateTempPassword();
     const passwordHash = await hashSecret(temporaryPassword, 12);
     const { user, member } = await this.db.$transaction(async (tx) => {
       await this.assertPhoneFree(phone, tx);
-      const created = await this.newShopAccount(tx, { phone, firstName: dto.firstName, lastName: dto.lastName }, passwordHash);
+      await this.assertLoginFree(login, tx);
+      const created = await this.newShopAccount(tx, { login, phone, firstName: dto.firstName, lastName: dto.lastName }, passwordHash);
       const row = await tx.shopMember.create({
         data: { shopId: shop.id, userId: created.id, memberRole: dto.memberRole, permissions: dto.permissions ?? DEFAULT_PERMISSIONS[dto.memberRole] },
         select: { id: true, memberRole: true, permissions: true },
@@ -187,7 +205,7 @@ export class AdminShopsService {
   /** Parolni tiklash: yangi vaqtincha parol, mustPasswordChange = true, barcha sessiyalar bekor qilinadi. */
   async resetMemberPassword(adminId: string, shopId: string, userId: string) {
     const shop = await this.shops.findOrThrow(shopId);
-    const member = await this.db.shopMember.findFirst({ where: { shopId: shop.id, userId }, select: { id: true, memberRole: true, user: { select: { id: true, phone: true, firstName: true, lastName: true, deletedAt: true } } } });
+    const member = await this.db.shopMember.findFirst({ where: { shopId: shop.id, userId }, select: { id: true, memberRole: true, user: { select: { id: true, login: true, phone: true, firstName: true, lastName: true, deletedAt: true } } } });
     if (!member || member.user.deletedAt) throw new NotFoundException(ERRORS.SHOP_MEMBER_NOT_FOUND);
     const temporaryPassword = generateTempPassword();
     const passwordHash = await hashSecret(temporaryPassword, 12);
@@ -199,7 +217,7 @@ export class AdminShopsService {
       await tx.auditLog.create({ data: { actorId: adminId, action: 'SHOP_PASSWORD_RESET', targetType: 'User', targetId: userId, after: { shopId: shop.id, memberRole: member.memberRole, revokedSessions: revoked.count } } });
       return revoked.count;
     });
-    return { user: member.user && { id: member.user.id, phone: member.user.phone, firstName: member.user.firstName, lastName: member.user.lastName }, temporaryPassword, revokedSessions: sessions };
+    return { user: member.user && { id: member.user.id, login: member.user.login, phone: member.user.phone, firstName: member.user.firstName, lastName: member.user.lastName }, temporaryPassword, revokedSessions: sessions };
   }
 
   /** Egani almashtirish: mavjud a’zo OWNER, eski ega MANAGER (bitta OWNER — partial unique, shuning uchun avval pasaytiriladi). */

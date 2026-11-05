@@ -116,6 +116,8 @@ model User {
   id                   String                   @id @default(uuid()) @db.Uuid
   accountNumber        Int                      @unique @default(autoincrement()) @map("account_number")
   phone                String?                  @unique @db.VarChar(32)
+  /// Do‘kon va admin panellariga kirish nomi (kichik harf; admin beradi). Mijoz telefon bilan kiradi.
+  login                String?                  @unique @db.VarChar(64)
   email                String?                  @unique @db.VarChar(255)
   /// Google hisobi (sub): Google orqali ro‘yxatdan o‘tgan foydalanuvchi uchun.
   googleId             String?                  @unique @map("google_id") @db.VarChar(64)

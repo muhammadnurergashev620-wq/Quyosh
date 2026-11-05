@@ -1,10 +1,18 @@
+import { LOGIN_MESSAGE } from '../../../common/utils/login';
 import { ArrayUnique, IsArray, IsBoolean, IsIn, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { ADMIN_PERMISSIONS } from '../../../common/constants/admin-permissions';
 
 export class CreateAdminDto {
+  /** Kirish logini (lotin harflari, raqamlar va . _ -). */
+  @IsString()
+  @Matches(/^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/, { message: LOGIN_MESSAGE })
+  login!: string;
+
+  /** Telefon (ixtiyoriy, aloqa uchun). */
+  @IsOptional()
   @IsString()
   @Matches(/^\+?998\d{9}$/, { message: 'Telefon raqami +998XXXXXXXXX ko‘rinishida bo‘lishi kerak' })
-  phone!: string;
+  phone?: string;
 
   @IsString()
   @MinLength(8)

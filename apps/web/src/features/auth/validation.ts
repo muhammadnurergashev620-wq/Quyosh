@@ -49,7 +49,13 @@ export const loginSchema = z.object({
   phoneLocal: localPhoneSchema,
   password: z.string().min(1, t('Parolni kiriting')).max(128),
 });
-export type LoginFormValues = z.infer<typeof loginSchema>;
+/** Do‘kon va admin panellari: administrator bergan login (telefon emas). */
+export const LOGIN_NAME_REGEX = /^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/;
+export const loginNameSchema = z.object({
+  login: z.string().trim().regex(LOGIN_NAME_REGEX, t('Login 3–32 belgi: lotin harflari, raqamlar va . _ -')),
+  password: z.string().min(1, t('Parolni kiriting')).max(128),
+});
+export type LoginFormValues = { phoneLocal: string; login: string; password: string };
 
 export const otpSchema = z.object({
   code: z.string().regex(OTP_CODE_REGEX, t('6 xonali kodni kiriting')),

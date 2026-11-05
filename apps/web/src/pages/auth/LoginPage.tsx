@@ -11,11 +11,12 @@ export function LoginPage() {
   const isAdmin = useAuthStore((s) => s.preferredRole) === 'ADMIN';
   // Do‘kon paneli (v3.1): hisobni admin yaratadi — ro‘yxatdan o‘tish, Google va «Parolni unutdim» yo‘q.
   const isShop = env.appRole === 'SHOP';
+  const byLogin = isShop || isAdmin || env.appRole === 'ADMIN';
 
   return (
     <div className="gm-auth-page">
       <h1>{isAdmin ? t('Administrator kirishi') : t('Kirish')}</h1>
-      <p className="gm-auth-page__subtitle">{t('Telefon raqami va parolingiz bilan kiring.')}</p>
+      <p className="gm-auth-page__subtitle">{byLogin ? t('Login va parolingiz bilan kiring.') : t('Telefon raqami va parolingiz bilan kiring.')}</p>
       <LoginForm />
       {!isShop && <GoogleAuth />}
       {isShop ? (

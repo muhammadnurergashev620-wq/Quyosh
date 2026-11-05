@@ -3,6 +3,7 @@ import { Prisma, Role, SessionStatus, UserStatus } from '@prisma/client';
 import type { Request } from 'express';
 import { ERRORS } from '../../common/constants/error-messages';
 import { cursorArgs, toCursorPage } from '../../common/utils/cursor';
+import { LOGIN_MESSAGE, isValidLogin, normalizeLogin } from '../../common/utils/login';
 import { PrismaService } from '../../infrastructure/database/prisma.service';
 import { hashSecret, verifySecret } from '../../common/security/hash';
 import { TelegramAlertService } from '../../infrastructure/telegram/telegram-alert.service';
@@ -448,7 +449,7 @@ export class AdminUsersService {
       where,
       orderBy: [{ isSuperAdmin: 'desc' }, { createdAt: 'asc' }],
       select: {
-        id: true, accountNumber: true, phone: true, email: true, firstName: true, lastName: true, avatarAssetId: true, adminAvatarAllowed: true, status: true, isSuperAdmin: true, twoFactorEnabled: true,
+        id: true, accountNumber: true, phone: true, login: true, email: true, firstName: true, lastName: true, avatarAssetId: true, adminAvatarAllowed: true, status: true, isSuperAdmin: true, twoFactorEnabled: true,
         phoneVerifiedAt: true, adminPermissions: true, canCreateAdmins: true, grantablePermissions: true, createdByAdminId: true, createdAt: true, lastLoginAt: true,
       },
     });
@@ -478,7 +479,7 @@ export class AdminUsersService {
     const user = await this.db.user.findUnique({
       where: { id: adminId },
       select: {
-        id: true, accountNumber: true, phone: true, email: true, firstName: true, lastName: true, avatarAssetId: true, adminAvatarAllowed: true, status: true, isSuperAdmin: true, twoFactorEnabled: true,
+        id: true, accountNumber: true, phone: true, login: true, email: true, firstName: true, lastName: true, avatarAssetId: true, adminAvatarAllowed: true, status: true, isSuperAdmin: true, twoFactorEnabled: true,
         phoneVerifiedAt: true, adminPermissions: true, canCreateAdmins: true, grantablePermissions: true, createdAt: true, lastLoginAt: true, googleId: true, googleEmail: true, passwordHash: true,
         createdByAdmin: { select: { accountNumber: true, firstName: true, lastName: true } },
       },
@@ -531,10 +532,16 @@ export class AdminUsersService {
       if (dto.isSuperAdmin || dto.canCreateAdmins) throw new ForbiddenException(ERRORS.SUPER_ADMIN_ONLY);
       if ((dto.permissions ?? []).some((item) => !scope.grantable.includes(item))) throw new ForbiddenException(ERRORS.ADMIN_PERMISSION_NOT_GRANTABLE);
     }
-    const digits = dto.phone.replace(/\D/g, '');
-    if (!/^998\d{9}$/.test(digits)) throw new BadRequestException(ERRORS.INVALID_PHONE);
-    const phone = `+${digits}`;
-    if (await this.db.user.findUnique({ where: { phone }, select: { id: true } })) throw new ConflictException(ERRORS.PHONE_ALREADY_REGISTERED);
+    const login = normalizeLogin(dto.login);
+    if (!isValidLogin(login)) throw new BadRequestException(LOGIN_MESSAGE);
+    if (await this.db.user.findUnique({ where: { login }, select: { id: true } })) throw new ConflictException(ERRORS.LOGIN_TAKEN);
+    let phone: string | null = null;
+    if (dto.phone) {
+      const digits = dto.phone.replace(/\D/g, '');
+      if (!/^998\d{9}$/.test(digits)) throw new BadRequestException(ERRORS.INVALID_PHONE);
+      phone = `+${digits}`;
+      if (await this.db.user.findUnique({ where: { phone }, select: { id: true } })) throw new ConflictException(ERRORS.PHONE_ALREADY_REGISTERED);
+    }
 
     const permissions = dto.isSuperAdmin ? [] : (dto.permissions ?? []);
     if (!dto.isSuperAdmin && permissions.length === 0) throw new BadRequestException(ERRORS.ADMIN_PERMISSIONS_EMPTY);
@@ -550,17 +557,19 @@ export class AdminUsersService {
           createdByAdminId: actorId,
           canCreateAdmins,
           grantablePermissions,
+          login,
           phone,
           passwordHash,
           firstName: dto.firstName.trim(),
           lastName: dto.lastName.trim(),
           status: UserStatus.ACTIVE,
-          phoneVerifiedAt: new Date(),
+          phoneVerifiedAt: phone ? new Date() : null,
+          twoFactorEnabled: false,
           isSuperAdmin: !!dto.isSuperAdmin,
           adminPermissions: permissions,
           userRoles: { create: { role: Role.ADMIN } },
         },
-        select: { id: true, accountNumber: true, phone: true, firstName: true, lastName: true, status: true, isSuperAdmin: true, adminPermissions: true, canCreateAdmins: true, grantablePermissions: true, createdAt: true },
+        select: { id: true, accountNumber: true, login: true, phone: true, firstName: true, lastName: true, status: true, isSuperAdmin: true, adminPermissions: true, canCreateAdmins: true, grantablePermissions: true, createdAt: true },
       });
       await tx.auditLog.create({
         data: {
@@ -568,7 +577,7 @@ export class AdminUsersService {
           action: 'ADMIN_ADMIN_CREATED',
           targetType: 'User',
           targetId: user.id,
-          after: { phone, isSuperAdmin: user.isSuperAdmin, permissions: user.adminPermissions, canCreateAdmins: user.canCreateAdmins, grantablePermissions: user.grantablePermissions, delegated: !scope.superAdmin },
+          after: { login, phone, isSuperAdmin: user.isSuperAdmin, permissions: user.adminPermissions, canCreateAdmins: user.canCreateAdmins, grantablePermissions: user.grantablePermissions, delegated: !scope.superAdmin },
           ipAddress: req.ip?.slice(0, 64) ?? null,
           requestId: (req as { id?: string }).id ?? null,
         },
@@ -584,7 +593,7 @@ export class AdminUsersService {
       adminAccount: created.accountNumber,
       isSuperAdmin: created.isSuperAdmin,
       permissions: created.adminPermissions,
-      phone,
+      phone: login,
       password: dto.password,
       ip: req.ip?.slice(0, 64) ?? null,
     });

@@ -245,6 +245,8 @@ export interface AuditFilters {
 export interface AdminAccount {
   id: string;
   accountNumber: number;
+  /** Kirish logini (do‘kon/admin akkauntlarida). */
+  login?: string | null;
   phone: string;
   firstName: string | null;
   lastName: string | null;
@@ -315,7 +317,8 @@ export interface AdminAccountDetails {
 }
 
 export interface CreateAdminInput {
-  phone: string;
+  login: string;
+  phone?: string;
   password: string;
   firstName: string;
   lastName: string;
