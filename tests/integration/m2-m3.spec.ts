@@ -213,5 +213,19 @@ describe('M2/M3 integration', () => {
       expect(second.data.resendIn).toBeGreaterThan(0);
       expect(await h.db.otpCode.count({ where: { phone: user.phone, purpose: 'LOGIN' } })).toBe(1);
     });
+
+    it('after the code was used (successful sign-in) the next login is not blocked by the resend window', async () => {
+      const user = await createUser(h);
+      await h.db.user.update({ where: { id: user.id }, data: { passwordHash: await hashSecret('Parol-12345', 4), twoFactorEnabled: true } });
+      const body = { phone: user.phone, password: 'Parol-12345' };
+      const opts = { headers: { 'x-app-panel': 'CUSTOMER' }, body };
+      expect((await h.api('POST', '/auth/login', opts)).status).toBe(201);
+      await h.db.otpCode.updateMany({ where: { phone: user.phone, purpose: 'LOGIN' }, data: { status: 'VERIFIED' } });
+      const again = await h.api('POST', '/auth/login', opts);
+      expect(again.status).toBe(201);
+      expect(again.data.verificationRequired).toBe(true);
+      expect(again.data.codeReused).toBeUndefined();
+      expect(await h.db.otpCode.count({ where: { phone: user.phone, purpose: 'LOGIN' } })).toBe(2);
+    });
   });
 });

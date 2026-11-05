@@ -111,6 +111,8 @@ export class OtpService {
           phone,
           purpose,
           panel,
+          // Kutish oynasi faqat hali ishlatilmagan (faol) kod uchun: kod muvaffaqiyatli kiritilgan bo‘lsa, qayta kirishga to‘sqinlik qilmaydi.
+          status: OtpStatus.ACTIVE,
           createdAt: { gte: resendStart },
         },
         orderBy: { createdAt: 'desc' },
