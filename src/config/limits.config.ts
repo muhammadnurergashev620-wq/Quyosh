@@ -5,9 +5,9 @@ export default registerAs('limits', () => ({
   /** Barcha so‘rovlar uchun umumiy IP chegarasi (alohida @RateLimit qo‘yilmagan yo‘llar): skraping/DoS'dan himoya. */
   global: { limit: intEnv('RATE_LIMIT_GLOBAL_MAX', 1200), windowSeconds: intEnv('RATE_LIMIT_GLOBAL_WINDOW_SECONDS', 60) },
   rate: {
-    register: { limit: intEnv('RATE_LIMIT_REGISTER_MAX', 3), windowSeconds: intEnv('RATE_LIMIT_REGISTER_WINDOW_SECONDS', 3600) },
+    register: { limit: intEnv('RATE_LIMIT_REGISTER_MAX', 10), windowSeconds: intEnv('RATE_LIMIT_REGISTER_WINDOW_SECONDS', 3600) },
     login: { limit: intEnv('RATE_LIMIT_LOGIN_MAX', 30), windowSeconds: intEnv('RATE_LIMIT_LOGIN_WINDOW_SECONDS', 900) },
-    otpRequest: { limit: intEnv('RATE_LIMIT_OTP_REQUEST_MAX', 3), windowSeconds: intEnv('RATE_LIMIT_OTP_REQUEST_WINDOW_SECONDS', 3600) },
+    otpRequest: { limit: intEnv('RATE_LIMIT_OTP_REQUEST_MAX', 10), windowSeconds: intEnv('RATE_LIMIT_OTP_REQUEST_WINDOW_SECONDS', 3600) },
     otpVerify: { limit: intEnv('RATE_LIMIT_OTP_VERIFY_MAX', 10), windowSeconds: intEnv('RATE_LIMIT_OTP_VERIFY_WINDOW_SECONDS', 900) },
     /** Qo‘ng‘iroq boshlash/signal: spamdan himoya (qo‘ng‘iroq boshlash alohida, signallar — ICE nomzodlari ko‘p bo‘lgani uchun keng). */
     call: { limit: intEnv('RATE_LIMIT_CALL_MAX', 12), windowSeconds: intEnv('RATE_LIMIT_CALL_WINDOW_SECONDS', 60), ipLimit: intEnv('RATE_LIMIT_CALL_IP_MAX', 120) },
@@ -33,7 +33,7 @@ export default registerAs('limits', () => ({
     ttlSeconds: intEnv('OTP_TTL_SECONDS', 300),
     resendSeconds: intEnv('OTP_RESEND_SECONDS', 120),
     windowSeconds: intEnv('OTP_WINDOW_SECONDS', 3600),
-    maxRequestsPerWindow: intEnv('OTP_MAX_REQUESTS', 3),
+    maxRequestsPerWindow: intEnv('OTP_MAX_REQUESTS', 10),
     ipMultiplier: intEnv('OTP_IP_MULTIPLIER', 3),
     maxAttempts: intEnv('OTP_MAX_ATTEMPTS', 5),
   },
