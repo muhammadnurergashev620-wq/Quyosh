@@ -16,7 +16,7 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
         "Narx takliflari",
         "Montaj kafolati"
       ],
-      "ctaPrimary": "Hisoblab ko‘rish"
+      "ctaPrimary": "Mijoz paneliga o‘tish"
     },
     "ru": {
       "label": "Солнечная энергия · Узбекистан",
@@ -29,7 +29,7 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
         "Коммерческие предложения",
         "Гарантия на монтаж"
       ],
-      "ctaPrimary": "Рассчитать"
+      "ctaPrimary": "Перейти в панель клиента"
     }
   },
   "STATS": {
@@ -241,11 +241,11 @@ export const HOME_DEFAULTS: Record<string, { uz: Record<string, unknown>; ru: Re
   "FINALE": {
     "uz": {
       "title": "Bugun quyosh {h} soat {m} daqiqa porlaydi. Uning qancha qismi sizniki?",
-      "ctaPrimary": "Hisoblab ko‘rish"
+      "ctaPrimary": "Mijoz paneliga o‘tish"
     },
     "ru": {
       "title": "Сегодня солнце светит {h} ч {m} мин. Сколько из этого — ваше?",
-      "ctaPrimary": "Рассчитать"
+      "ctaPrimary": "Перейти в панель клиента"
     }
   }
 };

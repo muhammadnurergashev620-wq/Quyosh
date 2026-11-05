@@ -206,6 +206,7 @@ describe('M7 channels, ops, quote templates, site CMS', () => {
       expect(home.data.blocks[0].content.ru.titleA).toBeTruthy();
       // v3.1: bosh sayt faqat mijoz uchun — migratsiya va standart matnlarda do‘konga oid narsa yo‘q.
       expect(JSON.stringify(home.data.blocks)).not.toMatch(/ctaSecondary|shopTitle|shopCta|Men do‘kon egasiman|Do‘konni qanday ochaman/);
+      expect(home.data.blocks.find((b: { type: string }) => b.type === 'HERO').content.uz.ctaPrimary).toBe('Mijoz paneliga o‘tish');
       expect(home.data.stats.confirmedInstallations).toBeGreaterThanOrEqual(2);
       const comments = home.data.testimonials.map((t: { comment: string }) => t.comment);
       expect(comments).toContain('Montaj o‘z vaqtida, tizim yaxshi ishlayapti, rahmat!');

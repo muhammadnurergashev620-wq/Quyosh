@@ -37,7 +37,8 @@ import './portal.css';
 
 /** Panel manzili: dev'da alohida port (VITE_DEV_*_URL), production'da shu domendagi yo‘l (TZ 5.2). */
 const origin = (url: string) => (/^https?:\/\//.test(url) ? url.replace(/\/$/, '') : '');
-const CUSTOMER_CALC = `${origin(env.customerUrl)}/mijoz/kalkulyator`;
+/** «Mijoz paneliga o‘tish»: dev’da mijoz panelining ildizi (guest — kalkulyatorga, kirgan — bosh panelga), production’da kalkulyator. */
+const CUSTOMER_PANEL = /^https?:/.test(env.customerUrl) ? `${env.customerUrl.replace(/\/$/, '')}/` : '/mijoz/kalkulyator';
 /** Kirish va ro‘yxatdan o‘tish — faqat mijoz paneliga (v3.1: bosh sayt faqat mijoz uchun, do‘kon paneli manzili ko‘rsatilmaydi). */
 const CUSTOMER_LOGIN = `${origin(env.customerUrl)}/login`;
 const CUSTOMER_REGISTER = `${origin(env.customerUrl)}/register`;
@@ -139,8 +140,8 @@ function Hero({ f }: F) {
         </ul>
       )}
       <div className="gm-film__cta">
-        <a href={CUSTOMER_CALC} className="gm-button gm-button--primary gm-button--md">
-          {str(f, 'ctaPrimary', t('Hisoblab ko‘rish'))} <ArrowRight size={16} aria-hidden="true" />
+        <a href={CUSTOMER_PANEL} className="gm-button gm-button--primary gm-button--md">
+          {str(f, 'ctaPrimary', t('Mijoz paneliga o‘tish'))} <ArrowRight size={16} aria-hidden="true" />
         </a>
       </div>
       <p className="gm-film__sunline">{sunLine()}</p>
@@ -258,7 +259,7 @@ function Finale({ f }: F) {
       <div className="qs-finale__inner">
         <h2>{f ? fill(str(f, 'title', ''), { h, m }) : t('Bugun quyosh {h} soat {m} daqiqa porlaydi. Uning qancha qismi sizniki?', { h, m })}</h2>
         <div className="gm-film__cta">
-          <a href={CUSTOMER_CALC} className="gm-button gm-button--primary gm-button--md">{str(f, 'ctaPrimary', t('Hisoblab ko‘rish'))} <ArrowRight size={16} aria-hidden="true" /></a>
+          <a href={CUSTOMER_PANEL} className="gm-button gm-button--primary gm-button--md">{str(f, 'ctaPrimary', t('Mijoz paneliga o‘tish'))} <ArrowRight size={16} aria-hidden="true" /></a>
         </div>
       </div>
     </section>
@@ -318,7 +319,7 @@ export function PortalPage({ preview = false }: { preview?: boolean }) {
       default: return null;
     }
   };
-  const heroCta = str(fields('HERO'), 'ctaPrimary', t('Hisoblab ko‘rish'));
+  const heroCta = str(fields('HERO'), 'ctaPrimary', t('Mijoz paneliga o‘tish'));
   return (
     <div className="qs-portal">
       {preview && (
@@ -329,7 +330,7 @@ export function PortalPage({ preview = false }: { preview?: boolean }) {
       <Header />
       <main>
         {/* Kino-scroll (HERO) bloklar yuklanguncha ham ko‘rinadi — matn standart, keyin CMS matni. */}
-        <ScrollFilm hero={<Hero f={fields('HERO')} />} finalCta={<div className="gm-film__cta"><a href={CUSTOMER_CALC} className="gm-button gm-button--primary gm-button--md">{heroCta} <ArrowRight size={16} aria-hidden="true" /></a></div>} />
+        <ScrollFilm hero={<Hero f={fields('HERO')} />} finalCta={<div className="gm-film__cta"><a href={CUSTOMER_PANEL} className="gm-button gm-button--primary gm-button--md">{heroCta} <ArrowRight size={16} aria-hidden="true" /></a></div>} />
         {order.filter((type) => type === 'STATS').map(section)}
         <section className="qs-portal__belt" aria-label={t('Tizim turlari')}>
           <Marquee items={SERVICES} />
