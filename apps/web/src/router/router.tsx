@@ -19,6 +19,7 @@ import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { OtpPage } from '@/pages/auth/OtpPage';
 import { SettingsPage } from '@/pages/SettingsPage';
+import { CustomerProfilePage } from '@/pages/customer/CustomerProfilePage';
 import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
 import { TermsPage } from '@/pages/legal/TermsPage';
 
@@ -185,8 +186,8 @@ const panelRouter = createBrowserRouter([
           { path: '/mijoz/montaj/:id', element: customer(<InstallationPage />) },
           { path: '/mijoz/murojaatlar', element: customer(<TicketsPage />) },
           { path: '/mijoz/murojaatlar/:id', element: customer(<TicketPage />) },
-          { path: '/mijoz/profil', element: customer(<SettingsPage />) },
-          { path: '/mijoz/profil/:section', element: customer(<SettingsPage />) },
+          { path: '/mijoz/profil', element: customer(<CustomerProfilePage />) },
+          { path: '/mijoz/profil/:section', element: <Navigate to="/sozlamalar" replace /> },
           // ── Do‘kon paneli ──
           { path: '/dokon', element: shop(<ShopDashboardPage />) },
           { path: '/dokon/sorovlar', element: shop(<ShopRequestsPage key="all" />) },
