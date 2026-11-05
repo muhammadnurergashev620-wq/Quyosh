@@ -5,7 +5,9 @@
   "packageManager": "pnpm@9.15.4",
   "scripts": {
     "build": "nest build",
+    "render:build": "bash scripts/render-build.sh",
     "start": "node dist/main.js",
+    "start:prod": "node dist/main.js",
     "start:dev": "nest start --watch",
     "lint": "eslint \"{src,scripts,tests}/**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
@@ -81,5 +83,8 @@
       "qs": ">=6.16.1",
       "body-parser": ">=2.4.0"
     }
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
