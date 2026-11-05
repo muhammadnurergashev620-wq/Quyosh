@@ -1,0 +1,43 @@
+/* Neon dashboard: har doim to‘q karta (yorug‘ mavzuda ham), shuning uchun o‘z o‘zgaruvchilari. */
+.nd {
+  --nd-bg: #0f1226;
+  --nd-card: #181c36;
+  --nd-card-2: #1d2242;
+  --nd-line: #2a3060;
+  --nd-ink: #eef1ff;
+  --nd-muted: #98a1c9;
+  --nd-cyan: #22d3ee;
+  --nd-blue: #3b82f6;
+  --nd-good: #34d399;
+  --nd-bad: #fb7185;
+}
+.nd-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.nd-gl { stroke: var(--nd-line); stroke-width: 1; stroke-dasharray: 2 4; opacity: 0.8; }
+.nd-axis { fill: var(--nd-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.nd-dot { fill: #eaffff; stroke: #22d3ee; stroke-width: 3; }
+.nd-dot--on { fill: #22d3ee; stroke: #0f1226; stroke-width: 2; }
+.nd-cross { stroke: #38bdf8; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.7; }
+.nd-glow { filter: drop-shadow(0 0 5px rgba(34, 211, 238, 0.55)); }
+.nd-bar { transition: opacity 120ms; }
+.nd-svg g:hover > .nd-bar { opacity: 0.8; }
+.nd-pt { fill: #2dd4bf; fill-opacity: 0.85; stroke: #0f1226; stroke-width: 1; }
+.nd-pt--hot { fill: #60a5fa; }
+.nd-pt:hover { fill: #ffffff; }
+.nd-tip { fill: #0b0e1f; stroke: var(--nd-cyan); stroke-width: 1; opacity: 0.97; }
+.nd-tip__t { fill: var(--nd-muted); font-size: 10.5px; }
+.nd-tip__v { fill: var(--nd-ink); font-size: 12.5px; font-weight: 700; }
+
+.nd-hbars { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px 22px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.nd-hbars li { display: grid; gap: 5px; min-width: 0; }
+.nd-hbars div { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--nd-muted); }
+.nd-hbars div span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nd-hbars b { color: var(--nd-ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.nd-hbars em { color: var(--nd-muted); font-style: normal; font-weight: 500; }
+.nd-hbars i { display: block; height: 7px; border-radius: 99px; background: #262b52; overflow: hidden; }
+.nd-hbars u { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #22d3ee, #3b82f6); box-shadow: 0 0 10px rgba(34, 211, 238, 0.5); }
+.nd-hbars--one { grid-template-columns: 1fr; }
+
+.nd-gauge { display: block; width: min(100%, 190px); margin: 0 auto; }
+.nd-gauge__track { fill: none; stroke: #262b52; stroke-width: 11; }
+.nd-gauge__v { fill: var(--nd-cyan); font-size: 30px; font-weight: 800; font-family: var(--qs-font-display, inherit); }
+.nd-gauge__l { fill: var(--nd-muted); font-size: 10.5px; }

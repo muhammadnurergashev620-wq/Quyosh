@@ -228,4 +228,22 @@ describe('M2/M3 integration', () => {
       expect(await h.db.otpCode.count({ where: { phone: user.phone, purpose: 'LOGIN' } })).toBe(2);
     });
   });
+
+  describe('admin dashboard overview', () => {
+    it('returns KPIs, zero-filled daily series and distributions; needs the REPORTS permission', async () => {
+      const reports = await createAdmin(h, ['REPORTS']);
+      const res = await h.get('/admin/dashboard/overview?days=14', reports.token);
+      expect(res.status).toBe(200);
+      expect(res.data.days).toBe(14);
+      expect(res.data.labels).toHaveLength(14);
+      for (const key of ['users', 'calculations', 'requests', 'quotes', 'installations', 'reviews', 'tickets']) expect(res.data.series[key]).toHaveLength(14);
+      expect(res.data.kpis.users.total).toBeGreaterThan(0);
+      expect(res.data.distributions.roles).toBeTypeOf('object');
+      expect(Array.isArray(res.data.quotePoints)).toBe(true);
+      expect((await h.get('/admin/dashboard/overview?days=999', reports.token)).data.days).toBe(90);
+      const other = await createAdmin(h, ['USERS']);
+      expect((await h.get('/admin/dashboard/overview', other.token)).status).toBe(403);
+      expect((await h.get('/admin/dashboard/overview', owner.token)).status).toBe(403);
+    });
+  });
 });

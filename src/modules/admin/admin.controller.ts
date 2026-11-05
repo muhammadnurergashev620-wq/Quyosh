@@ -44,6 +44,12 @@ export class AdminController {
   }
 
   @RequiresPermission('REPORTS')
+  @Get('dashboard/overview')
+  getOverview(@Query('days') days?: string) {
+    return this.adminService.getOverview(days ? Number(days) : undefined);
+  }
+
+  @RequiresPermission('REPORTS')
   @Get('dashboard')
   getDashboard(@Query() query: DashboardQueryDto) {
     return this.adminService.getDashboard(query);
