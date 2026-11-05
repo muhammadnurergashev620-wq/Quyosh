@@ -394,4 +394,5 @@ export const ruM7: Record<string, string> = {
   "{name} uchun yangi vaqtincha parol yaratiladi, barcha qurilmalardan chiqariladi va birinchi kirishda parolni almashtiradi.": "Для {name} будет создан новый временный пароль, все устройства будут выведены, при первом входе пароль нужно заменить.",
   "Platforma tasdiqlagan do‘kon belgisi": "Значок магазина, подтверждённого платформой",
   "Mijoz paneliga o‘tish": "Перейти в панель клиента",
+  "Kod yaqinda yuborilgan edi — oldingi kodni kiriting. Kod kelmagan bo‘lsa, taymer tugagach qayta yuboring.": "Код был отправлен недавно — введите предыдущий код. Если он не пришёл, отправьте повторно после окончания таймера.",
 };

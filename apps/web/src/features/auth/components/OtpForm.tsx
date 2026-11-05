@@ -25,6 +25,8 @@ export interface OtpFormProps {
   onSendSms?: () => Promise<boolean>;
   /** «Qayta yuborish» / «SMS» so‘rovidagi oxirgi xato: soatlik chegara tugagan bo‘lsa, tugmalar bloklanadi. */
   actionError?: unknown;
+  /** Qayta yuborish taymerining boshlang‘ich qiymati (soniya); berilmasa — to‘liq kutish vaqti. */
+  initialResendIn?: number;
 }
 
 /** Kodni qayta yuborish 2 daqiqadan keyin mumkin (backend: OTP_RESEND_SECONDS=120 bilan mos). */
@@ -35,8 +37,8 @@ const isHourlyLimit = (error: unknown) => error instanceof ApiError && error.sta
 
 const clock = (total: number) => `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
 
-export function OtpForm({ phone, loading, error, onSubmit, onResend, delivery, onSendSms, actionError }: OtpFormProps) {
-  const [resendIn, setResendIn] = useState(RESEND_COOLDOWN_SECONDS);
+export function OtpForm({ phone, loading, error, onSubmit, onResend, delivery, onSendSms, actionError, initialResendIn }: OtpFormProps) {
+  const [resendIn, setResendIn] = useState(initialResendIn ?? RESEND_COOLDOWN_SECONDS);
   const [resending, setResending] = useState(false);
   const [sendingSms, setSendingSms] = useState(false);
   const [code, setCode] = useState('');

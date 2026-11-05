@@ -58,8 +58,14 @@ export function useLogin() {
       }
       loginSecret.set(variables.phone, variables.password);
       setPendingPhone(variables.phone);
-      setDevCode(result.developmentCode ?? null);
-      useAuthStore.getState().setDelivery(result.delivery ?? null, result.smsAvailable === true);
+      if (result.codeReused) {
+        // Yangi kod yuborilmadi: oldingi kod (va uning ekrandagi dev ko‘rinishi) amal qiladi.
+        useAuthStore.getState().setResendIn(result.resendIn ?? null);
+      } else {
+        useAuthStore.getState().setResendIn(null);
+        setDevCode(result.developmentCode ?? null);
+        useAuthStore.getState().setDelivery(result.delivery ?? null, result.smsAvailable === true);
+      }
       setDeviceLimit(result.deviceLimit ? { max: result.deviceLimit.max, active: result.deviceLimit.active } : null);
     },
   });

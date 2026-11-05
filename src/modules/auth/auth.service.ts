@@ -634,16 +634,29 @@ export class AuthService {
 
     // Kod yuborish va qurilmalar limitini tekshirish parallel bajariladi (kutish vaqti qisqaradi).
     // Limit holati kod kiritishdan oldin foydalanuvchini ogohlantirish uchun: bu qurilma yangi bo‘lsa va limit to‘lgan bo‘lsa.
-    const [issued, deviceLimit] = await Promise.all([
-      this.otp.issue(phone, OtpPurpose.LOGIN, user.id, {
-        ip: this.clientIp(req),
-        device: this.deviceCookie(req),
-        panel: panelOf(req),
-        channel: dto.codeChannel,
-        reveal: true,
-      }),
+    const [issuedOrWait, deviceLimit] = await Promise.all([
+      this.otp
+        .issue(phone, OtpPurpose.LOGIN, user.id, {
+          ip: this.clientIp(req),
+          device: this.deviceCookie(req),
+          panel: panelOf(req),
+          channel: dto.codeChannel,
+          reveal: true,
+        })
+        .catch(async (error: unknown) => {
+          // Kod yaqinda yuborilgan (kutish oynasi): xato ko‘rsatmay, oldingi kodni kiritish bosqichiga o‘tkazamiz.
+          if (error instanceof TooManyRequestsException) {
+            const wait = await this.otp.pendingResendWait(phone, OtpPurpose.LOGIN, panelOf(req));
+            if (wait > 0) return { codeReused: true as const, resendIn: wait };
+          }
+          throw error;
+        }),
       this.deviceLimitState(user.id, req),
     ]);
+    if ('codeReused' in issuedOrWait) {
+      return { verificationRequired: true, codeReused: true, resendIn: issuedOrWait.resendIn, ...(deviceLimit ? { deviceLimit } : {}) };
+    }
+    const issued = issuedOrWait;
     const { delivery, smsAvailable } = issued as { delivery?: unknown; smsAvailable?: boolean };
     return { verificationRequired: true, delivery, smsAvailable, ...(deviceLimit ? { deviceLimit } : {}), ...this.devCode(issued) };
   }

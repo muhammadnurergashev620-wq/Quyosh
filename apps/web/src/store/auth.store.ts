@@ -19,6 +19,9 @@ interface AuthState {
   deviceLimit: { max: number; active: number } | null;
   setDeviceLimit: (limit: { max: number; active: number } | null) => void;
   setDevCode: (code: string | null) => void;
+  /** Kirishda oldingi kod hali amal qilsa: «Qayta yuborish» taymeri shu soniyadan boshlanadi (faqat xotirada). */
+  resendIn: number | null;
+  setResendIn: (seconds: number | null) => void;
   setSession: (hasSession: boolean) => void;
   setPreferredRole: (role: Role | null) => void;
   setPendingPhone: (phone: string | null) => void;
@@ -40,10 +43,12 @@ export const useAuthStore = create<AuthState>()(
       deviceLimit: null,
       setDeviceLimit: (deviceLimit) => set({ deviceLimit }),
       setDevCode: (devCode) => set({ devCode }),
+      resendIn: null,
+      setResendIn: (resendIn) => set({ resendIn }),
       setSession: (hasSession) => set({ hasSession }),
       setPreferredRole: (preferredRole) => set({ preferredRole: env.appRole ?? preferredRole }),
       setPendingPhone: (pendingPhone) => set({ pendingPhone }),
-      clear: () => set({ hasSession: false, pendingPhone: null, devCode: null, delivery: null, smsAvailable: false, deviceLimit: null, newCredentials: null }),
+      clear: () => set({ hasSession: false, pendingPhone: null, devCode: null, resendIn: null, delivery: null, smsAvailable: false, deviceLimit: null, newCredentials: null }),
     }),
     {
       name: 'quyosh.auth-ui',

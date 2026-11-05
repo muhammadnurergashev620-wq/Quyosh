@@ -42,6 +42,9 @@ export interface LoginResult {
   /** Yangi qurilma uchun faol qurilmalar limiti to‘lgan bo‘lsa — kod kiritishdan oldin ogohlantirish uchun. */
   deviceLimit?: DeviceLimitInfo;
   developmentCode?: string;
+  /** Kod yaqinda yuborilgan edi: yangisi yuborilmadi, oldingi kod amal qiladi; `resendIn` — qayta yuborishgacha soniya. */
+  codeReused?: boolean;
+  resendIn?: number;
   /** Kod qayerga yuborilgani. */
   delivery?: CodeDelivery;
   /** SMS orqali yuborish mumkinmi (xizmat ulangan bo‘lsa). */

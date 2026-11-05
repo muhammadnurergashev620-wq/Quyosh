@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { hashSecret } from '../../src/common/security/hash';
 import { bootHarness, createAdmin, createSuperAdmin, createUser, MISSING_UUID, tokenFor, type Harness, type TestUser } from '../helpers/harness';
 
 /**
@@ -192,6 +193,25 @@ describe('M2/M3 integration', () => {
       const other = await createUser(h);
       expect((await h.get(`/sites/${siteId}`, other.token)).status).toBe(404);
       expect((await h.get(`/sites/${siteId}`, customer.token)).data.areas).toHaveLength(1);
+    });
+  });
+
+  describe('login OTP cooldown', () => {
+    it('a second login within the resend window continues with the previous code instead of failing with 429', async () => {
+      const user = await createUser(h);
+      const passwordHash = await hashSecret('Parol-12345', 4);
+      await h.db.user.update({ where: { id: user.id }, data: { passwordHash, twoFactorEnabled: true } });
+      const body = { phone: user.phone, password: 'Parol-12345' };
+      const first = await h.api('POST', '/auth/login', { headers: { 'x-app-panel': 'CUSTOMER' }, body });
+      expect(first.status).toBe(201);
+      expect(first.data.verificationRequired).toBe(true);
+      expect(first.data.codeReused).toBeUndefined();
+      const second = await h.api('POST', '/auth/login', { headers: { 'x-app-panel': 'CUSTOMER' }, body });
+      expect(second.status).toBe(201);
+      expect(second.data.verificationRequired).toBe(true);
+      expect(second.data.codeReused).toBe(true);
+      expect(second.data.resendIn).toBeGreaterThan(0);
+      expect(await h.db.otpCode.count({ where: { phone: user.phone, purpose: 'LOGIN' } })).toBe(1);
     });
   });
 });

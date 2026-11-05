@@ -24,6 +24,7 @@ export function OtpPage() {
   const pendingPhone = useAuthStore((s) => s.pendingPhone);
   const preferredRole = useAuthStore((s) => s.preferredRole);
   const devCode = useAuthStore((s) => s.devCode);
+  const resendIn = useAuthStore((s) => s.resendIn);
   const deviceLimit = useAuthStore((s) => s.deviceLimit);
   const delivery = useAuthStore((s) => s.delivery);
   const smsAvailable = useAuthStore((s) => s.smsAvailable);
@@ -166,6 +167,9 @@ export function OtpPage() {
           {t('Agar bu telefon raqami bilan avval ro‘yxatdan o‘tgan bo‘lsangiz,')} <Link to="/login">{t('kirish sahifasidan')}</Link> {t('foydalaning. Aks holda kodni qayta tekshirib kiriting.')}
         </Alert>
       )}
+      {!isRegisterFlow && resendIn !== null && (
+        <Alert tone="info">{t('Kod yaqinda yuborilgan edi — oldingi kodni kiriting. Kod kelmagan bo‘lsa, taymer tugagach qayta yuboring.')}</Alert>
+      )}
       {!!resendError && !/Soatiga/.test(getErrorMessage(resendError)) && <Alert tone="danger">{getErrorMessage(resendError)}</Alert>}
       <OtpForm
         phone={pendingPhone}
@@ -174,6 +178,7 @@ export function OtpPage() {
         onSubmit={handleSubmit}
         onResend={isRegisterFlow || loginSecret.get(pendingPhone) ? handleResend : undefined}
         actionError={resendError}
+        initialResendIn={isRegisterFlow ? undefined : (resendIn ?? undefined)}
         delivery={isRegisterFlow ? null : delivery}
         onSendSms={!isRegisterFlow && smsAvailable && delivery?.channel !== 'SMS' && loginSecret.get(pendingPhone) ? handleSendSms : undefined}
       />

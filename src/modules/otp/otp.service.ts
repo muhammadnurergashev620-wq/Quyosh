@@ -63,6 +63,22 @@ export class OtpService {
     return this.config.getOrThrow<number>('limits.otp.maxAttempts');
   }
 
+  /**
+   * Faol (muddati o‘tmagan) kod bor va qayta yuborish oynasi hali ochilmagan bo‘lsa — qolgan soniyalar, aks holda 0.
+   * Kirishda «Yangi kod so‘rashdan oldin N soniya kuting» xatosi o‘rniga, oldingi kod bilan davom etish uchun.
+   */
+  async pendingResendWait(phoneInput: string, purpose: OtpPurpose, panel: string | null): Promise<number> {
+    const phone = this.normalizePhone(phoneInput);
+    const now = new Date();
+    const last = await this.db.otpCode.findFirst({
+      where: { phone, purpose, panel, status: OtpStatus.ACTIVE, expiresAt: { gt: now } },
+      orderBy: { createdAt: 'desc' },
+      select: { createdAt: true },
+    });
+    if (!last) return 0;
+    return Math.max(0, Math.ceil((this.resendMs - (now.getTime() - last.createdAt.getTime())) / 1000));
+  }
+
   async issue(
     phoneInput: string,
     purpose: OtpPurpose,

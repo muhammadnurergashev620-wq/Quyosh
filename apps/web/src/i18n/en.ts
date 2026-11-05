@@ -3839,4 +3839,5 @@ export const en: Record<string, string> = {
   "Xizmat ko‘rsatish": "Maintenance",
   "Platforma bo‘yicha savollar": "Questions about the platform",
   "Atamalar lug‘ati": "Glossary",
+  "Kod yaqinda yuborilgan edi — oldingi kodni kiriting. Kod kelmagan bo‘lsa, taymer tugagach qayta yuboring.": "A code was sent recently — enter the previous code. If it did not arrive, resend it when the timer ends.",
 };
