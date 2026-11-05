@@ -406,4 +406,5 @@ export const ruM7: Record<string, string> = {
   "Login": "Логин",
   "Login yoki parol noto‘g‘ri": "Логин или пароль неверны",
   "Bu login band — boshqasini tanlang": "Этот логин занят — выберите другой",
+  "Yangi xodim qo‘shish": "Добавить сотрудника",
 };

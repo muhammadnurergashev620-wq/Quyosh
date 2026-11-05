@@ -11,6 +11,10 @@ import { UserAvatar } from '@/components/common/UserAvatar';
 import { useCurrentShop } from '@/features/shop/current-shop';
 import { useShopMembers, useShopMutation } from '@/features/shop/hooks';
 import { shopService } from '@/features/shop/shop.service';
+import { AddMemberForm } from '@/features/shop/components/AddMemberForm';
+import { IssuedCredentials } from '@/features/admin/shops/IssuedCredentials';
+import { useQueryClient } from '@tanstack/react-query';
+import { KeyRound, UserPlus } from 'lucide-react';
 import { PermissionPicker } from '@/features/shop/components/PermissionPicker';
 import { DEFAULT_PERMISSIONS, MEMBER_ROLE, personName } from '@/features/shop/labels';
 import type { ShopMember } from '@/features/shop/types';
@@ -46,13 +50,18 @@ function MemberForm({ initial, loading, onSubmit, onCancel }: { initial: ShopMem
   );
 }
 
-/** U11.15: xodimlar va ruxsatlar. Yangi xodimni administrator qo‘shadi (v3.1); OWNER bitta va o‘zgartirilmaydi. */
+/** U11.15: xodimlar va ruxsatlar. Egasi yangi xodim qo‘shadi (login + vaqtincha parol) va parolini tiklaydi; OWNER bitta va o‘zgartirilmaydi. */
 export function ShopMembersPage() {
   const { shopId, shop } = useCurrentShop();
   const isOwner = shop?.memberRole === 'OWNER';
   const members = useShopMembers(shopId, isOwner);
   const [editing, setEditing] = useState<ShopMember | null>(null);
   const [removing, setRemoving] = useState<ShopMember | null>(null);
+  const [adding, setAdding] = useState(false);
+  const [resetting, setResetting] = useState<ShopMember | null>(null);
+  const [issued, setIssued] = useState<{ title: string; login: string | null; password: string } | null>(null);
+  const queryClient = useQueryClient();
+  const reset = useShopMutation(shopId, (id, userId: string) => shopService.resetMemberPassword(id, userId));
   const update = useShopMutation(shopId, (id, vars: { memberId: string; memberRole: 'MANAGER' | 'STAFF'; permissions: string[] }) => shopService.updateMember(id, vars.memberId, vars), { success: t('Saqlandi') });
   const remove = useShopMutation(shopId, (id, memberId: string) => shopService.removeMember(id, memberId), { success: t('Xodim chiqarildi') });
 
@@ -64,21 +73,22 @@ export function ShopMembersPage() {
     <div className="qs-page">
       <div className="qs-page__head">
         <div><h1>{t('Xodimlar')}</h1><p>{t('Har bir xodimga faqat kerakli bo‘limlarni oching.')}</p></div>
+        <Button onClick={() => setAdding(true)}><UserPlus size={16} aria-hidden="true" /> {t('Yangi xodim qo‘shish')}</Button>
       </div>
-      <Alert tone="info">{t('Yangi xodim qo‘shish va parolini tiklash uchun administratorga murojaat qiling. Bu yerda ruxsatlarni o‘zgartirish va xodimni chiqarish mumkin.')}</Alert>
       <ul className="qs-list">
         {members.data.members.map((member) => (
           <li key={member.id}>
             <UserAvatar name={personName(member.user)} seed={member.user.id} src={member.user.avatarAssetId ? `/avatars/${member.user.avatarAssetId}` : null} />
             <div>
               <strong>{personName(member.user)}</strong>
-              <small>{[member.user.phone, member.user.email].filter(Boolean).join(' · ')}</small>
+              <small>{[member.user.login, member.user.phone, member.user.email].filter(Boolean).join(' · ')}{member.user.mustPasswordChange ? ` · ${t('vaqtincha parol hali almashtirilmagan')}` : ''}</small>
               {member.memberRole !== 'OWNER' && <small>{t('{n} ta ruxsat', { n: member.permissions.length })}</small>}
             </div>
             <Badge tone={member.memberRole === 'OWNER' ? 'primary' : 'neutral'}>{MEMBER_ROLE[member.memberRole]}</Badge>
             {member.memberRole !== 'OWNER' && (
               <span className="qs-page__actions">
                 <Button size="sm" variant="secondary" onClick={() => setEditing(member)}>{t('Ruxsatlar')}</Button>
+                <Button size="sm" variant="ghost" onClick={() => setResetting(member)}><KeyRound size={14} aria-hidden="true" /> {t('Parolni tiklash')}</Button>
                 <Button size="sm" variant="ghost" onClick={() => setRemoving(member)}>{t('Chiqarish')}</Button>
               </span>
             )}
@@ -90,6 +100,43 @@ export function ShopMembersPage() {
           <MemberForm initial={editing} loading={update.isPending} onCancel={() => setEditing(null)} onSubmit={({ memberRole, permissions }) => update.mutate({ memberId: editing.id, memberRole, permissions }, { onSuccess: () => setEditing(null) })} />
         )}
       </Modal>
+      <Modal open={adding} onClose={() => setAdding(false)} title={t('Yangi xodim qo‘shish')} large>
+        {adding && (
+          <AddMemberForm
+            submit={(input) => shopService.addMember(shopId!, input)}
+            onCancel={() => setAdding(false)}
+            onDone={(data) => {
+              setAdding(false);
+              setIssued({ title: t('Xodim qo‘shildi'), login: data.user.login ?? null, password: data.temporaryPassword });
+              void queryClient.invalidateQueries({ queryKey: ['shop'] });
+              void members.refetch();
+            }}
+          />
+        )}
+      </Modal>
+      <Modal open={!!issued} onClose={() => undefined} title={issued?.title ?? ''} dismissible={false}>
+        {issued && <IssuedCredentials title={issued.title} login={issued.login} password={issued.password} onClose={() => setIssued(null)} />}
+      </Modal>
+      <ConfirmDialog
+        open={!!resetting}
+        title={t('Parolni qayta tiklash')}
+        description={t('{name} uchun yangi vaqtincha parol yaratiladi, barcha qurilmalardan chiqariladi va birinchi kirishda parolni almashtiradi.', { name: resetting ? personName(resetting.user) : '' })}
+        confirmLabel={t('Tiklash')}
+        showCancel
+        cancelLabel={t('Bekor qilish')}
+        loading={reset.isPending}
+        onConfirm={() =>
+          resetting &&
+          reset.mutate(resetting.user.id, {
+            onSuccess: (data) => {
+              setResetting(null);
+              setIssued({ title: t('Yangi vaqtincha parol'), login: data.user.login ?? resetting.user.login ?? null, password: data.temporaryPassword });
+              void members.refetch();
+            },
+          })
+        }
+        onCancel={() => setResetting(null)}
+      />
       <ConfirmDialog
         open={!!removing}
         title={t('Xodimni chiqarish')}

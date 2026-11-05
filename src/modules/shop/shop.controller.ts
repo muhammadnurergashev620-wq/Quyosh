@@ -69,6 +69,7 @@ export class ManageShopController {
     private readonly shops: ShopService,
     private readonly members: ShopMembersService,
     private readonly ops: ShopOperationsService,
+    private readonly accounts: AdminShopsService,
   ) {}
 
   @Get()
@@ -86,6 +87,20 @@ export class ManageShopController {
   @Get('members')
   listMembers(@CurrentShop() ctx: ShopContext) {
     return this.members.listMembers(ctx.shopId);
+  }
+
+  /** Do‘kon egasi yangi xodim qo‘shadi: login + vaqtincha parol (parol javobda BIR MARTA ko‘rsatiladi). */
+  @RequireShopPermission('members.manage')
+  @Post('members')
+  addMember(@CurrentShop() ctx: ShopContext, @CurrentUser('sub') userId: string, @Body() dto: AdminAddMemberDto) {
+    return this.accounts.addMember(userId, ctx.shopId, dto);
+  }
+
+  /** Egasi xodimning parolini tiklaydi (yangi vaqtincha parol, barcha qurilmalardan chiqariladi). Egasining o‘zi tiklanmaydi. */
+  @RequireShopPermission('members.manage')
+  @Post('members/:userId/reset-password')
+  resetMemberPassword(@CurrentShop() ctx: ShopContext, @CurrentUser('sub') actorId: string, @Param('userId', ParseUUIDPipe) userId: string) {
+    return this.accounts.resetMemberPassword(actorId, ctx.shopId, userId, { forbidOwner: true });
   }
 
   @RequireShopPermission('members.manage')

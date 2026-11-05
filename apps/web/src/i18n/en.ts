@@ -3850,4 +3850,5 @@ export const en: Record<string, string> = {
   "Lotin harflari, raqamlar va . _ - (3–32 belgi). Vaqtincha parolni tizim yaratadi va bir marta ko‘rsatadi": "Latin letters, digits and . _ - (3–32 characters). The system generates a temporary password and shows it once",
   "Login yoki parol noto‘g‘ri": "Login or password is incorrect",
   "Bu login band — boshqasini tanlang": "This login is taken — choose another",
+  "Yangi xodim qo‘shish": "Add a new employee",
 };

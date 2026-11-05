@@ -142,6 +142,32 @@ describe('Shop created by admin (TZ 3.5, 3.7, 6.4)', () => {
     expect(list.data.invitations).toBeUndefined();
   });
 
+  it('the shop owner adds and resets staff accounts himself; staff cannot, the owner cannot be reset by himself', async () => {
+    const owner = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: 'Yangi-Parol-2026!' } });
+    const ownerCookie = [cookieOf(owner, 'accessToken_shop'), cookieOf(owner, 'deviceId_shop')].filter(Boolean).join('; ');
+    const opts = { headers: shopHeaders, cookie: ownerCookie };
+    const added = await h.api('POST', `/manage/shops/${shopId}/members`, { ...opts, body: { firstName: 'Sardor', login: 'sardor.xodim', memberRole: 'STAFF' } });
+    expect(added.status).toBe(201);
+    expect(added.data.temporaryPassword).toHaveLength(16);
+    expect(added.data.user.login).toBe('sardor.xodim');
+    expect(added.data.user.phone).toBeNull();
+    expect((await h.api('POST', `/manage/shops/${shopId}/members`, { ...opts, body: { firstName: 'Sardor', login: 'SARDOR.xodim', memberRole: 'STAFF' } })).body.code).toBe('LOGIN_TAKEN');
+    // Xodim vaqtincha parol bilan login orqali kiradi; xodim boshqalarni qo‘sha olmaydi.
+    const staffLogin = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}2`, body: { login: 'sardor.xodim', password: added.data.temporaryPassword } });
+    expect(staffLogin.status).toBe(201);
+    expect(staffLogin.data.mustPasswordChange).toBe(true);
+    await h.db.user.update({ where: { id: added.data.user.id }, data: { mustPasswordChange: false } });
+    const staffCookie = [cookieOf(staffLogin, 'accessToken_shop'), cookieOf(staffLogin, 'deviceId_shop')].filter(Boolean).join('; ');
+    expect((await h.api('POST', `/manage/shops/${shopId}/members`, { headers: shopHeaders, cookie: staffCookie, body: { firstName: 'Yana', login: 'yana.xodim', memberRole: 'STAFF' } })).status).toBe(403);
+    // Egasi xodim parolini tiklaydi; o‘zini (egani) tiklay olmaydi.
+    const reset = await h.api('POST', `/manage/shops/${shopId}/members/${added.data.user.id}/reset-password`, { ...opts, body: {} });
+    expect(reset.status).toBe(201);
+    expect(reset.data.temporaryPassword).toHaveLength(16);
+    expect(reset.data.temporaryPassword).not.toBe(added.data.temporaryPassword);
+    expect((await h.api('POST', `/manage/shops/${shopId}/members/${ownerId}/reset-password`, { ...opts, body: {} })).status).toBe(403);
+    await h.db.shopMember.deleteMany({ where: { userId: added.data.user.id } });
+  });
+
   it('admin resets the password: new temporary password, sessions revoked, change required again', async () => {
     const old = await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin, password: 'Yangi-Parol-2026!' } });
     const oldCookie = [cookieOf(old, 'accessToken_shop'), cookieOf(old, 'deviceId_shop')].filter(Boolean).join('; ');

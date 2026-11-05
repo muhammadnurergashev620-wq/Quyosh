@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Role, ShopStatus } from '@prisma/client';
 import { PrismaService } from '../../infrastructure/database/prisma.service';
 import { OutboxService } from '../../infrastructure/outbox/outbox.service';
@@ -203,10 +203,11 @@ export class AdminShopsService {
   }
 
   /** Parolni tiklash: yangi vaqtincha parol, mustPasswordChange = true, barcha sessiyalar bekor qilinadi. */
-  async resetMemberPassword(adminId: string, shopId: string, userId: string) {
+  async resetMemberPassword(adminId: string, shopId: string, userId: string, opts: { forbidOwner?: boolean } = {}) {
     const shop = await this.shops.findOrThrow(shopId);
     const member = await this.db.shopMember.findFirst({ where: { shopId: shop.id, userId }, select: { id: true, memberRole: true, user: { select: { id: true, login: true, phone: true, firstName: true, lastName: true, deletedAt: true } } } });
     if (!member || member.user.deletedAt) throw new NotFoundException(ERRORS.SHOP_MEMBER_NOT_FOUND);
+    if (opts.forbidOwner && member.memberRole === 'OWNER') throw new ForbiddenException(ERRORS.SHOP_OWNER_IMMUTABLE);
     const temporaryPassword = generateTempPassword();
     const passwordHash = await hashSecret(temporaryPassword, 12);
     const revokedAt = new Date();

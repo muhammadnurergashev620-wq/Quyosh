@@ -18,10 +18,14 @@ export const shopService = {
   get: (shopId: string) => apiGet<ManagedShop>(base(shopId)),
   update: (shopId: string, input: UpdateShopInput) => apiPatch<Shop>(base(shopId), input),
 
-  /** Xodimlar ro‘yxati; xodimni faqat admin qo‘shadi (v3.1). */
+  /** Xodimlar: ro‘yxat; egasi yangi xodim qo‘shadi (login + vaqtincha parol) va parolini tiklaydi. */
   members: (shopId: string) => apiGet<{ members: ShopMember[] }>(`${base(shopId)}/members`),
   updateMember: (shopId: string, memberId: string, input: { memberRole?: 'MANAGER' | 'STAFF'; permissions?: string[] }) => apiPatch<ShopMember>(`${base(shopId)}/members/${memberId}`, input),
   removeMember: (shopId: string, memberId: string) => apiDelete(`${base(shopId)}/members/${memberId}`),
+  addMember: (shopId: string, input: { firstName: string; lastName?: string; login: string; phone?: string; memberRole: 'MANAGER' | 'STAFF'; permissions?: string[] }) =>
+    apiPost<{ member: { id: string }; user: { id: string; login?: string | null }; temporaryPassword: string }>(`${base(shopId)}/members`, input),
+  resetMemberPassword: (shopId: string, userId: string) =>
+    apiPost<{ user: { id: string; login?: string | null }; temporaryPassword: string }>(`${base(shopId)}/members/${userId}/reset-password`, {}),
 
   branches: (shopId: string) => apiGet<Branch[]>(`${base(shopId)}/branches`),
   createBranch: (shopId: string, input: BranchInput) => apiPost<Branch>(`${base(shopId)}/branches`, input),
