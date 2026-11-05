@@ -9,8 +9,8 @@ Repo ildizidagi `render.yaml` (Blueprint) shu qadamlarni avtomatlashtiradi; maxf
    - **Direct** ulanish (pooler'siz) → `DIRECT_URL` (faqat build paytida migratsiya/seed uchun).
    - PostGIS va pg_trgm migratsiyalar orqali o'zi yoqiladi (`CREATE EXTENSION`); Neon ularni qo'llab-quvvatlaydi.
 2. **Upstash** (upstash.com) → Redis database → *TLS* yoqilgan `rediss://default:<parol>@<host>.upstash.io:6379` → `REDIS_URL`.
-3. **S3-mos saqlash (MAJBURIY).** Ilova rasm/fayllarni S3'da saqlaydi va `STORAGE_*` bo'lmasa ishga tushmaydi. Bepul variant: Cloudflare R2 (bucket + API token → `STORAGE_ENDPOINT`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY_ID`, `STORAGE_SECRET_ACCESS_KEY`).
-4. **Kod yetkazish (MAJBURIY, kamida bittasi).** Production'da OTP kodi ekranda ko'rsatilmaydi: SMTP (`SMTP_*`) yoki Eskiz SMS (`ESKIZ_*`) kerak. Telegram (`TELEGRAM_BOT_TOKEN` + `TELEGRAM_OTP_CHAT_ID`) kodning nusxasini operator chatiga yuboradi. Admin kirishi ham OTP talab qiladi.
+3. **S3-mos saqlash (keyinroq, hozircha shart emas).** `STORAGE_*` bo'sh bo'lsa ilova ishlaydi, lekin rasm/fayl yuklash ishlamaydi (logo, portfolio, chat ilovalari). Bepul variant: Cloudflare R2 (bucket + API token → `STORAGE_ENDPOINT`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY_ID`, `STORAGE_SECRET_ACCESS_KEY`).
+4. **OTP kodi — hozircha ekranda.** `render.yaml` da `NODE_ENV=staging`, `OTP_DEV_ECHO=true`, `OTP_DEV_ECHO_AUTH=true`: tasdiqlash kodi javobda qaytadi va kirish ekranida ko'rinadi (SMS/email shart emas). **Bu faqat sinov uchun:** kod API javobida ochiq bo'lgani uchun telefon egaligi tekshirilmaydi (istalgan kishi istalgan raqamga ro'yxatdan o'ta oladi). Haqiqiy foydalanuvchilarga ochishdan oldin `NODE_ENV=production` qiling, `OTP_DEV_ECHO*` ni o'chiring (production'da ular yoqilgan bo'lsa ilova ishga tushmaydi) va SMTP (`SMTP_*`), Eskiz (`ESKIZ_*`) yoki Telegram (`TELEGRAM_BOT_TOKEN` + `TELEGRAM_OTP_CHAT_ID`) ulang.
 5. `JWT_SECRET` yarating (kamida 32 belgi): `openssl rand -base64 48`
 
 ## Render dashboard
@@ -21,7 +21,7 @@ Repo ildizidagi `render.yaml` (Blueprint) shu qadamlarni avtomatlashtiradi; maxf
    - Start Command: `node dist/main.js`
    - Health Check Path: `/api/v1/health`
 2. **Environment** bo'limida `render.yaml` dagi `sync: false` o'zgaruvchilarni to'ldiring (nomlari faylda; qiymatlarni chatga/repo'ga yozmang):
-   `DATABASE_URL`, `DIRECT_URL`, `REDIS_URL`, `JWT_SECRET`, `CORS_ORIGINS` (faqat https), `PUBLIC_API_URL`, `CUSTOMER_PANEL_URL`, `SHOP_PANEL_URL`, `AUTH_COOKIE_SAME_SITE`, `STORAGE_ENDPOINT`, `STORAGE_BUCKET`, `STORAGE_ACCESS_KEY_ID`, `STORAGE_SECRET_ACCESS_KEY`, `METRICS_TOKEN`, `OPS_WEBHOOK_SECRET`, kod yetkazish (`SMTP_*` yoki `ESKIZ_*` / `TELEGRAM_*`).
+   `DATABASE_URL`, `DIRECT_URL`, `REDIS_URL`, `JWT_SECRET`, `CORS_ORIGINS` (faqat https), `PUBLIC_API_URL`, `CUSTOMER_PANEL_URL`, `SHOP_PANEL_URL`, `AUTH_COOKIE_SAME_SITE`, `METRICS_TOKEN`, `OPS_WEBHOOK_SECRET` (va keyinroq `STORAGE_*`, kod yetkazish `SMTP_*` / `ESKIZ_*` / `TELEGRAM_*`).
 3. **Birinchi deploy uchun qo'shimcha:** `RUN_SEED=true`, `ADMIN_PHONE` (masalan `998901234567`), `ADMIN_PASSWORD` (≥ 12 belgi). Bu siyosatlar, katalog, kalkulyator ma'lumotlari va birinchi super adminni yaratadi (ularsiz ro'yxatdan o'tish ishlamaydi).
 4. **Create / Deploy.** Build paytida: bog'liqliklar → `prisma generate` → `nest build` → `prisma migrate deploy` (→ seed).
 5. Deploy muvaffaqiyatli bo'lgach **`RUN_SEED` va `ADMIN_PASSWORD` ni o'chiring** (seed har safar admin parolini qayta yozadi) va **Manual Deploy** qiling.

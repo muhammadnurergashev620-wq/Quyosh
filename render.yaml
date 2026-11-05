@@ -16,8 +16,14 @@ services:
       # ── Qat'iy qiymatlar (maxfiy emas) ──
       - key: NODE_VERSION
         value: "22"
+      # HOZIRCHA staging: OTP kodi ekranda ko'rinadi (production'da bu taqiqlangan — ilova ishga tushmaydi).
+      # Haqiqiy foydalanuvchilarga ochishdan oldin: NODE_ENV=production, OTP_DEV_ECHO* ni o'chiring va SMTP/Eskiz/Telegram ulang.
       - key: NODE_ENV
-        value: production
+        value: staging
+      - key: OTP_DEV_ECHO
+        value: "true"
+      - key: OTP_DEV_ECHO_AUTH
+        value: "true"
       - key: TRUST_PROXY            # Render proksi ortida: bitta qatlam (haqiqiy IP rate-limit va audit uchun)
         value: "1"
       - key: AUTH_COOKIE_SECURE
@@ -47,7 +53,8 @@ services:
         sync: false
       - key: AUTH_COOKIE_SAME_SITE  # frontend boshqa domenda bo'lsa: none; bir sayt (bir registrable domen) bo'lsa: lax
         sync: false
-      - key: STORAGE_ENDPOINT       # S3-mos saqlash (Cloudflare R2: https://<account>.r2.cloudflarestorage.com)
+      # S3-mos saqlash — hozircha bo'sh qolishi mumkin (ilova ishlaydi), lekin rasm/fayl yuklash ishlamaydi.
+      - key: STORAGE_ENDPOINT       # Cloudflare R2: https://<account>.r2.cloudflarestorage.com
         sync: false
       - key: STORAGE_BUCKET
         sync: false
@@ -66,7 +73,7 @@ services:
         sync: false
       - key: ADMIN_PASSWORD         # kamida 12 belgi
         sync: false
-      # ── Kod yetkazish (kamida bittasi kerak, aks holda OTP kodni foydalanuvchiga yetkazib bo'lmaydi) ──
+      # ── Kod yetkazish: hozircha shart emas (kod ekranda). Production'ga o'tishda kamida bittasi kerak ──
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT

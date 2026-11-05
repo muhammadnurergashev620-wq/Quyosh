@@ -28,4 +28,10 @@ describe('Render (Neon + Upstash) production muhiti', () => {
     expect(() => validate({ ...RENDER_ENV, OTP_DEV_ECHO: 'true' })).toThrow();
     expect(() => validate({ ...RENDER_ENV, REDIS_URL: 'https://x' })).toThrow();
   });
+
+  it('staging + OTP aks-sadosi (hozirgi Render sozlamasi): saqlashsiz va SMS/emailsiz ham ishga tushadi; production’da esa taqiqlangan', () => {
+    const staging = { ...RENDER_ENV, NODE_ENV: 'staging', OTP_DEV_ECHO: 'true', OTP_DEV_ECHO_AUTH: 'true', STORAGE_ENDPOINT: '', STORAGE_ACCESS_KEY_ID: '' };
+    expect(() => validate(staging)).not.toThrow();
+    expect(() => validate({ ...staging, NODE_ENV: 'production' })).toThrow();
+  });
 });
