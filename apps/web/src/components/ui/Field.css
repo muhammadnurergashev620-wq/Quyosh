@@ -25,6 +25,23 @@
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* Brauzer avto-to‘ldirishi (Firefox sariq/zaytun, Chrome ko‘k) fonni bo‘yamasin: mavzuga mos qoladi. */
+.gm-field__control:-webkit-autofill,
+.gm-field__control:-webkit-autofill:hover,
+.gm-field__control:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--qs-color-text);
+  caret-color: var(--qs-color-text);
+  -webkit-box-shadow: 0 0 0 1000px var(--qs-color-surface) inset;
+  box-shadow: 0 0 0 1000px var(--qs-color-surface) inset;
+  transition: background-color 9999s ease-out 0s;
+}
+
+.gm-field__control:autofill {
+  background-color: var(--qs-color-surface) !important;
+  background-image: none !important;
+  color: var(--qs-color-text) !important;
+}
+
 .gm-field__control::placeholder {
   color: color-mix(in srgb, var(--qs-color-text-muted) 75%, transparent);
 }
