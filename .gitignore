@@ -19,3 +19,7 @@ tmp/
 /apps/web/.env*
 data/
 backups/
+
+# Audit skrinshotlari (lokal, katta)
+docs/audit/before/
+docs/audit/after/
