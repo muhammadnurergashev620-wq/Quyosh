@@ -21,7 +21,7 @@ describe('Shop created by admin (TZ 3.5, 3.7, 6.4)', () => {
   let session = '';
 
   const create = (over: Record<string, unknown> = {}) =>
-    h.post('/admin/shops', admin.token, { name: 'Quyosh Diler', stir: String(300_000_000 + Math.floor(Math.random() * 99_999_999)), phone: '+998901000001', regionCode: 'samarqand', address: 'Samarqand, Registon 1', ownerFirstName: 'Aziza', ownerLastName: 'Karimova', ownerLogin: `egasi${Math.floor(100_000 + Math.random() * 899_999)}`, ownerPhone: `+99890${String(Math.floor(1_000_000 + Math.random() * 8_999_999))}`, ...over });
+    h.post('/admin/shops', admin.token, { name: 'Quyosh Diler', stir: String(300_000_000 + Math.floor(Math.random() * 99_999_999)), phone: `+99891${String(Math.floor(1_000_000 + Math.random() * 8_999_999))}`, regionCode: 'samarqand', address: 'Samarqand, Registon 1', ownerFirstName: 'Aziza', ownerLastName: 'Karimova', ownerLogin: `egasi${Math.floor(100_000 + Math.random() * 899_999)}`, ownerPhone: `+99890${String(Math.floor(1_000_000 + Math.random() * 8_999_999))}`, ...over });
 
   beforeAll(async () => {
     h = await bootHarness();
@@ -105,9 +105,9 @@ describe('Shop created by admin (TZ 3.5, 3.7, 6.4)', () => {
     const owner = await h.db.user.findUniqueOrThrow({ where: { id: ownerId } });
     expect(owner.login).toBe(ownerLogin);
     expect((await h.api('POST', '/auth/login', { headers: shopHeaders, cookie: `deviceId_shop=${DEVICE}`, body: { login: ownerLogin.toUpperCase(), password: 'Yangi-Parol-2026!' } })).status).toBe(201);
-    expect((await create({ ownerLogin, confirmDuplicates: true })).body.code).toBe('LOGIN_TAKEN');
-    expect((await create({ ownerLogin: 'x y', confirmDuplicates: true })).status).toBe(400);
-    const noPhone = await create({ ownerLogin: `telefonsiz${Math.floor(Math.random() * 99_999)}`, ownerPhone: undefined, confirmDuplicates: true });
+    expect((await create({ ownerLogin })).body.code).toBe('LOGIN_TAKEN');
+    expect((await create({ ownerLogin: 'x y' })).status).toBe(400);
+    const noPhone = await create({ ownerLogin: `telefonsiz${Math.floor(Math.random() * 99_999)}`, ownerPhone: undefined });
     expect(noPhone.status).toBe(201);
     expect(noPhone.data.owner.phone).toBeNull();
     const customerPanel = await h.api('POST', '/auth/login', { headers: { 'x-app-panel': 'CUSTOMER' }, body: { login: ownerLogin, password: 'Yangi-Parol-2026!' } });

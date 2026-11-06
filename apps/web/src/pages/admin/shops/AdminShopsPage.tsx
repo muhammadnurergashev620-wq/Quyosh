@@ -26,7 +26,6 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', stir: '', phone: '', regionCode: 'toshkent-shahri', address: '', ownerFirstName: '', ownerLastName: '', ownerLogin: '', ownerPhone: '' });
   const [duplicates, setDuplicates] = useState<Duplicates | null>(null);
-  const [confirmDup, setConfirmDup] = useState(false);
   const [result, setResult] = useState<{ shopId: string; login: string | null; password: string } | null>(null);
   const set = (patch: Partial<typeof form>) => setForm((current) => ({ ...current, ...patch }));
   const digits = (value: string) => value.replace(/\D/g, '');
@@ -46,7 +45,7 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
     mutationFn: () =>
       adminShopsService.create({
         name: form.name.trim(), stir: form.stir, phone: `+998${phone}`, regionCode: form.regionCode, address: form.address.trim(),
-        ownerFirstName: form.ownerFirstName.trim(), ownerLastName: form.ownerLastName.trim() || undefined, ownerLogin: form.ownerLogin.trim(), ownerPhone: ownerPhone.length === 9 ? `+998${ownerPhone}` : undefined, confirmDuplicates: confirmDup,
+        ownerFirstName: form.ownerFirstName.trim(), ownerLastName: form.ownerLastName.trim() || undefined, ownerLogin: form.ownerLogin.trim(), ownerPhone: ownerPhone.length === 9 ? `+998${ownerPhone}` : undefined,
       }),
     onSuccess: (data) => {
       setResult({ shopId: data.shop.id, login: data.owner.login ?? null, password: data.temporaryPassword });
@@ -55,10 +54,10 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
   });
   const close = () => {
     setForm({ name: '', stir: '', phone: '', regionCode: 'toshkent-shahri', address: '', ownerFirstName: '', ownerLastName: '', ownerLogin: '', ownerPhone: '' });
-    setDuplicates(null); setConfirmDup(false); setResult(null); create.reset();
+    setDuplicates(null); setResult(null); create.reset();
     onClose();
   };
-  const needsConfirm = !!duplicates?.shops.length && !duplicates.blocking;
+  const stirTaken = !!duplicates?.shops.some((shop) => shop.stir === form.stir);
   const valid = form.name.trim().length >= 2 && /^\d{9}$/.test(form.stir) && phone.length === 9 && form.address.trim().length >= 5 && form.ownerFirstName.trim().length >= 2 && LOGIN_RE.test(form.ownerLogin.trim()) && (ownerPhone.length === 0 || ownerPhone.length === 9);
 
   return (
@@ -83,12 +82,11 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
             <Input label={t('Manzil')} value={form.address} onChange={(e) => set({ address: e.target.value })} required maxLength={500} hint={t('Birinchi filial sifatida saqlanadi')} />
           </div>
           {duplicates && (duplicates.shops.length > 0 || duplicates.users.length > 0) && (
-            <Alert tone={duplicates.blocking ? 'danger' : 'warning'} title={duplicates.blocking ? t('Bu STIR bilan do‘kon mavjud') : t('O‘xshash yozuvlar topildi')}>
+            <Alert tone={duplicates.blocking ? 'danger' : 'warning'} title={duplicates.blocking ? (stirTaken ? t('Bu STIR bilan do‘kon mavjud') : t('Bu telefon raqami bilan do‘kon mavjud')) : t('O‘xshash yozuvlar topildi')}>
               <ul style={{ margin: '4px 0', paddingLeft: 18 }}>
                 {duplicates.shops.map((shop) => <li key={shop.id}>{shop.name} · {SHOP_STATUS[shop.status].label}{shop.stir ? ` · STIR ${shop.stir}` : ''}</li>)}
                 {duplicates.users.map((user) => <li key={user.id}>{t('Foydalanuvchi')}: {personName(user)} (#{user.accountNumber})</li>)}
               </ul>
-              {needsConfirm && <label className="qs-check"><input type="checkbox" checked={confirmDup} onChange={(e) => setConfirmDup(e.target.checked)} /> {t('Baribir yaratish')}</label>}
             </Alert>
           )}
           <h3 style={{ margin: '8px 0 0' }}>{t('Egasining hisobi')}</h3>
@@ -101,7 +99,7 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
           {create.isError && <Alert tone="danger">{getErrorMessage(create.error)}</Alert>}
           <div className="qs-form__actions">
             <Button type="button" variant="ghost" onClick={close}>{t('Bekor qilish')}</Button>
-            <Button type="submit" loading={create.isPending} disabled={!valid || !!duplicates?.blocking || (needsConfirm && !confirmDup)}>{t('Yaratish')}</Button>
+            <Button type="submit" loading={create.isPending} disabled={!valid || !!duplicates?.blocking}>{t('Yaratish')}</Button>
           </div>
         </form>
       )}

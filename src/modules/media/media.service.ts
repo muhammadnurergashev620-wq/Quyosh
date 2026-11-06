@@ -217,9 +217,12 @@ export class MediaService {
         await this.assertShopMember(uploaderId, link.id);
         return;
       }
-      case 'CERTIFICATE': {
+      case 'CERTIFICATE':
+      case 'VERIFICATION_DOC': {
+        // v3.1 (TZ 3.7.2): belgi va hujjatlarni faqat admin qo‘yadi — do‘kon a’zosi sertifikat/hujjat yuklay olmaydi.
         if (link.type !== 'Shop') throw new ForbiddenException(ERRORS.MEDIA_INVALID_TARGET);
-        await this.assertShopMember(uploaderId, link.id);
+        const admin = await this.db.userRole.findFirst({ where: { userId: uploaderId, role: Role.ADMIN }, select: { id: true } });
+        if (!admin) throw new ForbiddenException(ERRORS.MEDIA_INVALID_TARGET);
         return;
       }
       case 'SUPPORT_ATTACHMENT': {
@@ -230,11 +233,6 @@ export class MediaService {
       case 'ARTICLE_COVER': {
         const admin = await this.db.userRole.findFirst({ where: { userId: uploaderId, role: Role.ADMIN }, select: { id: true } });
         if (!admin || link.type !== 'User' || link.id !== uploaderId) throw new ForbiddenException(ERRORS.MEDIA_INVALID_TARGET);
-        return;
-      }
-      case 'VERIFICATION_DOC': {
-        if (link.type !== 'Shop') throw new ForbiddenException(ERRORS.MEDIA_INVALID_TARGET);
-        await this.assertShopMember(uploaderId, link.id, true);
         return;
       }
       case 'MESSAGE_ATTACHMENT': {

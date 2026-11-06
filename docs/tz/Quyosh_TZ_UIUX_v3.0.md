@@ -307,7 +307,7 @@ Do‘konni faqat admin yaratadi (ADMIN roli va `SHOPS` huquqi). Do‘kon ro‘yx
 
 1.  Admin → Do‘konlar → "+ Do‘kon yaratish" formasi: **do‘kon ma’lumotlari** — nomi, STIR, telefon, viloyat, manzil (birinchi filial sifatida saqlanadi); **egasining hisobi** — ism, **login** (3–32 belgi: lotin harflari, raqamlar, `. _ -`; admin beradi), telefon (ixtiyoriy). Parolni admin kiritmaydi.
 
-2.  Server dublikatni tekshiradi: shu STIR bilan do‘kon bo‘lsa 409 `SHOP_STIR_TAKEN` (bloklaydi); shu telefon bilan do‘kon bo‘lsa — ogohlantirish va tasdiq. Egasining logini band bo‘lsa 409 `LOGIN_TAKEN`, telefoni boshqa akkauntda band bo‘lsa 409 `PHONE_TAKEN`: mavjud akkaunt do‘konga bog‘lanmaydi.
+2.  Server dublikatni tekshiradi: shu STIR bilan do‘kon bo‘lsa 409 `SHOP_STIR_TAKEN`, shu telefon bilan do‘kon bo‘lsa 409 `SHOP_PHONE_TAKEN` — ikkalasi ham bloklaydi (v3.2, buyurtmachi qarori; profilda telefon o‘zgartirilganda ham). Egasining logini band bo‘lsa 409 `LOGIN_TAKEN`, telefoni boshqa akkauntda band bo‘lsa 409 `PHONE_TAKEN`: mavjud akkaunt do‘konga bog‘lanmaydi.
 
 3.  Bitta tranzaksiyada: Shop (`createdSource = ADMIN`, `status = ACTIVE`, `verificationStatus = VERIFIED`), birinchi filial, egasining User (faqat SHOP roli, `mustPasswordChange = true`) va `ShopMember(OWNER)` yaratiladi. Tizim kamida 12 belgili vaqtincha parol yaratadi.
 

@@ -62,7 +62,6 @@ export interface CreateShopInput {
   ownerLastName?: string;
   ownerLogin: string;
   ownerPhone?: string;
-  confirmDuplicates?: boolean;
 }
 
 export interface AddMemberInput {

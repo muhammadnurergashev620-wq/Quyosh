@@ -141,10 +141,8 @@ export class AdminShopsService {
     const ownerLogin = normalizeLogin(dto.ownerLogin);
     if (!isValidLogin(ownerLogin)) throw new BadRequestException(LOGIN_MESSAGE);
     const dup = await this.shops.duplicates(dto.stir, phone);
-    if (dup.blocking) throw conflict('SHOP_STIR_TAKEN', ERRORS.SHOP_STIR_TAKEN);
-    if (dup.shops.length > 0 && !dto.confirmDuplicates) {
-      throw new DomainException(HttpStatus.CONFLICT, 'SHOP_DUPLICATE_WARNING', 'Shu telefon raqamli do‘kon mavjud. Davom etish uchun tasdiqlang');
-    }
+    if (dup.shops.some((s) => s.stir === dto.stir)) throw conflict('SHOP_STIR_TAKEN', ERRORS.SHOP_STIR_TAKEN);
+    if (dup.shops.some((s) => s.phone === phone)) throw conflict('SHOP_PHONE_TAKEN', ERRORS.SHOP_PHONE_TAKEN);
     await this.assertPhoneFree(ownerPhone);
     await this.assertLoginFree(ownerLogin);
 
@@ -170,7 +168,7 @@ export class AdminShopsService {
       });
       // Parol audit va logga tushmaydi — faqat kim va nima yaratilgani.
       await tx.auditLog.create({
-        data: { actorId: adminId, action: 'SHOP_CREATED', targetType: 'Shop', targetId: created.id, after: { name: created.name, stir: created.stir, source: 'ADMIN', status: created.status, ownerUserId: user.id, duplicatesConfirmed: !!dto.confirmDuplicates } },
+        data: { actorId: adminId, action: 'SHOP_CREATED', targetType: 'Shop', targetId: created.id, after: { name: created.name, stir: created.stir, source: 'ADMIN', status: created.status, ownerUserId: user.id } },
       });
       await tx.auditLog.create({ data: { actorId: adminId, action: 'SHOP_ACCOUNT_CREATED', targetType: 'User', targetId: user.id, after: { shopId: created.id, role: 'OWNER', mustPasswordChange: true } } });
       return { shop: created, owner: user };

@@ -64,6 +64,12 @@ interface ErrorResult {
   details?: string[];
 }
 
+/** Log va xato jurnali uchun yo‘l: query (imzo, `sig`, `expires`) va maxfiy tokenli segmentlar yashiriladi. */
+export function safePath(url: string | undefined): string {
+  const path = String(url ?? '').split('?')[0]!;
+  return path.replace(/\/(shared|widget|shop-invitations)\/[^/]+/g, '/$1/:token');
+}
+
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger(AllExceptionsFilter.name);
@@ -111,7 +117,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     if (result.status >= 500) {
       const stack = exception instanceof Error ? exception.stack : String(exception);
-      this.logger.error(`Kutilmagan xatolik: ${req.method} ${req.url}`, stack);
+      this.logger.error(`Kutilmagan xatolik: ${req.method} ${safePath(req.url)}`, stack);
     }
 
     try {
@@ -120,7 +126,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         code: result.code,
         message: result.message,
         method: req.method,
-        path: req.url,
+        path: safePath(req.url),
         requestId: req.id ?? req.headers['x-request-id'] ?? null,
         stack: result.status >= 500 && exception instanceof Error ? exception.stack : undefined,
         req,
@@ -143,7 +149,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message: result.message,
       ...(result.details ? { details: result.details } : {}),
       timestamp: new Date().toISOString(),
-      path: req.url,
+      path: safePath(req.url),
       requestId: req.id ?? req.headers['x-request-id'] ?? null,
     });
   }

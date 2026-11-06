@@ -222,11 +222,6 @@ export class AdminCreateShopDto {
   @IsOptional()
   @Matches(PHONE, { message: 'PHONE_INVALID' })
   ownerPhone?: string;
-
-  /** Shu telefon bilan boshqa do‘kon bo‘lsa ogohlantirishni tasdiqlab o‘tish (STIR to‘qnashuvi baribir bloklanadi). */
-  @IsOptional()
-  @IsBoolean()
-  confirmDuplicates?: boolean;
 }
 
 /** TZ 3.7.2: admin do‘konga xodim qo‘shadi (login + vaqtincha parol). */

@@ -39,6 +39,14 @@ export class ShopService {
     if (taken) throw conflict('SHOP_STIR_TAKEN', ERRORS.SHOP_STIR_TAKEN);
   }
 
+  /** Bir telefon — bitta faol do‘kon (takroriy telefon bloklanadi, STIR kabi). */
+  async assertShopPhoneFree(phone: string | undefined | null, exceptShopId?: string) {
+    const normalized = phone ? normalizeUzPhone(phone) : null;
+    if (!normalized) return;
+    const taken = await this.db.shop.findFirst({ where: { phone: normalized, archivedAt: null, ...(exceptShopId ? { id: { not: exceptShopId } } : {}) }, select: { id: true } });
+    if (taken) throw conflict('SHOP_PHONE_TAKEN', ERRORS.SHOP_PHONE_TAKEN);
+  }
+
   /** GET /me/shops — foydalanuvchi a’zo bo‘lgan do‘konlar (do‘kon almashtirgich uchun). */
   async myShops(userId: string) {
     const rows = await this.db.shopMember.findMany({
@@ -80,6 +88,7 @@ export class ShopService {
   async updateProfile(ctx: ShopContext, actorId: string, dto: UpdateShopDto) {
     const before = await this.db.shop.findUniqueOrThrow({ where: { id: ctx.shopId } });
     if (dto.stir !== undefined) await this.assertStirFree(dto.stir, ctx.shopId);
+    if (dto.phone) await this.assertShopPhoneFree(dto.phone, ctx.shopId);
     if (dto.logoAssetId) await this.assertShopAsset(ctx.shopId, dto.logoAssetId, ['SHOP_LOGO']);
     if (dto.coverAssetId) await this.assertShopAsset(ctx.shopId, dto.coverAssetId, ['SHOP_LOGO', 'PORTFOLIO']);
     const data: Prisma.ShopUpdateInput = {
@@ -118,7 +127,7 @@ export class ShopService {
         : Promise.resolve([] as Array<{ id: string; name: string; slug: string; status: string; stir: string | null; phone: string | null }>),
       normalized ? this.db.user.findMany({ where: { phone: normalized, deletedAt: null }, select: { id: true, accountNumber: true, firstName: true, lastName: true, createdAt: true }, take: 5 }) : Promise.resolve([]),
     ]);
-    return { shops, users, blocking: shops.some((shop) => !!stir && shop.stir === stir) };
+    return { shops, users, blocking: shops.some((shop) => (!!stir && shop.stir === stir) || (!!normalized && shop.phone === normalized)) };
   }
 
   async findOrThrow(shopId: string) {

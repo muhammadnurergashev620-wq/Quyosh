@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ConfigService } from '@nestjs/config';
-import { AllExceptionsFilter } from '../../src/common/filters/all-exceptions.filter';
+import { AllExceptionsFilter, safePath } from '../../src/common/filters/all-exceptions.filter';
 import { TelegramAlertService } from '../../src/infrastructure/telegram/telegram-alert.service';
 
 function makeService(values: Record<string, unknown>) {
@@ -175,6 +175,15 @@ describe('AllExceptionsFilter → notifier', () => {
       expect.objectContaining({ status: 500, code: 'INTERNAL_ERROR', method: 'POST', requestId: 'rid' }),
     );
     expect(JSON.stringify(res.json.mock.calls[0])).not.toContain('db exploded');
+  });
+
+  it('never forwards query strings or share/widget tokens to logs and the error journal', () => {
+    const notifier = { notifyError: vi.fn() };
+    run(new Error('boom'), notifier);
+    expect(notifier.notifyError).toHaveBeenCalledWith(expect.objectContaining({ path: '/api/v1/x' }));
+    expect(safePath('/api/v1/media/file/abc/original?expires=1&sig=secret')).toBe('/api/v1/media/file/abc/original');
+    expect(safePath('/api/v1/shared/tok-123/pdf')).toBe('/api/v1/shared/:token/pdf');
+    expect(safePath('/api/v1/widget/pk_abc/embed.js?x=1')).toBe('/api/v1/widget/:token/embed.js');
   });
 
   it('survives a notifier that throws', () => {
