@@ -15,6 +15,7 @@ import { publicShopsService } from '@/features/catalog/public-shops.service';
 import { mapService } from '@/features/map/map.service';
 import { getErrorMessage } from '@/lib/error-messages';
 import { cx, formatDate, formatDateTime } from '@/lib/utils';
+import { useIdempotencyKey } from '@/hooks/useIdempotencyKey';
 import { t } from '@/i18n';
 import { dealsService } from '../deals.service';
 import '@/features/calc/calc.css';
@@ -84,21 +85,23 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
     if (b.powerKw) setCapacity(String(Math.round(b.powerKw * 10) / 10));
   }
 
+  const requestBody = {
+    calculationId: basis?.kind === 'calc' ? basis.id : undefined,
+    siteId: basis?.kind === 'site' ? basis.id : (basis?.siteId ?? undefined),
+    title: basis?.title,
+    systemType,
+    requiredCapacityKw: capacity ? Number(capacity.replace(',', '.')) : undefined,
+    batteryNeeded: battery,
+    installationNeeded: installation,
+    financingInterest: financing,
+    notes: notes.trim() || undefined,
+    shopIds,
+  };
+  const idem = useIdempotencyKey(requestBody);
   const create = useMutation({
-    mutationFn: () =>
-      dealsService.createRequest({
-        calculationId: basis?.kind === 'calc' ? basis.id : undefined,
-        siteId: basis?.kind === 'site' ? basis.id : (basis?.siteId ?? undefined),
-        title: basis?.title,
-        systemType,
-        requiredCapacityKw: capacity ? Number(capacity.replace(',', '.')) : undefined,
-        batteryNeeded: battery,
-        installationNeeded: installation,
-        financingInterest: financing,
-        notes: notes.trim() || undefined,
-        shopIds,
-      }),
+    mutationFn: () => dealsService.createRequest(requestBody, idem.key),
     onSuccess: (res) => {
+      idem.rotate();
       setDone(res);
       void queryClient.invalidateQueries({ queryKey: ['quote-requests'] });
       void queryClient.invalidateQueries({ queryKey: ['quote-limits'] });

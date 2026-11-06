@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Idempotent } from '../../common/decorators/idempotent.decorator';
 import type { Request, Response } from 'express';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { CurrentShop, RequireShopPermission, type ShopContext } from '../../common/decorators/shop-permission.decorator';
@@ -15,6 +16,7 @@ import { QuoteTemplateService } from './quote-template.service';
 export class QuotesController {
   constructor(private readonly quotes: QuoteService) {}
 
+  @Idempotent()
   @Post('quote-requests/:id/quotes')
   create(@CurrentUser('sub') userId: string, @Param('id', ParseUUIDPipe) requestId: string, @Body() dto: CreateQuoteDto) {
     return this.quotes.createDraft(userId, requestId, dto);
@@ -40,6 +42,7 @@ export class QuotesController {
     return this.quotes.updateDraft(userId, id, dto);
   }
 
+  @Idempotent()
   @Post('quotes/:id/send')
   send(@CurrentUser('sub') userId: string, @Param('id', ParseUUIDPipe) id: string) {
     return this.quotes.send(userId, id);

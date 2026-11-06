@@ -91,8 +91,8 @@ export class IdempotencyKeyReusedException extends DomainException {
   constructor() {
     super(
       HttpStatus.CONFLICT,
-      'IDEMPOTENCY_KEY_REUSED',
-      ERRORS.IDEMPOTENCY_KEY_REUSED,
+      'IDEMPOTENCY_CONFLICT',
+      ERRORS.IDEMPOTENCY_CONFLICT,
     );
   }
 }

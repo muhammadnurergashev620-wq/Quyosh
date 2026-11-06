@@ -25,7 +25,7 @@ const shop = (shopId: string) => `/manage/shops/${shopId}`;
 export const dealsService = {
   // Mijoz: so‘rovlar
   limits: () => apiGet<RequestLimits>('/quote-requests/limits'),
-  createRequest: (input: CreateRequestInput) => apiPost<{ id: string; number: number; shopCount: number }>('/quote-requests', input),
+  createRequest: (input: CreateRequestInput, idempotencyKey: string) => apiPost<{ id: string; number: number; shopCount: number }>('/quote-requests', input, idempotencyKey),
   myRequests: () => apiGet<QuoteRequestRow[]>('/quote-requests/me'),
   request: (id: string) => apiGet<QuoteRequestDetail>(`/quote-requests/${id}`),
   addShops: (id: string, shopIds: string[]) => apiPost<{ added: number }>(`/quote-requests/${id}/shops`, { shopIds }),
@@ -68,9 +68,9 @@ export const dealsService = {
   builderCatalog: (shopId: string, search?: string) => apiGet<BuilderCatalog>(`${shop(shopId)}/quote-builder/catalog${search ? `?search=${encodeURIComponent(search)}` : ''}`),
 
   // Takliflar
-  createQuote: (requestId: string, shopId: string, input: QuoteInput) => apiPost<QuoteView>(`/quote-requests/${requestId}/quotes`, { shopId, ...input }),
+  createQuote: (requestId: string, shopId: string, input: QuoteInput, idempotencyKey: string) => apiPost<QuoteView>(`/quote-requests/${requestId}/quotes`, { shopId, ...input }, idempotencyKey),
   updateQuote: (id: string, version: number, input: QuoteInput) => apiPatch<QuoteView>(`/quotes/${id}`, { version, ...input }),
-  sendQuote: (id: string) => apiPost<QuoteView>(`/quotes/${id}/send`),
+  sendQuote: (id: string, idempotencyKey: string) => apiPost<QuoteView>(`/quotes/${id}/send`, {}, idempotencyKey),
   reviseQuote: (id: string, version: number, input: QuoteInput) => apiPost<QuoteView>(`/quotes/${id}/revise`, { version, ...input }),
   withdrawQuote: (id: string) => apiPost<{ status: string }>(`/quotes/${id}/withdraw`),
   quote: (id: string) => apiGet<QuoteView>(`/quotes/${id}`),

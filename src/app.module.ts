@@ -26,6 +26,7 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { PermissionsGuard } from './common/guards/permissions.guard';
 import { RateLimitGuard } from './common/guards/rate-limit.guard';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { IdempotencyInterceptor } from './common/interceptors/idempotency.interceptor';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { OtpModule } from './modules/otp/otp.module';
@@ -73,6 +74,7 @@ import { SiteModule } from './modules/site/site.module';
     { provide: APP_GUARD, useClass: PermissionsGuard },
     { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
     { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: IdempotencyInterceptor },
   ],
 })
 export class AppModule {}

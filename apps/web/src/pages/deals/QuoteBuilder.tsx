@@ -17,6 +17,7 @@ import { useCurrentShop } from '@/features/shop/current-shop';
 import { apiPost } from '@/services/api.client';
 import { getErrorMessage } from '@/lib/error-messages';
 import { formatDate } from '@/lib/utils';
+import { useIdempotencyKey } from '@/hooks/useIdempotencyKey';
 import { t } from '@/i18n';
 
 interface Line {
@@ -135,14 +136,16 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
     };
   }
 
+  const createKey = useIdempotencyKey(current ? null : input());
+  const sendKey = useIdempotencyKey(current?.id ?? null);
   const saveDraft = useMutation({
-    mutationFn: async () => (current ? dealsService.updateQuote(current.id, current.version, input()) : dealsService.createQuote(lead.request.id, shopId, input())),
+    mutationFn: async () => (current ? dealsService.updateQuote(current.id, current.version, input()) : dealsService.createQuote(lead.request.id, shopId, input(), createKey.key)),
     onSuccess: (q) => { setCurrent(q); setSaved(t('Qoralama saqlandi')); onSaved(); },
   });
   const send = useMutation({
     mutationFn: async () => {
-      const draft = current ? await dealsService.updateQuote(current.id, current.version, input()) : await dealsService.createQuote(lead.request.id, shopId, input());
-      return dealsService.sendQuote(draft.id);
+      const draft = current ? await dealsService.updateQuote(current.id, current.version, input()) : await dealsService.createQuote(lead.request.id, shopId, input(), createKey.key);
+      return dealsService.sendQuote(draft.id, current?.id === draft.id ? sendKey.key : `${createKey.key}-send`);
     },
     onSuccess: (q) => { setCurrent(q); setSaved(t('Taklif mijozga yuborildi')); onSaved(); },
   });

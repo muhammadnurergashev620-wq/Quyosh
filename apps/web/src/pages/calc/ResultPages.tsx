@@ -16,6 +16,7 @@ import { cx } from '@/lib/utils';
 import { env } from '@/lib/env';
 import { useAuthStore } from '@/store/auth.store';
 import { useAppStore } from '@/store/app.store';
+import { useIdempotencyKey } from '@/hooks/useIdempotencyKey';
 import { lang as currentLang, t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
@@ -61,7 +62,8 @@ function PdfModal({ id, open, onClose }: { id: string; open: boolean; onClose: (
   const [lang, setLang] = useState<'uz' | 'oz' | 'ru' | 'en'>(currentLang === 'ru' ? 'ru' : currentLang === 'uz-Cyrl' ? 'oz' : currentLang === 'en' ? 'en' : 'uz');
   const [qr, setQr] = useState<'SHARE' | 'CABINET' | 'NONE'>('SHARE');
   const [jobId, setJobId] = useState<string | null>(null);
-  const create = useMutation({ mutationFn: () => calcService.report(id, lang, qr), onSuccess: (job) => setJobId(job.id) });
+  const idem = useIdempotencyKey({ id, lang, qr });
+  const create = useMutation({ mutationFn: () => calcService.report(id, lang, qr, idem.key), onSuccess: (job) => { idem.rotate(); setJobId(job.id); } });
   const status = useQuery({
     queryKey: ['report', jobId],
     queryFn: () => calcService.reportStatus(jobId!),

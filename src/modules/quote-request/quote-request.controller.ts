@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Header, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Idempotent } from '../../common/decorators/idempotent.decorator';
 import type { Request } from 'express';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { RateLimit } from '../../common/decorators/rate-limit.decorator';
@@ -18,6 +19,7 @@ export class QuoteRequestsController {
   constructor(private readonly service: QuoteRequestService) {}
 
   @RateLimit({ scope: 'user', limit: 10, windowSeconds: 3600 })
+  @Idempotent()
   @Post()
   create(@CurrentUser('sub') userId: string, @Body() dto: CreateQuoteRequestDto) {
     return this.service.create(userId, dto);

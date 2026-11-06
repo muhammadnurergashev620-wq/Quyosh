@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Res } from '@nestjs/common';
+import { Idempotent } from '../../common/decorators/idempotent.decorator';
 import { ConfigService } from '@nestjs/config';
 import type { Request, Response } from 'express';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
@@ -100,6 +101,7 @@ export class CalculationsController {
     return this.calculations.share(userId, id, dto.expiresDays);
   }
 
+  @Idempotent()
   @Post(':id/report')
   report(@CurrentUser('sub') userId: string, @Param('id', ParseUUIDPipe) id: string, @Body() dto: ReportDto) {
     return this.reports.create(userId, id, dto.lang ?? 'uz', dto.qrMode ?? 'NONE');

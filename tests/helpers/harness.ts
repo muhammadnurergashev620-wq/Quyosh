@@ -62,7 +62,9 @@ export async function bootHarness(): Promise<Harness> {
     const headers: Record<string, string> = { 'x-forwarded-for': options.ip ?? defaultIp, ...(options.headers ?? {}) };
     if (options.token) headers.cookie = `accessToken=${options.token}`;
     if (options.cookie) headers.cookie = options.cookie;
-    if (options.idempotent) headers['idempotency-key'] = `t-${randomUUID()}`;
+    // TZ 9.4: majburiy kalitli endpointlar — test o‘zi kalit bermasa, tasodifiy kalit qo‘shiladi.
+    const needsKey = method === 'POST' && /^\/(quote-requests(\/[^/]+\/quotes)?|quotes\/[^/]+\/send|calculations\/[^/]+\/report)$/.test(path.split('?')[0]!);
+    if ((options.idempotent ?? needsKey) && !Object.keys(headers).some((h) => h.toLowerCase() === 'idempotency-key')) headers['idempotency-key'] = `t-${randomUUID()}`;
     let body: BodyInit | undefined;
     if (options.rawBody !== undefined) {
       headers['content-type'] = 'application/json';
