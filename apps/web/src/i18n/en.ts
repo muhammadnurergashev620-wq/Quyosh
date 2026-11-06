@@ -3879,4 +3879,6 @@ export const en: Record<string, string> = {
   "Sharhlar reytingi taqsimoti": "Review rating distribution",
   "Hisoblar bo‘yicha": "By calculations",
   "Do‘konlar holati": "Shop statuses",
+  "Kamida {p} % — {s}": "At least {p} % — {s}",
+  "Eng kam summani qo‘yish": "Set the minimum amount",
 };

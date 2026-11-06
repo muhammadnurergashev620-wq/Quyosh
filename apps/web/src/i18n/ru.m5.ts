@@ -376,4 +376,6 @@ export const ruM5: Record<string, string> = {
   "Grafik": "График",
   "Ishlab chiqarish": "Выработка",
   "Tarmoqqa ulangan tizim elektr o‘chganda xavfsizlik uchun o‘chadi.": "Сетевая система при отключении сети выключается из соображений безопасности.",
+  "Kamida {p} % — {s}": "Не менее {p} % — {s}",
+  "Eng kam summani qo‘yish": "Указать минимальную сумму",
 };
