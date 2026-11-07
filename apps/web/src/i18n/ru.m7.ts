@@ -591,4 +591,5 @@ export const ruM7: Record<string, string> = {
   "xodimni do‘kondan chiqardi": "удалил(а) сотрудника из магазина",
   "yangi model taklif qildi": "предложил(а) новую модель",
   "Oylik tejash (ixtiyoriy)": "Экономия в месяц (необязательно)",
+  "So‘rov va montaj": "Заявки и монтаж",
 };

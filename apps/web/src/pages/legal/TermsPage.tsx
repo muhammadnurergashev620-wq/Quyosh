@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ChevronDown, FileText, Lock, ScrollText, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ChevronDown, FileText, Lock, ScrollText } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { LogoLink } from '@/components/common/Logo';
 import { PageLoader } from '@/components/common/PageLoader';
@@ -15,7 +15,7 @@ import { renderContent } from '@/features/legal/render-content';
 import './TermsPage.css';
 import { t } from '@/i18n';
 
-const ICONS: Partial<Record<PolicyType, LucideIcon>> = { TERMS: FileText, PRIVACY: Lock, PLATFORM_RULES: ScrollText, WARRANTY: ShieldCheck };
+const ICONS: Partial<Record<PolicyType, LucideIcon>> = { TERMS: FileText, PRIVACY: Lock, PLATFORM_RULES: ScrollText };
 
 function PolicyBody({ id, fallback }: { id: string; fallback?: string }) {
   const detail = usePolicy(id);

@@ -1,4 +1,4 @@
-import { Banknote, ClipboardList, FileText, MessageCircle, Megaphone, Scale, Settings, UserRound } from 'lucide-react';
+import { BookOpen, ClipboardList, FileText, MessageCircle, Scale, Settings, Store, UserRound } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { BadgeTone } from '@/components/ui/Badge';
 import { AUDIT_ACTIONS } from '@/features/admin/audit-labels';
@@ -6,13 +6,13 @@ import type { AdminNotificationCategory, AdminNotificationPriority } from '../ad
 import { t } from '@/i18n';
 
 export const CATEGORY: Record<AdminNotificationCategory, { label: string; icon: ReactNode; tone: 'green' | 'red' | 'violet' | 'blue' | 'amber' | 'teal' | 'pink' | 'gray' }> = {
-  PAYMENT: { label: t('To‘lov'), icon: <Banknote size={17} />, tone: 'green' },
+  SHOP: { label: t('Do‘kon'), icon: <Store size={17} />, tone: 'green' },
   DISPUTE: { label: t('Nizo'), icon: <Scale size={17} />, tone: 'red' },
   DOCUMENT: { label: t('Hujjat'), icon: <FileText size={17} />, tone: 'violet' },
   USER: { label: t('Foydalanuvchi'), icon: <UserRound size={17} />, tone: 'blue' },
-  ORDER: { label: t('So‘rov'), icon: <ClipboardList size={17} />, tone: 'amber' },
+  ORDER: { label: t('So‘rov va montaj'), icon: <ClipboardList size={17} />, tone: 'amber' },
   CHAT: { label: t('Suhbat'), icon: <MessageCircle size={17} />, tone: 'teal' },
-  POST: { label: t('E’lon'), icon: <Megaphone size={17} />, tone: 'pink' },
+  CONTENT: { label: t('Kontent'), icon: <BookOpen size={17} />, tone: 'pink' },
   SYSTEM: { label: t('Tizim'), icon: <Settings size={17} />, tone: 'gray' },
 };
 

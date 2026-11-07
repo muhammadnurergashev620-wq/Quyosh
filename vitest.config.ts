@@ -7,7 +7,7 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     include: ['tests/**/*.spec.ts', 'src/**/*.spec.ts'],
-    exclude: ['node_modules', 'dist', 'apps', 'TASK', '3-oy marcketplace'],
+    exclude: ['node_modules', 'dist', 'apps'],
     globalSetup: ['tests/setup/global-setup.ts'],
     setupFiles: ['tests/setup/setup-env.ts'],
     fileParallelism: false,

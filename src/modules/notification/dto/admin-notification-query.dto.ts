@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsDateString, IsIn, IsInt, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
 import { IsUUID } from '../../../common/validators/any-uuid';
+import { NOTIFICATION_CATEGORIES } from '../notification-classify';
 
 export class AdminNotificationQueryDto {
   @IsOptional()
@@ -23,7 +24,7 @@ export class AdminNotificationQueryDto {
   search?: string;
 
   @IsOptional()
-  @IsIn(['PAYMENT', 'DISPUTE', 'DOCUMENT', 'USER', 'ORDER', 'CHAT', 'POST', 'SYSTEM'])
+  @IsIn(NOTIFICATION_CATEGORIES)
   category?: string;
 
   @IsOptional()

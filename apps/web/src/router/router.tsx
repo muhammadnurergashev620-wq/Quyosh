@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { PageLoader } from '@/components/common/PageLoader';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter, Navigate, useParams } from 'react-router-dom';
 import { getNavItems } from '@/components/layout/nav-items';
 import { RouteError } from '@/components/common/RouteError';
 import { RootShell } from './RootShell';
@@ -117,6 +117,12 @@ function PanelRoot() {
   return <Navigate to={first?.to ?? '/'} replace />;
 }
 
+/** Eski `/mijoz/montaj/:id` → `/mijoz/montajlar/:id`. */
+function LegacyInstallationRedirect() {
+  const { id } = useParams();
+  return <Navigate to={`/mijoz/montajlar/${id ?? ''}`} replace />;
+}
+
 /** React Router v7 xatti-harakatini oldindan yoqish (future-flag ogohlantirishlari yo‘q). */
 const ROUTER_OPTIONS = { future: { v7_relativeSplatPath: true, v7_fetcherPersist: true, v7_normalizeFormMethod: true, v7_partialHydration: true, v7_skipActionErrorRevalidation: true } } as const;
 
@@ -187,7 +193,8 @@ const panelRouter = createBrowserRouter([
           { path: '/mijoz/bosh', element: customer(<CustomerDashboardPage />) },
           { path: '/mijoz/tizimim', element: customer(<SystemsPage />) },
           { path: '/mijoz/tizimim/:id', element: customer(<SystemPage />) },
-          { path: '/mijoz/montaj/:id', element: customer(<InstallationPage />) },
+          // Eski havola: bitta montaj sahifasi — /mijoz/montajlar/:id (A-12).
+          { path: '/mijoz/montaj/:id', element: <LegacyInstallationRedirect /> },
           { path: '/mijoz/murojaatlar', element: customer(<TicketsPage />) },
           { path: '/mijoz/murojaatlar/:id', element: customer(<TicketPage />) },
           { path: '/mijoz/profil', element: customer(<CustomerProfilePage />) },

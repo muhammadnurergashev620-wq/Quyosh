@@ -22,9 +22,6 @@ interface UploadFile {
   size: number;
 }
 
-/** Ish lentasi videosi: ko‘pi bilan 40 MB (taxminan 60 soniyalik 720p). */
-export const FEED_VIDEO_MAX_BYTES = 40 * 1024 * 1024;
-
 @Injectable()
 export class MediaService {
   constructor(

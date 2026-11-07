@@ -1,4 +1,4 @@
-export type AdminNotificationCategory = 'PAYMENT' | 'DISPUTE' | 'DOCUMENT' | 'USER' | 'ORDER' | 'CHAT' | 'POST' | 'SYSTEM';
+export type AdminNotificationCategory = 'SHOP' | 'DISPUTE' | 'DOCUMENT' | 'USER' | 'ORDER' | 'CHAT' | 'CONTENT' | 'SYSTEM';
 export type AdminNotificationPriority = 'HIGH' | 'MEDIUM' | 'LOW';
 
 export interface AdminNotificationItem {

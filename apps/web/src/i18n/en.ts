@@ -3339,4 +3339,5 @@ export const en: Record<string, string> = {
   "xodimni do‘kondan chiqardi": "removed a staff member",
   "yangi model taklif qildi": "proposed a new model",
   "Oylik tejash (ixtiyoriy)": "Monthly saving (optional)",
+  "So‘rov va montaj": "Requests and installation",
 };

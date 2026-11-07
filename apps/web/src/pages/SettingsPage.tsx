@@ -25,7 +25,7 @@ const BASE = '/sozlamalar';
 const DOCUMENTS: Array<{ section: string; type: PolicyType; label: string; icon: typeof FileText }> = [
   { section: 'shartlar', type: 'TERMS', label: t('Foydalanish shartlari'), icon: FileText },
   { section: 'maxfiylik', type: 'PRIVACY', label: t('Maxfiylik siyosati'), icon: Lock },
-  { section: 'oferta', type: 'PUBLIC_OFFER', label: t('Ommaviy oferta'), icon: ScrollText },
+  { section: 'qoidalar', type: 'PLATFORM_RULES', label: t('Platforma qoidalari'), icon: ScrollText },
 ];
 
 /** Sozlamalar: profil kabi — asosiy sahifada menyu, har bir qator alohida ichki bo‘lim. */
