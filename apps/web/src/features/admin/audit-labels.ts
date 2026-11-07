@@ -1,22 +1,7 @@
 import type { BadgeTone } from '@/components/ui/Badge';
 import { t } from '@/i18n';
 
-export type AuditGroup =
-  | 'auth'
-  | 'verification'
-  | 'users'
-  | 'profile'
-  | 'catalog'
-  | 'requests'
-  | 'offers'
-  | 'orderFlow'
-  | 'orders'
-  | 'payments'
-  | 'reviews'
-  | 'customer'
-  | 'disputes'
-  | 'chat'
-  | 'other';
+export type AuditGroup = 'auth' | 'users' | 'admins' | 'shops' | 'catalog' | 'calc' | 'deals' | 'content' | 'support' | 'system';
 
 export interface AuditActionInfo {
   /** Qisqa sarlavha. */
@@ -29,20 +14,15 @@ export interface AuditActionInfo {
 
 export const GROUP_INFO: Record<AuditGroup, { label: string; prefix?: string }> = {
   auth: { label: t('Kirish va sessiyalar'), prefix: 'AUTH_' },
-  verification: { label: t('Do‘konlarni tasdiqlash'), prefix: 'VERIFICATION_' },
-  users: { label: t('Foydalanuvchilar'), prefix: 'ADMIN_USER_' },
-  profile: { label: t('Usta faoliyati'), prefix: 'MASTER_' },
-  catalog: { label: t('Xizmatlar katalogi'), prefix: 'SERVICE_' },
-  requests: { label: t('So‘rovlar'), prefix: 'REQUEST_' },
-  offers: { label: t('Takliflar'), prefix: 'OFFER_' },
-  orderFlow: { label: t('Buyurtma jarayoni'), prefix: 'ORDER_' },
-  orders: { label: t('Admin — buyurtmalar'), prefix: 'ADMIN_ORDER_' },
-  payments: { label: t('To‘lovlar'), prefix: 'PAYMENT_' },
-  reviews: { label: t('Sharhlar'), prefix: 'REVIEW_' },
-  customer: { label: t('Mijoz profili'), prefix: 'CUSTOMER_' },
-  disputes: { label: t('Nizo va shikoyatlar'), prefix: 'DISPUTE_' },
-  chat: { label: t('Chat moderatsiyasi'), prefix: 'CHAT_' },
-  other: { label: t('Boshqa') },
+  users: { label: t('Foydalanuvchilar'), prefix: 'USER_' },
+  admins: { label: t('Adminlar'), prefix: 'ADMIN_' },
+  shops: { label: t('Do‘konlar'), prefix: 'SHOP_' },
+  catalog: { label: t('Katalog') },
+  calc: { label: t('Kalkulyator va tariflar') },
+  deals: { label: t('So‘rov, taklif va montaj') },
+  content: { label: t('Kontent') },
+  support: { label: t('Yordam') },
+  system: { label: t('Tizim') },
 };
 
 export const AUDIT_ACTIONS: Record<string, AuditActionInfo> = {
@@ -55,97 +35,34 @@ export const AUDIT_ACTIONS: Record<string, AuditActionInfo> = {
   AUTH_SESSION_REVOKED: { label: t('Qurilma sessiyasi tugatildi'), verb: t('qurilma sessiyasini tugatdi'), group: 'auth', tone: 'warning' },
   AUTH_OTHER_SESSIONS_REVOKED: { label: t('Boshqa qurilmalar chiqarildi'), verb: t('boshqa qurilmalarini tizimdan chiqardi'), group: 'auth', tone: 'warning' },
 
-  VERIFICATION_SUBMITTED: { label: t('Hujjat yuborildi'), verb: t('tasdiqlash uchun hujjat yubordi'), group: 'verification', tone: 'primary' },
-  VERIFICATION_START_REVIEW: { label: t('Ko‘rib chiqish boshlandi'), verb: t('hujjatni ko‘rib chiqishni boshladi'), group: 'verification', tone: 'primary' },
-  VERIFICATION_APPROVE: { label: t('Hujjat tasdiqlandi'), verb: t('hujjatni tasdiqladi'), group: 'verification', tone: 'success' },
-  VERIFICATION_REJECT: { label: t('Hujjat rad etildi'), verb: t('hujjatni rad etdi'), group: 'verification', tone: 'danger' },
-  VERIFICATION_REQUEST_CORRECTION: { label: t('Tuzatish so‘raldi'), verb: t('hujjatni tuzatishni so‘radi'), group: 'verification', tone: 'warning' },
-  VERIFICATION_DELETED: { label: t('Hujjat o‘chirildi'), verb: t('hujjatni o‘chirdi'), group: 'verification', tone: 'danger' },
 
-  ADMIN_USER_SUSPENDED: { label: t('Foydalanuvchi to‘xtatildi'), verb: t('foydalanuvchini to‘xtatdi'), group: 'users', tone: 'warning' },
   ADMIN_USER_REACTIVATED: { label: t('Foydalanuvchi qayta faollashtirildi'), verb: t('foydalanuvchini qayta faollashtirdi'), group: 'users', tone: 'success' },
-  ADMIN_USER_PASSWORD_VIEWED: { label: t('Parol ko‘rilgan (eski yozuv)'), verb: t('foydalanuvchi parolini ko‘rgan (bu imkoniyat bekor qilingan)'), group: 'users', tone: 'warning' },
   AUTH_REGISTER_DUPLICATE_ATTEMPT: { label: t('Takroriy ro‘yxatdan o‘tish urinishi'), verb: t('mavjud raqam/email bilan ro‘yxatdan o‘tmoqchi bo‘ldi'), group: 'users', tone: 'warning' },
   ADMIN_USER_PASSWORD_RESET: { label: t('Parol o‘zgartirildi'), verb: t('foydalanuvchi parolini o‘zgartirdi'), group: 'users', tone: 'warning' },
-  ADMIN_ADMIN_CREATED: { label: t('Admin yaratildi'), verb: t('yangi admin yaratdi'), group: 'users', tone: 'success' },
-  ADMIN_PERMISSIONS_CHANGED: { label: t('Admin huquqlari o‘zgardi'), verb: t('admin huquqlarini o‘zgartirdi'), group: 'users', tone: 'primary' },
-  ADMIN_SUPERADMIN_GRANTED: { label: t('Superadmin qilindi'), verb: t('superadmin huquqini berdi'), group: 'users', tone: 'warning' },
-  ADMIN_SUPERADMIN_REVOKED: { label: t('Superadminlik olib tashlandi'), verb: t('superadmin huquqini oldi'), group: 'users', tone: 'warning' },
-  ADMIN_TWO_FACTOR_ENABLED: { label: t('Kirish kodi yoqildi'), verb: t('kirishdagi tasdiqlash kodini yoqdi'), group: 'users', tone: 'success' },
-  ADMIN_TWO_FACTOR_DISABLED: { label: t('Kirish kodi o‘chirildi'), verb: t('kirishdagi tasdiqlash kodini o‘chirdi'), group: 'users', tone: 'warning' },
+  ADMIN_ADMIN_CREATED: { label: t('Admin yaratildi'), verb: t('yangi admin yaratdi'), group: 'admins', tone: 'success' },
+  ADMIN_PERMISSIONS_CHANGED: { label: t('Admin huquqlari o‘zgardi'), verb: t('admin huquqlarini o‘zgartirdi'), group: 'admins', tone: 'primary' },
+  ADMIN_SUPERADMIN_GRANTED: { label: t('Superadmin qilindi'), verb: t('superadmin huquqini berdi'), group: 'admins', tone: 'warning' },
+  ADMIN_SUPERADMIN_REVOKED: { label: t('Superadminlik olib tashlandi'), verb: t('superadmin huquqini oldi'), group: 'admins', tone: 'warning' },
+  ADMIN_TWO_FACTOR_ENABLED: { label: t('Kirish kodi yoqildi'), verb: t('kirishdagi tasdiqlash kodini yoqdi'), group: 'admins', tone: 'success' },
+  ADMIN_TWO_FACTOR_DISABLED: { label: t('Kirish kodi o‘chirildi'), verb: t('kirishdagi tasdiqlash kodini o‘chirdi'), group: 'admins', tone: 'warning' },
   ADMIN_USER_DELETED: { label: t('Foydalanuvchi o‘chirildi'), verb: t('foydalanuvchini o‘chirdi'), group: 'users', tone: 'danger' },
-  ADMIN_REGISTRATION_BLOCKED: { label: t('Qayta ro‘yxatdan o‘tish bloklandi'), verb: t('qayta ro‘yxatdan o‘tishni blokladi'), group: 'users', tone: 'danger' },
-  ADMIN_REGISTRATION_ALLOWED: { label: t('Qayta ro‘yxatdan o‘tishga ruxsat berildi'), verb: t('qayta ro‘yxatdan o‘tishga ruxsat berdi'), group: 'users', tone: 'success' },
-  USER_ACTION_CREATED: { label: t('Choralar qo‘llandi'), verb: t('foydalanuvchiga chora qo‘lladi'), group: 'users', tone: 'warning' },
+  ADMIN_REGISTRATION_BLOCKED: { label: t('Qayta ro‘yxatdan o‘tish bloklandi'), verb: t('qayta ro‘yxatdan o‘tishni blokladi'), group: 'admins', tone: 'danger' },
+  ADMIN_REGISTRATION_ALLOWED: { label: t('Qayta ro‘yxatdan o‘tishga ruxsat berildi'), verb: t('qayta ro‘yxatdan o‘tishga ruxsat berdi'), group: 'admins', tone: 'success' },
 
-  MASTER_PROFILE_CREATED: { label: t('Usta profili yaratildi'), verb: t('usta profilini yaratdi'), group: 'profile', tone: 'primary' },
-  MASTER_PROFILE_UPDATED: { label: t('Usta profili yangilandi'), verb: t('usta profilini yangiladi'), group: 'profile', tone: 'neutral' },
-  MASTER_STATUS_CHANGED: { label: t('Usta holati o‘zgardi'), verb: t('profil holatini o‘zgartirdi'), group: 'profile', tone: 'neutral' },
-  MASTER_PAUSED: { label: t('Usta pauza qo‘ydi'), verb: t('qabul qilishni pauza qildi'), group: 'profile', tone: 'warning' },
-  MASTER_RESUMED: { label: t('Usta pauzadan chiqdi'), verb: t('pauzadan chiqdi'), group: 'profile', tone: 'success' },
-  MASTER_PORTFOLIO_CREATED: { label: t('Portfolio ishi qo‘shildi'), verb: t('portfoliosiga yangi ish qo‘shdi'), group: 'profile', tone: 'primary' },
-  MASTER_PORTFOLIO_UPDATED: { label: t('Portfolio ishi yangilandi'), verb: t('portfolio ishini yangiladi'), group: 'profile', tone: 'neutral' },
-  MASTER_PORTFOLIO_REMOVED: { label: t('Portfolio ishi o‘chirildi'), verb: t('portfolio ishini o‘chirdi'), group: 'profile', tone: 'warning' },
-  ADMIN_PORTFOLIO_APPROVED: { label: t('Portfolio tasdiqlandi'), verb: t('portfolio ishini tasdiqladi'), group: 'profile', tone: 'success' },
-  ADMIN_PORTFOLIO_REJECTED: { label: t('Portfolio rad etildi'), verb: t('portfolio ishini rad etdi'), group: 'profile', tone: 'danger' },
 
-  REQUEST_CREATED: { label: t('So‘rov yaratildi'), verb: t('yangi so‘rov yaratdi'), group: 'requests', tone: 'primary' },
-  REQUEST_UPDATED: { label: t('So‘rov yangilandi'), verb: t('so‘rovni yangiladi'), group: 'requests', tone: 'neutral' },
-  REQUEST_SUBMITTED: { label: t('So‘rov yuborildi'), verb: t('so‘rovni ustalarga yubordi'), group: 'requests', tone: 'primary' },
-  REQUEST_CANCELLED: { label: t('So‘rov bekor qilindi'), verb: t('so‘rovni bekor qildi'), group: 'requests', tone: 'danger' },
 
-  OFFER_CREATED: { label: t('Taklif berildi'), verb: t('so‘rovga taklif berdi'), group: 'offers', tone: 'primary' },
-  OFFER_WITHDRAWN: { label: t('Taklif qaytarib olindi'), verb: t('taklifini qaytarib oldi'), group: 'offers', tone: 'warning' },
-  OFFER_ACCEPTED: { label: t('Taklif qabul qilindi'), verb: t('taklifni qabul qildi'), group: 'offers', tone: 'success' },
+  OFFER_CREATED: { label: t('Taklif berildi'), verb: t('so‘rovga taklif berdi'), group: 'catalog', tone: 'primary' },
 
-  ORDER_CONFIRMED: { label: t('Buyurtma tasdiqlandi'), verb: t('buyurtmani tasdiqladi'), group: 'orderFlow', tone: 'primary' },
-  ORDER_ON_THE_WAY: { label: t('Usta yo‘lga chiqdi'), verb: t('ish joyiga yo‘lga chiqdi'), group: 'orderFlow', tone: 'primary' },
-  ORDER_ARRIVED: { label: t('Usta yetib keldi'), verb: t('ish joyiga yetib keldi'), group: 'orderFlow', tone: 'primary' },
-  ORDER_IN_PROGRESS: { label: t('Ish boshlandi'), verb: t('ishni boshladi'), group: 'orderFlow', tone: 'primary' },
-  ORDER_WAITING_CONFIRMATION: { label: t('Tasdiq kutilmoqda'), verb: t('ish yakunini tasdiqlash uchun yubordi'), group: 'orderFlow', tone: 'warning' },
-  ORDER_COMPLETED: { label: t('Buyurtma yakunlandi'), verb: t('buyurtmani yakunladi'), group: 'orderFlow', tone: 'success' },
-  ORDER_CANCELLED: { label: t('Buyurtma bekor qilindi'), verb: t('buyurtmani bekor qildi'), group: 'orderFlow', tone: 'danger' },
-  ORDER_DISPUTED: { label: t('Buyurtma bo‘yicha nizo ochildi'), verb: t('buyurtma bo‘yicha nizo ochdi'), group: 'orderFlow', tone: 'danger' },
-  ORDER_RESCHEDULE_PROPOSED: { label: t('Yangi vaqt taklif qilindi'), verb: t('buyurtma vaqtini o‘zgartirishni taklif qildi'), group: 'orderFlow', tone: 'neutral' },
-  ORDER_RESCHEDULE_ACCEPTED: { label: t('Yangi vaqt tasdiqlandi'), verb: t('yangi vaqtni tasdiqladi'), group: 'orderFlow', tone: 'success' },
-  ORDER_RESCHEDULE_DECLINED: { label: t('Yangi vaqt rad etildi'), verb: t('taklif qilingan vaqtni rad etdi'), group: 'orderFlow', tone: 'warning' },
 
-  ADMIN_ORDER_CANCELLED: { label: t('Buyurtma bekor qilindi'), verb: t('buyurtmani bekor qildi'), group: 'orders', tone: 'danger' },
-  ADMIN_ORDER_COMPLETED: { label: t('Nizoli buyurtma yakunlandi'), verb: t('nizoli buyurtmani yakunladi'), group: 'orders', tone: 'success' },
 
-  SERVICE_CATEGORY_CREATED: { label: t('Kategoriya yaratildi'), verb: t('xizmat kategoriyasini yaratdi'), group: 'catalog', tone: 'primary' },
-  SERVICE_CREATED: { label: t('Xizmat yaratildi'), verb: t('yangi xizmat qo‘shdi'), group: 'catalog', tone: 'primary' },
-  SERVICE_UPDATED: { label: t('Xizmat yangilandi'), verb: t('xizmatni yangiladi'), group: 'catalog', tone: 'neutral' },
-  SERVICE_DEACTIVATED: { label: t('Xizmat o‘chirildi'), verb: t('xizmatni faolsizlantirdi'), group: 'catalog', tone: 'warning' },
 
-  DISPUTE_STATUS_CHANGED: { label: t('Nizo holati o‘zgardi'), verb: t('nizo holatini o‘zgartirdi'), group: 'disputes', tone: 'warning' },
-  COMPLAINT_STATUS_CHANGED: { label: t('Shikoyat holati o‘zgardi'), verb: t('shikoyat holatini o‘zgartirdi'), group: 'disputes', tone: 'warning' },
-  APPEAL_CREATED: { label: t('Apellyatsiya yuborildi'), verb: t('apellyatsiya yubordi'), group: 'disputes', tone: 'primary' },
-  APPEAL_UPDATED: { label: t('Apellyatsiya yangilandi'), verb: t('apellyatsiyani ko‘rib chiqdi'), group: 'disputes', tone: 'warning' },
-  WARRANTY_CREATED: { label: t('Kafolat ochildi'), verb: t('buyurtmaga kafolat ochdi'), group: 'disputes', tone: 'primary' },
-  WARRANTY_CLAIM_CREATED: { label: t('Kafolat da’vosi yuborildi'), verb: t('kafolat bo‘yicha da’vo yubordi'), group: 'disputes', tone: 'primary' },
-  WARRANTY_CLAIM_UPDATED: { label: t('Kafolat da’vosi yangilandi'), verb: t('kafolat da’vosini yangiladi'), group: 'disputes', tone: 'warning' },
-  COMPENSATION_CREATED: { label: t('Kompensatsiya berildi'), verb: t('kompensatsiya ajratdi'), group: 'disputes', tone: 'success' },
 
-  CHAT_MESSAGE_EDITED: { label: t('Xabar tahrirlandi'), verb: t('chatdagi xabarni tahrir qildi'), group: 'chat', tone: 'warning' },
-  CHAT_MESSAGE_DELETED: { label: t('Xabar o‘chirildi'), verb: t('chatdagi xabarni o‘chirdi'), group: 'chat', tone: 'danger' },
 
-  PAYMENT_CASH_CONFIRMED: { label: t('Naqd to‘lov tasdiqlandi'), verb: t('naqd to‘lovni tasdiqladi'), group: 'payments', tone: 'success' },
-  PAYMENT_REFUNDED: { label: t('To‘lov qaytarildi'), verb: t('to‘lovni qaytardi'), group: 'payments', tone: 'warning' },
-  PAYMENT_REFUNDED_AMOUNT_RECONCILED: { label: t('Qaytarilgan summa tekshirildi'), verb: t('qaytarilgan summani to‘lovlar jurnali bilan solishtirib to‘g‘rilab qo‘ydi'), group: 'payments', tone: 'warning' },
-  PAYMENT_WEBHOOK_MISMATCH: { label: t('To‘lov webhook’i mos kelmadi'), verb: t('to‘lov webhook’i mos kelmadi'), group: 'payments', tone: 'danger' },
 
-  REVIEW_CREATED: { label: t('Sharh qoldirildi'), verb: t('ustaga sharh qoldirdi'), group: 'reviews', tone: 'primary' },
 
-  CUSTOMER_PROFILE_UPDATED: { label: t('Mijoz profili yangilandi'), verb: t('profilini yangiladi'), group: 'customer', tone: 'neutral' },
-  CUSTOMER_ADDRESS_CREATED: { label: t('Manzil qo‘shildi'), verb: t('yangi manzil qo‘shdi'), group: 'customer', tone: 'primary' },
-  CUSTOMER_ADDRESS_UPDATED: { label: t('Manzil yangilandi'), verb: t('manzilni yangiladi'), group: 'customer', tone: 'neutral' },
-  CUSTOMER_ADDRESS_REMOVED: { label: t('Manzil o‘chirildi'), verb: t('manzilni o‘chirdi'), group: 'customer', tone: 'warning' },
 
-  ADMIN_CHAT_REPLY_ALLOWED: { label: t('Javob yozishga ruxsat berildi'), verb: t('foydalanuvchiga yordam suhbatida javob yozishga ruxsat berdi'), group: 'chat', tone: 'primary' },
-  ADMIN_CHAT_REPLY_DENIED: { label: t('Javob yozish taqiqlandi'), verb: t('foydalanuvchining javob yozishini taqiqladi'), group: 'chat', tone: 'warning' },
-  ADMIN_DELEGATION_CHANGED: { label: t('Admin yaratish vakolati o‘zgardi'), verb: t('adminning yangi admin yaratish vakolatini o‘zgartirdi'), group: 'users', tone: 'warning' },
-  ADMIN_AVATAR_PERMISSION_CHANGED: { label: t('Rasm qo‘yish ruxsati o‘zgardi'), verb: t('adminning profil rasmi qo‘yish ruxsatini o‘zgartirdi'), group: 'users', tone: 'neutral' },
+  ADMIN_DELEGATION_CHANGED: { label: t('Admin yaratish vakolati o‘zgardi'), verb: t('adminning yangi admin yaratish vakolatini o‘zgartirdi'), group: 'admins', tone: 'warning' },
+  ADMIN_AVATAR_PERMISSION_CHANGED: { label: t('Rasm qo‘yish ruxsati o‘zgardi'), verb: t('adminning profil rasmi qo‘yish ruxsatini o‘zgartirdi'), group: 'admins', tone: 'neutral' },
   ADMIN_USER_AVATAR_SET: { label: t('Profil rasmi qo‘yildi'), verb: t('foydalanuvchiga profil rasmi qo‘ydi'), group: 'users', tone: 'primary' },
   ADMIN_USER_AVATAR_REMOVED: { label: t('Profil rasmi olib tashlandi'), verb: t('foydalanuvchining profil rasmini olib tashladi'), group: 'users', tone: 'warning' },
   AUTH_GOOGLE_LINKED: { label: t('Google ulandi'), verb: t('akkauntiga Google’ni ulashdi'), group: 'auth', tone: 'primary' },
@@ -157,11 +74,69 @@ export const AUDIT_ACTIONS: Record<string, AuditActionInfo> = {
   USER_TWO_FACTOR_ENABLED: { label: t('Ikki bosqichli himoya yoqildi'), verb: t('ikki bosqichli himoyani yoqdi'), group: 'auth', tone: 'success' },
   USER_TWO_FACTOR_DISABLED: { label: t('Ikki bosqichli himoya o‘chirildi'), verb: t('ikki bosqichli himoyani o‘chirdi'), group: 'auth', tone: 'warning' },
   USER_SELF_DELETED: { label: t('Akkaunt o‘chirildi'), verb: t('o‘z akkauntini o‘chirdi'), group: 'auth', tone: 'danger' },
-  USER_ACTION_LIFTED: { label: t('Chora bekor qilindi'), verb: t('foydalanuvchidan chorani olib tashladi'), group: 'users', tone: 'success' },
-  SERVICE_CATEGORY_UPDATED: { label: t('Kategoriya yangilandi'), verb: t('xizmat kategoriyasini yangiladi'), group: 'catalog', tone: 'neutral' },
-  SERVICE_CATEGORY_DEACTIVATED: { label: t('Kategoriya o‘chirildi'), verb: t('xizmat kategoriyasini faolsizlantirdi'), group: 'catalog', tone: 'warning' },
-  WORK_POST_CREATED: { label: t('Ish lentasiga e’lon qo‘shildi'), verb: t('ish lentasiga e’lon qo‘shdi'), group: 'profile', tone: 'primary' },
-  WORK_POST_REMOVED: { label: t('Ish lentasidagi e’lon o‘chirildi'), verb: t('ish lentasidagi e’lonni o‘chirdi'), group: 'profile', tone: 'warning' },
+  SHOP_CREATED: { label: t('Do‘kon yaratildi'), verb: t('do‘kon yaratdi'), group: 'shops', tone: 'primary' },
+  SHOP_ACCOUNT_CREATED: { label: t('Do‘kon hisobi yaratildi'), verb: t('do‘kon hisobini yaratdi'), group: 'shops', tone: 'primary' },
+  SHOP_PASSWORD_RESET: { label: t('Do‘kon a’zosi paroli tiklandi'), verb: t('do‘kon a’zosi parolini tikladi'), group: 'shops', tone: 'warning' },
+  SHOP_MEMBER_ADDED: { label: t('Xodim qo‘shildi'), verb: t('do‘konga xodim qo‘shdi'), group: 'shops', tone: 'primary' },
+  SHOP_MEMBER_UPDATED: { label: t('Xodim ruxsatlari o‘zgardi'), verb: t('xodim ruxsatlarini o‘zgartirdi'), group: 'shops', tone: 'neutral' },
+  SHOP_MEMBER_REMOVED: { label: t('Xodim chiqarildi'), verb: t('xodimni do‘kondan chiqardi'), group: 'shops', tone: 'warning' },
+  SHOP_OWNER_CHANGED: { label: t('Do‘kon egasi almashdi'), verb: t('do‘kon egasini almashtirdi'), group: 'shops', tone: 'warning' },
+  SHOP_SUSPENDED: { label: t('Do‘kon to‘xtatildi'), verb: t('do‘konni to‘xtatdi'), group: 'shops', tone: 'danger' },
+  SHOP_RESUMED: { label: t('Do‘kon qayta yoqildi'), verb: t('do‘konni qayta yoqdi'), group: 'shops', tone: 'success' },
+  SHOP_BADGE_SET: { label: t('Belgi qo‘yildi'), verb: t('do‘konga belgi qo‘ydi'), group: 'shops', tone: 'success' },
+  SHOP_BADGE_REMOVED: { label: t('Belgi olib tashlandi'), verb: t('do‘kon belgisini olib tashladi'), group: 'shops', tone: 'warning' },
+  SHOP_PROFILE_UPDATED: { label: t('Do‘kon profili yangilandi'), verb: t('do‘kon profilini yangiladi'), group: 'shops', tone: 'neutral' },
+  SHOP_BRANCH_CREATED: { label: t('Filial qo‘shildi'), verb: t('filial qo‘shdi'), group: 'shops', tone: 'primary' },
+  SHOP_BRANCH_UPDATED: { label: t('Filial yangilandi'), verb: t('filialni yangiladi'), group: 'shops', tone: 'neutral' },
+  SHOP_BRANCH_ARCHIVED: { label: t('Filial arxivlandi'), verb: t('filialni arxivladi'), group: 'shops', tone: 'warning' },
+  SHOP_SERVICE_AREA_UPDATED: { label: t('Xizmat hududi yangilandi'), verb: t('xizmat hududini yangiladi'), group: 'shops', tone: 'neutral' },
+  SHOP_SERVICE_AREA_DELETED: { label: t('Xizmat hududi o‘chirildi'), verb: t('xizmat hududini o‘chirdi'), group: 'shops', tone: 'warning' },
+  SHOP_SERVICE_CREATED: { label: t('Xizmat qo‘shildi'), verb: t('xizmat qo‘shdi'), group: 'shops', tone: 'primary' },
+  SHOP_SERVICE_UPDATED: { label: t('Xizmat yangilandi'), verb: t('xizmatni yangiladi'), group: 'shops', tone: 'neutral' },
+  SHOP_SERVICE_DELETED: { label: t('Xizmat o‘chirildi'), verb: t('xizmatni o‘chirdi'), group: 'shops', tone: 'warning' },
+  WIDGET_UPDATED: { label: t('Vidjet sozlandi'), verb: t('vidjet sozlamalarini o‘zgartirdi'), group: 'shops', tone: 'neutral' },
+  SHOP_PRODUCT_CREATED: { label: t('Mahsulot qo‘shildi'), verb: t('mahsulot qo‘shdi'), group: 'catalog', tone: 'primary' },
+  SHOP_PRODUCT_UPDATED: { label: t('Mahsulot yangilandi'), verb: t('mahsulotni yangiladi'), group: 'catalog', tone: 'neutral' },
+  SHOP_PRODUCT_ARCHIVED: { label: t('Mahsulot arxivlandi'), verb: t('mahsulotni arxivladi'), group: 'catalog', tone: 'warning' },
+  OFFER_UPDATED: { label: t('Narx taklifi yangilandi'), verb: t('narx taklifini yangiladi'), group: 'catalog', tone: 'neutral' },
+  OFFER_DELETED: { label: t('Narx taklifi o‘chirildi'), verb: t('narx taklifini o‘chirdi'), group: 'catalog', tone: 'warning' },
+  IMPORT_VALIDATED: { label: t('Import tekshirildi'), verb: t('import faylini tekshirdi'), group: 'catalog', tone: 'neutral' },
+  IMPORT_APPLIED: { label: t('Import qo‘llandi'), verb: t('importni qo‘lladi'), group: 'catalog', tone: 'success' },
+  PRODUCT_MODEL_PROPOSED: { label: t('Model taklif qilindi'), verb: t('yangi model taklif qildi'), group: 'catalog', tone: 'primary' },
+  PRODUCT_MODEL_MERGED: { label: t('Modellar birlashtirildi'), verb: t('modellarni birlashtirdi'), group: 'catalog', tone: 'warning' },
+  CATEGORY_CREATED: { label: t('Kategoriya qo‘shildi'), verb: t('kategoriya qo‘shdi'), group: 'catalog', tone: 'primary' },
+  CATEGORY_UPDATED: { label: t('Kategoriya yangilandi'), verb: t('kategoriyani yangiladi'), group: 'catalog', tone: 'neutral' },
+  CATEGORY_DELETED: { label: t('Kategoriya o‘chirildi'), verb: t('kategoriyani o‘chirdi'), group: 'catalog', tone: 'warning' },
+  CALCULATION_SAVED: { label: t('Hisob saqlandi'), verb: t('hisobni saqlab qo‘ydi'), group: 'calc', tone: 'primary' },
+  CALCULATION_SHARED: { label: t('Hisob ulashildi'), verb: t('hisob havolasini yaratdi'), group: 'calc', tone: 'neutral' },
+  SITE_CREATED: { label: t('Obyekt qo‘shildi'), verb: t('obyekt qo‘shdi'), group: 'calc', tone: 'primary' },
+  SITE_ARCHIVED: { label: t('Obyekt arxivlandi'), verb: t('obyektni arxivladi'), group: 'calc', tone: 'warning' },
+  TARIFF_CREATED: { label: t('Tarif qo‘shildi'), verb: t('tarif qo‘shdi'), group: 'calc', tone: 'primary' },
+  TARIFF_UPDATED: { label: t('Tarif yangilandi'), verb: t('tarifni yangiladi'), group: 'calc', tone: 'neutral' },
+  TARIFF_COPIED: { label: t('Tarif nusxalandi'), verb: t('tarif nusxasini yaratdi'), group: 'calc', tone: 'neutral' },
+  TARIFF_UNTIL_SET: { label: t('Tarif muddati belgilandi'), verb: t('tarif tugash sanasini belgiladi'), group: 'calc', tone: 'warning' },
+  EXPORT_RULE_CREATED: { label: t('Eksport qoidasi qo‘shildi'), verb: t('eksport qoidasi qo‘shdi'), group: 'calc', tone: 'primary' },
+  EXPORT_RULE_UPDATED: { label: t('Eksport qoidasi yangilandi'), verb: t('eksport qoidasini yangiladi'), group: 'calc', tone: 'neutral' },
+  GRID_LIMIT_CREATED: { label: t('Ulanish limiti qo‘shildi'), verb: t('ulanish limiti qo‘shdi'), group: 'calc', tone: 'primary' },
+  FINANCING_CREATED: { label: t('Kredit mahsuloti qo‘shildi'), verb: t('kredit mahsuloti qo‘shdi'), group: 'calc', tone: 'primary' },
+  FINANCING_UPDATED: { label: t('Kredit mahsuloti yangilandi'), verb: t('kredit mahsulotini yangiladi'), group: 'calc', tone: 'neutral' },
+  CALC_SETTINGS_CREATED: { label: t('Kalkulyator sozlamasi yaratildi'), verb: t('kalkulyator sozlamalari versiyasini yaratdi'), group: 'calc', tone: 'primary' },
+  CALC_SETTINGS_PUBLISHED: { label: t('Kalkulyator sozlamasi e’lon qilindi'), verb: t('kalkulyator sozlamalarini e’lon qildi'), group: 'calc', tone: 'success' },
+  REGIONAL_YIELD_UPDATED: { label: t('Viloyat unumdorligi yangilandi'), verb: t('viloyat unumdorligini yangiladi'), group: 'calc', tone: 'neutral' },
+  LEAD_UPDATED: { label: t('So‘rov holati yangilandi'), verb: t('so‘rov bosqichini o‘zgartirdi'), group: 'deals', tone: 'neutral' },
+  INSTALLATION_DISPUTE_RESOLVED: { label: t('Montaj e’tirozi hal qilindi'), verb: t('montaj e’tirozi bo‘yicha qaror qabul qildi'), group: 'deals', tone: 'warning' },
+  REVIEW_MODERATED: { label: t('Sharh moderatsiya qilindi'), verb: t('sharhni moderatsiya qildi'), group: 'deals', tone: 'neutral' },
+  COMPLAINT_RESOLVED: { label: t('Shikoyat hal qilindi'), verb: t('shikoyatni hal qildi'), group: 'deals', tone: 'success' },
+  MODERATION_SETTINGS_UPDATED: { label: t('Moderatsiya sozlamalari o‘zgardi'), verb: t('moderatsiya sozlamalarini o‘zgartirdi'), group: 'deals', tone: 'warning' },
+  ARTICLE_CREATED: { label: t('Maqola qo‘shildi'), verb: t('maqola qo‘shdi'), group: 'content', tone: 'primary' },
+  ARTICLE_UPDATED: { label: t('Maqola yangilandi'), verb: t('maqolani yangiladi'), group: 'content', tone: 'neutral' },
+  SITE_BLOCK_PUBLISHED: { label: t('Bosh sahifa bloki e’lon qilindi'), verb: t('bosh sahifa blokini e’lon qildi'), group: 'content', tone: 'success' },
+  SITE_BLOCKS_REORDERED: { label: t('Bloklar tartibi o‘zgardi'), verb: t('bosh sahifa bloklari tartibini o‘zgartirdi'), group: 'content', tone: 'neutral' },
+  POLICY_CREATED: { label: t('Siyosat versiyasi yaratildi'), verb: t('siyosatning yangi versiyasini yaratdi'), group: 'content', tone: 'primary' },
+  POLICY_PUBLISHED: { label: t('Siyosat e’lon qilindi'), verb: t('siyosatni e’lon qildi'), group: 'content', tone: 'success' },
+  SUPPORT_TICKET_UPDATED: { label: t('Murojaat yangilandi'), verb: t('murojaatni yangiladi'), group: 'support', tone: 'neutral' },
+  OPS_ALERT_ACK: { label: t('Ogohlantirish tasdiqlandi'), verb: t('tizim ogohlantirishini ko‘rib chiqdi'), group: 'system', tone: 'neutral' },
+  RETENTION_CLEANUP: { label: t('Eski ma’lumotlar tozalandi'), verb: t('eski ma’lumotlarni tozaladi'), group: 'system', tone: 'neutral' },
 };
 
 const humanize = (code: string) => {
@@ -170,7 +145,7 @@ const humanize = (code: string) => {
 };
 
 export function actionInfo(action: string): AuditActionInfo {
-  return AUDIT_ACTIONS[action] ?? { label: humanize(action), verb: humanize(action).toLowerCase(), group: 'other', tone: 'neutral' };
+  return AUDIT_ACTIONS[action] ?? { label: humanize(action), verb: humanize(action).toLowerCase(), group: 'system', tone: 'neutral' };
 }
 
 export const TARGET_LABEL: Record<string, string> = {

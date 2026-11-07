@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Activity, Bot, CalendarDays, ChevronLeft, ChevronRight, CreditCard, Download, Eye, FileCheck2, Filter, LogIn, MessageSquare, MoreHorizontal, Package, RotateCcw, ScrollText, Scale, Search, Send, Shield, ShieldAlert, ShieldCheck, Star, Truck, UserCog, UserRound, Users, Wrench, Settings } from 'lucide-react';
+import { Activity, BookOpen, Bot, Calculator, CalendarDays, ChevronLeft, ChevronRight, Download, Eye, FileCheck2, Filter, LogIn, MessageSquare, MoreHorizontal, Package, RotateCcw, ScrollText, Search, Settings, Shield, ShieldAlert, Store, UserCog, UserRound, Users } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
@@ -29,20 +29,15 @@ import { t } from '@/i18n';
 
 const GROUP_ICON: Record<AuditGroup, ReactNode> = {
   auth: <LogIn size={16} />,
-  verification: <ShieldCheck size={16} />,
   users: <Users size={16} />,
-  profile: <UserCog size={16} />,
-  catalog: <Wrench size={16} />,
-  requests: <Send size={16} />,
-  offers: <FileCheck2 size={16} />,
-  orderFlow: <Truck size={16} />,
-  orders: <Package size={16} />,
-  payments: <CreditCard size={16} />,
-  reviews: <Star size={16} />,
-  customer: <UserRound size={16} />,
-  disputes: <Scale size={16} />,
-  chat: <MessageSquare size={16} />,
-  other: <Settings size={16} />,
+  admins: <UserCog size={16} />,
+  shops: <Store size={16} />,
+  catalog: <Package size={16} />,
+  calc: <Calculator size={16} />,
+  deals: <FileCheck2 size={16} />,
+  content: <BookOpen size={16} />,
+  support: <MessageSquare size={16} />,
+  system: <Settings size={16} />,
 };
 const CATEGORY_OPTIONS = (Object.keys(GROUP_INFO) as AuditGroup[]).filter((key) => GROUP_INFO[key].prefix);
 const ACTION_OPTIONS = Object.entries(AUDIT_ACTIONS)
@@ -53,7 +48,7 @@ const ROLE_TABS: Array<{ value: RoleTab; label: string }> = [
   { value: '', label: t('Barcha') },
   { value: 'ADMIN', label: t('Adminlar') },
   { value: 'USERS', label: t('Foydalanuvchilar') },
-  { value: 'SHOP', label: t('Ustalar') },
+  { value: 'SHOP', label: t('Do‘konlar') },
   { value: 'CUSTOMER', label: t('Mijozlar') },
   { value: 'SYSTEM', label: t('Tizim') },
 ];

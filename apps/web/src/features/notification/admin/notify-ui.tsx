@@ -10,7 +10,7 @@ export const CATEGORY: Record<AdminNotificationCategory, { label: string; icon: 
   DISPUTE: { label: t('Nizo'), icon: <Scale size={17} />, tone: 'red' },
   DOCUMENT: { label: t('Hujjat'), icon: <FileText size={17} />, tone: 'violet' },
   USER: { label: t('Foydalanuvchi'), icon: <UserRound size={17} />, tone: 'blue' },
-  ORDER: { label: t('Buyurtma'), icon: <ClipboardList size={17} />, tone: 'amber' },
+  ORDER: { label: t('So‘rov'), icon: <ClipboardList size={17} />, tone: 'amber' },
   CHAT: { label: t('Suhbat'), icon: <MessageCircle size={17} />, tone: 'teal' },
   POST: { label: t('E’lon'), icon: <Megaphone size={17} />, tone: 'pink' },
   SYSTEM: { label: t('Tizim'), icon: <Settings size={17} />, tone: 'gray' },

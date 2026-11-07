@@ -119,8 +119,8 @@ export function AdminNotificationsPage() {
         <div className="gm-ul__user">
           <span className="gm-nt__obj gm-nt--amber">{CATEGORY.ORDER.icon}</span>
           <div>
-            <strong>{item.object.number ? `№${item.object.number}` : t('Buyurtma')}</strong>
-            <small>{item.actor ? `${accountName(item.actor)} · ${ROLE_LABEL[item.actor.role]}` : t('Buyurtma')}</small>
+            <strong>{item.object.number ? `№${item.object.number}` : t('So‘rov')}</strong>
+            <small>{item.actor ? `${accountName(item.actor)} · ${ROLE_LABEL[item.actor.role]}` : t('So‘rov')}</small>
           </div>
         </div>
       );
@@ -153,7 +153,7 @@ export function AdminNotificationsPage() {
         <span className="gm-adm2__logo"><Bell size={26} aria-hidden="true" /></span>
         <div>
           <h1>{t('Bildirishnomalar')}</h1>
-          <p>{t('Tizim, buyurtma, to‘lov va xavfsizlik bo‘yicha yangiliklar')}</p>
+          <p>{t('Tizim, do‘konlar, so‘rovlar va xavfsizlik bo‘yicha yangiliklar')}</p>
         </div>
         <div className="gm-ntf__tools gm-adm2__create">
           <Button variant="secondary" loading={markAll.isPending} disabled={!s || s.unread.total === 0} onClick={() => markAll.mutate(undefined, { onSuccess: () => pushToast(t('Hammasi o‘qilgan deb belgilandi'), 'success') })}>

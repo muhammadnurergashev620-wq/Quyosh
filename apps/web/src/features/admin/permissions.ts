@@ -5,7 +5,7 @@ export type AdminPermission = 'USERS' | 'SHOPS' | 'CATALOG' | 'REVIEWS' | 'TARIF
 export const ADMIN_PERMISSION_OPTIONS: Array<{ value: AdminPermission; label: string; hint: string; group: 'Boshqaruv' | 'Kontent' | 'Tizim' }> = [
   { value: 'REPORTS', label: t('Boshqaruv paneli va hisobotlar'), hint: t('Statistika, funnel va hisobotlar'), group: 'Tizim' },
   { value: 'USERS', label: t('Foydalanuvchilar'), hint: t('Foydalanuvchilarni ko‘rish, muzlatish, bloklash, o‘chirish'), group: 'Boshqaruv' },
-  { value: 'SHOPS', label: t('Do‘konlar va verifikatsiya'), hint: t('Do‘konlarni tasdiqlash, sertifikatlar'), group: 'Boshqaruv' },
+  { value: 'SHOPS', label: t('Do‘konlar'), hint: t('Do‘kon yaratish, xodimlar va parollar, to‘xtatish, belgilar'), group: 'Boshqaruv' },
   { value: 'REVIEWS', label: t('Sharhlar va shikoyatlar'), hint: t('Moderatsiya, shikoyatlar, montaj e’tirozlari'), group: 'Boshqaruv' },
   { value: 'SUPPORT', label: t('Yordam navbati'), hint: t('Murojaatlarga javob berish'), group: 'Boshqaruv' },
   { value: 'CATALOG', label: t('Katalog moderatsiyasi'), hint: t('Kategoriyalar va modellar'), group: 'Kontent' },

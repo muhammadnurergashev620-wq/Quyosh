@@ -18,8 +18,8 @@ describe('getErrorMessage', () => {
   });
 
   it('shows validation field names in the user’s language, not as raw code names', () => {
-    const e = new ApiError({ statusCode: 400, code: 'VALIDATION_ERROR', message: 'x', requestId: null, details: ['experienceYears: 70 dan katta bo‘lmasligi kerak', 'serviceAreas.0: juda uzun', 'unknownField: x'] });
-    expect(getErrorMessage(e)).toBe('Tajriba (yil): 70 dan katta bo‘lmasligi kerak\nIsh hududlari: juda uzun\nunknownField: x');
+    const e = new ApiError({ statusCode: 400, code: 'VALIDATION_ERROR', message: 'x', requestId: null, details: ['monthlyKwh: 100000 dan katta bo‘lmasligi kerak', 'shopIds.0: juda uzun', 'unknownField: x'] });
+    expect(getErrorMessage(e)).toBe('Oylik iste’mol: 100000 dan katta bo‘lmasligi kerak\nDo‘konlar: juda uzun\nunknownField: x');
   });
 
   it('joins validation details and handles non-API errors', () => {

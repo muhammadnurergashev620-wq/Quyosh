@@ -64,7 +64,7 @@ export function PhoneVerifyDialog({ open, onClose }: { open: boolean; onClose: (
     >
       <form id="gm-phone-form" className="gm-form" onSubmit={submit}>
         <p style={{ margin: 0, color: 'var(--qs-color-text-muted)' }}>
-          {t('Buyurtma berish uchun telefon raqamingiz kerak: usta siz bilan shu raqam orqali bog‘lanadi.')}
+          {t('So‘rov yuborish uchun telefon raqamingiz kerak: do‘kon siz bilan shu raqam orqali bog‘lanadi.')}
         </p>
         {!!error && <Alert tone="danger">{getErrorMessage(error)}</Alert>}
         <Input

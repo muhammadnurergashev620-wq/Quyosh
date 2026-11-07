@@ -78,7 +78,7 @@ export function NotificationList() {
         <EmptyState
           icon={<BellOff size={28} />}
           title={filter === 'unread' ? t('Hammasi o‘qilgan') : t('Bildirishnomalar yo‘q')}
-          description={filter === 'unread' ? t('Yangi bildirishnomalar shu yerda paydo bo‘ladi.') : t('Buyurtma, chat va tasdiqlash xabarlari shu yerda ko‘rinadi.')}
+          description={filter === 'unread' ? t('Yangi bildirishnomalar shu yerda paydo bo‘ladi.') : t('So‘rov, taklif, montaj va chat xabarlari shu yerda ko‘rinadi.')}
         />
       ) : (
         groups.map((group) => (

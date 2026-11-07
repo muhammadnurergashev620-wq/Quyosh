@@ -225,7 +225,7 @@ export function AdminUsersPage() {
     <div className="gm-ul">
       <header className="gm-ul__head">
         <h1>{t('Foydalanuvchilar')}</h1>
-        <p>{t('Mijozlar va ustalarni yagona boshqaruv markazidan nazorat qiling')}</p>
+        <p>{t('Mijozlar va do‘kon xodimlarini yagona boshqaruv markazidan nazorat qiling')}</p>
       </header>
 
       <div className="gm-ul__kpis">
@@ -234,7 +234,7 @@ export function AdminUsersPage() {
           <div>
             <small>{t('Jami foydalanuvchilar')}</small>
             <strong>{s ? formatNumber(s.total.all) : '…'}{growth !== null && growth !== undefined && <em className={growth >= 0 ? 'is-up' : 'is-down'} title={t('Oxirgi 30 kunda yangi: {count}', { count: s?.total.new30 ?? 0 })}>{growth >= 0 ? '↑' : '↓'} {Math.abs(growth)}%</em>}</strong>
-            <span>{t('Mijozlar: {c} | Ustalar: {m}', { c: s ? formatNumber(s.total.customers) : '…', m: s ? formatNumber(s.total.shops) : '…' })}</span>
+            <span>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.total.customers) : '…', m: s ? formatNumber(s.total.shops) : '…' })}</span>
           </div>
         </article>
         <article className="gm-ukpi">
@@ -242,7 +242,7 @@ export function AdminUsersPage() {
           <div>
             <small>{t('Faol akkauntlar')}</small>
             <strong>{s ? formatNumber(s.active.all) : '…'}</strong>
-            <span>{t('Mijozlar: {c} | Ustalar: {m}', { c: s ? formatNumber(s.active.customers) : '…', m: s ? formatNumber(s.active.shops) : '…' })}</span>
+            <span>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.active.customers) : '…', m: s ? formatNumber(s.active.shops) : '…' })}</span>
           </div>
         </article>
         <article className="gm-ukpi">
@@ -250,7 +250,7 @@ export function AdminUsersPage() {
           <div>
             <small>{t('Bloklangan')}</small>
             <strong>{s ? formatNumber(s.blocked.all) : '…'}</strong>
-            <span>{t('Mijozlar: {c} | Ustalar: {m}', { c: s ? formatNumber(s.blocked.customers) : '…', m: s ? formatNumber(s.blocked.shops) : '…' })}{s && s.blocked.suspended > 0 && ` · ${t('Muzlatilgan: {n}', { n: s.blocked.suspended })}`}</span>
+            <span>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.blocked.customers) : '…', m: s ? formatNumber(s.blocked.shops) : '…' })}{s && s.blocked.suspended > 0 && ` · ${t('Muzlatilgan: {n}', { n: s.blocked.suspended })}`}</span>
           </div>
         </article>
         <article className="gm-ukpi">
@@ -258,7 +258,7 @@ export function AdminUsersPage() {
           <div>
             <small>{t('Tasdiqlanishi kutilmoqda')}</small>
             <strong>{s ? formatNumber(s.pending.all) : '…'}</strong>
-            <span>{t('Mijozlar: {c} | Ustalar: {m}', { c: s ? formatNumber(s.pending.customers) : '…', m: s ? formatNumber(s.pending.shops) : '…' })}</span>
+            <span>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.pending.customers) : '…', m: s ? formatNumber(s.pending.shops) : '…' })}</span>
           </div>
         </article>
       </div>
@@ -266,7 +266,7 @@ export function AdminUsersPage() {
       <section className="gm-ul__panel">
         <div className="gm-ul__toolbar">
           <div className="gm-ul__tabs" role="tablist" aria-label={t('Rol bo‘yicha')}>
-            {([['', t('Barchasi'), s?.total.all], ['CUSTOMER', t('Mijozlar'), s?.total.customers], ['SHOP', t('Ustalar'), s?.total.shops]] as Array<[RoleFilter, string, number | undefined]>).map(([value, label, count]) => (
+            {([['', t('Barchasi'), s?.total.all], ['CUSTOMER', t('Mijozlar'), s?.total.customers], ['SHOP', t('Do‘kon xodimlari'), s?.total.shops]] as Array<[RoleFilter, string, number | undefined]>).map(([value, label, count]) => (
               <button key={value || 'all'} type="button" role="tab" aria-selected={role === value} className={cx(role === value && 'is-on')} onClick={() => setRole(value)}>
                 {label}{count !== undefined && ` (${formatNumber(count)})`}
               </button>

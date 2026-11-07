@@ -24,7 +24,7 @@ import { t } from '@/i18n';
 
 type Detail = NonNullable<ReturnType<typeof useAdminUserByNumber>['data']>;
 
-const PANEL: Record<string, string> = { CUSTOMER: t('Mijoz paneli'), MASTER: t('Usta paneli'), ADMIN: t('Admin paneli') };
+const PANEL: Record<string, string> = { CUSTOMER: t('Mijoz paneli'), SHOP: t('Do‘kon paneli'), ADMIN: t('Admin paneli') };
 
 const STATUS: Record<string, { label: string; tone: BadgeTone }> = {
   ACTIVE: { label: t('Faol'), tone: 'success' },

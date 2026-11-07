@@ -14,7 +14,7 @@ interface Copy {
 export const USER_ACTION_COPY: Record<UserAction, Copy> = {
   SUSPEND: {
     title: t('Akkauntni muzlatish'),
-    text: t('Foydalanuvchi darhol tizimdan chiqariladi va qayta kira olmaydi. Usta bo‘lsa, profili mos ustalar qidiruvidan olinadi. Keyinroq qayta faollashtirish mumkin.'),
+    text: t('Foydalanuvchi darhol tizimdan chiqariladi va qayta kira olmaydi. Do‘kon xodimi bo‘lsa, do‘kon kabinetiga ham kira olmaydi. Keyinroq qayta faollashtirish mumkin.'),
     confirm: t('Muzlatish'),
     variant: 'primary',
     reasonRequired: true,
@@ -28,14 +28,14 @@ export const USER_ACTION_COPY: Record<UserAction, Copy> = {
   },
   ACTIVATE: {
     title: t('Akkauntni faollashtirish'),
-    text: t('Foydalanuvchi yana tizimga kira oladi. Usta bo‘lsa, profili «Nofaol» holatda tiklanadi — usta uni o‘zi yoqadi.'),
+    text: t('Foydalanuvchi yana tizimga kira oladi; sessiyalar qaytadan ochiladi.'),
     confirm: t('Faollashtirish'),
     variant: 'primary',
     reasonRequired: false,
   },
   DELETE: {
     title: t('Akkauntni o‘chirish'),
-    text: t('Foydalanuvchi tizimga kira olmaydi va ro‘yxatdan yo‘qoladi. Buyurtma va to‘lov tarixi saqlanadi. Bu amalni bekor qilib bo‘lmaydi.'),
+    text: t('Foydalanuvchi tizimga kira olmaydi va ro‘yxatdan yo‘qoladi. So‘rov, taklif va montaj tarixi saqlanadi. Bu amalni bekor qilib bo‘lmaydi.'),
     confirm: t('O‘chirish'),
     variant: 'danger',
     reasonRequired: true,
