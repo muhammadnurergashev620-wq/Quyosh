@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { PolicyStatus, PolicyType, PrismaClient, Role, UserStatus } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { seedCatalog } from './seed-catalog';
@@ -8,28 +10,30 @@ import { seedKnowledge } from './seed-knowledge';
 
 const prisma = new PrismaClient();
 
+/** Huquqiy matnlar `prisma/legal/*.uz.md` da (qoralama — e’lon qilishdan oldin yurist tekshiradi). */
+const legal = (name: string) => readFileSync(join(__dirname, 'legal', `${name}.uz.md`), 'utf8').trim();
+
 const POLICIES: Array<{ id: string; type: PolicyType; version: string; title: string; content: string }> = [
   {
     id: '00000000-0001-4000-8000-000000000001',
     type: PolicyType.TERMS,
     version: '1.0',
     title: 'Foydalanish shartlari',
-    content: 'Quyosh platformasidan foydalanish shartlari',
+    content: legal('terms'),
   },
   {
     id: '00000000-0001-4000-8000-000000000002',
     type: PolicyType.PRIVACY,
     version: '1.0',
     title: 'Maxfiylik siyosati',
-    content: 'Quyosh maxfiylik siyosati',
+    content: legal('privacy'),
   },
   {
     id: '00000000-0001-4000-8000-000000000003',
     type: PolicyType.PLATFORM_RULES,
     version: '1.0',
     title: 'Platforma qoidalari',
-
-    content: 'Quyosh platforma ishlatish qoidalari',
+    content: legal('platform-rules'),
   },
 ];
 
