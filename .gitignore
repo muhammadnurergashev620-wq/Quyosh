@@ -25,3 +25,5 @@ docs/audit/before/
 docs/audit/after/
 test-results/
 playwright-report/
+docs/ui/before/
+docs/ui/after/
