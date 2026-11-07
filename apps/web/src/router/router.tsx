@@ -117,6 +117,9 @@ function PanelRoot() {
   return <Navigate to={first?.to ?? '/'} replace />;
 }
 
+/** React Router v7 xatti-harakatini oldindan yoqish (future-flag ogohlantirishlari yo‘q). */
+const ROUTER_OPTIONS = { future: { v7_relativeSplatPath: true, v7_fetcherPersist: true, v7_normalizeFormMethod: true, v7_partialHydration: true, v7_skipActionErrorRevalidation: true } } as const;
+
 const panelRouter = createBrowserRouter([
   {
     element: <RootShell />,
@@ -237,7 +240,7 @@ const panelRouter = createBrowserRouter([
       { path: '*', element: <NotFoundPage /> },
     ],
   },
-]);
+], ROUTER_OPTIONS);
 
 /** Asosiy sayt (quyosh.uz, rol belgilanmagan): faqat tushuntirish va yo‘naltirish (U7.1). */
 const portalRouter = createBrowserRouter([
@@ -251,6 +254,6 @@ const portalRouter = createBrowserRouter([
       { path: '*', element: <NotFoundPage /> },
     ],
   },
-]);
+], ROUTER_OPTIONS);
 
 export const router = env.appRole ? panelRouter : portalRouter;

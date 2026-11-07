@@ -1,12 +1,18 @@
+import { env } from '@/lib/env';
+
 export type ThemeMode = 'light' | 'dark';
+
+/** Admin paneli standart holatda to‘q mavzuda ochiladi; foydalanuvchi tanlovi saqlansa — o‘sha. */
+const DEFAULT_MODE: ThemeMode = env.appRole === 'ADMIN' ? 'dark' : 'light';
 
 const KEY = 'quyosh.theme';
 
 export function getThemeMode(): ThemeMode {
   try {
-    return localStorage.getItem(KEY) === 'dark' ? 'dark' : 'light';
+    const stored = localStorage.getItem(KEY);
+    return stored === 'dark' || stored === 'light' ? stored : DEFAULT_MODE;
   } catch {
-    return 'light';
+    return DEFAULT_MODE;
   }
 }
 

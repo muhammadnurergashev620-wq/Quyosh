@@ -9,6 +9,7 @@ import { useCurrentRole } from '@/features/session/hooks/useCurrentRole';
 import { useAuthStore } from '@/store/auth.store';
 import { ApiError } from '@/types/api';
 import type { Role } from '@/types/common';
+import { ForbiddenPage } from '@/pages/ForbiddenPage';
 import { t } from '@/i18n';
 
 /** Server/tarmoq muammosi (avtorizatsiya emas): sessiyani saqlab, qayta urinishni taklif qiladi. */
@@ -46,7 +47,7 @@ export function RoleGuard({ roles, children }: { roles: Role[]; children: ReactN
   if (isError || !role) return <ExpiredSession />;
   if (!roles.includes(role)) {
     const [first] = getNavItems(role, { superAdmin: true }); // bosh sahifa; bo‘lim huquqlarini «/admin» o‘zi tekshiradi
-    return <Navigate to={first?.to ?? '/'} replace />;
+    return <ForbiddenPage home={first?.to ?? '/'} />;
   }
   return children;
 }

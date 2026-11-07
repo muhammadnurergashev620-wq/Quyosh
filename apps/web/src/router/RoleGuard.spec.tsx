@@ -49,16 +49,18 @@ describe('RoleGuard', () => {
     expect(screen.getByText('maxfiy')).toBeInTheDocument();
   });
 
-  it('sends a wrong role to its own home page', () => {
+  it('shows “Ruxsat yo‘q” (403) to a wrong role with a link to its own home page', () => {
     state.role = 'CUSTOMER';
     renderGuard(['ADMIN']);
-    expect(screen.getByText('mijoz bosh sahifa')).toBeInTheDocument();
+    expect(screen.getByText('Ruxsat yo‘q')).toBeInTheDocument();
+    expect(screen.queryByText('maxfiy')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Bosh sahifamga o‘tish' })).toHaveAttribute('href', '/mijoz/bosh');
   });
 
-  it('sends admins away from customer-only pages', () => {
+  it('admins on customer-only pages get the 403 page pointing to the admin home', () => {
     state.role = 'ADMIN';
     renderGuard(['CUSTOMER']);
-    expect(screen.getByText('admin bosh sahifa')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Bosh sahifamga o‘tish' })).toHaveAttribute('href', '/admin');
   });
 
   it('sends users without a resolvable role to login', () => {

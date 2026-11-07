@@ -15,12 +15,13 @@
     <script>
       (function () {
         try {
-          var mode = localStorage.getItem('quyosh.theme') === 'dark' ? 'dark' : 'light';
+          var stored = localStorage.getItem('quyosh.theme');
+          var mode = stored === 'dark' || stored === 'light' ? stored : '__DEFAULT_THEME__';
           document.documentElement.setAttribute('data-theme', mode);
           var size = localStorage.getItem('quyosh.ui-size');
           document.documentElement.setAttribute('data-ui-size', size === 'small' || size === 'large' ? size : 'medium');
         } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'light');
+          document.documentElement.setAttribute('data-theme', '__DEFAULT_THEME__');
         }
       })();
     </script>

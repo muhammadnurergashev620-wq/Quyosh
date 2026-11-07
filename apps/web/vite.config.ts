@@ -88,6 +88,11 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       {
+        // Standart mavzu: admin paneli — to‘q (buyurtmachi qarori), qolganlari — yorug‘. Foydalanuvchi tanlovi ustun.
+        name: 'quyosh-default-theme',
+        transformIndexHtml: { order: 'pre', handler: (html: string) => html.replaceAll('__DEFAULT_THEME__', role === 'ADMIN' ? 'dark' : 'light') },
+      },
+      {
         // Faqat production build: dev serverda HMR uchun CSP qo‘yilmaydi.
         name: 'quyosh-csp',
         apply: 'build',
