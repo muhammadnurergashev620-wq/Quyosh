@@ -28,7 +28,9 @@ test('customer registers with the on-screen OTP, runs the quick calculator and s
   // Natija: quvvat, oylik tejash (diapazon), narx, qoplanish.
   await expect(page.getByText('Tavsiya etilgan quvvat')).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('.qs-calc-kpis strong').first()).toContainText('kVt');
+  const saved = page.waitForResponse((res) => res.request().method() === 'POST' && /\/api\/v1\/calculations$/.test(res.url()));
   await page.getByRole('button', { name: 'Saqlash' }).click();
+  expect((await saved).status()).toBe(201);
   await page.goto(`${URLS.customer}/mijoz/hisoblar`);
   await expect(page.locator('.qs-table tbody tr')).not.toHaveCount(0);
 });
