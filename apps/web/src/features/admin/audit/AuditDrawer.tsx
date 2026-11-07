@@ -59,7 +59,7 @@ export function AuditDrawer({ log, onClose, onFilterActor }: { log: AuditLog; on
             <h2>{info.label}</h2>
             <p>{formatDateTime(log.createdAt)} · {formatRelativeTime(log.createdAt)}</p>
           </div>
-          <button type="button" className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}><X size={18} /></button>
+          <Button variant="ghost" size="sm" iconOnly className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}><X size={18} /></Button>
         </header>
 
         <div className="gm-udr__body">

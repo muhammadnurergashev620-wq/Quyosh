@@ -345,3 +345,8 @@ button.gm-stepper__btn { cursor: pointer; }
 .gm-tabs-x--segmented .gm-tabs-x__list--auto > button { min-height: 34px; padding: 0 var(--qs-space-3); border-radius: var(--qs-radius-10); font-size: 13.5px; }
 .gm-tabs-x--segmented .gm-tabs-x__list--auto > :is(.is-on, [aria-selected='true'], [aria-checked='true']) { color: var(--qs-color-text); }
 .gm-tabs-x--full .gm-tabs-x__list--auto > button { flex: 1 1 0; }
+
+.gm-stat.is-on { border-color: var(--qs-color-primary); box-shadow: 0 0 0 1px var(--qs-color-primary), var(--qs-shadow-sm); }
+
+.gm-card-x--dark :is(h1, h2, h3, strong), .gm-card-x--gradient :is(h1, h2, h3, strong) { color: inherit; }
+.gm-card-x .gm-empty-state { border: 0; background: none; box-shadow: none; }

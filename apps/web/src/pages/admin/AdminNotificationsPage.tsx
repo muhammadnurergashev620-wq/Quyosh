@@ -23,6 +23,8 @@ import '@/features/admin/list-shared.css';
 import './AdminNotificationsPage.css';
 import { t } from '@/i18n';
 import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Tab } from '@/components/ui/Tabs';
+import { StatCard, type StatTone } from '@/components/ui/StatCard';
 
 type Tab = '' | 'UNREAD' | 'HIGH' | 'SYSTEM';
 const isoDay = (offset: number) => new Date(Date.now() - offset * 86_400_000).toISOString().slice(0, 10);
@@ -33,14 +35,16 @@ const CATEGORIES = Object.keys(CATEGORY) as AdminNotificationCategory[];
 function Kpi({ icon, tone, label, bucket, on, onClick }: { icon: React.ReactNode; tone: string; label: string; bucket: AdminNotificationBucket | undefined; on: boolean; onClick: () => void }) {
   const change = bucket?.changePercent ?? null;
   return (
-    <button type="button" className={cx('gm-ukpi gm-ukpi--btn', on && 'is-on')} onClick={onClick} aria-pressed={on}>
-      <span className={cx('gm-ukpi__icon', `gm-nt--${tone}`)}>{icon}</span>
-      <div>
-        <small>{label}</small>
-        <strong>{bucket ? formatNumber(bucket.total) : '…'}{change !== null && change !== 0 && <em className={change > 0 ? 'is-up' : 'is-down'}>{change > 0 ? '↑' : '↓'} {Math.abs(change)}%</em>}</strong>
-        <span>{t('Oxirgi 7 kunda: {count}', { count: bucket ? bucket.last7 : '…' })} · {t('oldingi 7 kunda: {count}', { count: bucket ? bucket.prev7 : '…' })}</span>
-      </div>
-    </button>
+    <StatCard
+      variant="compact"
+      tone={(({ red: 'danger', amber: 'warning', blue: 'info', green: 'success', violet: 'violet', teal: 'teal' }) as Record<string, StatTone>)[tone] ?? 'primary'}
+      icon={icon}
+      label={label}
+      value={bucket ? <>{formatNumber(bucket.total)}{change !== null && change !== 0 && <em className={change > 0 ? 'is-up' : 'is-down'}>{change > 0 ? '↑' : '↓'} {Math.abs(change)}%</em>}</> : null}
+      note={<>{t('Oxirgi 7 kunda: {count}', { count: bucket ? bucket.last7 : '…' })} · {t('oldingi 7 kunda: {count}', { count: bucket ? bucket.prev7 : '…' })}</>}
+      selected={on}
+      onClick={onClick}
+    />
   );
 }
 
@@ -225,9 +229,9 @@ export function AdminNotificationsPage() {
 
         <div className="gm-aud__tabs" role="tablist">
           {([['', t('Barchasi'), s?.total.total], ['UNREAD', t('O‘qilmagan'), s?.unread.total], ['HIGH', t('Muhim'), s?.important.total], ['SYSTEM', t('Tizim'), s?.system.total]] as Array<[Tab, string, number | undefined]>).map(([value, label, count]) => (
-            <button key={value || 'all'} type="button" role="tab" aria-selected={tab === value} className={cx(tab === value && 'is-on')} onClick={() => setTab(value)}>
+            <Tab key={value || 'all'} role="tab" aria-selected={tab === value} onClick={() => setTab(value)} selected={tab === value}>
               {label}{count !== undefined && <span>{formatNumber(count)}</span>}
-            </button>
+            </Tab>
           ))}
         </div>
 
@@ -314,7 +318,7 @@ export function AdminNotificationsPage() {
               <button type="button" onClick={() => setPage(page - 1)} disabled={page <= 1} aria-label={t('Oldingi sahifa')}><ChevronLeft size={16} /></button>
               {pageNumbers(page, data.pages).map((entry) =>
                 typeof entry === 'number' ? (
-                  <button key={entry} type="button" className={cx(entry === page && 'is-on')} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)}>{entry}</button>
+                  <Tab key={entry} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)} selected={entry === page}>{entry}</Tab>
                 ) : (
                   <span key={entry}>…</span>
                 ),

@@ -27,6 +27,8 @@ import '@/features/admin/list-shared.css';
 import './AdminAuditPage.css';
 import { t } from '@/i18n';
 import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Tab } from '@/components/ui/Tabs';
+import { StatCard, type StatTone } from '@/components/ui/StatCard';
 
 const GROUP_ICON: Record<AuditGroup, ReactNode> = {
   auth: <LogIn size={16} />,
@@ -215,14 +217,17 @@ export function AdminAuditPage() {
 
       <div className="gm-ul__kpis gm-ord2__kpis">
         {kpis.map((kpi) => (
-          <button key={kpi.key} type="button" className={cx('gm-ukpi gm-ukpi--btn', kpi.on && 'is-on')} onClick={kpi.onClick} aria-pressed={kpi.on}>
-            <span className={`gm-ukpi__icon gm-aud__icon--${kpi.tone}`}>{kpi.icon}</span>
-            <div>
-              <small>{kpi.label}</small>
-              <strong>{kpi.value === undefined ? '…' : formatNumber(kpi.value)}{kpi.value !== undefined && <Delta current={kpi.value} previous={kpi.previous} />}</strong>
-              <span>{prev ? t('Oldingi davr: {count}', { count: formatNumber(kpi.previous ?? 0) }) : t('Oldingi davr bilan solishtirish uchun sana oralig‘ini tanlang')}</span>
-            </div>
-          </button>
+          <StatCard
+            key={kpi.key}
+            variant="compact"
+            tone={(({ blue: 'info', green: 'success', red: 'danger', amber: 'warning', violet: 'violet', teal: 'teal' }) as Record<string, StatTone>)[kpi.tone] ?? 'primary'}
+            icon={kpi.icon}
+            label={kpi.label}
+            value={kpi.value === undefined ? null : <>{formatNumber(kpi.value)}<Delta current={kpi.value} previous={kpi.previous} /></>}
+            note={prev ? t('Oldingi davr: {count}', { count: formatNumber(kpi.previous ?? 0) }) : t('Oldingi davr bilan solishtirish uchun sana oralig‘ini tanlang')}
+            selected={kpi.on}
+            onClick={kpi.onClick}
+          />
         ))}
       </div>
 
@@ -284,9 +289,9 @@ export function AdminAuditPage() {
           {ROLE_TABS.map((tab) => {
             const n = count(tab.value);
             return (
-              <button key={tab.value || 'all'} type="button" role="tab" aria-selected={role === tab.value} className={cx(role === tab.value && 'is-on')} onClick={() => setRole(tab.value)}>
+              <Tab key={tab.value || 'all'} role="tab" aria-selected={role === tab.value} onClick={() => setRole(tab.value)} selected={role === tab.value}>
                 {tab.label}{n !== undefined && <span>{formatNumber(n)}</span>}
-              </button>
+              </Tab>
             );
           })}
         </div>
@@ -375,7 +380,7 @@ export function AdminAuditPage() {
               <button type="button" onClick={() => setPage(page - 1)} disabled={page <= 1} aria-label={t('Oldingi sahifa')}><ChevronLeft size={16} /></button>
               {pageNumbers(page, data.pages).map((entry) =>
                 typeof entry === 'number' ? (
-                  <button key={entry} type="button" className={cx(entry === page && 'is-on')} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)}>{entry}</button>
+                  <Tab key={entry} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)} selected={entry === page}>{entry}</Tab>
                 ) : (
                   <span key={entry}>…</span>
                 ),

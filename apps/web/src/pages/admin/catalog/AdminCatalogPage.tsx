@@ -15,14 +15,13 @@ import { catalogService, type CategoryInput } from '@/features/catalog/catalog.s
 import { i18nText, SPEC_META, specValue } from '@/features/catalog/format';
 import { SPEC_KEYS, type AdminModel, type Category, type ModelStatus, type SpecKey } from '@/features/catalog/types';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
 import { formatDate, formatDateTime, formatDecimal, formatNumber } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Chip } from '@/components/ui/Chip';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const MODEL_STATUS: Record<ModelStatus, { label: string; tone: 'neutral' | 'success' | 'warning' | 'danger' }> = {
   PENDING: { label: t('Tekshiruvda'), tone: 'warning' },
@@ -109,7 +108,7 @@ function ModelReview({ model, onClose }: { model: AdminModel; onClose: () => voi
             <Input label={t('Asosiy modelni qidirish')} value={mergeQuery} onChange={(e) => { setMergeQuery(e.target.value); setMergeTarget(null); }} />
             <ul className="qs-search-results" style={{ marginTop: 8 }}>
               {candidates.data?.items.filter((item) => item.id !== model.id).map((item) => (
-                <li key={item.id}><button type="button" className={cx(mergeTarget?.id === item.id && 'is-on')} onClick={() => setMergeTarget(item)}><span><strong>{item.brand} {item.model}</strong><small>{i18nText(item.category.nameI18n)}</small></span></button></li>
+                <li key={item.id}><Tab onClick={() => setMergeTarget(item)} selected={mergeTarget?.id === item.id}><span><strong>{item.brand} {item.model}</strong><small>{i18nText(item.category.nameI18n)}</small></span></Tab></li>
               ))}
             </ul>
             <div className="qs-form__actions" style={{ marginTop: 8 }}>
@@ -299,7 +298,7 @@ export function AdminCatalogPage() {
       <div className="qs-page__head"><div><h1>{t('Katalog moderatsiyasi')}</h1><p>{t('Yagona uskuna katalogi: do‘konlar taklif qilgan modellar, kategoriyalar va kurs.')}</p></div></div>
       <TabBar variant="tabs" role="tablist">
         {([['models', t('Modellar')], ['categories', t('Kategoriyalar')], ['rates', t('Valyuta kursi')]] as const).map(([key, label]) => (
-          <button key={key} type="button" role="tab" aria-selected={tab === key} className={cx(tab === key && 'is-on')} onClick={() => setTab(key)}>{label}</button>
+          <Tab key={key} role="tab" aria-selected={tab === key} onClick={() => setTab(key)} selected={tab === key}>{label}</Tab>
         ))}
       </TabBar>
       {tab === 'models' && <ModelsTab />}

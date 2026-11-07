@@ -18,6 +18,7 @@ import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
 import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Tab } from '@/components/ui/Tabs';
 
 const SORTS = [
   { value: 'offers', label: t('Tavsiya etilgan') },
@@ -74,12 +75,12 @@ export function CatalogPage() {
           <div>
             <h3>{t('Kategoriya')}</h3>
             <ul className="qs-catalog__cats">
-              <li><button type="button" className={cx(!filters.categorySlug && 'is-on')} onClick={() => set('kategoriya', undefined)}>{t('Hammasi')}</button></li>
+              <li><Tab onClick={() => set('kategoriya', undefined)} selected={!filters.categorySlug}>{t('Hammasi')}</Tab></li>
               {(categories.data ?? []).map((item) => (
                 <li key={item.id}>
-                  <button type="button" className={cx(item.slug === filters.categorySlug && 'is-on')} onClick={() => { set('kategoriya', item.slug); }}>
+                  <Tab onClick={() => { set('kategoriya', item.slug); }} selected={item.slug === filters.categorySlug}>
                     {i18nText(item.nameI18n)} <small>{item.modelCount}</small>
-                  </button>
+                  </Tab>
                 </li>
               ))}
             </ul>

@@ -60,7 +60,7 @@ export function ErrorDrawer({ fingerprint, onClose }: { fingerprint: string; onC
       <aside className="gm-udr" role="dialog" aria-modal="true" aria-label={t('Xato tafsilotlari')}>
         <header className="gm-edr__head">
           <small>{t('Xato tafsilotlari')}</small>
-          <button type="button" className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}><X size={18} /></button>
+          <Button variant="ghost" size="sm" iconOnly className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}><X size={18} /></Button>
         </header>
         <div className="gm-udr__body">
           {detail.isError && <Alert tone="danger">{getErrorMessage(detail.error)}</Alert>}

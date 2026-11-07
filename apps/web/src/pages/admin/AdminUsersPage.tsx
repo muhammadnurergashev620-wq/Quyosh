@@ -28,6 +28,8 @@ import type { AdminUser, ManagedStatus, UserFilters } from '@/features/admin/typ
 import './AdminUsersPage.css';
 import { t } from '@/i18n';
 import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Tab } from '@/components/ui/Tabs';
+import { StatCard } from '@/components/ui/StatCard';
 
 const PAGE_SIZE = 20;
 type RoleFilter = '' | 'CUSTOMER' | 'SHOP';
@@ -230,47 +232,19 @@ export function AdminUsersPage() {
       </header>
 
       <div className="gm-ul__kpis">
-        <article className="gm-ukpi">
-          <span className="gm-ukpi__icon gm-ukpi__icon--blue"><Users size={24} aria-hidden="true" /></span>
-          <div>
-            <small>{t('Jami foydalanuvchilar')}</small>
-            <strong>{s ? formatNumber(s.total.all) : '…'}{growth !== null && growth !== undefined && <em className={growth >= 0 ? 'is-up' : 'is-down'} title={t('Oxirgi 30 kunda yangi: {count}', { count: s?.total.new30 ?? 0 })}>{growth >= 0 ? '↑' : '↓'} {Math.abs(growth)}%</em>}</strong>
-            <span>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.total.customers) : '…', m: s ? formatNumber(s.total.shops) : '…' })}</span>
-          </div>
-        </article>
-        <article className="gm-ukpi">
-          <span className="gm-ukpi__icon gm-ukpi__icon--green"><UserCheck size={24} aria-hidden="true" /></span>
-          <div>
-            <small>{t('Faol akkauntlar')}</small>
-            <strong>{s ? formatNumber(s.active.all) : '…'}</strong>
-            <span>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.active.customers) : '…', m: s ? formatNumber(s.active.shops) : '…' })}</span>
-          </div>
-        </article>
-        <article className="gm-ukpi">
-          <span className="gm-ukpi__icon gm-ukpi__icon--red"><Ban size={24} aria-hidden="true" /></span>
-          <div>
-            <small>{t('Bloklangan')}</small>
-            <strong>{s ? formatNumber(s.blocked.all) : '…'}</strong>
-            <span>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.blocked.customers) : '…', m: s ? formatNumber(s.blocked.shops) : '…' })}{s && s.blocked.suspended > 0 && ` · ${t('Muzlatilgan: {n}', { n: s.blocked.suspended })}`}</span>
-          </div>
-        </article>
-        <article className="gm-ukpi">
-          <span className="gm-ukpi__icon gm-ukpi__icon--amber"><Clock size={24} aria-hidden="true" /></span>
-          <div>
-            <small>{t('Tasdiqlanishi kutilmoqda')}</small>
-            <strong>{s ? formatNumber(s.pending.all) : '…'}</strong>
-            <span>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.pending.customers) : '…', m: s ? formatNumber(s.pending.shops) : '…' })}</span>
-          </div>
-        </article>
+        <StatCard variant="compact" tone="info" icon={<Users size={24} aria-hidden="true" />} label={t('Jami foydalanuvchilar')} value={<>{s ? formatNumber(s.total.all) : '…'}{growth !== null && growth !== undefined && <em className={growth >= 0 ? 'is-up' : 'is-down'} title={t('Oxirgi 30 kunda yangi: {count}', { count: s?.total.new30 ?? 0 })}>{growth >= 0 ? '↑' : '↓'} {Math.abs(growth)}%</em>}</>} note={<>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.total.customers) : '…', m: s ? formatNumber(s.total.shops) : '…' })}</>} />
+        <StatCard variant="compact" tone="success" icon={<UserCheck size={24} aria-hidden="true" />} label={t('Faol akkauntlar')} value={<>{s ? formatNumber(s.active.all) : '…'}</>} note={<>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.active.customers) : '…', m: s ? formatNumber(s.active.shops) : '…' })}</>} />
+        <StatCard variant="compact" tone="danger" icon={<Ban size={24} aria-hidden="true" />} label={t('Bloklangan')} value={<>{s ? formatNumber(s.blocked.all) : '…'}</>} note={<>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.blocked.customers) : '…', m: s ? formatNumber(s.blocked.shops) : '…' })}{s && s.blocked.suspended > 0 && ` · ${t('Muzlatilgan: {n}', { n: s.blocked.suspended })}`}</>} />
+        <StatCard variant="compact" tone="warning" icon={<Clock size={24} aria-hidden="true" />} label={t('Tasdiqlanishi kutilmoqda')} value={<>{s ? formatNumber(s.pending.all) : '…'}</>} note={<>{t('Mijozlar: {c} | Do‘kon xodimlari: {m}', { c: s ? formatNumber(s.pending.customers) : '…', m: s ? formatNumber(s.pending.shops) : '…' })}</>} />
       </div>
 
       <section className="gm-ul__panel">
         <div className="gm-ul__toolbar">
           <div className="gm-ul__tabs" role="tablist" aria-label={t('Rol bo‘yicha')}>
             {([['', t('Barchasi'), s?.total.all], ['CUSTOMER', t('Mijozlar'), s?.total.customers], ['SHOP', t('Do‘kon xodimlari'), s?.total.shops]] as Array<[RoleFilter, string, number | undefined]>).map(([value, label, count]) => (
-              <button key={value || 'all'} type="button" role="tab" aria-selected={role === value} className={cx(role === value && 'is-on')} onClick={() => setRole(value)}>
+              <Tab key={value || 'all'} role="tab" aria-selected={role === value} onClick={() => setRole(value)} selected={role === value}>
                 {label}{count !== undefined && ` (${formatNumber(count)})`}
-              </button>
+              </Tab>
             ))}
           </div>
           <label className="gm-ul__search">
@@ -418,7 +392,7 @@ export function AdminUsersPage() {
               <button type="button" onClick={() => setPage(page - 1)} disabled={page <= 1} aria-label={t('Oldingi sahifa')}><ChevronLeft size={16} /></button>
               {pageNumbers(page, data.pages).map((entry) =>
                 typeof entry === 'number' ? (
-                  <button key={entry} type="button" className={cx(entry === page && 'is-on')} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)}>{entry}</button>
+                  <Tab key={entry} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)} selected={entry === page}>{entry}</Tab>
                 ) : (
                   <span key={entry}>…</span>
                 ),

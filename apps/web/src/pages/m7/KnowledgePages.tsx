@@ -21,7 +21,7 @@ import '@/features/shop/shop.css';
 import '@/features/m7/m7.css';
 import '@/features/calc/calc.css';
 import { safeExternalUrl } from '@/lib/return-to';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 export const TYPE_LABEL: Record<ArticleType, string> = { GUIDE: t('Qo‘llanma'), ARTICLE: t('Maqola'), FAQ: 'FAQ', VIDEO: t('Video'), GLOSSARY: t('Atama') };
 const CTA: Record<Exclude<CtaType, 'NONE'>, { title: string; text: string; to: string; button: string }> = {
@@ -122,7 +122,7 @@ export function KnowledgeCategoryPage() {
       ) : (
         <>
           <TabBar variant="tabs" role="tablist">
-            {(['', 'GUIDE', 'ARTICLE', 'FAQ', 'VIDEO'] as Array<ArticleType | ''>).map((tp) => <button key={tp || 'all'} type="button" role="tab" aria-selected={type === tp} className={cx(type === tp && 'is-on')} onClick={() => setType(tp)}>{tp ? TYPE_LABEL[tp] : t('Barchasi')}</button>)}
+            {(['', 'GUIDE', 'ARTICLE', 'FAQ', 'VIDEO'] as Array<ArticleType | ''>).map((tp) => <Tab key={tp || 'all'} role="tab" aria-selected={type === tp} onClick={() => setType(tp)} selected={type === tp}>{tp ? TYPE_LABEL[tp] : t('Barchasi')}</Tab>)}
           </TabBar>
           {list.isLoading ? <PageLoader /> : !list.data?.items.length ? <EmptyState icon={<BookOpen size={28} />} title={t('Material yo‘q')} /> : <div className="qs-kcards">{list.data.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div>}
         </>

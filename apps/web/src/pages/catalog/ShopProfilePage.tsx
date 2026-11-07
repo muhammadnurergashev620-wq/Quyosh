@@ -27,7 +27,7 @@ import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
 import '@/features/m7/m7.css';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
@@ -100,7 +100,7 @@ export function ShopProfilePage() {
 
       <TabBar variant="tabs" role="tablist">
         {([['overview', t('Umumiy')], ['services', t('Xizmatlar va narxlar')], ['products', t('Mahsulotlar ({n})', { n: shop.productCount })], ['portfolio', t('Portfolio')]] as const).map(([key, label]) => (
-          <button key={key} type="button" role="tab" aria-selected={tab === key} className={cx(tab === key && 'is-on')} onClick={() => setTab(key)}>{label}</button>
+          <Tab key={key} role="tab" aria-selected={tab === key} onClick={() => setTab(key)} selected={tab === key}>{label}</Tab>
         ))}
       </TabBar>
 

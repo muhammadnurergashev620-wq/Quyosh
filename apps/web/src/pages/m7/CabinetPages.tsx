@@ -22,7 +22,7 @@ import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
 import '@/features/m7/m7.css';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const REMINDER_LABEL: Record<Reminder['type'], string> = { CLEANING: t('Panellarni tozalash'), INSPECTION: t('Yillik ko‘rik'), WARRANTY_EXPIRY: t('Kafolat tugashi') };
 const n0 = (v: number) => formatNumber(Math.round(v));
@@ -112,7 +112,7 @@ function AddSystemModal({ open, onClose }: { open: boolean; onClose: () => void 
           <Input label={t('O‘rnatilgan sana')} type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} />
         </div>
         <TabBar variant="segmented" role="radiogroup" aria-label={t('Tizim turi')}>
-          {(['ON_GRID', 'HYBRID', 'OFF_GRID'] as SystemType[]).map((st) => <button key={st} type="button" role="radio" aria-checked={f.type === st} className={cx(f.type === st && 'is-on')} onClick={() => setF({ ...f, type: st })}>{SYSTEM_TYPE[st].title}</button>)}
+          {(['ON_GRID', 'HYBRID', 'OFF_GRID'] as SystemType[]).map((st) => <Tab key={st} role="radio" aria-checked={f.type === st} onClick={() => setF({ ...f, type: st })} selected={f.type === st}>{SYSTEM_TYPE[st].title}</Tab>)}
         </TabBar>
         <div className="qs-form__row">
           <Input label={t('Uskuna kafolati')} suffix={t('oy')} inputMode="numeric" value={f.eqMonths} onChange={(e) => setF({ ...f, eqMonths: e.target.value.replace(/\D/g, '') })} />
@@ -174,7 +174,7 @@ function ProductionChart({ s }: { s: SystemDetail }) {
           </div>
         ))}
       </div>
-      <div className="qs-prod-legend"><span><i /> {t('Prognoz')}</span><span><i className="dot" /> {t('Kiritilgan')}</span><button type="button" className="gm-link" onClick={() => setTable(!table)}>{table ? t('Jadvalni yashirish') : t('Jadval ko‘rinishi')}</button></div>
+      <div className="qs-prod-legend"><span><i /> {t('Prognoz')}</span><span><i className="dot" /> {t('Kiritilgan')}</span><Button variant="link" onClick={() => setTable(!table)}>{table ? t('Jadvalni yashirish') : t('Jadval ko‘rinishi')}</Button></div>
       {table && (
         <div className="qs-table-wrap" style={{ marginTop: 10 }}>
           <table className="qs-table"><thead><tr><th>{t('Oy')}</th><th className="qs-right">{t('Prognoz, kWh')}</th><th className="qs-right">{t('Haqiqiy, kWh')}</th></tr></thead>
@@ -220,8 +220,8 @@ export function SystemPage() {
         <div className="qs-form" style={{ marginTop: 16 }}>
           <h3 style={{ margin: 0 }}>{t('Oy ko‘rsatkichini kiritish')}</h3>
           <TabBar variant="tabs" role="tablist">
-            <button type="button" role="tab" aria-selected={mode === 'kwh'} className={cx(mode === 'kwh' && 'is-on')} onClick={() => setMode('kwh')}>{t('Ishlab chiqarilgan kWh')}</button>
-            <button type="button" role="tab" aria-selected={mode === 'meter'} className={cx(mode === 'meter' && 'is-on')} onClick={() => setMode('meter')}>{t('Hisoblagich ko‘rsatkichi')}</button>
+            <Tab role="tab" aria-selected={mode === 'kwh'} onClick={() => setMode('kwh')} selected={mode === 'kwh'}>{t('Ishlab chiqarilgan kWh')}</Tab>
+            <Tab role="tab" aria-selected={mode === 'meter'} onClick={() => setMode('meter')} selected={mode === 'meter'}>{t('Hisoblagich ko‘rsatkichi')}</Tab>
           </TabBar>
           <div className="qs-form__row" style={{ alignItems: 'end' }}>
             <Input label={t('Oy')} type="month" value={period} max={new Date().toISOString().slice(0, 7)} onChange={(e) => setPeriod(e.target.value)} />

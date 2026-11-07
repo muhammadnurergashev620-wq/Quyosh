@@ -10,13 +10,12 @@ import { kw, monthName, SYSTEM_TYPE } from '@/features/calc/labels';
 import type { ApplianceRow, SystemType } from '@/features/calc/types';
 import { i18nText } from '@/features/catalog/format';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
 import { formatDecimal } from '@/lib/format';
 import { SelectMenu } from '@/components/ui/SelectMenu';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 /** U8.13: elektr uzilishi kalkulyatori — default HYBRID; ON_GRID da raqam ko‘rsatilmaydi. */
 export function OutagePage() {
@@ -33,7 +32,7 @@ export function OutagePage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Elektr o‘chganda')}</h1><p>{t('Muhim texnika uzilishda qancha ishlashini hisoblang.')}</p></div></div>
       <section className="qs-card qs-form">
-        <TabBar variant="segmented" role="group">{(Object.keys(SYSTEM_TYPE) as SystemType[]).map((type) => <button key={type} type="button" className={cx(systemType === type && 'is-on')} onClick={() => setSystemType(type)}>{SYSTEM_TYPE[type].title}</button>)}</TabBar>
+        <TabBar variant="segmented" role="group">{(Object.keys(SYSTEM_TYPE) as SystemType[]).map((type) => <Tab key={type} onClick={() => setSystemType(type)} selected={systemType === type}>{SYSTEM_TYPE[type].title}</Tab>)}</TabBar>
         <div className="qs-appliances">
           {rows.map((row, index) => (
             <div key={index} className="qs-appliance">
@@ -55,7 +54,7 @@ export function OutagePage() {
         {run.isError && <Alert tone="danger">{getErrorMessage(run.error)}</Alert>}
       </section>
       {result && (!result.applicable ? (
-        <Alert tone="warning" title={t('Zaxira yo‘q')}>{t('Tarmoqqa ulangan tizim elektr o‘chganda xavfsizlik uchun o‘chadi.')} <button type="button" className="qs-chart__toggle" onClick={() => { setSystemType('HYBRID'); }}>{t('Gibrid variantni hisoblash')}</button></Alert>
+        <Alert tone="warning" title={t('Zaxira yo‘q')}>{t('Tarmoqqa ulangan tizim elektr o‘chganda xavfsizlik uchun o‘chadi.')} <Button variant="link" onClick={() => { setSystemType('HYBRID'); }}>{t('Gibrid variantni hisoblash')}</Button></Alert>
       ) : (
         <section className="qs-card">
           <div className="qs-calc-kpis">

@@ -12,7 +12,7 @@ export type StatTone = 'primary' | 'success' | 'warning' | 'danger' | 'info' | '
 export interface StatCardProps {
   label: string;
   /** Raqam (sanaladi) yoki tayyor matn. `null`/`undefined` — «—» va «Ma’lumot hali yo‘q». */
-  value: number | string | null | undefined;
+  value: number | string | ReactNode | null | undefined;
   unit?: string;
   /** Raqam formatlash: kasr xonalari soni (standart 0 — butun). */
   digits?: number;
@@ -29,6 +29,8 @@ export interface StatCardProps {
   variant?: 'default' | 'compact' | 'hero';
   to?: string;
   onClick?: () => void;
+  /** Filtr sifatida bosilgan (faol) holat. */
+  selected?: boolean;
   className?: string;
   children?: ReactNode;
 }
@@ -57,7 +59,7 @@ function Value({ value, digits = 0 }: { value: number; digits?: number }) {
  * KPI kartasi (U5.2) — hamma panelda yagona: label + ikonka-quti, Onest 800 qiymat (sanaladi), alohida birlik,
  * trend (▲/▼ belgisi + rang), ixtiyoriy sparkline, skeleton; ma’lumot yo‘q bo‘lsa «—».
  */
-export function StatCard({ label, value, unit, digits, icon, tone = 'primary', trend, trendLabel, note, spark, loading, variant = 'default', to, onClick, className, children }: StatCardProps) {
+export function StatCard({ label, value, unit, digits, icon, tone = 'primary', trend, trendLabel, note, spark, loading, variant = 'default', to, onClick, selected, className, children }: StatCardProps) {
   const empty = value === null || value === undefined || value === '';
   const body = (
     <>
@@ -69,7 +71,7 @@ export function StatCard({ label, value, unit, digits, icon, tone = 'primary', t
         <Skeleton className="gm-stat__skeleton" />
       ) : (
         <div className="gm-stat__value">
-          <strong>{empty ? '—' : typeof value === 'number' ? <Value value={value} digits={digits} /> : value}</strong>
+          <strong>{empty ? '—' : typeof value === 'number' ? <Value value={value} digits={digits} /> : (value as ReactNode)}</strong>
           {!empty && unit && <span className="gm-stat__unit">{unit}</span>}
         </div>
       )}
@@ -85,9 +87,9 @@ export function StatCard({ label, value, unit, digits, icon, tone = 'primary', t
       {children}
     </>
   );
-  const cls = cx('gm-stat', `gm-stat--${variant}`, `gm-stat--${tone}`, (to || onClick) && 'is-clickable', className);
+  const cls = cx('gm-stat', `gm-stat--${variant}`, `gm-stat--${tone}`, (to || onClick) && 'is-clickable', selected && 'is-on', className);
   if (to) return <Link to={to} className={cls}>{body}</Link>;
-  if (onClick) return <button type="button" className={cls} onClick={onClick}>{body}</button>;
+  if (onClick) return <button type="button" className={cls} onClick={onClick} aria-pressed={selected}>{body}</button>;
   return <div className={cls}>{body}</div>;
 }
 

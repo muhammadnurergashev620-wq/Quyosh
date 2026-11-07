@@ -19,7 +19,6 @@ import { useCurrentShop } from '@/features/shop/current-shop';
 import { useShopMembers } from '@/features/shop/hooks';
 import { REGIONS } from '@/lib/regions';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
 import { formatDateTime, formatNumber, formatRelativeTime } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
@@ -28,7 +27,7 @@ import { QuoteBuilder } from './QuoteBuilder';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { SelectMenu } from '@/components/ui/SelectMenu';
 import { Chip } from '@/components/ui/Chip';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const region = (code: string | null) => REGIONS.find((r) => r.code === code)?.name ?? null;
 const TABS: Array<{ key: RequestShopStatus | 'ALL'; label: string }> = [
@@ -104,15 +103,15 @@ export function ShopRequestsPage({ quotedOnly = false }: { quotedOnly?: boolean 
         <div className="qs-page__actions">
           <label className="qs-check"><input type="checkbox" checked={mine} onChange={(e) => setMine(e.target.checked)} /> {t('Faqat menga tayinlangan')}</label>
           <TabBar variant="tabs" role="tablist" aria-label={t('Ko‘rinish')}>
-            <button type="button" role="tab" aria-selected={view === 'list'} className={cx(view === 'list' && 'is-on')} onClick={() => setParams({})}><List size={15} /> {t('Ro‘yxat')}</button>
-            <button type="button" role="tab" aria-selected={view === 'pipeline'} className={cx(view === 'pipeline' && 'is-on')} onClick={() => setParams({ korinish: 'pipeline' })}><Kanban size={15} /> {t('Pipeline')}</button>
+            <Tab role="tab" aria-selected={view === 'list'} onClick={() => setParams({})} selected={view === 'list'}><List size={15} /> {t('Ro‘yxat')}</Tab>
+            <Tab role="tab" aria-selected={view === 'pipeline'} onClick={() => setParams({ korinish: 'pipeline' })} selected={view === 'pipeline'}><Kanban size={15} /> {t('Pipeline')}</Tab>
           </TabBar>
         </div>
       </div>
       {view === 'list' ? (
         <>
           <TabBar variant="tabs" role="tablist">
-            {TABS.map((tb) => <button key={tb.key} type="button" role="tab" aria-selected={tab === tb.key} className={cx(tab === tb.key && 'is-on')} onClick={() => setTab(tb.key)}>{tb.label}</button>)}
+            {TABS.map((tb) => <Tab key={tb.key} role="tab" aria-selected={tab === tb.key} onClick={() => setTab(tb.key)} selected={tab === tb.key}>{tb.label}</Tab>)}
           </TabBar>
           {!items.length ? (
             <EmptyState icon={<ClipboardList size={30} />} title={t('So‘rov yo‘q')} description={t('Xizmat hududingizni va katalogni to‘ldiring — mijozlar sizni xaritada va qidiruvda topadi.')} />

@@ -174,7 +174,7 @@ export function ChatPanel({ rsId, side, visits, context, canWrite = true, canAsk
                 {p.body}
                 {p.files.length > 0 && <div className="qs-msg__files">{p.files.map((f) => <span key={f}><Paperclip size={13} /> {f}</span>)}</div>}
                 <div className="qs-msg__meta">
-                  {p.state === 'sending' ? t('Yuborilmoqda…') : <>{p.error} · <button type="button" className="gm-link" onClick={() => void deliver(p)}>{t('Qayta yuborish')}</button></>}
+                  {p.state === 'sending' ? t('Yuborilmoqda…') : <>{p.error} · <Button variant="link" onClick={() => void deliver(p)}>{t('Qayta yuborish')}</Button></>}
                 </div>
               </div>
             );

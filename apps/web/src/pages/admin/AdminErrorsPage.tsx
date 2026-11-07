@@ -21,6 +21,8 @@ import './AdminUsersPage.css';
 import './AdminErrorsPage.css';
 import { t } from '@/i18n';
 import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Tab } from '@/components/ui/Tabs';
+import { StatCard } from '@/components/ui/StatCard';
 
 const isoDay = (offset: number) => new Date(Date.now() - offset * 86_400_000).toISOString().slice(0, 10);
 const dayStart = (value: string) => (value ? new Date(`${value}T00:00:00`).toISOString() : undefined);
@@ -216,22 +218,10 @@ export function AdminErrorsPage() {
       </header>
 
       <div className="gm-ul__kpis gm-errs2__kpis">
-        <button type="button" className={cx('gm-ukpi gm-ukpi--btn', !severity && !state && 'is-on')} onClick={() => { setSeverity(''); setState(''); }}>
-          <span className="gm-ukpi__icon gm-errs2__ic--red"><AlertTriangle size={24} /></span>
-          <div><small>{t('Jami xatolar')}</small><strong>{o ? formatNumber(o.current.total) : '…'}{o && <Delta current={o.current.total} previous={o.previous.total} />}</strong><span>{t('Oldingi davr: {count}', { count: o ? formatNumber(o.previous.total) : '…' })}</span></div>
-        </button>
-        <button type="button" className={cx('gm-ukpi gm-ukpi--btn', severity === 'ERROR' && 'is-on')} onClick={() => setSeverity('ERROR')}>
-          <span className="gm-ukpi__icon gm-errs2__ic--red"><AlertOctagon size={24} /></span>
-          <div><small>{t('Jiddiy')}</small><strong>{o ? formatNumber(o.current.severe) : '…'}{o && <Delta current={o.current.severe} previous={o.previous.severe} />}</strong><span>{t('Oldingi davr: {count}', { count: o ? formatNumber(o.previous.severe) : '…' })}</span></div>
-        </button>
-        <button type="button" className={cx('gm-ukpi gm-ukpi--btn', state === 'open' && 'is-on')} onClick={() => setState('open')}>
-          <span className="gm-ukpi__icon gm-errs2__ic--amber"><Bug size={24} /></span>
-          <div><small>{t('Hal qilinmagan')}</small><strong>{o ? formatNumber(o.current.open) : '…'}{o && <Delta current={o.current.open} previous={o.previous.open} />}</strong><span>{t('Oldingi davr: {count}', { count: o ? formatNumber(o.previous.open) : '…' })}</span></div>
-        </button>
-        <div className="gm-ukpi">
-          <span className="gm-ukpi__icon gm-errs2__ic--blue"><Users size={24} /></span>
-          <div><small>{t('Ta’sirlangan foydalanuvchilar')}</small><strong>{o ? formatNumber(o.current.affectedUsers) : '…'}{o && <Delta current={o.current.affectedUsers} previous={o.previous.affectedUsers} />}</strong><span>{t('Oldingi davr: {count}', { count: o ? formatNumber(o.previous.affectedUsers) : '…' })}</span></div>
-        </div>
+        <StatCard variant="compact" tone="danger" icon={<AlertTriangle size={24} />} label={t('Jami xatolar')} value={<>{o ? formatNumber(o.current.total) : '…'}{o && <Delta current={o.current.total} previous={o.previous.total} />}</>} note={<>{t('Oldingi davr: {count}', { count: o ? formatNumber(o.previous.total) : '…' })}</>} selected={!severity && !state} onClick={() => { setSeverity(''); setState(''); }} />
+        <StatCard variant="compact" tone="danger" icon={<AlertOctagon size={24} />} label={t('Jiddiy')} value={<>{o ? formatNumber(o.current.severe) : '…'}{o && <Delta current={o.current.severe} previous={o.previous.severe} />}</>} note={<>{t('Oldingi davr: {count}', { count: o ? formatNumber(o.previous.severe) : '…' })}</>} selected={severity === 'ERROR'} onClick={() => setSeverity('ERROR')} />
+        <StatCard variant="compact" tone="warning" icon={<Bug size={24} />} label={t('Hal qilinmagan')} value={<>{o ? formatNumber(o.current.open) : '…'}{o && <Delta current={o.current.open} previous={o.previous.open} />}</>} note={<>{t('Oldingi davr: {count}', { count: o ? formatNumber(o.previous.open) : '…' })}</>} selected={state === 'open'} onClick={() => setState('open')} />
+        <StatCard variant="compact" tone="info" icon={<Users size={24} />} label={t('Ta’sirlangan foydalanuvchilar')} value={<>{o ? formatNumber(o.current.affectedUsers) : '…'}{o && <Delta current={o.current.affectedUsers} previous={o.previous.affectedUsers} />}</>} note={<>{t('Oldingi davr: {count}', { count: o ? formatNumber(o.previous.affectedUsers) : '…' })}</>} />
       </div>
 
       <div className="gm-errs2__row">
@@ -258,9 +248,9 @@ export function AdminErrorsPage() {
           <div className="gm-errs2__codes">
             {o?.codes.length === 0 && <small className="gm-errs2__empty">{t('HTTP xatolari yo‘q.')}</small>}
             {o?.codes.map((code) => (
-              <button key={code.status} type="button" className={cx(statusFilter === String(code.status) && 'is-on')} title={`${statusName(code.status)} · ${code.count}`} onClick={() => { setStatusFilter(statusFilter === String(code.status) ? '' : String(code.status)); setStatusClass(''); }}>
+              <Tab key={code.status} title={`${statusName(code.status)} · ${code.count}`} onClick={() => { setStatusFilter(statusFilter === String(code.status) ? '' : String(code.status)); setStatusClass(''); }} selected={statusFilter === String(code.status)}>
                 {code.status}<span>{code.count}</span>
-              </button>
+              </Tab>
             ))}
           </div>
         </section>
@@ -385,7 +375,7 @@ export function AdminErrorsPage() {
               <button type="button" onClick={() => setPage(page - 1)} disabled={page <= 1} aria-label={t('Oldingi sahifa')}><ChevronLeft size={16} /></button>
               {pageNumbers(page, data.pages).map((entry) =>
                 typeof entry === 'number' ? (
-                  <button key={entry} type="button" className={cx(entry === page && 'is-on')} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)}>{entry}</button>
+                  <Tab key={entry} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)} selected={entry === page}>{entry}</Tab>
                 ) : (
                   <span key={entry}>…</span>
                 ),

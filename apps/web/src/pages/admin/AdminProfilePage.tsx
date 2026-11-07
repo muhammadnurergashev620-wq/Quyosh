@@ -22,6 +22,7 @@ import { ADMIN_PERMISSION_OPTIONS } from '@/features/admin/permissions';
 import { ADMIN_STATUS } from '@/features/admin/admins/admins-ui';
 import './AdminProfilePage.css';
 import { t } from '@/i18n';
+import { Tab } from '@/components/ui/Tabs';
 
 type Tab = 'info' | 'security' | 'permissions' | 'activity' | 'devices';
 
@@ -96,7 +97,7 @@ export function AdminProfilePage() {
 
       <div className="gm-aprof__tabs" role="tablist">
         {tabs.map(([value, label, icon]) => (
-          <button key={value} type="button" role="tab" aria-selected={tab === value} className={cx(tab === value && 'is-on')} onClick={() => setTab(value)}>{icon} {label}</button>
+          <Tab key={value} role="tab" aria-selected={tab === value} onClick={() => setTab(value)} selected={tab === value}>{icon} {label}</Tab>
         ))}
       </div>
 

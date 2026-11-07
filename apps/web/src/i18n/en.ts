@@ -3345,4 +3345,8 @@ export const en: Record<string, string> = {
   "Ma’lumotni yuklab bo‘lmadi": "Couldn’t load the data",
   "Qidirish…": "Search…",
   "Sahifa yo‘li": "Breadcrumb",
+  "Bo‘sh qoldirilsa — muddatsiz": "Leave empty for no end date",
+  "Navbatda yana {n} ta xabar": "{n} more messages queued",
+  "Tarif amal qilishining oxirgi kuni": "Last day the tariff applies",
+  "Xabarlar": "Messages",
 };

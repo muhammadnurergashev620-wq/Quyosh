@@ -26,7 +26,7 @@ import { track } from '@/features/m7/track';
 import '@/features/shop/shop.css';
 import '@/features/map/map.css';
 import '@/features/calc/calc.css';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 type ConsumptionMode = 'kwh' | 'bill';
 
@@ -130,13 +130,13 @@ export function QuickCalcPage() {
             <h2><span>2</span>{t('Elektr sarfi')}</h2>
             {template ? (
               <Alert tone="info">
-                {t('Texnika shabloni: {name}', { name: i18nText(template.nameI18n as { uz: string }) })} · <button type="button" className="qs-chart__toggle" onClick={() => commit({ templateCode: null })}>{t('Raqam kiritish')}</button>
+                {t('Texnika shabloni: {name}', { name: i18nText(template.nameI18n as { uz: string }) })} · <Button variant="link" onClick={() => commit({ templateCode: null })}>{t('Raqam kiritish')}</Button>
               </Alert>
             ) : (
               <>
                 <TabBar variant="segmented" role="group" aria-label={t('Kiritish turi')}>
-                  <button type="button" className={cx(state.mode === 'bill' && 'is-on')} disabled={tariffMissing} onClick={() => commit({ mode: 'bill', value: '' })}>{t('Oylik to‘lov, so‘m')}</button>
-                  <button type="button" className={cx(state.mode === 'kwh' && 'is-on')} onClick={() => commit({ mode: 'kwh', value: '' })}>{t('Oylik sarf, kWh')}</button>
+                  <Tab disabled={tariffMissing} onClick={() => commit({ mode: 'bill', value: '' })} selected={state.mode === 'bill'}>{t('Oylik to‘lov, so‘m')}</Tab>
+                  <Tab onClick={() => commit({ mode: 'kwh', value: '' })} selected={state.mode === 'kwh'}>{t('Oylik sarf, kWh')}</Tab>
                 </TabBar>
                 <Input
                   label={state.mode === 'kwh' ? t('O‘rtacha oylik sarf, kWh') : t('O‘rtacha oylik to‘lov, so‘m')}
@@ -148,7 +148,7 @@ export function QuickCalcPage() {
                   placeholder={state.mode === 'kwh' ? '350' : '250 000'}
                 />
                 {tariffMissing && <Alert tone="info">{t('Bu hudud uchun tarif ma’lumoti yo‘q — kWh kiriting')}</Alert>}
-                <button type="button" className="qs-chart__toggle" style={{ justifySelf: 'start' }} onClick={() => setTemplates(true)}>{t('Bilmayman — texnika bo‘yicha')}</button>
+                <Button variant="link" onClick={() => setTemplates(true)}>{t('Bilmayman — texnika bo‘yicha')}</Button>
               </>
             )}
           </section>
@@ -156,15 +156,15 @@ export function QuickCalcPage() {
           <section className="qs-card qs-quick__block">
             <h2><span>3</span>{t('O‘rnatish joyi')}</h2>
             <div className="qs-choice">
-              <button type="button" className={cx(state.place === 'ROOF' && 'is-on')} onClick={() => commit({ place: 'ROOF' })}><strong>{t('Tom')}</strong><small>{t('Uy yoki bino tomi')}</small></button>
-              <button type="button" className={cx(state.place === 'GROUND' && 'is-on')} onClick={() => commit({ place: 'GROUND' })}><strong>{t('Hovli yoki yer')}</strong><small>{t('Yerga o‘rnatish')}</small></button>
+              <Tab onClick={() => commit({ place: 'ROOF' })} selected={state.place === 'ROOF'}><strong>{t('Tom')}</strong><small>{t('Uy yoki bino tomi')}</small></Tab>
+              <Tab onClick={() => commit({ place: 'GROUND' })} selected={state.place === 'GROUND'}><strong>{t('Hovli yoki yer')}</strong><small>{t('Yerga o‘rnatish')}</small></Tab>
             </div>
             <div className="qs-choice">
               {(['SMALL', 'MEDIUM', 'LARGE'] as const).map((size) => (
-                <button key={size} type="button" className={cx(state.size === size && 'is-on')} onClick={() => commit({ size })}>
+                <Tab key={size} onClick={() => commit({ size })} selected={state.size === size}>
                   <strong>{size === 'SMALL' ? t('Kichik') : size === 'MEDIUM' ? t('O‘rtacha') : t('Katta')}</strong>
                   <small>≈ {presets[size]} m²</small>
-                </button>
+                </Tab>
               ))}
               <button type="button" onClick={() => navigate('/mijoz/kalkulyator/batafsil?qadam=2', { state: { fromQuick: committed } })}><strong>{t('Xaritada chizaman')}</strong><small>{t('Aniqroq natija')}</small></button>
             </div>

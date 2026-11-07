@@ -6,6 +6,7 @@ import { monthShort } from './labels';
 import { t } from '@/i18n';
 import './charts.css';
 import { InfoTip } from '@/components/ui/InfoTip';
+import { Button } from '@/components/ui/Button';
 
 /**
  * Yengil SVG grafiklar (dataviz: bitta o‘q, ingichka belgilar, 4px yumaloq uchlar, 2px oraliq, legend ≥ 2 seriyada,
@@ -41,7 +42,7 @@ function Frame({ title, tip, legend, table, children }: { title: string; tip?: s
             {legend.map((s) => <span key={s.name}><i className={`is-${s.color}`} aria-hidden="true" />{s.name}</span>)}
           </span>
         )}
-        <button type="button" className="qs-chart__toggle" onClick={() => setShowTable((v) => !v)} aria-pressed={showTable}>{showTable ? t('Grafik') : t('Jadval')}</button>
+        <Button variant="ghost" size="sm" onClick={() => setShowTable((v) => !v)} aria-pressed={showTable}>{showTable ? t('Grafik') : t('Jadval')}</Button>
       </figcaption>
       {showTable ? <div className="qs-chart__table">{table}</div> : children}
     </figure>

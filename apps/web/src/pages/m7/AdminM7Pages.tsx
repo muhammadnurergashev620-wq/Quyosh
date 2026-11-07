@@ -26,7 +26,7 @@ import '@/features/shop/shop.css';
 import '@/features/m7/m7.css';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { SelectMenu } from '@/components/ui/SelectMenu';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const QUEUE_LABEL: Record<string, string> = {
   models: t('ProductModel takliflari'), reviews: t('Moderatsiyadagi sharhlar'),
@@ -243,13 +243,13 @@ export function AdminArticleEditorPage() {
       <div className="qs-grid-2 qs-grid-main">
         <section className="qs-card qs-form">
           <TabBar variant="tabs" role="tablist">
-            {LANGS.map(([l, label]) => <button key={l} type="button" role="tab" aria-selected={lang === l} className={cx(lang === l && 'is-on')} onClick={() => setLang(l)}>{label} <Badge tone={completeness[l] === 3 ? 'success' : l === 'oz' || l === 'en' ? 'neutral' : 'warning'}>{completeness[l]}/3</Badge></button>)}
+            {LANGS.map(([l, label]) => <Tab key={l} role="tab" aria-selected={lang === l} onClick={() => setLang(l)} selected={lang === l}>{label} <Badge tone={completeness[l] === 3 ? 'success' : l === 'oz' || l === 'en' ? 'neutral' : 'warning'}>{completeness[l]}/3</Badge></Tab>)}
           </TabBar>
           {lang === 'en' && <small className="qs-muted">English text is optional: if empty, the Uzbek text is shown to English readers.</small>}
           {lang === 'oz' && <small className="qs-muted">{t('Kirill matni bo‘sh bo‘lsa, lotin matnidan avtomatik transliteratsiya qilinadi.')}</small>}
           <Input label={t('Sarlavha')} value={f.title[lang] ?? ''} onChange={(e) => setL('title', e.target.value)} />
           <Textarea label={t('Qisqa tavsif')} value={f.summary[lang] ?? ''} onChange={(e) => setL('summary', e.target.value)} />
-          <TabBar variant="tabs"><button type="button" className={cx(!preview && 'is-on')} onClick={() => setPreview(false)}>Markdown</button><button type="button" className={cx(preview && 'is-on')} onClick={() => setPreview(true)}>{t('Ko‘rinish')}</button></TabBar>
+          <TabBar variant="tabs"><Tab onClick={() => setPreview(false)} selected={!preview}>Markdown</Tab><Tab onClick={() => setPreview(true)} selected={preview}>{t('Ko‘rinish')}</Tab></TabBar>
           {preview ? <div className="qs-card"><Markdown source={f.body[lang] ?? ''} /></div> : <Textarea label={t('Matn (Markdown)')} rows={18} value={f.body[lang] ?? ''} onChange={(e) => setL('body', e.target.value)} />}
           <Input label={t('SEO sarlavha ({n}/60)', { n: (f.seoTitle[lang] ?? '').length })} value={f.seoTitle[lang] ?? ''} onChange={(e) => setL('seoTitle', e.target.value)} />
           <Textarea label={t('SEO tavsif ({n}/160)', { n: (f.seoDesc[lang] ?? '').length })} value={f.seoDesc[lang] ?? ''} onChange={(e) => setL('seoDesc', e.target.value)} />

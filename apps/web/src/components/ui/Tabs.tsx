@@ -116,3 +116,12 @@ export function TabBar({ variant = 'tabs', children, className, role = 'tablist'
     </div>
   );
 }
+
+/** TabBar ichidagi tab yoki segment tugmasi (yoki tanlov tugmasi): `selected` — faol. */
+export function Tab({ selected = false, className, children, ...rest }: React.ButtonHTMLAttributes<HTMLButtonElement> & { selected?: boolean }) {
+  return (
+    <button type="button" className={cx('gm-tab-btn', selected && 'is-on', className)} {...rest}>
+      {children}
+    </button>
+  );
+}

@@ -21,7 +21,7 @@ import { t } from '@/i18n';
 import { dealsService } from '../deals.service';
 import '@/features/calc/calc.css';
 import { responseTime } from '../labels';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 type Basis = { kind: 'calc' | 'site'; id: string; title: string; systemType?: SystemType; powerKw?: number; siteId?: string | null };
 interface PickShop { id: string; name: string; ratingAvg: string; ratingCount: number; distanceKm?: number; avgResponseMinutes?: number | null; serving: boolean }
@@ -170,17 +170,17 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
               ) : (
                 <div className="qs-basis">
                   {calcs.data?.map((c) => (
-                    <button key={c.id} type="button" className={cx(basis?.kind === 'calc' && basis.id === c.id && 'is-on')} onClick={() => choose({ kind: 'calc', id: c.id, title: c.title || t('Hisob'), systemType: c.systemType, powerKw: c.systemPowerKw, siteId: c.site?.id ?? null })}>
+                    <Tab key={c.id} onClick={() => choose({ kind: 'calc', id: c.id, title: c.title || t('Hisob'), systemType: c.systemType, powerKw: c.systemPowerKw, siteId: c.site?.id ?? null })} selected={basis?.kind === 'calc' && basis.id === c.id}>
                       <strong>{c.title || t('Hisob')}</strong>
                       <small>{formatDate(c.createdAt)} · {kw(c.systemPowerKw)} · {SYSTEM_TYPE[c.systemType].title}</small>
                       <small>{sumShort(c.initialCost)}</small>
-                    </button>
+                    </Tab>
                   ))}
                   {sites.data?.map((s) => (
-                    <button key={s.id} type="button" className={cx(basis?.kind === 'site' && basis.id === s.id && 'is-on')} onClick={() => choose({ kind: 'site', id: s.id, title: s.title })}>
+                    <Tab key={s.id} onClick={() => choose({ kind: 'site', id: s.id, title: s.title })} selected={basis?.kind === 'site' && basis.id === s.id}>
                       <strong><MapPin size={13} /> {s.title}</strong>
                       <small>{t('Obyekt')} · {t('{n} m² foydali', { n: Math.round(Number(s.usableAreaM2)) })}</small>
-                    </button>
+                    </Tab>
                   ))}
                 </div>
               )}
@@ -191,7 +191,7 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
             <>
               <TabBar variant="segmented" role="radiogroup" aria-label={t('Tizim turi')}>
                 {(['ON_GRID', 'HYBRID', 'OFF_GRID'] as SystemType[]).map((st) => (
-                  <button key={st} type="button" role="radio" aria-checked={systemType === st} className={cx(systemType === st && 'is-on')} onClick={() => { setSystemType(st); setBattery(st !== 'ON_GRID'); }}>{SYSTEM_TYPE[st].title}</button>
+                  <Tab key={st} role="radio" aria-checked={systemType === st} onClick={() => { setSystemType(st); setBattery(st !== 'ON_GRID'); }} selected={systemType === st}>{SYSTEM_TYPE[st].title}</Tab>
                 ))}
               </TabBar>
               <Input label={t('Kerakli quvvat')} suffix={t('kVt')} inputMode="decimal" value={capacity} onChange={(e) => setCapacity(e.target.value.replace(/[^\d.,]/g, ''))} hint={basis?.powerKw ? t('Hisobdan olindi') : undefined} />

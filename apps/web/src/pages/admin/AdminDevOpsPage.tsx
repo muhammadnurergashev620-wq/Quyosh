@@ -19,6 +19,7 @@ import { apiGet, apiPost } from '@/services/api.client';
 import './AdminDevOpsPage.css';
 import { t } from '@/i18n';
 import { safeExternalUrl } from '@/lib/return-to';
+import { Tab } from '@/components/ui/Tabs';
 
 const WINDOW_TABS: Array<{ value: DevOpsWindow; label: string }> = [
   { value: '1h', label: t('1 soat') },
@@ -137,9 +138,9 @@ export function AdminDevOpsPage() {
           )}
           <div className="gm-devops__tabs" role="tablist" aria-label={t('Vaqt oralig‘i')}>
             {WINDOW_TABS.map((tab) => (
-              <button key={tab.value} type="button" role="tab" aria-selected={window === tab.value} className={cx(window === tab.value && 'is-on')} onClick={() => setWindow(tab.value)}>
+              <Tab key={tab.value} role="tab" aria-selected={window === tab.value} onClick={() => setWindow(tab.value)} selected={window === tab.value}>
                 {tab.label}
-              </button>
+              </Tab>
             ))}
           </div>
           <Button variant="secondary" size="sm" loading={devops.isFetching} onClick={() => void devops.refetch()}>

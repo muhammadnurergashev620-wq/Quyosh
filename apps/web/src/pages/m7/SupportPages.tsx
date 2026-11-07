@@ -26,6 +26,7 @@ import '@/features/shop/shop.css';
 import '@/features/m7/m7.css';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Tab } from '@/components/ui/Tabs';
 
 export const CATEGORY_LABEL: Record<string, string> = {
   ACCOUNT: t('Akkaunt va kirish'), CALCULATOR: t('Kalkulyator'), REQUEST_QUOTE: t('So‘rov va takliflar'), INSTALLATION: t('Montaj'),
@@ -204,7 +205,7 @@ export function TicketPage() {
         <div className="qs-card">
           <h2>{t('Javobimizni baholang')}</h2>
           <div className="qs-stars" role="radiogroup" aria-label={t('Baho')}>
-            {[1, 2, 3, 4, 5].map((n) => <button key={n} type="button" role="radio" aria-checked={x.satisfaction === n} className={cx((x.satisfaction ?? 0) >= n && 'is-on')} onClick={() => rate.mutate(n)} aria-label={t('{n} yulduz', { n })}><Star size={26} fill={(x.satisfaction ?? 0) >= n ? 'currentColor' : 'none'} /></button>)}
+            {[1, 2, 3, 4, 5].map((n) => <Tab key={n} role="radio" aria-checked={x.satisfaction === n} onClick={() => rate.mutate(n)} aria-label={t('{n} yulduz', { n })} selected={(x.satisfaction ?? 0) >= n}><Star size={26} fill={(x.satisfaction ?? 0) >= n ? 'currentColor' : 'none'} /></Tab>)}
           </div>
         </div>
       )}

@@ -12,7 +12,6 @@ import { ResultView } from '@/features/calc/ResultView';
 import type { EstimateInput } from '@/features/calc/types';
 import { getErrorMessage } from '@/lib/error-messages';
 import { rememberReturnTo } from '@/lib/return-to';
-import { cx } from '@/lib/utils';
 import { env } from '@/lib/env';
 import { useAuthStore } from '@/store/auth.store';
 import { useAppStore } from '@/store/app.store';
@@ -20,7 +19,7 @@ import { useIdempotencyKey } from '@/hooks/useIdempotencyKey';
 import { lang as currentLang, t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 /** Saqlangan hisobdan — to‘g‘ridan-to‘g‘ri so‘rov wizard’iga (U9.1, asos avtomatik); saqlanmagan bo‘lsa — xarita. */
 function OffersCta({ calculationId }: { calculationId?: string }) {
@@ -79,7 +78,7 @@ function PdfModal({ id, open, onClose }: { id: string; open: boolean; onClose: (
       <div className="qs-form">
         <Select label={t('Til')} value={lang} onChange={(e) => setLang(e.target.value as 'uz' | 'oz' | 'ru' | 'en')} options={[{ value: 'uz', label: 'O‘zbekcha' }, { value: 'oz', label: 'Ўзбекча' }, { value: 'ru', label: 'Русский' }, { value: 'en', label: 'English' }]} />
         <TabBar variant="segmented" role="group" aria-label={t('QR-kod')}>
-          {([['SHARE', t('QR: ulashish havolasi')], ['CABINET', t('QR: kabinetga')], ['NONE', t('QR yo‘q')]] as const).map(([value, label]) => <button key={value} type="button" className={cx(qr === value && 'is-on')} onClick={() => setQr(value)}>{label}</button>)}
+          {([['SHARE', t('QR: ulashish havolasi')], ['CABINET', t('QR: kabinetga')], ['NONE', t('QR yo‘q')]] as const).map(([value, label]) => <Tab key={value} onClick={() => setQr(value)} selected={qr === value}>{label}</Tab>)}
         </TabBar>
         {jobId && !ready && status.data?.status !== 'FAILED' && <div className="qs-sun-wait"><svg viewBox="0 0 42 22" aria-hidden="true"><path d="M2,20 A19,17 0 0 1 40,20" fill="none" stroke="var(--qs-color-border)" strokeWidth="1.5" /><circle r="3" /></svg>{t('PDF tayyorlanmoqda…')}</div>}
         {status.data?.status === 'FAILED' && <Alert tone="danger">{t('PDF tayyorlanmadi. Qayta urinib ko‘ring.')}</Alert>}
@@ -103,7 +102,7 @@ function ShareModal({ id, open, onClose }: { id: string; open: boolean; onClose:
       <div className="qs-form">
         <Alert tone="info">{t('Havolada aniq manzil va tom chizmasi ko‘rinmaydi.')}</Alert>
         <TabBar variant="segmented" role="group">
-          {([7, 30, null] as const).map((value) => <button key={String(value)} type="button" className={cx(days === value && 'is-on')} onClick={() => setDays(value)}>{value ? t('{n} kun', { n: value }) : t('Muddatsiz')}</button>)}
+          {([7, 30, null] as const).map((value) => <Tab key={String(value)} onClick={() => setDays(value)} selected={days === value}>{value ? t('{n} kun', { n: value }) : t('Muddatsiz')}</Tab>)}
         </TabBar>
         {link && (
           <div className="qs-inline-price" style={{ flexWrap: 'wrap' }}>
@@ -136,7 +135,7 @@ export function SavedResultPage() {
   const views = saved.data.shares.reduce((sum, s) => sum + s.viewCount, 0);
   return (
     <>
-      {saved.data.outdated && <Alert tone="warning" title={t('Eski tarif/model bilan')}>{t('Bu hisob oldingi tarif yoki sozlamalar bilan qilingan.')} <button type="button" className="qs-chart__toggle" onClick={() => recalc.mutate()}>{t('Qayta hisoblash')}</button></Alert>}
+      {saved.data.outdated && <Alert tone="warning" title={t('Eski tarif/model bilan')}>{t('Bu hisob oldingi tarif yoki sozlamalar bilan qilingan.')} <Button variant="link" onClick={() => recalc.mutate()}>{t('Qayta hisoblash')}</Button></Alert>}
       <ResultView
         result={saved.data.result}
         cta={<OffersCta calculationId={id} />}

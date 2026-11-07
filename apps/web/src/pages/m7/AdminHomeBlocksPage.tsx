@@ -17,7 +17,7 @@ import { formatDateTime } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/m7/m7.css';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 interface AdminBlock {
   id: string;
@@ -220,9 +220,9 @@ function BlockEditor({ block, onSaved }: { block: AdminBlock; onSaved: (b: Admin
       {hint && <p className="qs-muted" style={{ margin: 0 }}>{hint()}</p>}
       <TabBar variant="tabs" role="tablist" aria-label={t('Til')}>
         {LANGS.map(([code, label]) => (
-          <button key={code} type="button" role="tab" aria-selected={lang === code} className={cx(lang === code && 'is-on')} onClick={() => setLang(code)}>
+          <Tab key={code} role="tab" aria-selected={lang === code} onClick={() => setLang(code)} selected={lang === code}>
             {label} {code === 'oz' || code === 'en' ? (value[code] ? '✓' : '·') : complete(block.type, value[code]) ? '✓' : '!'}
-          </button>
+          </Tab>
         ))}
       </TabBar>
       {lang === 'oz' && <p className="qs-muted" style={{ margin: 0 }}>{t('Kirill matni ixtiyoriy: bo‘sh maydonlar o‘zbek lotinidan avtomatik o‘giriladi.')}</p>}

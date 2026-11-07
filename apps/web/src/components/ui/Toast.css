@@ -1,66 +1,73 @@
-.gm-toast-viewport {
+/* Toast: desktop — o‘ng pastda, mobil — yuqorida markazda */
+.gm-toasts {
   position: fixed;
-  bottom: var(--qs-space-5);
   right: var(--qs-space-5);
-  left: var(--qs-space-4);
+  bottom: var(--qs-space-5);
+  z-index: 1100;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-direction: column-reverse;
   gap: var(--qs-space-2);
-  z-index: 1000;
+  width: min(380px, calc(100vw - 32px));
   pointer-events: none;
+}
+@media (max-width: 639px) {
+  .gm-toasts { top: calc(env(safe-area-inset-top, 0px) + var(--qs-space-3)); bottom: auto; left: 50%; right: auto; transform: translateX(-50%); flex-direction: column; }
 }
 
 .gm-toast {
-  pointer-events: auto;
+  --tc: var(--qs-color-info);
+  --tc-bg: var(--qs-color-info-bg);
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--qs-space-3);
-  background: var(--qs-color-surface);
+  padding: 14px 10px 16px 14px;
   border: 1px solid var(--qs-color-border);
+  border-radius: 16px;
+  background: var(--qs-color-surface);
+  color: var(--qs-color-text);
   box-shadow: var(--qs-shadow-lg);
-  border-radius: var(--qs-radius-md);
-  padding: var(--qs-space-3) var(--qs-space-4);
-  max-width: 380px;
-  font-size: 14px;
-  font-weight: 500;
-  animation: gm-toast-in 0.25s var(--qs-ease);
+  overflow: hidden;
+  pointer-events: auto;
+  touch-action: pan-y;
+  animation: gm-toast-in var(--qs-dur-3) var(--qs-ease-out);
 }
+.gm-toast.is-dragging { transition: none; }
+.gm-toast.is-leaving { animation: gm-toast-out var(--qs-dur-2) var(--qs-ease-in) forwards; }
+@keyframes gm-toast-in { from { opacity: 0; transform: translateY(12px) scale(.96); } }
+@keyframes gm-toast-out { to { opacity: 0; transform: translateX(24px); } }
 
-.gm-toast--success {
-  border-left: 4px solid var(--qs-color-success);
+.gm-toast--success { --tc: var(--qs-color-success); --tc-bg: var(--qs-color-success-bg); }
+.gm-toast--error { --tc: var(--qs-color-danger); --tc-bg: var(--qs-color-danger-bg); }
+.gm-toast--warning { --tc: var(--qs-color-warning); --tc-bg: var(--qs-color-warning-bg); }
+.gm-toast--loading { --tc: var(--qs-color-primary); --tc-bg: var(--qs-color-primary-soft); }
+
+.gm-toast__icon { display: inline-grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--tc-bg); color: var(--tc); }
+.gm-toast__icon svg { width: 18px; height: 18px; stroke-width: 2.6; }
+.gm-toast__bang { font-family: var(--qs-font-display); font-weight: 800; font-size: 18px; line-height: 1; }
+.gm-toast__spin { animation: gm-toast-spin 1s linear infinite; }
+@keyframes gm-toast-spin { to { transform: rotate(360deg); } }
+.gm-toast__text { flex: 1; min-width: 0; padding-top: 2px; }
+.gm-toast__title { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.gm-toast__desc { margin: 2px 0 0; font-size: 13px; color: var(--qs-color-text-muted); line-height: 1.45; }
+.gm-toast__action { margin-top: 8px; padding: 0; border: 0; background: none; color: var(--qs-color-primary); font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; }
+.gm-toast__action:hover { text-decoration: underline; text-underline-offset: 3px; }
+.gm-toast__close { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border: 0; border-radius: var(--qs-radius-sm); background: transparent; color: var(--qs-color-text-muted); cursor: pointer; }
+.gm-toast__close:hover { background: var(--qs-color-surface-muted); color: var(--qs-color-text); }
+.gm-toast__close svg { width: 16px; height: 16px; }
+.gm-toast__action:focus-visible, .gm-toast__close:focus-visible { outline: none; box-shadow: var(--qs-ring); }
+
+/* Qolgan vaqt chizig‘i */
+.gm-toast__progress {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
+  background: var(--tc); opacity: .7; transform-origin: left;
+  animation-name: gm-toast-progress; animation-timing-function: linear; animation-fill-mode: forwards;
 }
+.gm-toast__progress.is-paused { animation-play-state: paused; }
+@keyframes gm-toast-progress { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
-.gm-toast--error {
-  border-left: 4px solid var(--qs-color-danger);
+@media (prefers-reduced-motion: reduce) {
+  .gm-toast, .gm-toast.is-leaving { animation-duration: var(--qs-dur-1); animation-name: gm-fade; }
+  .gm-toast__spin { animation: none; }
 }
-
-.gm-toast--info {
-  border-left: 4px solid var(--qs-color-primary);
-}
-
-.gm-toast__close {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: var(--qs-color-text-muted);
-  font-size: 14px;
-}
-
-@keyframes gm-toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-}
-
-@media (max-width: 899px) {
-  .gm-toast-viewport {
-    bottom: 88px;
-    align-items: stretch;
-  }
-
-  .gm-toast {
-    max-width: none;
-  }
-}
+@keyframes gm-fade { from { opacity: 0; } }

@@ -603,4 +603,9 @@ export const ruM7: Record<string, string> = {
   "Sahifalar": "Страницы",
   "Hech narsa topilmadi": "Ничего не найдено",
   "Tanlang": "Выберите",
+  "Bo‘sh qoldirilsa — muddatsiz": "Если оставить пустым — бессрочно",
+  "Navbatda yana {n} ta xabar": "В очереди ещё {n} сообщ.",
+  "Tarif amal qilishining oxirgi kuni": "Последний день действия тарифа",
+  "Xabarlar": "Сообщения",
+  "Qaytarish": "Отменить",
 };

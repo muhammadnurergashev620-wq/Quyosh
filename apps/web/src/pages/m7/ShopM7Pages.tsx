@@ -25,7 +25,7 @@ import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
 import '@/features/m7/m7.css';
 import { SelectMenu } from '@/components/ui/SelectMenu';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const regionName = (code: string) => REGIONS.find((r) => r.code === code)?.name ?? (code === 'unknown' ? t('Ko‘rsatilmagan') : code);
 const minutes = (m: number | null) => (m === null ? '—' : m < 60 ? t('{n} daq', { n: m }) : t('{n} soat', { n: Math.round(m / 60) }));
@@ -187,7 +187,7 @@ export function WidgetPage() {
             <input className="qs-swatch" type="color" aria-label={t('Asosiy rang')} value={theme.primaryColor} onChange={(e) => setTheme({ ...theme, primaryColor: e.target.value })} />
             <Input label={t('Asosiy rang')} value={theme.primaryColor} onChange={(e) => setTheme({ ...theme, primaryColor: e.target.value })} />
           </div>
-          {!c.contrast.ok && <Alert tone="warning">{t('Oq matn bilan kontrast {r}:1 (kamida 4,5:1 kerak). Vidjetda yaqin mos rang ishlatiladi:', { r: c.contrast.ratio })} <button type="button" className="gm-link" onClick={() => setTheme({ ...theme, primaryColor: c.contrast.suggestion! })}>{c.contrast.suggestion}</button></Alert>}
+          {!c.contrast.ok && <Alert tone="warning">{t('Oq matn bilan kontrast {r}:1 (kamida 4,5:1 kerak). Vidjetda yaqin mos rang ishlatiladi:', { r: c.contrast.ratio })} <Button variant="link" onClick={() => setTheme({ ...theme, primaryColor: c.contrast.suggestion! })}>{c.contrast.suggestion}</Button></Alert>}
           <Input label={t('Sarlavha')} value={theme.title} maxLength={80} onChange={(e) => setTheme({ ...theme, title: e.target.value })} />
           <label className="gm-field__label" htmlFor="wlang">{t('Til')}</label>
           <SelectMenu id="wlang" className="qs-select" value={theme.lang} onChange={(e) => setTheme({ ...theme, lang: e.target.value as 'uz' | 'oz' | 'ru' | 'en' })}><option value="uz">O‘zbekcha</option><option value="oz">Ўзбекча</option><option value="ru">Русский</option><option value="en">English</option></SelectMenu>
@@ -198,8 +198,8 @@ export function WidgetPage() {
         </section>
         <section className="qs-page" style={{ gap: 'var(--qs-space-3)' }}>
           <TabBar variant="tabs" role="tablist">
-            <button type="button" role="tab" aria-selected={device === 'desktop'} className={cx(device === 'desktop' && 'is-on')} onClick={() => setDevice('desktop')}><Monitor size={15} /> Desktop</button>
-            <button type="button" role="tab" aria-selected={device === 'mobile'} className={cx(device === 'mobile' && 'is-on')} onClick={() => setDevice('mobile')}><Smartphone size={15} /> {t('Mobil')}</button>
+            <Tab role="tab" aria-selected={device === 'desktop'} onClick={() => setDevice('desktop')} selected={device === 'desktop'}><Monitor size={15} /> Desktop</Tab>
+            <Tab role="tab" aria-selected={device === 'mobile'} onClick={() => setDevice('mobile')} selected={device === 'mobile'}><Smartphone size={15} /> {t('Mobil')}</Tab>
           </TabBar>
           <div className={cx('qs-widget-preview', device === 'mobile' && 'is-mobile')}><iframe key={rev} src={c.frameUrl} title={t('Vidjet preview')} /></div>
           <div className="qs-card">

@@ -12,12 +12,11 @@ import { dealsService } from '@/features/deals/deals.service';
 import { num } from '@/features/deals/labels';
 import { useCurrentShop } from '@/features/shop/current-shop';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
 import { formatDate, formatRating } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 /** U11.11: sharhlar — yangi/javobsiz filtri, reyting taqsimoti, bitta ommaviy javob. */
 export function ShopReviewsPage() {
@@ -50,8 +49,8 @@ export function ShopReviewsPage() {
         </div>
       </div>
       <TabBar variant="tabs" role="tablist">
-        <button type="button" role="tab" aria-selected={filter === 'all'} className={cx(filter === 'all' && 'is-on')} onClick={() => setFilter('all')}>{t('Barchasi')}</button>
-        <button type="button" role="tab" aria-selected={filter === 'unanswered'} className={cx(filter === 'unanswered' && 'is-on')} onClick={() => setFilter('unanswered')}>{t('Javobsiz')}</button>
+        <Tab role="tab" aria-selected={filter === 'all'} onClick={() => setFilter('all')} selected={filter === 'all'}>{t('Barchasi')}</Tab>
+        <Tab role="tab" aria-selected={filter === 'unanswered'} onClick={() => setFilter('unanswered')} selected={filter === 'unanswered'}>{t('Javobsiz')}</Tab>
       </TabBar>
       {!rows.length ? (
         <EmptyState icon={<MessageSquareQuote size={30} />} title={t('Sharh yo‘q')} description={t('Montaj qabul qilingach, mijoz sharh qoldirishi mumkin.')} />

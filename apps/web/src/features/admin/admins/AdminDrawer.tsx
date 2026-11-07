@@ -20,6 +20,7 @@ import { ADMIN_STATUS } from './admins-ui';
 import '@/features/admin/users/UserDrawer.css';
 import './AdminDrawer.css';
 import { t } from '@/i18n';
+import { Tab } from '@/components/ui/Tabs';
 
 export type AdminDrawerAction = 'permissions' | 'delegation' | 'password' | 'super' | 'ACTIVATE' | 'SUSPEND' | 'BLOCK' | 'DELETE';
 type Tab = 'info' | 'permissions' | 'activity' | 'sessions';
@@ -89,14 +90,14 @@ export function AdminDrawer({
             <p className="gm-udr__id">ID {admin.accountNumber}</p>
             <p>{t('Ro‘yxatdan o‘tgan: {date}', { date: formatDate(admin.createdAt) })} <small>({formatRelativeTime(admin.createdAt)})</small></p>
           </div>
-          <button type="button" className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}>
+          <Button variant="ghost" size="sm" iconOnly className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}>
             <X size={18} />
-          </button>
+          </Button>
         </header>
 
         <div className="gm-udr__tabs" role="tablist">
           {([['info', t('Asosiy ma’lumotlar')], ['permissions', t('Huquqlar')], ['activity', t('Faoliyat tarixi')], ['sessions', t('Sessiyalar')]] as Array<[Tab, string]>).map(([value, label]) => (
-            <button key={value} type="button" role="tab" aria-selected={tab === value} className={cx(tab === value && 'is-on')} onClick={() => setTab(value)}>{label}</button>
+            <Tab key={value} role="tab" aria-selected={tab === value} onClick={() => setTab(value)} selected={tab === value}>{label}</Tab>
           ))}
         </div>
 

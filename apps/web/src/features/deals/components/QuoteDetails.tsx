@@ -3,13 +3,13 @@ import type { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Star } from 'lucide-react';
 import { sum } from '@/features/calc/labels';
-import { cx } from '@/lib/utils';
 import { formatDate, formatDecimal, formatRelativeTime } from '@/lib/format';
 import { t } from '@/i18n';
 import { dealsService } from '../deals.service';
 import { days, ITEM_TYPE, months, num } from '../labels';
 import type { QuoteView } from '../types';
 import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Tab } from '@/components/ui/Tabs';
 
 /** Revision snapshot va joriy taklif uchun yagona ko‘rinish (farqlarni solishtirish uchun). */
 export interface QuoteSnap {
@@ -145,9 +145,9 @@ export function Stars({ value, onChange, size = 26 }: { value: number; onChange?
       }}
     >
       {[1, 2, 3, 4, 5].map((n) => (
-        <button key={n} type="button" role="radio" aria-checked={value === n} aria-label={t('{n} yulduz', { n })} tabIndex={value === n || (value === 0 && n === 1) ? 0 : -1} className={cx(n <= value && 'is-on')} onClick={() => onChange(n)}>
+        <Tab key={n} role="radio" aria-checked={value === n} aria-label={t('{n} yulduz', { n })} tabIndex={value === n || (value === 0 && n === 1) ? 0 : -1} onClick={() => onChange(n)} selected={n <= value}>
           <Star size={size} fill={n <= value ? 'currentColor' : 'none'} />
-        </button>
+        </Tab>
       ))}
     </div>
   );

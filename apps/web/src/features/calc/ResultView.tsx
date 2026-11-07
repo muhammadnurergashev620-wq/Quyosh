@@ -15,7 +15,7 @@ import { track } from '@/features/m7/track';
 import './calc.css';
 import { safeExternalUrl } from '@/lib/return-to';
 import { InfoTip } from '@/components/ui/InfoTip';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const INSIGHT_ICON: Record<Insight['type'], ReactNode> = {
   BEST_SAVING_MONTH: <TrendingDown size={20} />,
@@ -116,7 +116,7 @@ export function ResultView({ result, actions, cta, shared }: { result: EstimateR
         <section className="qs-card">
           <TabBar variant="tabs" role="tablist">
             {result.typicalDays.map((item, index) => (
-              <button key={item.month} type="button" role="tab" aria-selected={season === index} className={cx(season === index && 'is-on')} onClick={() => setSeason(index)}>{monthName(item.month)}</button>
+              <Tab key={item.month} role="tab" aria-selected={season === index} onClick={() => setSeason(index)} selected={season === index}>{monthName(item.month)}</Tab>
             ))}
           </TabBar>
           <DayChart title={t('Quyosh kuni: {m}dagi odatiy kun', { m: monthName(day.month) })} generation={day.generation} load={day.load} />

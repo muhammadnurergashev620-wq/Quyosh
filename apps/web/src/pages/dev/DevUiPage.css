@@ -1,0 +1,8 @@
+.dev-ui { display: grid; gap: var(--qs-space-5); padding-bottom: var(--qs-space-8); }
+.dev-ui > .gm-card-x, .dev-ui__grid > .gm-card-x { display: grid; gap: var(--qs-space-4); align-content: start; }
+.dev-ui__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--qs-space-3); }
+.dev-ui__grid { display: grid; gap: var(--qs-space-4); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.dev-ui__form, .dev-ui__stack { display: grid; gap: var(--qs-space-3); }
+.dev-ui__radio { display: inline-flex; align-items: center; gap: var(--qs-space-2); font-size: 14px; }
+.dev-ui__sk-wide { width: 70%; }
+.dev-ui__sk-block { height: 80px; }

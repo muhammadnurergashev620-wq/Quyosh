@@ -15,10 +15,10 @@ import type { Role } from '@/types/common';
 import { getNavItems } from './nav-items';
 import { getThemeMode, setThemeMode } from '@/lib/theme';
 import type { ThemeMode } from '@/lib/theme';
-import { cx } from '@/lib/utils';
 import { LANGUAGES, lang, setLanguage, t } from '@/i18n';
 import './Header.css';
 import './PanelHeader.css';
+import { Tab } from '@/components/ui/Tabs';
 
 /** Admin va superadmin panelining yuqori paneli: bo‘lim, foydalanuvchi va buyurtma bo‘yicha qidiruv (Ctrl+K), til, mavzu, bildirishnomalar va profil menyusi. */
 export function PanelHeader({ role }: { role: Role | null }) {
@@ -77,12 +77,12 @@ export function PanelHeader({ role }: { role: Role | null }) {
           />
 
           <div className="gm-aheader__theme" role="group" aria-label={t('Mavzu')}>
-            <button type="button" className={cx(mode === 'light' && 'is-on')} aria-pressed={mode === 'light'} aria-label={t('Yorug‘ mavzu')} title={t('Yorug‘ mavzu')} onClick={() => setTheme('light')}>
+            <Tab aria-pressed={mode === 'light'} aria-label={t('Yorug‘ mavzu')} title={t('Yorug‘ mavzu')} onClick={() => setTheme('light')} selected={mode === 'light'}>
               <Sun size={17} strokeWidth={2} />
-            </button>
-            <button type="button" className={cx(mode === 'dark' && 'is-on')} aria-pressed={mode === 'dark'} aria-label={t('Qorong‘i mavzu')} title={t('Qorong‘i mavzu')} onClick={() => setTheme('dark')}>
+            </Tab>
+            <Tab aria-pressed={mode === 'dark'} aria-label={t('Qorong‘i mavzu')} title={t('Qorong‘i mavzu')} onClick={() => setTheme('dark')} selected={mode === 'dark'}>
               <Moon size={17} strokeWidth={2} />
-            </button>
+            </Tab>
           </div>
 
           {guest ? (

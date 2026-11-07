@@ -8,14 +8,13 @@ import { useGeoJsonLayer, usePointPicker, usePolygonEditor } from '@/features/ma
 import { ringAreaM2, selfIntersects, toPolygon, type LngLat } from '@/features/map/geometry';
 import { mapService } from '@/features/map/map.service';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
 import { formatNumber } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import type { Branch } from '../types';
 import { t } from '@/i18n';
 import '@/features/map/map.css';
 import { Chip } from '@/components/ui/Chip';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const RADII = [10, 25, 50, 80];
 
@@ -49,8 +48,8 @@ export function ServiceAreaEditor({ shopId, branch, onDone }: { shopId: string; 
     <div className="qs-form">
       {current.data && <Alert tone="info">{t('Hozirgi hudud: {km} km². Yangisi saqlansa, almashtiriladi.', { km: formatNumber(Number(current.data.areaKm2)) })}</Alert>}
       <TabBar variant="tabs" role="tablist">
-        <button type="button" role="tab" aria-selected={mode === 'radius'} className={cx(mode === 'radius' && 'is-on')} onClick={() => setMode('radius')}>{t('Radius bo‘yicha')}</button>
-        <button type="button" role="tab" aria-selected={mode === 'draw'} className={cx(mode === 'draw' && 'is-on')} onClick={() => setMode('draw')}>{t('Xaritada chizish')}</button>
+        <Tab role="tab" aria-selected={mode === 'radius'} onClick={() => setMode('radius')} selected={mode === 'radius'}>{t('Radius bo‘yicha')}</Tab>
+        <Tab role="tab" aria-selected={mode === 'draw'} onClick={() => setMode('draw')} selected={mode === 'draw'}>{t('Xaritada chizish')}</Tab>
       </TabBar>
       {mode === 'radius' ? (
         <div className="qs-chips">

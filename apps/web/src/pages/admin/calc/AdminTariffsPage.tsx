@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Copy, ExternalLink, Plus, Trash2 } from 'lucide-react';
+import { CalendarClock, Copy, ExternalLink, Plus, Trash2 } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -12,7 +12,6 @@ import { PageLoader } from '@/components/common/PageLoader';
 import { adminCalcService, PUBLISH_STATUS, type CustomerType, type PublishStatus, type Tariff, type TariffInput, type TouPeriodType } from '@/features/admin/calc/service';
 import { getErrorMessage } from '@/lib/error-messages';
 import { REGIONS, regionName } from '@/lib/regions';
-import { cx } from '@/lib/utils';
 import { formatDate, formatNumber } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
@@ -21,7 +20,7 @@ import { safeExternalUrl } from '@/lib/return-to';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { SelectMenu } from '@/components/ui/SelectMenu';
 import { Chip } from '@/components/ui/Chip';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const CUSTOMER_TYPE: Record<CustomerType, string> = { HOUSEHOLD: t('Maishiy'), LEGAL: t('Yuridik') };
 const COMPENSATION: Record<string, string> = { NONE: t('Kompensatsiya yo‘q'), NET_METERING: t('Net metering'), NET_BILLING: t('Net billing'), FEED_IN: t('Feed-in tarif') };
@@ -126,6 +125,8 @@ function TariffsTab() {
   const [region, setRegion] = useState('');
   const [status, setStatus] = useState<PublishStatus | ''>('');
   const [editing, setEditing] = useState<Tariff | 'new' | null>(null);
+  /** «Tugash sanasi» oynasi (avval brauzerning prompt() edi). */
+  const [untilFor, setUntilFor] = useState<{ id: string; value: string } | null>(null);
   const list = useQuery({ queryKey: ['admin', 'tariffs', region, status], queryFn: () => adminCalcService.tariffs({ regionCode: region || undefined, status: status || undefined }) });
   const action = useMutation({
     mutationFn: ({ id, kind, until }: { id: string; kind: 'publish' | 'archive' | 'copy' | 'until'; until?: string | null }) =>
@@ -138,6 +139,20 @@ function TariffsTab() {
   if (list.isError || !list.data) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
   return (
     <>
+      <Modal
+        open={!!untilFor}
+        onClose={() => setUntilFor(null)}
+        title={t('Tugash sanasi')}
+        icon={<CalendarClock size={22} />}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setUntilFor(null)}>{t('Bekor qilish')}</Button>
+            <Button loading={action.isPending} onClick={() => { if (untilFor) action.mutate({ id: untilFor.id, kind: 'until', until: untilFor.value || null }, { onSuccess: () => setUntilFor(null) }); }}>{t('Saqlash')}</Button>
+          </>
+        }
+      >
+        <Input type="date" label={t('Tarif amal qilishining oxirgi kuni')} hint={t('Bo‘sh qoldirilsa — muddatsiz')} value={untilFor?.value ?? ''} onChange={(e) => setUntilFor((u) => (u ? { ...u, value: e.target.value } : u))} />
+      </Modal>
       <div className="qs-toolbar">
         <SelectMenu className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}>
           <option value="">{t('Barcha hududlar')}</option>
@@ -177,7 +192,7 @@ function TariffsTab() {
                       {tariff.status === 'DRAFT' && <Button size="sm" variant="secondary" onClick={() => setEditing(tariff)}>{t('Tahrirlash')}</Button>}
                       {tariff.status === 'DRAFT' && <Button size="sm" onClick={() => action.mutate({ id: tariff.id, kind: 'publish' })}>{t('Tasdiqlash')}</Button>}
                       {tariff.status === 'PUBLISHED' && (
-                        <Button size="sm" variant="ghost" onClick={() => { const value = window.prompt(t('Tugash sanasi (YYYY-MM-DD), bo‘sh — muddatsiz'), tariff.effectiveUntil?.slice(0, 10) ?? ''); if (value !== null) action.mutate({ id: tariff.id, kind: 'until', until: value || null }); }}>{t('Tugash sanasi')}</Button>
+                        <Button size="sm" variant="ghost" onClick={() => setUntilFor({ id: tariff.id, value: tariff.effectiveUntil?.slice(0, 10) ?? '' })}>{t('Tugash sanasi')}</Button>
                       )}
                       <Button size="sm" variant="ghost" aria-label={t('Nusxa olish')} onClick={() => action.mutate({ id: tariff.id, kind: 'copy' })}><Copy size={14} /></Button>
                       {tariff.status !== 'ARCHIVED' && <Button size="sm" variant="ghost" onClick={() => action.mutate({ id: tariff.id, kind: 'archive' })}>{t('Arxivlash')}</Button>}
@@ -273,8 +288,8 @@ export function AdminTariffsPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Tariflar')}</h1><p>{t('Elektr tariflari, eksport kompensatsiyasi va ulanish limitlari — versiyalangan, rasmiy manba bilan.')}</p></div></div>
       <TabBar variant="tabs" role="tablist">
-        <button type="button" role="tab" aria-selected={tab === 'tariffs'} className={cx(tab === 'tariffs' && 'is-on')} onClick={() => setTab('tariffs')}>{t('Tariflar')}</button>
-        <button type="button" role="tab" aria-selected={tab === 'export'} className={cx(tab === 'export' && 'is-on')} onClick={() => setTab('export')}>{t('Eksport va limitlar')}</button>
+        <Tab role="tab" aria-selected={tab === 'tariffs'} onClick={() => setTab('tariffs')} selected={tab === 'tariffs'}>{t('Tariflar')}</Tab>
+        <Tab role="tab" aria-selected={tab === 'export'} onClick={() => setTab('export')} selected={tab === 'export'}>{t('Eksport va limitlar')}</Tab>
       </TabBar>
       {tab === 'tariffs' ? <TariffsTab /> : <ExportRulesTab />}
     </div>

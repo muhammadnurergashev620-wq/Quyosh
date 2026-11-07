@@ -36,6 +36,8 @@ import '@/features/admin/list-shared.css';
 import './AdminAdminsPage.css';
 import { t } from '@/i18n';
 import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Tab } from '@/components/ui/Tabs';
+import { StatCard } from '@/components/ui/StatCard';
 
 type RoleFilter = '' | 'SUPER' | 'ADMIN' | 'DELEGATE';
 type MfaFilter = '' | 'on' | 'off';
@@ -290,38 +292,10 @@ export function AdminAdminsPage() {
       </header>
 
       <div className="gm-ul__kpis">
-        <article className="gm-ukpi">
-          <span className="gm-ukpi__icon gm-ukpi__icon--blue"><Users size={24} aria-hidden="true" /></span>
-          <div>
-            <small>{t('Jami adminlar')}</small>
-            <strong>{stats ? formatNumber(stats.total) : '…'}{weekDelta !== null && weekDelta !== 0 && <em className={weekDelta > 0 ? 'is-up' : 'is-down'}>{weekDelta > 0 ? '↑' : '↓'} {Math.abs(weekDelta)}%</em>}</strong>
-            <span>{t('O‘tgan hafta: {count}', { count: stats?.totalWeekAgo ?? '…' })}{stats && stats.superAdmins > 0 && ` · ${t('Superadmin: {count}', { count: stats.superAdmins })}`}</span>
-          </div>
-        </article>
-        <article className="gm-ukpi">
-          <span className="gm-ukpi__icon gm-ukpi__icon--green"><UserCheck size={24} aria-hidden="true" /></span>
-          <div>
-            <small>{t('Faol adminlar')}</small>
-            <strong>{stats ? formatNumber(stats.active) : '…'}</strong>
-            <span>{t('Jami adminlarning {percent}%', { percent: stats ? kpiShare(stats.active) : '…' })}{stats && stats.pending > 0 && ` · ${t('Tasdiqlanmagan: {count}', { count: stats.pending })}`}</span>
-          </div>
-        </article>
-        <article className="gm-ukpi">
-          <span className="gm-ukpi__icon gm-ukpi__icon--red"><Ban size={24} aria-hidden="true" /></span>
-          <div>
-            <small>{t('Bloklangan')}</small>
-            <strong>{stats ? formatNumber(stats.blocked) : '…'}</strong>
-            <span>{t('Muzlatilgan: {count}', { count: stats?.suspended ?? '…' })}</span>
-          </div>
-        </article>
-        <article className="gm-ukpi">
-          <span className="gm-ukpi__icon gm-ukpi__icon--amber"><ShieldCheck size={24} aria-hidden="true" /></span>
-          <div>
-            <small>{t('MFA yoqilgan')}</small>
-            <strong>{stats ? formatNumber(stats.mfaOn) : '…'}</strong>
-            <span>{t('MFA o‘chirilgan: {count}', { count: stats?.mfaOff ?? '…' })}</span>
-          </div>
-        </article>
+        <StatCard variant="compact" tone="info" icon={<Users size={24} aria-hidden="true" />} label={t('Jami adminlar')} value={<>{stats ? formatNumber(stats.total) : '…'}{weekDelta !== null && weekDelta !== 0 && <em className={weekDelta > 0 ? 'is-up' : 'is-down'}>{weekDelta > 0 ? '↑' : '↓'} {Math.abs(weekDelta)}%</em>}</>} note={<>{t('O‘tgan hafta: {count}', { count: stats?.totalWeekAgo ?? '…' })}{stats && stats.superAdmins > 0 && ` · ${t('Superadmin: {count}', { count: stats.superAdmins })}`}</>} />
+        <StatCard variant="compact" tone="success" icon={<UserCheck size={24} aria-hidden="true" />} label={t('Faol adminlar')} value={<>{stats ? formatNumber(stats.active) : '…'}</>} note={<>{t('Jami adminlarning {percent}%', { percent: stats ? kpiShare(stats.active) : '…' })}{stats && stats.pending > 0 && ` · ${t('Tasdiqlanmagan: {count}', { count: stats.pending })}`}</>} />
+        <StatCard variant="compact" tone="danger" icon={<Ban size={24} aria-hidden="true" />} label={t('Bloklangan')} value={<>{stats ? formatNumber(stats.blocked) : '…'}</>} note={<>{t('Muzlatilgan: {count}', { count: stats?.suspended ?? '…' })}</>} />
+        <StatCard variant="compact" tone="warning" icon={<ShieldCheck size={24} aria-hidden="true" />} label={t('MFA yoqilgan')} value={<>{stats ? formatNumber(stats.mfaOn) : '…'}</>} note={<>{t('MFA o‘chirilgan: {count}', { count: stats?.mfaOff ?? '…' })}</>} />
       </div>
 
       <section className="gm-ul__panel">
@@ -404,8 +378,8 @@ export function AdminAdminsPage() {
             </>
           )}
           <span className="gm-adm2__views" role="group" aria-label={t('Ko‘rinish')}>
-            <button type="button" className={cx(view === 'list' && 'is-on')} aria-pressed={view === 'list'} onClick={() => setView('list')} aria-label={t('Jadval')}><List size={17} /></button>
-            <button type="button" className={cx(view === 'grid' && 'is-on')} aria-pressed={view === 'grid'} onClick={() => setView('grid')} aria-label={t('Kartalar')}><LayoutGrid size={17} /></button>
+            <Tab aria-pressed={view === 'list'} onClick={() => setView('list')} aria-label={t('Jadval')} selected={view === 'list'}><List size={17} /></Tab>
+            <Tab aria-pressed={view === 'grid'} onClick={() => setView('grid')} aria-label={t('Kartalar')} selected={view === 'grid'}><LayoutGrid size={17} /></Tab>
           </span>
         </div>
 
@@ -509,7 +483,7 @@ export function AdminAdminsPage() {
               <button type="button" onClick={() => setPage(page - 1)} disabled={page <= 1} aria-label={t('Oldingi sahifa')}><ChevronLeft size={16} /></button>
               {pageNumbers(page, pages).map((entry) =>
                 typeof entry === 'number' ? (
-                  <button key={entry} type="button" className={cx(entry === page && 'is-on')} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)}>{entry}</button>
+                  <Tab key={entry} aria-current={entry === page ? 'page' : undefined} onClick={() => setPage(entry)} selected={entry === page}>{entry}</Tab>
                 ) : (
                   <span key={entry}>…</span>
                 ),

@@ -68,7 +68,7 @@ export function AdminNotificationDrawer({ id, onClose }: { id: string; onClose: 
               </div>
             )}
           </div>
-          <button type="button" className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}><X size={18} /></button>
+          <Button variant="ghost" size="sm" iconOnly className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}><X size={18} /></Button>
         </header>
 
         <div className="gm-udr__body">

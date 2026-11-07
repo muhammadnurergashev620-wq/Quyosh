@@ -71,9 +71,9 @@ export function UserDrawer({ user, onClose }: { user: AdminUser; onClose: () => 
             {email && <p><Mail size={13} aria-hidden="true" /> {email}</p>}
             <p className="gm-udr__id">ID {user.accountNumber}</p>
           </div>
-          <button type="button" className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}>
+          <Button variant="ghost" size="sm" iconOnly className="gm-udr__close" onClick={onClose} aria-label={t('Yopish')}>
             <X size={18} />
-          </button>
+          </Button>
         </header>
 
         <div className="gm-udr__body">

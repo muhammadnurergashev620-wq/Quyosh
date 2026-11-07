@@ -12,13 +12,12 @@ import { PageLoader } from '@/components/common/PageLoader';
 import { adminCalcService, PUBLISH_STATUS, type CustomerType, type FinancingProduct } from '@/features/admin/calc/service';
 import { getErrorMessage } from '@/lib/error-messages';
 import { REGIONS } from '@/lib/regions';
-import { cx } from '@/lib/utils';
 import { formatDate, formatDateTime, formatNumber, formatPercent } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { TabBar } from '@/components/ui/Tabs';
+import { Tab, TabBar } from '@/components/ui/Tabs';
 
 const MONTHS = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 'Iyl', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'];
 
@@ -247,7 +246,7 @@ export function AdminCalcSettingsPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Kalkulyator sozlamalari')}</h1><p>{t('Hisob parametrlari va ma’lumot manbalari. Har o‘zgarish auditga yoziladi.')}</p></div></div>
       <TabBar variant="tabs" role="tablist">
-        {tabs.map(([key, label]) => <button key={key} type="button" role="tab" aria-selected={tab === key} className={cx(tab === key && 'is-on')} onClick={() => setTab(key)}>{label}</button>)}
+        {tabs.map(([key, label]) => <Tab key={key} role="tab" aria-selected={tab === key} onClick={() => setTab(key)} selected={tab === key}>{label}</Tab>)}
       </TabBar>
       {tab === 'settings' && <SettingsTab />}
       {tab === 'financing' && <FinancingTab />}

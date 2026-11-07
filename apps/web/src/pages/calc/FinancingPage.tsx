@@ -6,12 +6,12 @@ import { MoneyInput } from '@/components/ui/MoneyInput';
 import { calcService } from '@/features/calc/calc.service';
 import { sum, sumShort } from '@/features/calc/labels';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
 import { formatDate, formatPercent } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
 import { Chip } from '@/components/ui/Chip';
+import { Tab } from '@/components/ui/Tabs';
 
 /** U8.12: kredit kalkulyatori — mahsulotlarni tanlab solishtirish. */
 export function FinancingPage() {
@@ -47,11 +47,11 @@ export function FinancingPage() {
         <div className="qs-chips">{[6, 12, 18, 24, 36].map((n) => <Chip key={n} onClick={() => setTerm(n)} selected={term === n}>{t('{n} oy', { n })}</Chip>)}</div>
         <div className="qs-choice">
           {products.map((p) => (
-            <button key={p.id} type="button" className={cx(picked.includes(p.id) && 'is-on')} onClick={() => setPicked((c) => (c.includes(p.id) ? c.filter((x) => x !== p.id) : [...c, p.id].slice(-3)))}>
+            <Tab key={p.id} onClick={() => setPicked((c) => (c.includes(p.id) ? c.filter((x) => x !== p.id) : [...c, p.id].slice(-3)))} selected={picked.includes(p.id)}>
               <strong>{p.providerName}</strong>
               <small>{formatPercent(Number(p.annualRate), 1)} · {p.allowedTerms.join(', ')} {t('oy')} · {t('min. {p} %', { p: Math.round(Number(p.minDownPaymentPct) * 100) })}</small>
               {p.verifiedAt && <small>{t('Manba tekshirilgan: {d}', { d: formatDate(p.verifiedAt) })}</small>}
-            </button>
+            </Tab>
           ))}
         </div>
         {!products.length && <Alert tone="info">{t('Hozircha tasdiqlangan moliyalashtirish mahsuloti yo‘q.')}</Alert>}

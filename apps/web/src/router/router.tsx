@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { PageLoader } from '@/components/common/PageLoader';
-import { createBrowserRouter, Navigate, useParams } from 'react-router-dom';
-import { getNavItems } from '@/components/layout/nav-items';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { RouteError } from '@/components/common/RouteError';
 import { RootShell } from './RootShell';
 import { AuthLayout } from '@/layouts/AuthLayout';
@@ -11,7 +10,6 @@ import { NotFoundPage } from '@/pages/NotFoundPage';
 import { RoleGuard } from './RoleGuard';
 import { PublicCustomerRoute } from './PublicCustomerRoute';
 import { env } from '@/lib/env';
-import { useAuthStore } from '@/store/auth.store';
 import type { ReactNode } from 'react';
 import type { Role } from '@/types/common';
 import { RoleSelectPage } from '@/pages/RoleSelectPage';
@@ -23,6 +21,7 @@ import { CustomerProfilePage } from '@/pages/customer/CustomerProfilePage';
 import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
 import { TermsPage } from '@/pages/legal/TermsPage';
 import { SuspendedBanner } from '@/features/shop/components/SuspendedBanner';
+import { LegacyInstallationRedirect, PanelRoot } from './redirects';
 
 const AdminHome = lazy(() => import('@/pages/admin/AdminHome').then((m) => ({ default: m.AdminHome })));
 const AdminUsersPage = lazy(() => import('@/pages/admin/AdminUsersPage').then((m) => ({ default: m.AdminUsersPage })));
@@ -86,6 +85,7 @@ const AdminTicketPage = lazy(() => import('@/pages/m7/AdminM7Pages').then((m) =>
 const AdminContentPage = lazy(() => import('@/pages/m7/AdminM7Pages').then((m) => ({ default: m.AdminContentPage })));
 const AdminArticleEditorPage = lazy(() => import('@/pages/m7/AdminM7Pages').then((m) => ({ default: m.AdminArticleEditorPage })));
 const AdminHomeBlocksPage = lazy(() => import('@/pages/m7/AdminHomeBlocksPage').then((m) => ({ default: m.AdminHomeBlocksPage })));
+const DevUiPage = lazy(() => import('@/pages/dev/DevUiPage').then((m) => ({ default: m.DevUiPage })));
 const PortalPreviewPage = lazy(() => import('@/pages/landing/portal/PortalPage').then((m) => ({ default: () => <m.PortalPage preview /> })));
 const AdminReportsPage = lazy(() => import('@/pages/m7/AdminM7Pages').then((m) => ({ default: m.AdminReportsPage })));
 const ShopDashboardPage = lazy(() => import('@/pages/shop/ShopDashboardPage').then((m) => ({ default: m.ShopDashboardPage })));
@@ -103,25 +103,6 @@ const shop = (el: ReactNode) => only(['SHOP'], <><SuspendedBanner />{el}</>);
 const admin = (el: ReactNode) => only(['ADMIN'], el);
 
 const open = (el: ReactNode) => <PublicCustomerRoute>{el}</PublicCustomerRoute>;
-
-
-/**
- * Panel ildizi (TZ 5.4): kirmagan foydalanuvchi — mijoz panelida kalkulyatorga (guest ham ishlata oladi),
- * do‘kon va admin panelida /login ga; kirgan — menyudagi birinchi bo‘limga.
- */
-function PanelRoot() {
-  const hasSession = useAuthStore((s) => s.hasSession);
-  const role = env.appRole ?? 'CUSTOMER';
-  if (!hasSession) return <Navigate to={role === 'CUSTOMER' ? '/mijoz/kalkulyator' : '/login'} replace />;
-  const [first] = getNavItems(role, { superAdmin: false });
-  return <Navigate to={first?.to ?? '/'} replace />;
-}
-
-/** Eski `/mijoz/montaj/:id` → `/mijoz/montajlar/:id`. */
-function LegacyInstallationRedirect() {
-  const { id } = useParams();
-  return <Navigate to={`/mijoz/montajlar/${id ?? ''}`} replace />;
-}
 
 /** React Router v7 xatti-harakatini oldindan yoqish (future-flag ogohlantirishlari yo‘q). */
 const ROUTER_OPTIONS = { future: { v7_relativeSplatPath: true, v7_fetcherPersist: true, v7_normalizeFormMethod: true, v7_partialHydration: true, v7_skipActionErrorRevalidation: true } } as const;
@@ -242,6 +223,8 @@ const panelRouter = createBrowserRouter([
           { path: '/bildirishnomalar', element: <NotificationsPage /> },
           { path: '/sozlamalar', element: <SettingsPage /> },
           { path: '/sozlamalar/:section', element: <SettingsPage /> },
+          // Komponentlar ko‘rgazmasi — faqat dev rejimida (production bundle’ga tushmaydi).
+          ...(import.meta.env.DEV ? [{ path: '/dev/ui', element: <DevUiPage /> }] : []),
         ],
       },
       { path: '*', element: <NotFoundPage /> },
