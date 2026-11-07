@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loginSchema, otpSchema, registerSchema, toFullPhone } from './validation';
+import { loginSchema, otpSchema, registerSchema, toFullPhone, loginNameSchema } from './validation';
 
 describe('toFullPhone', () => {
   it('prefixes a 9-digit local number with +998, matching IsPhoneNumber(UZ)', () => {
@@ -101,5 +101,20 @@ describe('otpSchema', () => {
     const base = { phoneLocal: '90 123 45 67', password: 'Parol1234', confirmPassword: 'Parol1234', acceptedTerms: true as const };
     expect(registerSchema.safeParse({ ...base, fullName: 'Ali' }).success).toBe(false);
     expect(registerSchema.safeParse({ ...base, fullName: 'Ali Valiyev' }).success).toBe(true);
+  });
+});
+
+/** Do‘kon/admin logini — backend `LOGIN_PATTERN` (src/common/utils/login.ts) bilan bir xil: 3–32, lotin/raqam/. _ -. */
+describe('loginNameSchema', () => {
+  it.each(['admin', 'quyosh.servis', 'dokon_01', 'a-b', 'Admin'])('accepts %s', (login) => {
+    expect(loginNameSchema.safeParse({ login, password: 'x' }).success).toBe(true);
+  });
+
+  it.each(['ab', '.admin', 'with space', 'kirill_логин', 'a'.repeat(33), ''])('rejects %j', (login) => {
+    expect(loginNameSchema.safeParse({ login, password: 'x' }).success).toBe(false);
+  });
+
+  it('requires a password', () => {
+    expect(loginNameSchema.safeParse({ login: 'admin', password: '' }).success).toBe(false);
   });
 });

@@ -64,9 +64,20 @@ Birinchi Super Admin: `ADMIN_LOGIN` (standart `admin`) / `ADMIN_PASSWORD` (≥ 1
 
 ```bash
 pnpm typecheck && pnpm lint && pnpm test:unit      # backend (infratuzilmasiz)
-pnpm test                                           # integratsiya (Postgres+PostGIS, Redis, S3; CREATEDB huquqi kerak)
+pnpm test                                           # unit + integratsiya (Postgres+PostGIS, Redis, S3; CREATEDB huquqi kerak)
+pnpm test:integration                               # faqat integratsiya
+pnpm test:coverage                                  # qamrov
 cd apps/web && npm run typecheck && npm run lint && npx vitest run
+
+# E2E (Playwright) — ishlab turgan lokal stend ustida (pm2: 5183/5184/5185, API 3100, OTP_DEV_ECHO=true)
+ADMIN_PASSWORD=… pnpm test:e2e                      # PLAYWRIGHT_CHROMIUM_PATH bilan o‘z Chromium’ingizni berish mumkin
+pnpm test:all                                       # backend + frontend + e2e
 ```
+
+E2E to‘plami (`tests/e2e`): admin do‘kon yaratadi → vaqtincha parol bir marta → do‘kon shu login bilan kirib parolni almashtiradi;
+mijoz ekrandagi OTP bilan ro‘yxatdan o‘tadi → Tez hisob → natija → saqlash; salbiy holatlar (noto‘g‘ri OTP, mijoz admin paneliga kira olmaydi,
+ko‘p xato login → 429, begona do‘kon so‘rovi — `E2E_SHOP_B_TOKEN`/`E2E_FOREIGN_RS_ID` berilsa). Taklif → montaj → tasdiq → sharh oqimi
+`tests/integration/m6-quotes.spec.ts` da API darajasida to‘liq tekshiriladi.
 
 ### Ops webhooklari
 

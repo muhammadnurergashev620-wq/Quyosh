@@ -69,6 +69,24 @@ describe('golden: sizing (TZ 11.4)', () => {
     expect(r.recommendedKwp).toBeCloseTo(1.65, 6);
   });
 
+  it('G07a OFF_GRID: eng yomon oy (dekabr 60 kWh/kWp) — 350 × 1,15 / 60 = 6,71 kWp → 12 panel; ulanish limiti qo‘llanmaydi', () => {
+    const yieldByMonth = [150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150, 60];
+    const r = recommendSize(sizing({ systemType: 'OFF_GRID', monthlySpecificYield: yieldByMonth, specificYieldKwhPerKwp: 1710, gridMaxKw: 3 }));
+    expect(r.limits.needed).toBeCloseTo((350 / 31) * 1.15 / (60 / 31), 6);
+    expect(r.panelCount).toBe(12);
+    expect(r.limits.grid).toBeNull();
+  });
+
+  it('G07b tekis tom 100 m²: qatorlar orasidagi soyasiz masofa tufayli qiya tomdagidan kam panel, lekin > 0', () => {
+    const flat = maxPanelsForArea({ roofShape: 'FLAT', usableAreaM2: 100 }, DEFAULT_PANEL, 41.3);
+    const pitched = maxPanelsForArea({ roofShape: 'PITCHED', usableAreaM2: 100 }, DEFAULT_PANEL, 41.3);
+    expect(pitched).toBe(34); // floor(100 / 2,583 × 0,90)
+    expect(flat).toBeGreaterThan(0);
+    expect(flat).toBeLessThan(pitched);
+    // To‘rtburchak o‘lchami berilsa — shu bo‘yicha (20 × 5 m).
+    expect(maxPanelsForArea({ roofShape: 'FLAT', usableAreaM2: 100, rectWidthM: 20, rectLengthM: 5 }, DEFAULT_PANEL, 41.3)).toBeGreaterThan(0);
+  });
+
   it('G07 iste’mol 0 → kamida 1 panel, sabab MIN_ONE_PANEL', () => {
     const r = recommendSize(sizing({ annualLoadKwh: 0, monthlyLoadKwh: Array(12).fill(0) }));
     expect(r.panelCount).toBe(1);

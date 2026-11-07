@@ -23,3 +23,5 @@ backups/
 # Audit skrinshotlari (lokal, katta)
 docs/audit/before/
 docs/audit/after/
+test-results/
+playwright-report/

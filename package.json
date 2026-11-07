@@ -13,6 +13,10 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run --config vitest.unit.config.ts",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "test:coverage": "vitest run --coverage",
+    "test:all": "pnpm test && npm --prefix apps/web test && pnpm test:e2e",
     "test:watch": "vitest",
     "db:generate": "prisma generate",
     "db:validate": "prisma validate",
@@ -57,6 +61,7 @@
   "devDependencies": {
     "@nestjs/cli": "^11.0.10",
     "@nestjs/testing": "^11.1.18",
+    "@playwright/test": "1.64.1",
     "@swc/core": "^1.16.2",
     "@types/express": "^5.0.0",
     "@types/multer": "^2.2.0",
