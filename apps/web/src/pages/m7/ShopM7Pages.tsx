@@ -266,7 +266,7 @@ export function AnalyticsPage() {
               <div className="qs-vbars" role="img" aria-label={t('So‘rovlar kunlar bo‘yicha')}>{days.map((d) => <span key={d.day} title={`${d.day}: ${d.requests} ${t('so‘rov')}, ${d.views} ${t('ko‘rish')}`} style={{ height: d.requests ? `${(d.requests / maxDaily) * 100}%` : '1px' }} />)}</div>
             )}
           </section>
-          <div className="qs-grid-2" style={{ alignItems: 'start' }}>
+          <div className="qs-grid-2 qs-grid-top">
             <section className="qs-card">
               <h2>{t('Voronka')}</h2>
               <div className="qs-hbars">{x.funnel.map((f) => <div key={f.step} className="qs-hbar"><span>{FUNNEL[f.step] ?? f.step}</span><div><span style={{ width: `${x.funnel[0]!.count ? (f.count / x.funnel[0]!.count) * 100 : 0}%` }} /></div><strong>{f.count}</strong></div>)}</div>

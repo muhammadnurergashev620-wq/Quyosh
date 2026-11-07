@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { MoneyInput } from '@/components/ui/MoneyInput';
 import { calcService } from '@/features/calc/calc.service';
 import { sum, sumShort } from '@/features/calc/labels';
 import { getErrorMessage } from '@/lib/error-messages';
@@ -38,10 +38,10 @@ export function FinancingPage() {
       <div className="qs-page__head"><div><h1>{t('Kredit kalkulyatori')}</h1><p>{t('Tizim narxi va tejash bo‘yicha oylik to‘lovni solishtiring.')}</p></div></div>
       <section className="qs-card qs-form">
         <div className="qs-form__row">
-          <Input label={t('Tizim narxi, so‘m')} inputMode="numeric" value={cost} onChange={(e) => setCost(e.target.value.replace(/\D/g, ''))} />
-          <Input label={t('Boshlang‘ich to‘lov, so‘m')} inputMode="numeric" value={down} onChange={(e) => setDown(e.target.value.replace(/\D/g, ''))}
+          <MoneyInput label={t('Tizim narxi')} value={cost} onValueChange={setCost} />
+          <MoneyInput label={t('Boshlang‘ich to‘lov')} value={down} onValueChange={setDown}
             error={downTooLow ? t('Kamida {p} % — {s}', { p: Math.round(minPct * 100), s: sum(minDown) }) : undefined} />
-          <Input label={t('Oylik tejash (ixtiyoriy), so‘m')} inputMode="numeric" value={saving} onChange={(e) => setSaving(e.target.value.replace(/\D/g, ''))} />
+          <MoneyInput label={t('Oylik tejash (ixtiyoriy)')} value={saving} onValueChange={setSaving} />
         </div>
         <div className="qs-chips">{[6, 12, 18, 24, 36].map((n) => <button key={n} type="button" className={cx('qs-chip', term === n && 'is-on')} onClick={() => setTerm(n)}>{t('{n} oy', { n })}</button>)}</div>
         <div className="qs-choice">

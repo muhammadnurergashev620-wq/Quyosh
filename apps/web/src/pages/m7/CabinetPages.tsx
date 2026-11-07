@@ -50,7 +50,7 @@ export function CustomerDashboardPage() {
         <>
           <section className="qs-card">
             <h2>{t('Sizdan kutilayotgan amallar')}</h2>
-            {!x.actions.length ? <p className="qs-muted" style={{ margin: 0 }}><CheckCircle2 size={15} /> {t('Hozircha hammasi joyida.')}</p> : (
+            {!x.actions.length ? <p className="qs-muted qs-line"><CheckCircle2 size={15} /> {t('Hozircha hammasi joyida.')}</p> : (
               <div className="qs-req-list">
                 {x.actions.map((a) => { const l = actionLink(a); return <div key={`${a.kind}-${a.id}`} className="qs-pick"><span>{l.text}</span><Link className="gm-button gm-button--primary gm-button--sm" to={l.to}>{l.button}</Link></div>; })}
               </div>
@@ -59,11 +59,13 @@ export function CustomerDashboardPage() {
           <div className="qs-grid-2">
             <section className="qs-card">
               <header><h2>{t('Ochiq so‘rovlar')}</h2><Link to="/mijoz/sorovlar">{t('Hammasi')}</Link></header>
-              {!x.openRequests.length ? <p className="qs-muted">—</p> : x.openRequests.map((r) => <p key={r.id} style={{ margin: '6px 0' }}><Link to={`/mijoz/sorovlar/${r.id}`}>№{r.number} · {r.title}</Link> <Badge tone={r.quotes ? 'success' : 'neutral'}>{t('{n} ta taklif', { n: r.quotes })}</Badge></p>)}
+              {!x.openRequests.length ? (
+                <div className="qs-mini-empty"><p className="qs-muted">{t('Ochiq so‘rov yo‘q. Hisob natijasidan do‘konlarga so‘rov yuborib, narx takliflarini oling.')}</p><Link className="gm-button gm-button--secondary gm-button--sm" to="/mijoz/hisoblar">{t('Hisoblarimdan so‘rov yuborish')}</Link></div>
+              ) : x.openRequests.map((r) => <p key={r.id} className="qs-line"><Link to={`/mijoz/sorovlar/${r.id}`}>№{r.number} · {r.title}</Link> <Badge tone={r.quotes ? 'success' : 'neutral'}>{t('{n} ta taklif', { n: r.quotes })}</Badge></p>)}
             </section>
             <section className="qs-card">
               <header><h2>{t('Oxirgi hisoblar')}</h2><Link to="/mijoz/hisoblar">{t('Hammasi')}</Link></header>
-              {x.calculations.map((c) => <p key={c.id} style={{ margin: '6px 0' }}><Link to={`/mijoz/natija/${c.id}`}>{c.title || formatDate(c.createdAt)}</Link> <small className="qs-muted">{c.systemPowerKw ? kw(c.systemPowerKw) : ''}{c.monthlySaving !== null ? ` · ${t('oyiga {s}', { s: sumShort(c.monthlySaving) })}` : ''}</small></p>)}
+              {x.calculations.map((c) => <p key={c.id} className="qs-line"><Link to={`/mijoz/natija/${c.id}`}>{c.title || formatDate(c.createdAt)}</Link> <small className="qs-muted">{c.systemPowerKw ? kw(c.systemPowerKw) : ''}{c.monthlySaving !== null ? ` · ${t('oyiga {s}', { s: sumShort(c.monthlySaving) })}` : ''}</small></p>)}
             </section>
           </div>
           {x.system && (
@@ -71,8 +73,8 @@ export function CustomerDashboardPage() {
               <header><h2><Zap size={17} /> {x.system.title ?? t('O‘rnatilgan tizim')}</h2><Link to={`/mijoz/tizimim/${x.system.id}`}>{t('Ochish')}</Link></header>
               <div className="qs-kpi-grid">
                 <div className="qs-kpi"><small>{t('Quvvat')}</small><strong>{kw(Number(x.system.systemPowerKw))}</strong></div>
-                <div className="qs-kpi"><small>{t('Bu oy prognozi')}</small><strong>{x.system.expectedThisMonthKwh ? `${n0(x.system.expectedThisMonthKwh)} kWh` : '—'}</strong></div>
-                <div className="qs-kpi"><small>{t('Oxirgi kiritilgan')}</small><strong>{x.system.lastReading ? `${n0(x.system.lastReading.generatedKwh)} kWh` : '—'}</strong>{x.system.lastReading && <small>{x.system.lastReading.period}</small>}</div>
+                <div className="qs-kpi"><small>{t('Bu oy prognozi')}</small><strong>{x.system.expectedThisMonthKwh ? `${n0(x.system.expectedThisMonthKwh)} kWh` : <span className="qs-muted qs-kpi-note">{t('Ma’lumot yo‘q')}</span>}</strong></div>
+                <div className="qs-kpi"><small>{t('Oxirgi kiritilgan')}</small>{x.system.lastReading ? <><strong>{`${n0(x.system.lastReading.generatedKwh)} kWh`}</strong><small>{x.system.lastReading.period}</small></> : <Link to={`/mijoz/tizimim/${x.system.id}`} className="qs-kpi-cta">{t('Ko‘rsatkichni kiriting')}</Link>}</div>
               </div>
             </section>
           )}
@@ -229,7 +231,7 @@ export function SystemPage() {
           {add.data && <Alert tone={add.data.reading.alert ? 'warning' : 'success'}>{add.data.reading.expectedKwh ? t('{a} kWh · prognoz {e} kWh ({d})', { a: n0(add.data.reading.generatedKwh), e: n0(add.data.reading.expectedKwh), d: pct(add.data.reading.deviation ?? 0) }) : t('Saqlandi: {a} kWh', { a: n0(add.data.reading.generatedKwh) })}</Alert>}
         </div>
       </section>
-      <div className="qs-grid-2" style={{ alignItems: 'start' }}>
+      <div className="qs-grid-2 qs-grid-top">
         <section className="qs-card">
           <h2>{t('Komponentlar va kafolatlar')}</h2>
           {x.components.length > 0 && <ul className="qs-list">{x.components.map((c, i) => <li key={i}>{c.title} × {c.quantity}</li>)}</ul>}

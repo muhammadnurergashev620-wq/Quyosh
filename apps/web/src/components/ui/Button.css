@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--qs-space-2);
-  border-radius: var(--qs-radius-md);
+  border-radius: 12px;
   border: 1.5px solid transparent;
   cursor: pointer;
   font-family: var(--qs-font-display);
@@ -14,7 +14,8 @@
     background-color 0.15s ease,
     border-color 0.15s ease,
     box-shadow 0.15s ease,
-    opacity 0.15s ease;
+    opacity 0.15s ease,
+    transform 0.12s ease;
   white-space: nowrap;
   text-decoration: none;
   user-select: none;
@@ -22,7 +23,21 @@
 
 .gm-button:disabled {
   cursor: not-allowed;
-  opacity: 0.55;
+  opacity: 0.5;
+}
+
+.gm-button.is-loading:disabled {
+  cursor: progress;
+  opacity: 0.85;
+}
+
+.gm-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.gm-button:focus-visible {
+  outline: 2px solid var(--qs-focus-ring);
+  outline-offset: 2px;
 }
 
 .gm-button--md {
@@ -35,14 +50,12 @@
   min-height: var(--qs-btn-h-sm);
   padding: 0 calc(var(--qs-btn-px) - 4px);
   font-size: var(--qs-btn-fs-sm);
-  border-radius: 10px;
 }
 
 .gm-button--lg {
   min-height: var(--qs-btn-h-lg);
   padding: 0 calc(var(--qs-btn-px) + 4px);
   font-size: var(--qs-btn-fs-lg);
-  border-radius: 14px;
 }
 
 .gm-button--full {
@@ -57,6 +70,7 @@
 
 .gm-button--primary:hover:not(:disabled) {
   background: var(--qs-color-primary-hover);
+  box-shadow: 0 10px 22px -8px color-mix(in srgb, var(--qs-color-primary) 75%, transparent);
   color: var(--qs-color-primary-contrast);
 }
 
@@ -104,6 +118,40 @@
 
 .gm-button__spinner {
   position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+.gm-button.is-loading .gm-button__label {
+  opacity: 0; /* ko‘rinmas, lekin ekran o‘quvchi uchun nom saqlanadi */
+}
+
+/* Faqat ikonka: kvadrat, balandlik bilan teng kenglik. */
+.gm-button--icon {
+  padding: 0;
+  aspect-ratio: 1;
+}
+.gm-button--icon.gm-button--sm { width: var(--qs-btn-h-sm); }
+.gm-button--icon.gm-button--md { width: var(--qs-btn-h-md); }
+.gm-button--icon.gm-button--lg { width: var(--qs-btn-h-lg); }
+
+/* Strelkali CTA: hover’da strelka 2 px o‘ngga. */
+.gm-button .lucide-arrow-right {
+  transition: transform 0.15s ease;
+}
+.gm-button:hover:not(:disabled) .lucide-arrow-right {
+  transform: translateX(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-button,
+  .gm-button .lucide-arrow-right {
+    transition: none;
+  }
+  .gm-button:active:not(:disabled),
+  .gm-button:hover:not(:disabled) .lucide-arrow-right {
+    transform: none;
+  }
 }
 
 .gm-button > svg {
@@ -127,4 +175,11 @@
 
 .gm-button__label > svg {
   flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.gm-button--sm .gm-button__label > svg {
+  width: 16px;
+  height: 16px;
 }

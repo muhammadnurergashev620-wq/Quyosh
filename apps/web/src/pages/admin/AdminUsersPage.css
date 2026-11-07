@@ -89,7 +89,7 @@
 .gm-ul__acts .gm-dropdown__menu { right: 0; z-index: 40; }
 
 .gm-ul__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 14px; font-size: 13px; color: var(--qs-color-text-muted); }
-.gm-ul__pager { display: inline-flex; align-items: center; gap: 4px; }
+.gm-ul__pager { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; max-width: 100%; }
 .gm-ul__pager button { display: grid; place-items: center; min-width: 34px; height: 34px; padding: 0 8px; border: 1px solid var(--qs-color-border); border-radius: 8px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .gm-ul__pager button.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: #fff; }
 .gm-ul__pager button:disabled { opacity: 0.4; cursor: default; }

@@ -72,3 +72,13 @@ export function insightText(item: Insight, context: { maxGeneration: number }): 
       return t('Ortiqcha energiyaning {p} % i iyun–avgustga to‘g‘ri keladi', { p: Math.round(item.value * 100) });
   }
 }
+
+/** Texnik atamalar izohi (InfoTip, U8): oddiy tilda, bir-ikki jumla. */
+export const TERM_TIP = {
+  power: t('kVt (kilovatt) — tizimning eng yuqori quvvati. 1 kVt panel O‘zbekistonda yiliga taxminan 1 400–1 700 kWh ishlab chiqaradi.'),
+  savings: t('Oylik tejash — quyosh energiyasi tufayli elektr hisobingiz qancha kamayishi (tarif bo‘yicha, oraliq: past–yuqori ssenariy).'),
+  cost: t('Uskuna va montajning taxminiy narxi. Aniq narxni do‘kon joyida o‘lchovdan keyin beradi.'),
+  payback: t('O‘zini oqlash (payback) — tizim narxi tejash hisobiga necha yilda qaytishi.'),
+  inverter: t('Invertor — panellardagi doimiy tokni uydagi o‘zgaruvchan tokka aylantiradigan qurilma.'),
+  kwh: t('kWh (kilovatt-soat) — energiya miqdori: 1 kVt quvvat 1 soat ishlaganda 1 kWh bo‘ladi. Hisoblagichingiz shuni o‘lchaydi.'),
+} as const;

@@ -1,9 +1,10 @@
 import { useId, useState } from 'react';
 import { Info } from 'lucide-react';
 import './InfoTip.css';
+import { t } from '@/i18n';
 
 /** Kichik «i» belgisi: ustiga olib borilganda yoki fokus berilganda tushuntirish ko‘rinadi (klaviatura va sensorli ekranlar uchun ham). */
-export function InfoTip({ text, label = 'Izoh' }: { text: string; label?: string }) {
+export function InfoTip({ text, label = t('Izoh') }: { text: string; label?: string }) {
   const id = useId();
   const [open, setOpen] = useState(false);
   return (

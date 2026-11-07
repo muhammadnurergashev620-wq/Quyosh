@@ -8,12 +8,13 @@ import { regionName } from '@/lib/regions';
 import { cx } from '@/lib/utils';
 import { formatDate, formatDecimal, formatNumber, formatPercent } from '@/lib/format';
 import { CashflowChart, DayChart, MonthlyBars, RangeBar } from './charts';
-import { ASSUMPTION_TEXT, insightText, kw, kwh, LIMITING, METHOD, monthName, OPTION_LABEL, sum, sumShort, SYSTEM_TYPE, WARNING_TEXT, years } from './labels';
+import { ASSUMPTION_TEXT, insightText, kw, kwh, LIMITING, METHOD, monthName, OPTION_LABEL, sum, sumShort, SYSTEM_TYPE, TERM_TIP, WARNING_TEXT, years } from './labels';
 import type { EstimateResult, Insight } from './types';
 import { t } from '@/i18n';
 import { track } from '@/features/m7/track';
 import './calc.css';
 import { safeExternalUrl } from '@/lib/return-to';
+import { InfoTip } from '@/components/ui/InfoTip';
 
 const INSIGHT_ICON: Record<Insight['type'], ReactNode> = {
   BEST_SAVING_MONTH: <TrendingDown size={20} />,
@@ -36,29 +37,29 @@ export function Kpis({ result, pending, compact }: { result: EstimateResult; pen
   return (
     <div className={cx('qs-calc-kpis', pending && 'is-pending', compact && 'is-compact')}>
       <div>
-        <small>{t('Tavsiya etilgan quvvat')}</small>
+        <small className="qs-kpi-label">{t('Tavsiya etilgan quvvat')} <InfoTip text={TERM_TIP.power} label={t('Tavsiya etilgan quvvat')} /></small>
         <strong>{kw(result.systemPowerKw)}</strong>
         <span className="qs-muted">{t('{n} ta panel · invertor {inv} kVt', { n: result.panelCountEstimate, inv: result.inverterKw })}{result.batteryKwh ? ` · ${t('akk. {b} kWh', { b: result.batteryKwh })}` : ''}</span>
       </div>
       <div>
-        <small>{t('Oylik tejash')}</small>
+        <small className="qs-kpi-label">{t('Oylik tejash')} <InfoTip text={TERM_TIP.savings} label={t('Oylik tejash')} /></small>
         {noMoney ? <strong className="qs-muted">{t('Hisoblab bo‘lmaydi')}</strong> : <strong>{sumShort((result.money.savings ?? 0) / 12)}</strong>}
         {!noMoney && <RangeBar low={monthly(s.low.saving)} base={monthly(s.base.saving)} high={monthly(s.high.saving)} format={sumShort} />}
       </div>
       <div>
-        <small>{t('Taxminiy narx')}</small>
+        <small className="qs-kpi-label">{t('Taxminiy narx')} <InfoTip text={TERM_TIP.cost} label={t('Taxminiy narx')} /></small>
         <strong>{sumShort(result.money.initialCost)}</strong>
         <span className="qs-muted">{result.money.costProvenance === 'CATALOG_MEDIAN' ? t('Katalog medianasi (90 kun)') : result.money.costProvenance === 'USER' ? t('Siz kiritgan') : t('Standart baho')}</span>
       </div>
       <div>
-        <small>{t('O‘zini oqlash')}</small>
+        <small className="qs-kpi-label">{t('O‘zini oqlash')} <InfoTip text={TERM_TIP.payback} label={t('O‘zini oqlash')} /></small>
         {result.money.simplePaybackYears !== null ? (
           <>
             <strong>{years(result.money.simplePaybackYears)}</strong>
             <RangeBar low={s.low.simplePaybackYears} base={s.base.simplePaybackYears} high={s.high.simplePaybackYears} format={(v) => years(v)} />
           </>
         ) : (
-          <strong className="qs-muted" style={{ fontSize: 15 }}>{result.money.paybackUnavailableReason === 'NON_POSITIVE_BENEFIT' ? t('O‘zini oqlamaydi — yillik sof foyda musbat emas') : t('Hisoblab bo‘lmaydi')}</strong>
+          <strong className="qs-muted qs-kpi-note">{result.money.paybackUnavailableReason === 'NON_POSITIVE_BENEFIT' ? t('O‘zini oqlamaydi — yillik sof foyda musbat emas') : t('Hisoblab bo‘lmaydi')}</strong>
         )}
       </div>
     </div>
@@ -139,13 +140,13 @@ export function ResultView({ result, actions, cta, shared }: { result: EstimateR
           <span>{t('Yillik')}: <b>{kwh(result.generation.annual)}</b></span>
           <span>{t('1 kVt dan')}: <b>{kwh(result.generation.specificYield)}</b></span>
         </div>
-        <MonthlyBars title={t('Oylik ishlab chiqarish va iste’mol')} unit="kWh" format={(v) => kwh(Math.round(v))} series={[{ name: t('Ishlab chiqarish'), color: 'gen', values: result.generation.monthly }, { name: t('Iste’mol'), color: 'load', values: result.load.monthly }]} />
+        <MonthlyBars title={t('Oylik ishlab chiqarish va iste’mol')} tip={TERM_TIP.kwh} unit="kWh" format={(v) => kwh(Math.round(v))} series={[{ name: t('Ishlab chiqarish'), color: 'gen', values: result.generation.monthly }, { name: t('Iste’mol'), color: 'load', values: result.load.monthly }]} />
         <dl className="qs-dl">
           <dt>{t('O‘zida iste’mol')}</dt><dd>{kwh(result.energy.selfConsumedKwh)} ({Math.round(result.energy.selfSufficiency * 100)} %)</dd>
           <dt>{t('Tarmoqdan olish')}</dt><dd>{kwh(result.energy.gridImportKwh)}</dd>
           <dt>{t('Tarmoqqa berish')}</dt><dd>{kwh(result.energy.gridExportKwh)}</dd>
           {result.batteryKwh > 0 && <><dt>{t('Akkumulyator orqali')}</dt><dd>{kwh(result.energy.batteryThroughputKwh)}</dd></>}
-          {result.clippingLossKwh > 0 && <><dt>{t('Invertor cheklovi (clipping)')}</dt><dd>{kwh(result.clippingLossKwh)}</dd></>}
+          {result.clippingLossKwh > 0 && <><dt>{t('Invertor cheklovi (clipping)')} <InfoTip text={TERM_TIP.inverter} label={t('Invertor')} /></dt><dd>{kwh(result.clippingLossKwh)}</dd></>}
           {result.curtailmentKwh > 0 && <><dt>{t('Foydalanilmagan ortiqcha')}</dt><dd>{kwh(result.curtailmentKwh)}</dd></>}
         </dl>
       </Section>

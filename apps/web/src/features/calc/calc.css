@@ -71,3 +71,5 @@
 @media (max-width: 760px) { .qs-map--draw { height: 56dvh; } }
 .qs-map__crosshair { position: absolute; left: 50%; top: 50%; z-index: 2; transform: translate(-50%, -50%); color: #fff; filter: drop-shadow(0 0 2px rgba(0,0,0,.8)); pointer-events: none; }
 .qs-list > li.is-active { border-color: var(--qs-color-primary); box-shadow: inset 0 0 0 1px var(--qs-color-primary); }
+.qs-kpi-label { display: inline-flex; align-items: center; gap: 4px; }
+.qs-kpi-note { font-size: 15px; }

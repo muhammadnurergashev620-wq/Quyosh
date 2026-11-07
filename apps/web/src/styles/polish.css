@@ -324,3 +324,20 @@ input[type='checkbox']:not([role='switch']):disabled {
 .qs-placeholder { display: grid; gap: 8px; justify-items: start; padding: 32px 24px; color: var(--qs-color-text-muted); }
 .qs-placeholder h1 { color: var(--qs-color-text); margin: 0; }
 .qs-placeholder p { margin: 0; }
+
+/* ── Moslashuv (audit A-21): grid/flex bolalari torayishi mumkin; mobilda jadvallar karta ichida aylanadi ── */
+.qs-page > *, .qs-card > *, .qs-form > *, .qs-grid-2 > *, .qs-grid-3 > *, .gm-ul > * { min-width: 0; }
+.qs-appliance .qs-input-sm, .qs-appliance select { width: 100%; min-width: 0; }
+@media (max-width: 760px) {
+  .qs-appliance { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .qs-card > .qs-table, .qs-card > table, .qs-table-wrap, .gm-ul__table { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .qs-card > .qs-table, .qs-card > table { white-space: nowrap; }
+}
+.qs-dl dd { min-width: 0; overflow-wrap: anywhere; }
+.gm-ul__table { max-width: 100%; }
+
+/* Mobil: forma oxiridagi tugmalar to‘liq kenglikda, asosiy amal yuqorida (U5). */
+@media (max-width: 480px) {
+  .qs-form__actions { flex-direction: column-reverse; align-items: stretch; }
+  .qs-form__actions > .gm-button, .qs-form__actions > a.gm-button { width: 100%; min-height: 44px; }
+}

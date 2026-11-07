@@ -5,6 +5,7 @@ import { formatDecimal, formatNumber } from '@/lib/format';
 import { monthShort } from './labels';
 import { t } from '@/i18n';
 import './charts.css';
+import { InfoTip } from '@/components/ui/InfoTip';
 
 /**
  * Yengil SVG grafiklar (dataviz: bitta o‘q, ingichka belgilar, 4px yumaloq uchlar, 2px oraliq, legend ≥ 2 seriyada,
@@ -29,12 +30,12 @@ function niceMax(value: number) {
 
 const compact = (value: number) => (Math.abs(value) >= 1e6 ? `${formatDecimal((value / 1e6), 1)}M` : Math.abs(value) >= 1e3 ? `${formatDecimal((value / 1e3), 1)}k` : formatNumber(value));
 
-function Frame({ title, legend, table, children }: { title: string; legend?: Series[]; table: ReactNode; children: ReactNode }) {
+function Frame({ title, tip, legend, table, children }: { title: string; tip?: string; legend?: Series[]; table: ReactNode; children: ReactNode }) {
   const [showTable, setShowTable] = useState(false);
   return (
     <figure className="qs-chart">
       <figcaption>
-        <strong>{title}</strong>
+        <strong>{title}{tip && <> <InfoTip text={tip} label={title} /></>}</strong>
         {legend && legend.length > 1 && (
           <span className="qs-chart__legend">
             {legend.map((s) => <span key={s.name}><i className={`is-${s.color}`} aria-hidden="true" />{s.name}</span>)}
@@ -64,7 +65,7 @@ function Grid({ max, unit }: { max: number; unit: string }) {
 }
 
 /** Oylik guruhlangan ustunlar (1–2 seriya). */
-export function MonthlyBars({ title, series, unit, format }: { title: string; series: Series[]; unit: string; format: (v: number) => string }) {
+export function MonthlyBars({ title, tip, series, unit, format }: { title: string; tip?: string; series: Series[]; unit: string; format: (v: number) => string }) {
   const [hover, setHover] = useState<number | null>(null);
   const max = niceMax(Math.max(...series.flatMap((s) => s.values), 0));
   const plotW = W - PAD.left - PAD.right;
@@ -78,7 +79,7 @@ export function MonthlyBars({ title, series, unit, format }: { title: string; se
     </table>
   );
   return (
-    <Frame title={title} legend={series} table={table}>
+    <Frame title={title} tip={tip} legend={series} table={table}>
       <div className="qs-chart__plot">
         <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={title} onMouseLeave={() => setHover(null)}>
           <Grid max={max} unit={unit} />

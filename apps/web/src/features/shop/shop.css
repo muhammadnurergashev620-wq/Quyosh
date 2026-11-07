@@ -12,7 +12,10 @@
 .qs-card > header h2 { margin: 0; flex: 1; }
 .qs-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--qs-space-4); }
 .qs-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--qs-space-4); }
-@media (max-width: 900px) { .qs-grid-2, .qs-grid-3 { grid-template-columns: minmax(0, 1fr); } }
+.qs-grid-top { align-items: start; }
+/* Asosiy ustun + yon panel (2:1) — tafsilot sahifalari. */
+.qs-grid-main { align-items: start; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+@media (max-width: 900px) { .qs-grid-2, .qs-grid-3, .qs-grid-main { grid-template-columns: minmax(0, 1fr); } }
 .qs-form { display: grid; gap: var(--qs-space-4); }
 .qs-form__row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--qs-space-3); }
 .qs-form__actions { display: flex; gap: var(--qs-space-2); justify-content: flex-end; flex-wrap: wrap; }
@@ -82,7 +85,7 @@
 
 .qs-inline-price { display: flex; align-items: center; gap: 6px; }
 .qs-inline-price input { width: 140px; height: 32px; padding: 0 8px; border: 1px solid var(--qs-color-border); border-radius: 8px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-variant-numeric: tabular-nums; text-align: right; }
-.qs-inline-price input:focus { outline: none; box-shadow: var(--qs-focus-ring); border-color: var(--qs-color-primary); }
+.qs-inline-price input:focus { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); border-color: var(--qs-color-primary); }
 
 .qs-toolbar { display: flex; flex-wrap: wrap; gap: var(--qs-space-2); align-items: flex-end; }
 .qs-toolbar > .gm-field { min-width: 220px; flex: 1; }
@@ -102,7 +105,7 @@
 
 .qs-stat-line { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; }
 .qs-stat-line b { font-variant-numeric: tabular-nums; }
-.qs-dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; font-size: 14px; }
+.qs-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; margin: 0; font-size: 14px; }
 .qs-dl dt { color: var(--qs-color-text-muted); }
 .qs-dl dd { margin: 0; overflow-wrap: anywhere; }
 .qs-timeline { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
@@ -115,8 +118,8 @@
 .qs-tabs button { display: inline-flex; align-items: center; gap: 7px; min-height: 38px; padding: 0 16px; border: 1px solid var(--qs-color-border); border-radius: 10px; background: var(--qs-color-surface); color: var(--qs-color-text-muted); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
 .qs-tabs button:hover { color: var(--qs-color-text); border-color: var(--qs-color-primary); }
 .qs-tabs button.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: var(--qs-color-primary-contrast, #fff); }
-.qs-tabs button:focus-visible { outline: none; box-shadow: var(--qs-focus-ring); }
+.qs-tabs button:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); }
 .qs-select { height: 38px; padding: 0 32px 0 12px; border: 1px solid var(--qs-color-border); border-radius: 10px; background: var(--qs-color-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center; color: var(--qs-color-text); font: inherit; font-size: 14px; appearance: none; cursor: pointer; }
-.qs-select:focus-visible { outline: none; box-shadow: var(--qs-focus-ring); border-color: var(--qs-color-primary); }
+.qs-select:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); border-color: var(--qs-color-primary); }
 .qs-input-sm { height: 34px; padding: 0 8px; border: 1px solid var(--qs-color-border); border-radius: 8px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-size: 14px; font-variant-numeric: tabular-nums; }
-.qs-input-sm:focus { outline: none; border-color: var(--qs-color-primary); box-shadow: var(--qs-focus-ring); }
+.qs-input-sm:focus { outline: none; border-color: var(--qs-color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); }

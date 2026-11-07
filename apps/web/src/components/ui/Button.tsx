@@ -12,23 +12,26 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize;
   loading?: boolean;
   fullWidth?: boolean;
+  /** Faqat ikonka (kvadrat tugma): `aria-label` majburiy — ekran o‘quvchi uchun nom. */
+  iconOnly?: boolean;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { variant = 'primary', size = 'md', loading = false, fullWidth = false, disabled, className, children, ...rest },
+    { variant = 'primary', size = 'md', loading = false, fullWidth = false, iconOnly = false, disabled, className, children, ...rest },
     ref,
   ) => {
     return (
       <button
         ref={ref}
-        className={cx('gm-button', `gm-button--${variant}`, `gm-button--${size}`, fullWidth && 'gm-button--full', className)}
+        className={cx('gm-button', `gm-button--${variant}`, `gm-button--${size}`, fullWidth && 'gm-button--full', iconOnly && 'gm-button--icon', loading && 'is-loading', className)}
         disabled={disabled || loading}
         aria-busy={loading || undefined}
         {...rest}
       >
-        {loading && <Spinner size="sm" />}
-        <span className={loading ? 'gm-button__label gm-visually-hidden' : 'gm-button__label'}>{children}</span>
+        {loading && <Spinner size="sm" className="gm-button__spinner" />}
+        {/* Yuklanishda matn joyida qoladi (ko‘rinmas) — tugma kengligi o‘zgarmaydi. */}
+        <span className="gm-button__label">{children}</span>
       </button>
     );
   },

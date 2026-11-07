@@ -120,7 +120,7 @@ export function AdminTicketPage() {
           <Button variant="secondary" onClick={() => update.mutate(x.assigneeId ? { unassign: true } : { assigneeId: me.data?.id })}>{x.assigneeId ? (x.assigneeId === me.data?.id ? t('Menga tayinlangan · olib tashlash') : t('Tayinlashni olib tashlash')) : t('O‘zimga olish')}</Button>
         </div>
       </div>
-      <div className="qs-grid-2" style={{ alignItems: 'start', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)' }}>
+      <div className="qs-grid-2 qs-grid-main">
         <div className="qs-page" style={{ gap: 'var(--qs-space-3)' }}>
           <div className="qs-card qs-ticket-thread">
             {x.messages?.map((m) => m.senderSide === 'SYSTEM'
@@ -237,7 +237,7 @@ export function AdminArticleEditorPage() {
       </div>
       {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}
       {save.isSuccess && <Alert tone="success">{t('Saqlandi')}</Alert>}
-      <div className="qs-grid-2" style={{ gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', alignItems: 'start' }}>
+      <div className="qs-grid-2 qs-grid-main">
         <section className="qs-card qs-form">
           <div className="qs-tabs" role="tablist">
             {LANGS.map(([l, label]) => <button key={l} type="button" role="tab" aria-selected={lang === l} className={cx(lang === l && 'is-on')} onClick={() => setLang(l)}>{label} <Badge tone={completeness[l] === 3 ? 'success' : l === 'oz' || l === 'en' ? 'neutral' : 'warning'}>{completeness[l]}/3</Badge></button>)}
