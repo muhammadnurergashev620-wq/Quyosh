@@ -18,5 +18,3 @@ export function splitFullName(full: string): { firstName: string; lastName: stri
   return { firstName: parts[0]!.slice(0, 100), lastName: parts.slice(1).join(' ').slice(0, 100) };
 }
 
-export const joinFullName = (firstName?: string | null, lastName?: string | null) => [firstName, lastName].filter(Boolean).join(' ').trim();
-

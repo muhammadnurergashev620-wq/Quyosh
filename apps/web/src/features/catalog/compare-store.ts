@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export const MAX_COMPARE = 4;
+const MAX_COMPARE = 4;
 
 export interface CompareEntry {
   id: string;

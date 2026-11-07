@@ -41,7 +41,6 @@ export const ruQuyosh: Record<string, string> = {
   Murojaatlar: 'Обращения',
   'Bosh panel': 'Главная панель',
   'Filiallar va hudud': 'Филиалы и зона',
-  Sertifikatlar: 'Сертификаты',
   Analitika: 'Аналитика',
   Xodimlar: 'Сотрудники',
   'Do‘konlar': 'Магазины',
@@ -57,10 +56,7 @@ export const ruQuyosh: Record<string, string> = {
   Ega: 'Владелец',
   Menejer: 'Менеджер',
   Xodim: 'Сотрудник',
-  'Tekshiruv kutmoqda': 'Ожидают проверки',
   'Bu bo‘lim': 'Этот раздел',
-  'bosqichida qo‘shiladi.': 'будет добавлен на этапе.',
-  'Avval do‘kon profilini yarating': 'Сначала создайте профиль магазина',
   'So‘rovlar, takliflar, katalog va boshqa bo‘limlar do‘kon yaratilgach ochiladi. Do‘kon nomi, STIR va telefonni kiriting.':
     'Запросы, предложения, каталог и другие разделы откроются после создания магазина. Укажите название, ИНН и телефон.',
   'Bu akkaunt do‘kon panelidan foydalana olmaydi.': 'Этот аккаунт не может пользоваться панелью магазина.',
@@ -74,9 +70,7 @@ export const ruQuyosh: Record<string, string> = {
     'Укажите адрес — и вы увидите, сколько панелей поместится, сколько можно сэкономить в месяц и какие проверенные магазины установят систему.',
   'Manzilingizni belgilang — nechta panel sig‘ishi, oyiga qancha tejash va qaysi do‘konlar o‘rnatib berishini ko‘ring.':
     'Укажите адрес — посмотрите, сколько панелей поместится, какая будет экономия и какие магазины установят систему.',
-  'Hisoblab ko‘rish': 'Рассчитать',
   'Men do‘kon egasiman': 'Я владелец магазина',
-  'Do‘kon uchun kirish': 'Вход для магазина',
   'Do‘konlar uchun': 'Магазинам',
   'Toshkentda quyosh {time} da chiqdi': 'В Ташкенте солнце взошло в {time}',
   'Bugun {h} soat {m} daqiqa quyosh': 'Сегодня {h} ч {m} мин солнца',
@@ -89,12 +83,6 @@ export const ruQuyosh: Record<string, string> = {
   'Tasdiqlangan montajlar': 'Подтверждённые монтажи',
   'Tizim turlari': 'Типы систем',
   'Quyosh har kuni tomingizga tushadi. Biz faqat uni hisoblaymiz.': 'Солнце каждый день светит на вашу крышу. Мы его просто считаем.',
-  '3 daqiqada dastlabki hisob — ro‘yxatdan o‘tmasdan': 'Предварительный расчёт за 3 минуты — без регистрации',
-  'Naqd va kredit variantlarini solishtirish': 'Сравнение оплаты наличными и в кредит',
-  'Bir nechta do‘kondan narx taklifi': 'Предложения от нескольких магазинов',
-  'Tayyor hisobli so‘rovlar: tizim parametrlari va iste’mol bilan': 'Готовые запросы с параметрами системы и потреблением',
-  'Katalog, filiallar va xizmat hududi bir joyda': 'Каталог, филиалы и зона обслуживания в одном месте',
-  'Tasdiqlangan do‘kon belgisi va montajdan keyingi sharhlar': 'Знак проверенного магазина и отзывы только после монтажа',
   'Manzildan montajgacha — olti qadam': 'От адреса до монтажа — шесть шагов',
   'Manzilni qidiring yoki xaritada pin qo‘ying.': 'Найдите адрес или поставьте метку на карте.',
   'Tomni sun’iy yo‘ldosh rasmi ustida chizing yoki taxminiy hajmni tanlang.': 'Нарисуйте крышу на спутниковом снимке или выберите примерный размер.',
@@ -156,12 +144,10 @@ export const ruQuyosh: Record<string, string> = {
   'So‘rovlar o‘zi keladi — siz faqat o‘rnatasiz': 'Запросы приходят сами — вы только устанавливаете',
   'Tayyor hisobli so‘rovlar': 'Запросы с готовым расчётом',
   'Tasdiqlangan do‘kon belgisi': 'Знак проверенного магазина',
-  'Hujjat bilan tasdiqlangan do‘kon belgisi': 'Знак магазина, подтверждённого документами',
   'Hisobini qilgan mijozlar tayyor parametrlar bilan narx so‘raydi. Taklif yuboring, montajni kuzating, reyting yig‘ing.':
     'Клиенты с готовым расчётом запрашивают цену. Отправляйте предложения, ведите монтаж, набирайте рейтинг.',
 
   // FAQ
-  'Mijoz va do‘konlar uchun eng kerakli javoblar bir joyda.': 'Главные ответы для клиентов и магазинов в одном месте.',
   'Hisob qanchalik aniq?': 'Насколько точен расчёт?',
   'Hisob PVGIS quyosh ma’lumotlari, hududingiz tarifi va kiritgan iste’molingiz asosida soatlik bajariladi. Natija past, standart va yuqori diapazonda ko‘rsatiladi — bu prognoz, kafolat emas.':
     'Расчёт выполняется по часам на основе данных PVGIS, тарифа вашего региона и вашего потребления. Результат показывается диапазоном — это прогноз, а не гарантия.',
@@ -180,10 +166,8 @@ export const ruQuyosh: Record<string, string> = {
   'Montajdan keyin nima bo‘ladi?': 'Что происходит после монтажа?',
   'Montajni chek-list bilan qabul qilasiz, sharh qoldirasiz va o‘rnatilgan tizimingizni kabinetda kuzatasiz: kafolatlar, tozalash eslatmalari, haqiqiy ishlab chiqarish.':
     'Вы принимаете монтаж по чек-листу, оставляете отзыв и следите за системой в кабинете: гарантии, напоминания об очистке, реальная выработка.',
-  'Do‘konni qanday ochaman?': 'Как открыть магазин?',
   'Do‘kon panelida ro‘yxatdan o‘ting: nom, telefon va STIR kiriting, filial va xizmat hududini belgilang. Hujjatlar tekshirilgach, do‘kon katalog va xaritada ko‘rinadi.':
     'Зарегистрируйтесь в панели магазина: укажите название, телефон и ИНН, филиал и зону обслуживания. После проверки документов магазин появится в каталоге и на карте.',
-  'So‘rovlar qanday keladi?': 'Как приходят запросы?',
   'Mijoz tayyor hisob bilan narx so‘raydi; siz tizim parametrlari va iste’molni ko‘rib, taklif yuborasiz yoki o‘lchov uchrashuvini taklif qilasiz.':
     'Клиент запрашивает цену с готовым расчётом; вы смотрите параметры и потребление и отправляете предложение или предлагаете выезд на замер.',
   'Ma’lumotlarim qayerda saqlanadi?': 'Где хранятся мои данные?',

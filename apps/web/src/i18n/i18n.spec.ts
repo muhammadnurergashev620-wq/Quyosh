@@ -44,8 +44,8 @@ describe('t()', () => {
   it('keeps the trailing period in step with the Uzbek source text', async () => {
     const ru = await load('ru');
     // «Yuklanmoqda» kabi nuqtasiz kalit — tarjimada ham nuqta yo‘q; nuqtali kalit — nuqtali tarjima.
-    expect(ru.t('Hujjat o‘chiriladi. Bu amalni qaytarib bo‘lmaydi.')).toBe('Документ будет удалён. Это действие нельзя отменить.');
-    expect(ru.t('Hujjat o‘chiriladi. Bu amalni qaytarib bo‘lmaydi')).toBe('Документ будет удалён. Это действие нельзя отменить');
+    expect(ru.t('Hozircha hammasi joyida.')).toBe('Пока всё в порядке.');
+    expect(ru.t('Hozircha hammasi joyida')).toBe('Пока всё в порядке');
   });
 });
 
@@ -69,6 +69,6 @@ describe('languages (TZ U18)', () => {
   it('translates Quyosh terms from the U3 glossary', async () => {
     const ru = await load('ru');
     expect(ru.t('Tarmoqqa ulangan')).toBe('Сетевая');
-    expect(ru.t('Hisoblab ko‘rish')).toBe('Рассчитать');
+    expect(ru.t('Hisoblash')).toBe('Рассчитать');
   });
 });

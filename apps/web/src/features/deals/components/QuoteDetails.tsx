@@ -23,7 +23,7 @@ export interface QuoteSnap {
 
 const s = (v: unknown) => (v === null || v === undefined ? null : String(v));
 
-export function snapOf(q: QuoteView): QuoteSnap {
+function snapOf(q: QuoteView): QuoteSnap {
   return {
     total: String(q.total), equipmentSubtotal: String(q.equipmentSubtotal), installationSubtotal: String(q.installationSubtotal), deliveryCost: String(q.deliveryCost),
     otherCosts: String(q.otherCosts), discountAmount: String(q.discountAmount), vatIncluded: q.vatIncluded, vatRate: String(q.vatRate), vatAmount: String(q.vatAmount),
@@ -50,7 +50,7 @@ function Diff({ now, before, render }: { now: unknown; before?: unknown; render:
 const money = (v: string) => sum(num(v));
 const qty = (v: string) => formatDecimal(num(v), 3);
 
-export function QuoteBody({ snap, prev }: { snap: QuoteSnap; prev?: QuoteSnap | null }) {
+function QuoteBody({ snap, prev }: { snap: QuoteSnap; prev?: QuoteSnap | null }) {
   const p = prev ?? undefined;
   const pItem = (i: number) => p?.items[i];
   return (

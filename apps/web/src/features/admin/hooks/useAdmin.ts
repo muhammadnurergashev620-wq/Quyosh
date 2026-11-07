@@ -1,26 +1,12 @@
-import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { adminService } from '../services/admin.service';
-import type { DateRange } from '../services/admin.service';
 import type { AuditFilters, CreateAdminInput, DevOpsWindow, UserFilters } from '../types';
-
-export function useDashboard(range: DateRange) {
-  return useQuery({ queryKey: ['admin', 'dashboard', range], queryFn: () => adminService.dashboard(range) });
-}
 
 export function useDevOps(window: DevOpsWindow) {
   return useQuery({
     queryKey: ['admin', 'devops', window],
     queryFn: () => adminService.devops(window),
     refetchInterval: 15_000,
-  });
-}
-
-export function useAdminUsers(filters: UserFilters) {
-  return useInfiniteQuery({
-    queryKey: ['admin', 'users', filters],
-    queryFn: ({ pageParam }: { pageParam?: string }) => adminService.users(filters, pageParam),
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });
 }
 
@@ -89,20 +75,6 @@ export function useDeleteUser() {
       void queryClient.invalidateQueries({ queryKey: ['admin', 'user-number'] });
     },
   });
-}
-
-export function useAuditLogs(filters: AuditFilters) {
-  return useInfiniteQuery({
-    queryKey: ['admin', 'audit', filters],
-    queryFn: ({ pageParam }: { pageParam?: string }) => adminService.audit(filters, pageParam),
-    refetchInterval: 30_000,
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-  });
-}
-
-export function useAdminUser(id: string | undefined) {
-  return useQuery({ queryKey: ['admin', 'user', id], queryFn: () => adminService.user(id ?? ''), enabled: !!id });
 }
 
 export function useAuditPage(filters: AuditFilters, page: number, limit: number) {

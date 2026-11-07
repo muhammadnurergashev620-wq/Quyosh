@@ -169,7 +169,7 @@ export const TARGET_LABEL: Record<string, string> = {
   Appeal: t('Apellyatsiya'),
 };
 
-export const STATUS_LABEL: Record<string, string> = {
+const STATUS_LABEL: Record<string, string> = {
   PENDING: t('Kutilmoqda'),
   UNDER_REVIEW: t('Ko‘rib chiqilmoqda'),
   VERIFIED: t('Tasdiqlangan'),

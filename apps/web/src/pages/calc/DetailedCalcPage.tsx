@@ -32,7 +32,7 @@ import '@/features/shop/shop.css';
 import '@/features/map/map.css';
 import '@/features/calc/calc.css';
 
-export const DETAILED_DRAFT_KIND = 'detailed';
+const DETAILED_DRAFT_KIND = 'detailed';
 
 interface DrawnArea { id: string; name: string; points: LngLat[]; roofShape: 'FLAT' | 'PITCHED'; tiltDeg: number; azimuthDeg: number | null; shadingLevel: Shading }
 type ConsumptionTab = 'kwh' | 'bill' | 'twelve' | 'appliances';
@@ -70,7 +70,7 @@ const STEPS = [t('Joylashuv'), t('Maydon'), t('Elektr sarfi'), t('Tizim'), t('Xa
 const num = (value: string) => Number(value.replace(/\s/g, '').replace(',', '.'));
 
 /** Holatdan hisob kirishi (faqat zarur qismlar to‘lgan bo‘lsa). */
-export function detailedInput(state: DetailedState, options: Array<{ key: string; kwp: number }> = []): EstimateInput | null {
+function detailedInput(state: DetailedState, options: Array<{ key: string; kwp: number }> = []): EstimateInput | null {
   if (!state.point && !state.siteId) return null;
   const input: EstimateInput = { mode: 'DETAILED', systemType: state.systemType, consumption: {} };
   if (state.siteId) input.siteId = state.siteId;

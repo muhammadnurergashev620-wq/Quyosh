@@ -50,7 +50,7 @@ export const loginSchema = z.object({
   password: z.string().min(1, t('Parolni kiriting')).max(128),
 });
 /** Do‘kon va admin panellari: administrator bergan login (telefon emas). */
-export const LOGIN_NAME_REGEX = /^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/;
+const LOGIN_NAME_REGEX = /^[A-Za-z0-9][A-Za-z0-9._-]{2,31}$/;
 export const loginNameSchema = z.object({
   login: z.string().trim().regex(LOGIN_NAME_REGEX, t('Login 3–32 belgi: lotin harflari, raqamlar va . _ -')),
   password: z.string().min(1, t('Parolni kiriting')).max(128),

@@ -10,7 +10,7 @@ const nice = (max: number): number => {
   const f = max / pow;
   return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * pow;
 };
-export const compact = (value: number): string => (value >= 1_000_000 ? `${+(value / 1_000_000).toFixed(1)}M` : value >= 10_000 ? `${Math.round(value / 1000)}k` : value >= 1000 ? `${+(value / 1000).toFixed(1)}k` : String(Math.round(value)));
+const compact = (value: number): string => (value >= 1_000_000 ? `${+(value / 1_000_000).toFixed(1)}M` : value >= 10_000 ? `${Math.round(value / 1000)}k` : value >= 1000 ? `${+(value / 1000).toFixed(1)}k` : String(Math.round(value)));
 
 /** Monoton kubik egri chiziq (Fritsch–Carlson): grafik «sakramaydi» va qiymatdan oshib ketmaydi. */
 function smoothPath(points: Array<[number, number]>): string {

@@ -20,7 +20,7 @@ const STATUS: Record<SiteVisit['status'], { label: string; tone: 'primary' | 'su
   CANCELLED: { label: t('Bekor qilingan'), tone: 'neutral' },
 };
 
-export const slotText = (slot: { start: string; end: string }) => `${formatDateTime(slot.start)}–${formatTime(slot.end)}`;
+const slotText = (slot: { start: string; end: string }) => `${formatDateTime(slot.start)}–${formatTime(slot.end)}`;
 
 /** U9.4: o‘lchov uchrashuvi kartasi (chatda). Mijoz vaqt tanlaydi — tasdiqlash kontaktni ochadi. */
 export function SiteVisitCard({ visit, rsId, side, onChanged }: { visit: SiteVisit; rsId: string; side: Side; onChanged: () => void }) {

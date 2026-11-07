@@ -38,10 +38,10 @@ export interface QuickState {
   size: AreaPreset | null;
 }
 
-export const QUICK_DRAFT_KIND = 'quick';
+const QUICK_DRAFT_KIND = 'quick';
 
 /** Tez hisob holatidan kirish (faqat to‘liq bo‘lsa). */
-export function quickInput(state: QuickState): EstimateInput | null {
+function quickInput(state: QuickState): EstimateInput | null {
   if (!state.point || !state.size) return null;
   const amount = Number(state.value.replace(/\s/g, ''));
   const consumption = state.templateCode ? { templateCode: state.templateCode } : state.mode === 'kwh' ? (amount > 0 ? { monthlyKwh: amount } : null) : amount > 0 ? { billAmount: amount } : null;

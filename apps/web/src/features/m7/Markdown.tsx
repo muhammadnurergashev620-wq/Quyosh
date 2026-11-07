@@ -8,7 +8,7 @@ import { isSafeInternalPath } from '@/lib/return-to';
  * havolalar faqat http(s) yoki ichki yo‘llar. Qo‘llab-quvvatlanadi: ##/### sarlavhalar, paragraf, ro‘yxatlar,
  * jadval, **qalin**, *kursiv*, `kod`, [havola](url).
  */
-export const slugify = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
+const slugify = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
 
 function inline(text: string, key = 0): ReactNode[] {
   const out: ReactNode[] = [];

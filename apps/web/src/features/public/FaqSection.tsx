@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { SupportContacts } from './SupportContacts';
 import { cx } from '@/lib/utils';
 import { t } from '@/i18n';
 
@@ -24,7 +23,6 @@ const GENERAL: Qa[] = [
 ];
 
 export const FAQ_PREVIEW: Qa[] = [CUSTOMER[0]!, CUSTOMER[1]!, CUSTOMER[3]!, CUSTOMER[4]!, CUSTOMER[5]!, GENERAL[0]!, GENERAL[1]!];
-const ALL: Qa[] = [...CUSTOMER, ...GENERAL];
 
 export function Column({ items }: { items: Qa[] }) {
   const [open, setOpen] = useState<number | null>(null);
@@ -40,21 +38,5 @@ export function Column({ items }: { items: Qa[] }) {
         </div>
       ))}
     </div>
-  );
-}
-
-export function FaqSection() {
-  return (
-    <section className="gm-show__block" id="savollar">
-      <header className="gm-show__head gm-show__head--faq">
-        <span className="gm-faq__pill">FAQ</span>
-        <h2>{t('Ko‘p beriladigan savollar')}</h2>
-        <p className="gm-show__lead">{t('Mijoz va do‘konlar uchun eng kerakli javoblar bir joyda.')}</p>
-      </header>
-      <div className="gm-faq gm-faq--single">
-        <Column items={ALL} />
-      </div>
-      <SupportContacts title={t('Savolingiz qoldimi?')} />
-    </section>
   );
 }

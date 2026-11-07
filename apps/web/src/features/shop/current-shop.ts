@@ -11,13 +11,13 @@ interface ShopSelection {
 }
 
 /** Tanlangan do‘kon (foydalanuvchi bir nechta do‘konga a’zo bo‘lishi mumkin — TZ 2.1). */
-export const useShopSelection = create<ShopSelection>()(
+const useShopSelection = create<ShopSelection>()(
   persist((set) => ({ shopId: null, setShopId: (shopId) => set({ shopId }) }), { name: 'quyosh.shop' }),
 );
 
 export const myShopsKey = ['shop', 'mine'] as const;
 
-export function useMyShops() {
+function useMyShops() {
   const hasSession = useAuthStore((s) => s.hasSession);
   return useQuery({ queryKey: myShopsKey, queryFn: shopService.myShops, enabled: hasSession, staleTime: 30_000 });
 }

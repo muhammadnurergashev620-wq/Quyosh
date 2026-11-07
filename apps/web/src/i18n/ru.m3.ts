@@ -97,8 +97,6 @@ export const ruM3: Record<string, string> = {
   "Hudud bor": "Зона задана",
   "Hudud yo‘q": "Зоны нет",
   "Xizmat hududi: {name}": "Зона обслуживания: {name}",
-  "Avval birinchi filialni qo‘shing.": "Сначала добавьте первый филиал.",
-  "Mijoz qaysi hududda bo‘lsa, unga xizmat ko‘rsatadigan do‘konlar birinchi tavsiya qilinadi.": "Клиенту в первую очередь рекомендуются магазины, обслуживающие его район.",
   "Do‘konlar xaritasi": "Карта магазинов",
   "Obyektlarim": "Мои объекты",
   "Obyekt turi": "Тип объекта",

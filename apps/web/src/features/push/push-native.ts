@@ -20,7 +20,7 @@ const readToken = (): string | null => {
   }
 };
 
-export function rememberPushToken(token: string): void {
+function rememberPushToken(token: string): void {
   try {
     localStorage.setItem(TOKEN_KEY, token);
   } catch {

@@ -96,8 +96,6 @@ export const ruM5: Record<string, string> = {
   "Juda tez o‘zgartiryapsiz — bir oz kutib yangilanadi": "Вы меняете слишком быстро — обновим через несколько секунд",
   "Kredit kalkulyatori": "Кредитный калькулятор",
   "Tizim narxi va tejash bo‘yicha oylik to‘lovni solishtiring.": "Сравните ежемесячный платёж с учётом цены системы и экономии.",
-  "Tizim narxi, so‘m": "Цена системы, сум",
-  "Oylik tejash (ixtiyoriy), so‘m": "Экономия в месяц (необязательно), сум",
   "min. {p} %": "мин. {p} %",
   "Manba tekshirilgan: {d}": "Источник проверен: {d}",
   "Hozircha tasdiqlangan moliyalashtirish mahsuloti yo‘q.": "Пока нет подтверждённых продуктов финансирования.",

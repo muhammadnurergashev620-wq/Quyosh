@@ -52,14 +52,6 @@ export function verticesOf(polygon: { coordinates: number[][][] } | null | undef
   return ring.slice(0, -1).map(([lon, lat]) => [lon!, lat!] as LngLat);
 }
 
-export function bboxOf(points: LngLat[]): [LngLat, LngLat] | null {
-  if (!points.length) return null;
-  const lons = points.map((p) => p[0]);
-  const lats = points.map((p) => p[1]);
-  return [[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]];
-}
-
 /** O‘zbekiston chegarasining taxminiy to‘rtburchagi (TZ 10.1: chegaradan tashqarida ogohlantirish). */
 export const UZ_BOUNDS: [LngLat, LngLat] = [[55.9, 37.1], [73.2, 45.6]];
-export const UZ_CENTER: LngLat = [64.6, 41.4];
 export const inUzbekistan = ([lon, lat]: LngLat) => lon >= UZ_BOUNDS[0][0] && lon <= UZ_BOUNDS[1][0] && lat >= UZ_BOUNDS[0][1] && lat <= UZ_BOUNDS[1][1];

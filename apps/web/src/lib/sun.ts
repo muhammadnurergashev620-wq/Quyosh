@@ -5,7 +5,7 @@
 const RAD = Math.PI / 180;
 const TZ_OFFSET_MIN = 300;
 
-export const TASHKENT = { lat: 41.2995, lon: 69.2401 };
+const TASHKENT = { lat: 41.2995, lon: 69.2401 };
 
 export interface SunTimes {
   /** Mahalliy (Toshkent) vaqt bo‘yicha daqiqalar, kun boshidan. */
@@ -31,7 +31,7 @@ export function sunTimes(date: Date, lat = TASHKENT.lat, lon = TASHKENT.lon): Su
 }
 
 /** Toshkent vaqti bo‘yicha kun boshidan o‘tgan daqiqalar. */
-export function localMinutes(date: Date): number {
+function localMinutes(date: Date): number {
   return (((date.getUTCHours() * 60 + date.getUTCMinutes() + TZ_OFFSET_MIN) % 1440) + 1440) % 1440;
 }
 

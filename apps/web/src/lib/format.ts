@@ -157,42 +157,10 @@ export function formatRelativeTime(value: string | Date, now: number = Date.now(
   return t('hozirgina');
 }
 
-/** `ms` — qolgan millisekund (masalan `useCountdown` dan). Kun/soat/daqiqa ko‘rinishida chiqaradi. */
-export function formatCountdown(ms: number): string {
-  if (ms <= 0) return t('Muddati tugagan');
-  const totalMinutes = Math.floor(ms / 60_000);
-  const days = Math.floor(totalMinutes / 1440);
-  const hours = Math.floor((totalMinutes % 1440) / 60);
-  const minutes = totalMinutes % 60;
-  if (days > 0) return t('{days} kun {hours} soat qoldi', { days, hours });
-  if (hours > 0) return t('{hours} soat {minutes} daqiqa qoldi', { hours, minutes });
-  if (minutes > 0) return t('{minutes} daqiqa qoldi', { minutes });
-  return t('1 daqiqadan kam qoldi');
-}
-
 // ───────────── Kiritish maydonlari va davomiylik ─────────────
 
 /** Pul maydoni uchun raqamlarni minglarga ajratadi — ko‘rsatiladigan summalar (formatMoney) bilan bir xil ajratgich bilan. */
 export function groupAmount(value: string): string {
   const digits = value.replace(/\D/g, '').replace(/^0+(?=\d)/, '');
   return digits ? formatNumber(Number(digits)) : '';
-}
-
-export function groupDigits(value: string): string {
-  return value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-}
-
-/** Daqiqani o‘qiladigan ko‘rinishga keltiradi: 90 → «1 soat 30 daqiqa», 45 → «45 daqiqa». */
-export function formatMinutes(total: number): string {
-  if (!Number.isFinite(total) || total <= 0) return '';
-  const days = Math.floor(total / 1440);
-  const hours = Math.floor((total % 1440) / 60);
-  const minutes = total % 60;
-  return [
-    days && t('{n} kun', { n: days }),
-    hours && t('{n} soat', { n: hours }),
-    minutes && t('{n} daqiqa', { n: minutes }),
-  ]
-    .filter(Boolean)
-    .join(' ');
 }

@@ -28,12 +28,6 @@ function parts(value: string | Date): Parts {
   return { year: Number(map.year), month: Number(map.month), day: Number(map.day), hour: map.hour!, minute: map.minute! };
 }
 
-/** «14:05» (Toshkent vaqti). */
-export function clock(value: string | Date): string {
-  const p = parts(value);
-  return `${p.hour}:${p.minute}`;
-}
-
 export function dayKey(value: string | Date): string {
   const p = parts(value);
   return `${p.year}-${String(p.month).padStart(2, '0')}-${String(p.day).padStart(2, '0')}`;

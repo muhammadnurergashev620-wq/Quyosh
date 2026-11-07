@@ -16,7 +16,7 @@ export function getThemeMode(): ThemeMode {
   }
 }
 
-export function applyTheme(mode: ThemeMode): void {
+function applyTheme(mode: ThemeMode): void {
   document.documentElement.setAttribute('data-theme', mode);
 }
 

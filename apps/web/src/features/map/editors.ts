@@ -6,7 +6,7 @@ import { closeRing, type LngLat } from './geometry';
 const EDIT = 'qs-edit';
 
 /** `map.remove()` dan keyin uslub yo‘q — bunday instansiyaga murojaat qilinmaydi. */
-export const alive = (map: MapLibreMap | null): map is MapLibreMap => !!map && !!(map as unknown as { style?: unknown }).style;
+const alive = (map: MapLibreMap | null): map is MapLibreMap => !!map && !!(map as unknown as { style?: unknown }).style;
 const VERTEX = 'qs-edit-vertex';
 
 function editData(points: LngLat[]): GeoJSON.FeatureCollection {

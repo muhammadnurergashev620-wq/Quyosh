@@ -5,9 +5,9 @@ import { calcService } from './calc.service';
 import type { EstimateInput, EstimateResult } from './types';
 
 /** U8.9: debounce 800 ms, minimal oraliq — guest 6 s / kirgan 2 s, bitta faol so‘rov, 429 da kutish. */
-export const DEBOUNCE_MS = 800;
-export const MIN_INTERVAL_GUEST_MS = 6000;
-export const MIN_INTERVAL_USER_MS = 2000;
+const DEBOUNCE_MS = 800;
+const MIN_INTERVAL_GUEST_MS = 6000;
+const MIN_INTERVAL_USER_MS = 2000;
 const RATE_LIMIT_WAIT_MS = 10_000;
 
 export interface EstimateState {

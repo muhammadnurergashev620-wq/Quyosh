@@ -1,4 +1,4 @@
-import { Banknote, Bell, ClipboardList, FileText, MessageCircle, Megaphone, Scale, Settings, UserRound } from 'lucide-react';
+import { Banknote, ClipboardList, FileText, MessageCircle, Megaphone, Scale, Settings, UserRound } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { BadgeTone } from '@/components/ui/Badge';
 import { AUDIT_ACTIONS } from '@/features/admin/audit-labels';
@@ -23,7 +23,6 @@ export const PRIORITY: Record<AdminNotificationPriority, { label: string; tone: 
 };
 
 export const ROLE_LABEL: Record<string, string> = { ADMIN: t('Admin'), SHOP: t('Do‘kon'), CUSTOMER: t('Mijoz') };
-export const FALLBACK_ICON = <Bell size={17} />;
 
 /** Audit amalidan keladigan bildirishnomalarda sarlavha amal nomidan olinadi (tarjima qilinadi); qolganlarida — saqlangan sarlavha. */
 export function notificationTitle(item: { title: string; action: string | null }): string {

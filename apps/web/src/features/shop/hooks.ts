@@ -3,9 +3,8 @@ import { useAppStore } from '@/store/app.store';
 import { getErrorMessage } from '@/lib/error-messages';
 import { shopService } from './shop.service';
 import { myShopsKey } from './current-shop';
-import { t } from '@/i18n';
 
-export const shopKey = (shopId: string | null, ...rest: string[]) => ['shop', shopId ?? '-', ...rest];
+const shopKey = (shopId: string | null, ...rest: string[]) => ['shop', shopId ?? '-', ...rest];
 
 export function useManagedShop(shopId: string | null) {
   return useQuery({ queryKey: shopKey(shopId), queryFn: () => shopService.get(shopId!), enabled: !!shopId });
@@ -38,5 +37,3 @@ export function useShopMutation<TVars, TResult>(shopId: string | null, fn: (shop
     onError: (error) => pushToast(getErrorMessage(error), 'error'),
   });
 }
-
-export const savedToast = () => t('Saqlandi');

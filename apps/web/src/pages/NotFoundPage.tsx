@@ -5,7 +5,7 @@ import { env } from '@/lib/env';
 import { t } from '@/i18n';
 
 /** Panelning bosh sahifasi (rol bo‘yicha); asosiy saytda — «/». */
-export function homePath(): string {
+function homePath(): string {
   return env.appRole ? (getNavItems(env.appRole, { superAdmin: true })[0]?.to ?? '/') : '/';
 }
 

@@ -11,18 +11,6 @@ export function usePolicy(id: string | null) {
   return useQuery({ queryKey: ['legal', 'policy', id], queryFn: () => legalService.get(id as string), enabled: !!id });
 }
 
-export function useMyAcceptances() {
-  return useQuery({ queryKey: ['legal', 'acceptances'], queryFn: async () => toItems(await legalService.myAcceptances()) });
-}
-
-export function useAcceptPolicy() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => legalService.accept(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['legal', 'acceptances'] }),
-  });
-}
-
 export function useAdminPolicies() {
   return useQuery({ queryKey: ['legal', 'admin'], queryFn: async () => toItems(await legalService.adminList()) });
 }

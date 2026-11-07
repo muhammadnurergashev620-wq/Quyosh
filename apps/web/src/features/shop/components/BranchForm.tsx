@@ -15,7 +15,7 @@ import { t } from '@/i18n';
 const DEFAULT_HOURS: OpeningHours = { mon: [['09:00', '18:00']], tue: [['09:00', '18:00']], wed: [['09:00', '18:00']], thu: [['09:00', '18:00']], fri: [['09:00', '18:00']], sat: [['10:00', '16:00']] };
 
 /** Hafta kunlari jadvali (U11.8): har kun — ochiq/yopiq va vaqt oralig‘i. */
-export function OpeningHoursEditor({ value, onChange }: { value: OpeningHours; onChange: (next: OpeningHours) => void }) {
+function OpeningHoursEditor({ value, onChange }: { value: OpeningHours; onChange: (next: OpeningHours) => void }) {
   const set = (day: Weekday, range: [string, string] | null) => {
     const next = { ...value };
     if (range) next[day] = [range];
