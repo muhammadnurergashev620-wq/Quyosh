@@ -3,6 +3,9 @@ import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEnum, IsIn, IsInt, Is
 import { CustomerType, PaymentType, SystemType } from '@prisma/client';
 import { IsUUID } from '../../../common/validators/any-uuid';
 
+/** Pul maydonlari uchun yuqori chegara (so‘m) — juda katta qiymat hisobni Infinity/NaN ga olib bormasin. */
+const MAX_MONEY = 1_000_000_000_000;
+
 export class ApplianceDto {
   @IsOptional() @IsString() @MaxLength(40) code?: string;
   @Type(() => Number) @IsInt() @Min(1) @Max(100_000) powerW!: number;
@@ -27,7 +30,7 @@ export class FinancingInputDto {
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(2) annualRate?: number;
   @Type(() => Number) @IsInt() @Min(1) @Max(360) termMonths!: number;
   @IsOptional() @IsEnum(PaymentType) paymentType?: PaymentType;
-  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) downPayment?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(MAX_MONEY) downPayment?: number;
 }
 
 /** Saqlanmagan maydon poligoni (guest yoki chizilayotgan): server tekshiradi va o‘lchaydi, saqlamaydi. */
@@ -41,10 +44,10 @@ export class DraftAreaDto {
 
 /** U8.7: foydalanuvchi kiritgan xarajatlar (so‘m). */
 export class CostsDto {
-  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) equipmentCost?: number;
-  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) installationCost?: number;
-  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) deliveryCost?: number;
-  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) otherCost?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(MAX_MONEY) equipmentCost?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(MAX_MONEY) installationCost?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(MAX_MONEY) deliveryCost?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(MAX_MONEY) otherCost?: number;
 }
 
 export class EstimateDto {
@@ -71,7 +74,7 @@ export class EstimateDto {
   @IsOptional() @IsUUID() batteryModelId?: string;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.3) @Max(1000) kwp?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(2000) batteryKwh?: number;
-  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) budget?: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(MAX_MONEY) budget?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0.5) @Max(72) backupHours?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(-0.2) @Max(0.5) tariffGrowth?: number;
   @IsOptional() @ValidateNested() @Type(() => FinancingInputDto) financing?: FinancingInputDto;
@@ -79,8 +82,8 @@ export class EstimateDto {
 }
 
 export class FinancingEstimateDto {
-  @Type(() => Number) @IsNumber() @Min(1) initialCost!: number;
-  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) downPayment?: number;
+  @Type(() => Number) @IsNumber() @Min(1) @Max(MAX_MONEY) initialCost!: number;
+  @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(MAX_MONEY) downPayment?: number;
   @IsOptional() @IsUUID() productId?: string;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) @Max(2) annualRate?: number;
   @Type(() => Number) @IsInt() @Min(1) @Max(360) termMonths!: number;

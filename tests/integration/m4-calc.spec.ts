@@ -99,4 +99,34 @@ describe('M4 calculation integration', () => {
     expect(hybrid.data.applicable).toBe(true);
     expect(hybrid.data.backupHoursNight).toBeGreaterThanOrEqual(6);
   });
+  describe('edge inputs (TZ 11 / 2-bosqich audit)', () => {
+    it.each([
+      ['negative consumption', { consumption: { monthlyKwh: -1 } }],
+      ['absurd consumption', { consumption: { monthlyKwh: 1e9 } }],
+      ['latitude out of range', { lat: 120 }],
+      ['zero roof area', { areaM2: 0, areaPreset: undefined }],
+      ['absurd budget', { budget: 1e20 }],
+    ])('%s → 400, not 500', async (_label, over) => {
+      const res = await h.post('/calculations/estimate', undefined, { ...base, ...over });
+      expect(res.status).toBe(400);
+    });
+
+    it('zero consumption → 422 with a hint; “no consumption yet” answers with a range and no NaN', async () => {
+      const zero = await h.post('/calculations/estimate', undefined, { ...base, consumption: { monthlyKwh: 0 } });
+      expect(zero.status).toBe(422);
+      expect(zero.body.message).toContain('Hozircha iste’mol yo‘q');
+      const res = await h.post('/calculations/estimate', undefined, { ...base, consumption: { monthlyKwh: 0, noConsumptionYet: true } });
+      expect(res.status).toBe(200);
+      expect(JSON.stringify(res.data)).not.toMatch(/NaN|Infinity/);
+      expect(res.data.scenarios.low).toBeDefined();
+      expect(res.data.scenarios.high).toBeDefined();
+    });
+
+    it('financing: huge numbers are rejected; down payment above the price finances nothing', async () => {
+      expect((await h.post('/financing/estimate', undefined, { initialCost: 1e15, termMonths: 12, annualRate: 0.2 })).status).toBe(400);
+      const res = await h.post('/financing/estimate', undefined, { initialCost: 10_000_000, downPayment: 12_000_000, termMonths: 12, annualRate: 0.2 });
+      expect(res.status).toBe(200);
+      expect(res.data.financedAmount).toBe(0);
+    });
+  });
 });
