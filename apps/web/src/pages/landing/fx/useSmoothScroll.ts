@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import Lenis from 'lenis';
+import { onFirstInteraction } from '@/lib/motion/first-interaction';
 
 /** Silliq (inertsiyali) skroll + tepada skroll progress chizig‘i. Harakat kamaytirilgan bo‘lsa yoqilmaydi. */
 export function useSmoothScroll() {
@@ -14,29 +14,42 @@ export function useSmoothScroll() {
     update();
     if (reduce) return () => window.removeEventListener('scroll', update);
 
-    const lenis = new Lenis({ duration: 1.15, easing: (x) => 1 - Math.pow(1 - x, 3), smoothWheel: true });
+    // Lenis birinchi o‘zaro ta’sirda dinamik yuklanadi — birinchi ekran va asosiy oqim bo‘sh qoladi.
     let frame = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
-      frame = requestAnimationFrame(raf);
-    };
-    frame = requestAnimationFrame(raf);
-    // Sahifa ichidagi #havolalar silliq o‘tadi.
-    const onClick = (event: MouseEvent) => {
-      const anchor = (event.target as HTMLElement | null)?.closest<HTMLAnchorElement>('a[href^="#"]');
-      const id = anchor?.getAttribute('href');
-      if (!anchor || !id || id === '#') return;
-      const target = document.querySelector<HTMLElement>(id);
-      if (!target) return;
-      event.preventDefault();
-      lenis.scrollTo(target, { offset: -72 });
-    };
-    document.addEventListener('click', onClick);
+    let disposed = false;
+    let teardown: (() => void) | undefined;
+    const cancelWait = onFirstInteraction(() => {
+      void import('lenis').then(({ default: Lenis }) => {
+        if (disposed) return;
+        const lenis = new Lenis({ duration: 1.15, easing: (x) => 1 - Math.pow(1 - x, 3), smoothWheel: true });
+        const raf = (time: number) => {
+          lenis.raf(time);
+          frame = requestAnimationFrame(raf);
+        };
+        frame = requestAnimationFrame(raf);
+        // Sahifa ichidagi #havolalar silliq o‘tadi.
+        const onClick = (event: MouseEvent) => {
+          const anchor = (event.target as HTMLElement | null)?.closest<HTMLAnchorElement>('a[href^="#"]');
+          const id = anchor?.getAttribute('href');
+          if (!anchor || !id || id === '#') return;
+          const target = document.querySelector<HTMLElement>(id);
+          if (!target) return;
+          event.preventDefault();
+          lenis.scrollTo(target, { offset: -72 });
+        };
+        document.addEventListener('click', onClick);
+        teardown = () => {
+          cancelAnimationFrame(frame);
+          document.removeEventListener('click', onClick);
+          lenis.destroy();
+        };
+      });
+    });
     return () => {
-      cancelAnimationFrame(frame);
-      document.removeEventListener('click', onClick);
+      disposed = true;
+      cancelWait();
+      teardown?.();
       window.removeEventListener('scroll', update);
-      lenis.destroy();
     };
   }, []);
 }

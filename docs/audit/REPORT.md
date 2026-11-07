@@ -57,7 +57,7 @@ Topilmalar ID’lari — [AUDIT.md](AUDIT.md). Lokal stend portlari: bosh sayt 5
 **Tuzilma va tozalash (4-bosqich)** — 4-bo‘limdagi ro‘yxat.
 - Bug: admin “Siyosatlar” formasida backend qabul qilmaydigan 5 tur (oferta, to‘lov, qaytarish…) — 400 berardi; Sozlamalar → “Ommaviy oferta” mavjud bo‘lmagan hujjatni so‘rardi.
 - **A-12** `/mijoz/montaj/:id` → `/mijoz/montajlar/:id`.
-- `.env.example`: `REFRESH_TOKEN_TTL_DAYS` kod o‘qimaydigan kalit edi → `REFRESH_TOKEN_TTL_MINUTES`.
+- `.env.example`: `REFRESH_TOKEN_TTL_DAYS` kod o‘qimaydigan kalit edi → `REFRESH_TOKEN_TTL_MINUTES`; standart sessiya muddati 60 daqiqadan 30 kunga (buyurtmachi qarori).
 
 **Unumdorlik (A-02)**
 - Lug‘atlar til bo‘yicha dinamik (o‘zbek tilida umuman yuklanmaydi); bosh sahifa (GSAP, Lenis, Three.js) panellar bundle’iga tushardi — lazy. Asosiy bo‘lak 628 → 100 KB gzip.
@@ -88,10 +88,14 @@ Asosiy juftliklar: `admin/bosh` (yorug‘ → to‘q), `*/404`, `customer/ruxsat
 
 | Sahifa | Performance | Accessibility | Best practices | SEO |
 |---|---|---|---|---|
-| Bosh sayt `/` | **44** (maqsad 85) | 95 | 96 | 100 |
+| Bosh sayt `/` | **74–77** (oldin 42; maqsad 85) | 95 | 96 | 100 |
 | Mijoz paneli `/login` | **81** (maqsad 80) | 96 | 100 | 100 |
 
-Bosh sayt maqsadga yetmadi: asosiy oqimni `PortalPage` ning o‘zi band qiladi (≈ 9 s rendering/paint — Three.js “Quyosh filmi”, GSAP, shader fon; headless Chrome’da dasturiy WebGL). Shader 30 fps va kechiktirilgan start bilan yengillashtirildi (42 → 44). 85 uchun filmni foydalanuvchi aylantirgandagina ishga tushirish va poster-rasm bilan almashtirish kerak — §8 dagi qaror.
+Bosh sayt: 42 → **74–77** (LCP 6,2 → 2,1 s, TBT 6,6 → 0,9–1,1 s, CLS 0). Qilingan ishlar (buyurtmachi qarori №1):
+- Birinchi ekranda CSS poster; Three.js film, GSAP, shader foni va Lenis faqat birinchi skroll/teginish/klavishda dinamik yuklanadi (joylashuv bir xil — sakrash yo‘q).
+- Bosh sayt build’ida `index.html` ichida statik birinchi ekran (logo, sarlavha, CTA) — JS’ni kutmasdan chiziladi; React uni almashtiradi.
+- Bosh sahifa bo‘lagi App bilan parallel yuklanadi.
+85 ga yetmagan qism — TBT: brauzerning hujjatni qayta ishlashi (~1 s) va React’ning birinchi render’i (~0,7 s, headless Chrome 4× CPU sekinlashtirishda). Keyingi qadam — to‘liq SSR/prerender (Render build’ida Chromium kerak bo‘ladi).
 
 ## 7. Hal qilinmay qolganlar
 
@@ -106,10 +110,14 @@ Bosh sayt maqsadga yetmadi: asosiy oqimni `PortalPage` ning o‘zi band qiladi (
 
 ## 8. Mendan kutilayotgan qarorlar
 
-1. Bosh sahifa filmi: Lighthouse ≥ 85 uchun filmni scroll boshlanganda yuklash va birinchi ekranda statik poster qo‘yish — roziligingiz?
-2. Huquqiy matnlar qoralamasini (admin → Siyosatlar → 1.1 DRAFT) tekshirib e’lon qilish — yurist ko‘rigidan keyin.
-3. `REFRESH_TOKEN_TTL_MINUTES` standart 60 daqiqa — mijozlar soatiga bir qayta kiradi. Uzunroq (masalan, 30 kun) kerakmi?
-4. `fix/full-audit` ni `main` ga birlashtirish va push — ruxsatingiz bilan.
+Hal qilindi (buyurtmachi “ha”):
+1. Bosh sahifa filmi — scroll’da yuklanadi, birinchi ekranda poster (§6).
+2. Sessiya muddati — 30 kun, sliding (`REFRESH_TOKEN_TTL_MINUTES` standart 43 200).
+3. `fix/full-audit` → `main` birlashtirildi va push qilindi.
+
+Qolgan:
+- Huquqiy matnlar qoralamasini (admin → Siyosatlar → 1.1 DRAFT) yurist ko‘rigidan keyin e’lon qilish.
+- Bosh sayt Lighthouse 85 uchun to‘liq SSR/prerender kerakmi.
 
 ## 9. TZ’dan chetga chiqishlar
 

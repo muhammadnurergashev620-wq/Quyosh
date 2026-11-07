@@ -20,6 +20,8 @@
           document.documentElement.setAttribute('data-theme', mode);
           var size = localStorage.getItem('quyosh.ui-size');
           document.documentElement.setAttribute('data-ui-size', size === 'small' || size === 'large' ? size : 'medium');
+          var lang = localStorage.getItem('quyosh.lang');
+          if (lang && lang !== 'uz') document.documentElement.classList.add('qs-noshell');
         } catch (e) {
           document.documentElement.setAttribute('data-theme', '__DEFAULT_THEME__');
         }

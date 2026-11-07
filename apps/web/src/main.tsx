@@ -44,6 +44,8 @@ window.addEventListener(
 /** Avval tanlangan til lug‘ati, keyin ilova modullari (ular modul darajasida `t()` chaqiradi). */
 async function boot() {
   await loadDictionary();
+  // Bosh saytda (rol yo‘q) bosh sahifa bo‘lagi App bilan parallel yuklanadi — ketma-ket kutish yo‘q (LCP).
+  if (!import.meta.env.VITE_APP_ROLE) void import('./pages/landing/portal/PortalPage');
   const [{ App }, { applyUiSize, getUiSize }, { installGlobalErrorReporting }] = await Promise.all([import('./App'), import('@/lib/ui-size'), import('@/lib/error-reporter')]);
   applyUiSize(getUiSize());
   installGlobalErrorReporting();

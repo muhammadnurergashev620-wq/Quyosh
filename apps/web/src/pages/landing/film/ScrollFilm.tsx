@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { getGsap } from '@/lib/motion/gsap';
+import { onFirstInteraction } from '@/lib/motion/first-interaction';
 import { prefersReducedMotion } from '@/lib/motion/tokens';
 import { sunState } from '@/lib/sun';
 import { ShaderBackground } from '../fx/ShaderBackground';
-import { createFilmStage, SCENES, type FilmStage } from './FilmStage';
+import type { FilmStage } from './FilmStage';
 import { SCENE_NAMES, filmLabels, filmScenes } from './film-content';
 import './film.css';
 import { t } from '@/i18n';
@@ -32,6 +32,8 @@ export function ScrollFilm({ hero, finalCta }: { hero: ReactNode; finalCta: Reac
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [mode, setMode] = useState<'pending' | 'film' | 'static'>('pending');
+  /** Poster (CSS) → birinchi skroll/teginish/klavishda 3D film va shader dinamik yuklanadi. */
+  const [live, setLive] = useState(false);
   const scenes = filmScenes();
   const names = SCENE_NAMES();
 
@@ -39,16 +41,31 @@ export function ScrollFilm({ hero, finalCta }: { hero: ReactNode; finalCta: Reac
     setMode(webglAvailable() && !prefersReducedMotion() ? 'film' : 'static');
   }, []);
 
+  useEffect(() => (mode === 'film' ? onFirstInteraction(() => setLive(true)) : undefined), [mode]);
+
   useEffect(() => {
     const section = sectionRef.current;
     const mount = stageRef.current;
-    if (mode !== 'film' || !section || !mount) return;
-    const { ScrollTrigger } = getGsap();
+    if (mode !== 'film' || !live || !section || !mount) return;
+    let disposed = false;
+    let cleanup: (() => void) | undefined;
+    void Promise.all([import('./FilmStage'), import('@/lib/motion/gsap')]).then(([film, motion]) => {
+      if (disposed) return;
+      cleanup = startFilm(section, mount, film, motion.getGsap().ScrollTrigger);
+    });
+    return () => {
+      disposed = true;
+      cleanup?.();
+    };
+  }, [mode, live]);
+
+  function startFilm(section: HTMLElement, mount: HTMLDivElement, film: typeof import('./FilmStage'), ScrollTrigger: ReturnType<typeof import('@/lib/motion/gsap').getGsap>['ScrollTrigger']): (() => void) | undefined {
+    const { createFilmStage, SCENES } = film;
     const lowPower = window.matchMedia('(max-width: 700px)').matches || (navigator.hardwareConcurrency ?? 8) <= 4;
     const stage: FilmStage | null = createFilmStage(mount, (() => { const sun = sunState(); return filmLabels(sun.arc, sun.period === 'NIGHT'); })(), { lowPower });
     if (!stage) {
       setMode('static');
-      return;
+      return undefined;
     }
     const caps = Array.from(section.querySelectorAll<HTMLElement>('[data-cap]'));
     const ticks = Array.from(section.querySelectorAll<HTMLElement>('[data-tick]'));
@@ -102,7 +119,7 @@ export function ScrollFilm({ hero, finalCta }: { hero: ReactNode; finalCta: Reac
       document.removeEventListener('visibilitychange', onVisibility);
       stage.dispose();
     };
-  }, [mode]);
+  }
 
   if (mode !== 'film') {
     return (
@@ -127,8 +144,8 @@ export function ScrollFilm({ hero, finalCta }: { hero: ReactNode; finalCta: Reac
 
   return (
     <section className="gm-film gm-film--long" ref={sectionRef} data-scene="0" aria-label={t('Quyosh: hisobdan montajgacha')}>
-      <div className="gm-film__sticky">
-        <ShaderBackground variant="brand" />
+      <div className={live ? 'gm-film__sticky' : 'gm-film__sticky is-poster'}>
+        {live && <ShaderBackground variant="brand" />}
         <div className="gm-film__scrim" aria-hidden="true" />
         <div ref={stageRef} className="gm-film__stage" aria-hidden="true" />
 

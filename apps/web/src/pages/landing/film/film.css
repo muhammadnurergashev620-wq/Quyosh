@@ -99,3 +99,13 @@
 .gm-film__chips li { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 999px; background: rgba(255, 255, 255, 0.06); font-size: 12.5px; font-weight: 600; color: rgba(255, 255, 255, 0.86); }
 .gm-film__chips li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #f0b84b; }
 .gm-film__cap--final .gm-film__text { text-shadow: 0 1px 12px rgba(6, 13, 43, 0.9); }
+
+/* Poster: film ishga tushguncha (birinchi skroll/teginishgacha) — WebGL’siz, shader foniga o‘xshash statik gradient. */
+.gm-film__sticky.is-poster {
+  background:
+    radial-gradient(60% 55% at 78% 30%, rgba(242, 198, 107, 0.42), transparent 62%),
+    radial-gradient(70% 70% at 15% 85%, rgba(20, 86, 255, 0.55), transparent 65%),
+    linear-gradient(160deg, #071433 0%, #0b1f4d 55%, #071028 100%);
+}
+/* Poster holatida birinchi bob (sarlavha va CTA) darhol ko‘rinadi va bosiladi — film hali ishga tushmagan. */
+.gm-film__sticky.is-poster .gm-film__cap--hero { --on: 1; pointer-events: auto; }

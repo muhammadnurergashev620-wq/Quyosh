@@ -1298,13 +1298,13 @@ export class AuthService {
     return createJwt<RefreshClaims>(
       { sub, deviceId, familyId, jti, type: 'refresh' },
       this.jwtSecret(),
-      this.config.get<number>('auth.refreshTtlSeconds', 30 * 60),
+      this.config.get<number>('auth.refreshTtlSeconds', 30 * 24 * 60 * 60),
     );
   }
 
   private refreshExpiry() {
     return new Date(
-      Date.now() + this.config.get<number>('auth.refreshTtlSeconds', 30 * 60) * 1000,
+      Date.now() + this.config.get<number>('auth.refreshTtlSeconds', 30 * 24 * 60 * 60) * 1000,
     );
   }
 
@@ -1372,7 +1372,7 @@ export class AuthService {
     res.cookie(names.refresh, refreshToken, {
       ...base,
       path: '/api/v1/auth',
-      maxAge: this.config.get<number>('auth.refreshTtlSeconds', 30 * 60) * 1000,
+      maxAge: this.config.get<number>('auth.refreshTtlSeconds', 30 * 24 * 60 * 60) * 1000,
     });
     res.cookie(names.device, deviceId, {
       ...base,
