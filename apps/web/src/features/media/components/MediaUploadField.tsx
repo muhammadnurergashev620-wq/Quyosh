@@ -11,6 +11,7 @@ import { MAX_UPLOAD_BYTES, MAX_UPLOAD_MB, prepareUpload } from '../prepare-image
 import { MediaThumbnail } from './MediaThumbnail';
 import './MediaUploadField.css';
 import { t } from '@/i18n';
+import { formatDecimal } from '@/lib/format';
 
 const STATUS_LABEL: Record<string, string> = {
   UPLOADING: t('Yuklanmoqda'),
@@ -71,7 +72,7 @@ export function MediaUploadField({ label, accept = 'image/*,video/*', kind, link
     const file = await prepareUpload(picked);
     setPreparing(false);
     if (file.size > MAX_UPLOAD_BYTES) {
-      setLocalError(t('Fayl juda katta: {size} MB. Eng ko‘pi bilan {max} MB yuklash mumkin.', { size: (file.size / 1024 / 1024).toFixed(1), max: MAX_UPLOAD_MB }));
+      setLocalError(t('Fayl juda katta: {size} MB. Eng ko‘pi bilan {max} MB yuklash mumkin.', { size: formatDecimal(file.size / 1024 / 1024, 1), max: MAX_UPLOAD_MB }));
       return;
     }
     upload.mutate(

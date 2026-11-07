@@ -4,7 +4,7 @@ import { Check, Copy, KeyRound, Ban, CheckCircle2, Snowflake, Trash2, ArrowLeft,
 import type { ReactNode } from 'react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
-import { formatDateTime, formatRelativeTime } from '@/lib/utils';
+import { formatDateTime, formatRelativeTime } from '@/lib/format';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import type { BadgeTone } from '@/components/ui/Badge';
@@ -82,6 +82,7 @@ export function AdminUserProfilePage() {
         <ArrowLeft size={16} />{' '}{isAdminAccount ? t('Adminlar') : t('Foydalanuvchilar')}</Link>
       {user.isLoading && <PageLoader />}
       {user.isError && <Alert tone="danger">{getErrorMessage(user.error)}</Alert>}
+      {number === null && <EmptyState title={t('Foydalanuvchi topilmadi')} description={t('Havola noto‘g‘ri: foydalanuvchi ID raqami bo‘lishi kerak.')} action={<Link to="/admin/foydalanuvchilar" className="gm-button gm-button--secondary gm-button--md">{t('Foydalanuvchilar ro‘yxati')}</Link>} />}
       {data && isAdminAccount && (
         <AdminAccountProfile data={data} viewerId={me.data?.id} viewerIsSuper={!!me.data?.isSuperAdmin} viewerNumber={me.data?.accountNumber} onDelete={() => setAction('DELETE')} />
       )}

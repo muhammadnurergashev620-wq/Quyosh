@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/lib/format';
 import './charts.css';
 
 /** Neon dashboard grafiklari (SVG, kutubxonasiz): hover tooltip, gradientlar, ruxsat etilgan o‘qlar. Hamma grafik `role="img"` va aria-label bilan. */

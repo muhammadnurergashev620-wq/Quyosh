@@ -25,7 +25,7 @@ import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
 import { Column, FAQ_PREVIEW } from '@/features/public/FaqSection';
 import { DEFAULT_ORDER, fill, items, list, localize, str, useHomeData, type BlockFields, type BlockType, type Item, type Testimonial } from '@/features/site/home-content';
 import { env } from '@/lib/env';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/lib/format';
 import { hhmm, sunState } from '@/lib/sun';
 import { t } from '@/i18n';
 import { useSmoothScroll } from '../fx/useSmoothScroll';

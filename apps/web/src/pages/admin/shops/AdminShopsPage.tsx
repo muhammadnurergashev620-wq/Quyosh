@@ -16,7 +16,8 @@ import { personName, SHOP_STATUS } from '@/features/shop/labels';
 import type { ShopStatus } from '@/features/shop/types';
 import { REGIONS } from '@/lib/regions';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 

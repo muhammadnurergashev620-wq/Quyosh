@@ -5,7 +5,8 @@ import { AlertTriangle, BatteryCharging, CalendarDays, ExternalLink, Lightbulb, 
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { regionName } from '@/lib/regions';
-import { cx, formatDate, formatNumber } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatDecimal, formatNumber, formatPercent } from '@/lib/format';
 import { CashflowChart, DayChart, MonthlyBars, RangeBar } from './charts';
 import { ASSUMPTION_TEXT, insightText, kw, kwh, LIMITING, METHOD, monthName, OPTION_LABEL, sum, sumShort, SYSTEM_TYPE, WARNING_TEXT, years } from './labels';
 import type { EstimateResult, Insight } from './types';
@@ -170,12 +171,12 @@ export function ResultView({ result, actions, cta, shared }: { result: EstimateR
       {result.lifetime && (
         <Section title={t('25 yil')}>
           <CashflowChart title={t('Jamg‘arilgan pul oqimi')} points={result.lifetime.years.map((y) => ({ year: y.year, value: y.cumulative }))} markers={replacements} format={sumShort} />
-          <p className="qs-muted" style={{ margin: 0 }}>{t('Belgilar — invertor yoki akkumulyator almashtirish yillari. CO₂ tejalishi: {t} t.', { t: (result.lifetime.co2Kg / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) })}</p>
+          <p className="qs-muted" style={{ margin: 0 }}>{t('Belgilar — invertor yoki akkumulyator almashtirish yillari. CO₂ tejalishi: {t} t.', { t: formatDecimal((result.lifetime.co2Kg / 1000), 1) })}</p>
           <details>
             <summary>{t('Kengaytirilgan ko‘rsatkichlar')}</summary>
             <dl className="qs-dl" style={{ marginTop: 8 }}>
               <dt title={t('Kelajakdagi foydaning bugungi qiymati')}>NPV</dt><dd>{sum(result.lifetime.npv)}</dd>
-              <dt title={t('Ichki daromadlilik darajasi')}>IRR</dt><dd>{result.lifetime.irr === null ? t('hisoblanmadi') : `${(result.lifetime.irr * 100).toFixed(1)} %`}</dd>
+              <dt title={t('Ichki daromadlilik darajasi')}>IRR</dt><dd>{result.lifetime.irr === null ? t('hisoblanmadi') : `${formatPercent(result.lifetime.irr, 1)}`}</dd>
               <dt title={t('1 kWh energiyaning o‘rtacha tannarxi')}>LCOE</dt><dd>{result.lifetime.lcoe === null ? '—' : `${formatNumber(result.lifetime.lcoe)} ${t('so‘m/kWh')}`}</dd>
               <dt>{t('Diskontlangan qoplanish')}</dt><dd>{result.lifetime.discountedPayback === null ? t('25 yil ichida yo‘q') : years(result.lifetime.discountedPayback)}</dd>
             </dl>
@@ -203,8 +204,8 @@ export function ResultView({ result, actions, cta, shared }: { result: EstimateR
         ) : (
           <dl className="qs-dl">
             <dt>{t('Kritik yuklama')}</dt><dd>{kw(outage.criticalLoadKw)} ({t('ishga tushish {p}', { p: kw(outage.peakStartKw) })})</dd>
-            <dt>{t('Tunda zaxira')}</dt><dd>{outage.backupHoursNight === null ? '—' : t('{h} soat', { h: outage.backupHoursNight.toFixed(1) })}</dd>
-            <dt>{t('Kunduzi')}</dt><dd>{outage.dayUnlimited ? t('Quyosh bor paytda cheklanmagan') : outage.backupHoursDay === null ? '—' : t('{h} soat', { h: outage.backupHoursDay.toFixed(1) })}</dd>
+            <dt>{t('Tunda zaxira')}</dt><dd>{outage.backupHoursNight === null ? '—' : t('{h} soat', { h: formatDecimal(outage.backupHoursNight, 1) })}</dd>
+            <dt>{t('Kunduzi')}</dt><dd>{outage.dayUnlimited ? t('Quyosh bor paytda cheklanmagan') : outage.backupHoursDay === null ? '—' : t('{h} soat', { h: formatDecimal(outage.backupHoursDay, 1) })}</dd>
             <dt>{t('Invertor')}</dt><dd>{outage.inverterOk ? t('Yetarli') : t('Yetarli emas')}</dd>
           </dl>
         )}

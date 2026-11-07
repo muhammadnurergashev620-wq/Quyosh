@@ -15,7 +15,7 @@ import { mediaService } from '@/features/media/services/media.service';
 import { STOCK_STATUS } from '@/features/shop/labels';
 import { getErrorMessage } from '@/lib/error-messages';
 import { REGIONS, regionName } from '@/lib/regions';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import { CategoryGlyph, CompareBar } from './CatalogParts';
 import { t } from '@/i18n';

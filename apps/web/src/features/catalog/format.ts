@@ -1,5 +1,5 @@
-import { NUMBER_LOCALE, contentText, lang, t } from '@/i18n';
-import { formatMoney, formatNumber } from '@/lib/utils';
+import { contentText, t } from '@/i18n';
+import { formatDecimal, formatNumber, formatSum } from '@/lib/format';
 import type { I18nText } from '@/features/shop/types';
 import type { ExchangeRate, SpecKey, Specs } from './types';
 
@@ -43,7 +43,7 @@ export function specValue(key: SpecKey, raw: string | number | null | undefined)
   if (!Number.isFinite(value)) return String(raw);
   if (key === 'batteryUsableDod') value *= 100;
   const digits = meta.digits ?? 2;
-  const text = digits === 0 ? formatNumber(value) : value.toLocaleString(NUMBER_LOCALE[lang], { maximumFractionDigits: digits });
+  const text = digits === 0 ? formatNumber(value) : formatDecimal(value, digits);
   return meta.unit ? `${text} ${meta.unit}` : text;
 }
 
@@ -53,7 +53,7 @@ export function keySpecs(model: Specs): string[] {
   return keys.filter((key) => model[key] !== null && model[key] !== undefined).map((key) => `${SPEC_META[key].label}: ${specValue(key, model[key])}`);
 }
 
-export const sum = (value: string | number) => formatMoney(value, t('so‘m'));
+export const sum = formatSum;
 
 /** USD narx: «1 250 $ (≈ 15 082 775 so‘m, MB kursi 30.10.2026)». */
 export function priceWithRate(price: string, currency: 'UZS' | 'USD', priceUzs: string | null, rate: ExchangeRate | null): { main: string; note: string | null } {

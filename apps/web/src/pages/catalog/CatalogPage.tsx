@@ -11,7 +11,8 @@ import { catalogService, type CatalogFilters } from '@/features/catalog/catalog.
 import { i18nText } from '@/features/catalog/format';
 import type { Category } from '@/features/catalog/types';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatNumber } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatNumber } from '@/lib/format';
 import { CompareBar, ProductCard } from './CatalogParts';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';

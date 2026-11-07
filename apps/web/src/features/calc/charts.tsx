@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import type { ReactNode } from 'react';
-import { cx, formatNumber } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDecimal, formatNumber } from '@/lib/format';
 import { monthShort } from './labels';
 import { t } from '@/i18n';
 import './charts.css';
@@ -26,7 +27,7 @@ function niceMax(value: number) {
   return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * exp;
 }
 
-const compact = (value: number) => (Math.abs(value) >= 1e6 ? `${(value / 1e6).toLocaleString('ru-RU', { maximumFractionDigits: 1 })}M` : Math.abs(value) >= 1e3 ? `${(value / 1e3).toLocaleString('ru-RU', { maximumFractionDigits: 1 })}k` : formatNumber(value));
+const compact = (value: number) => (Math.abs(value) >= 1e6 ? `${formatDecimal((value / 1e6), 1)}M` : Math.abs(value) >= 1e3 ? `${formatDecimal((value / 1e3), 1)}k` : formatNumber(value));
 
 function Frame({ title, legend, table, children }: { title: string; legend?: Series[]; table: ReactNode; children: ReactNode }) {
   const [showTable, setShowTable] = useState(false);
@@ -124,7 +125,7 @@ export function DayChart({ title, generation, load }: { title: string; generatio
   const y = (v: number) => PAD.top + (H - PAD.top - PAD.bottom) * (1 - v / max);
   const line = load.map((v, h) => `${h === 0 ? 'M' : 'L'}${PAD.left + slot * h + slot / 2},${y(v)}`).join(' ');
   const series: Series[] = [{ name: t('Ishlab chiqarish'), color: 'gen', values: generation }, { name: t('Iste’mol'), color: 'load', values: load }];
-  const fmt = (v: number) => `${v.toLocaleString('ru-RU', { maximumFractionDigits: 2 })} kWh`;
+  const fmt = (v: number) => `${formatDecimal(v, 2)} kWh`;
   const table = (
     <table className="qs-table">
       <thead><tr><th>{t('Soat')}</th>{series.map((s) => <th key={s.name} className="qs-right">{s.name}</th>)}</tr></thead>

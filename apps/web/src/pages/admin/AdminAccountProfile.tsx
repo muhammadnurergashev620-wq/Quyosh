@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { Switch } from '@/components/ui/Switch';
 import { accountName } from '@/lib/account-name';
 import { describeDevice } from '@/lib/user-agent';
-import { formatDateTime, formatRelativeTime } from '@/lib/utils';
+import { formatDateTime, formatRelativeTime } from '@/lib/format';
 import { AvatarEditor } from '@/features/profile/AvatarEditor';
 import { AdminAvatarPermission } from '@/features/admin/components/AdminAvatarPermission';
 import { AdminPermissionsDialog } from '@/features/admin/components/AdminPermissionsDialog';

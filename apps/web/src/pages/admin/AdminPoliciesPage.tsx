@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/format';
 import { useAdminPolicies, useCreatePolicy, usePublishPolicy } from '@/features/legal/hooks/useLegal';
 import { POLICY_TYPE_LABEL } from '@/features/legal/types';
 import type { PolicyType } from '@/features/legal/types';

@@ -7,7 +7,7 @@ import { PageLoader } from '@/components/common/PageLoader';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Alert } from '@/components/ui/Alert';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/format';
 import { usePolicies, usePolicy } from '@/features/legal/hooks/useLegal';
 import { POLICY_TYPE_LABEL } from '@/features/legal/types';
 import type { PolicyType } from '@/features/legal/types';

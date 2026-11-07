@@ -17,7 +17,7 @@ import { mapService, type AreaType, type RoofShape, type ShadingLevel, type Site
 import { AREA_TYPE, AZIMUTHS, ROOF_SHAPE, SHADING, SITE_TYPE } from '@/features/map/labels';
 import { getErrorMessage } from '@/lib/error-messages';
 import { regionName } from '@/lib/regions';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';

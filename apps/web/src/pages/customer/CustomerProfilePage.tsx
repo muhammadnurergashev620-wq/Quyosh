@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { accountName } from '@/lib/account-name';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/format';
 import { LogoutDialog } from '@/features/auth/components/LogoutDialog';
 import { AvatarEditor } from '@/features/profile/AvatarEditor';
 import { ChangePasswordDialog } from '@/features/admin/profile/ChangePasswordDialog';

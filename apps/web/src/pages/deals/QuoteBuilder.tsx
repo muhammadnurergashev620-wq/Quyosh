@@ -16,7 +16,7 @@ import type { QuoteInput, QuoteItemType, QuoteTemplate, QuoteView, ShopLeadView 
 import { useCurrentShop } from '@/features/shop/current-shop';
 import { apiPost } from '@/services/api.client';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatDecimal } from '@/lib/format';
 import { useIdempotencyKey } from '@/hooks/useIdempotencyKey';
 import { t } from '@/i18n';
 
@@ -204,7 +204,7 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
             <div className="qs-page__actions" style={{ marginBottom: 10 }}>
               <Search size={16} />
               <input className="qs-input-sm" style={{ flex: 1, minWidth: 200 }} placeholder={t('Katalogdan qidirish (brend, model)')} aria-label={t('Katalogdan qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} />
-              {catalog.data?.exchangeRate && <small className="qs-muted">{t('MB kursi: 1 USD = {r} so‘m ({d})', { r: num(catalog.data.exchangeRate.rateToUzs).toLocaleString('ru-RU'), d: formatDate(catalog.data.exchangeRate.rateDate) })}</small>}
+              {catalog.data?.exchangeRate && <small className="qs-muted">{t('MB kursi: 1 USD = {r} so‘m ({d})', { r: formatDecimal(num(catalog.data.exchangeRate.rateToUzs), 2), d: formatDate(catalog.data.exchangeRate.rateDate) })}</small>}
             </div>
             {editable && (
               <div className="qs-chips" style={{ marginBottom: 12 }}>

@@ -14,7 +14,8 @@ import type { SystemType } from '@/features/calc/types';
 import { publicShopsService } from '@/features/catalog/public-shops.service';
 import { mapService } from '@/features/map/map.service';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate, formatDateTime } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatDateTime, formatRating } from '@/lib/format';
 import { useIdempotencyKey } from '@/hooks/useIdempotencyKey';
 import { t } from '@/i18n';
 import { dealsService } from '../deals.service';
@@ -217,7 +218,7 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
                       <div>
                         <strong>{s.name}</strong> {s.serving && <Badge tone="success">{t('Hududingizga xizmat qiladi')}</Badge>}
                         <small>
-                          <Star size={12} /> {Number(s.ratingAvg).toFixed(1)} ({s.ratingCount}){s.distanceKm !== undefined ? ` · ${t('{n} km', { n: s.distanceKm })}` : ''}
+                          <Star size={12} /> {formatRating(s.ratingAvg)} ({s.ratingCount}){s.distanceKm !== undefined ? ` · ${t('{n} km', { n: s.distanceKm })}` : ''}
                           {responseTime(s.avgResponseMinutes) ? ` · ${responseTime(s.avgResponseMinutes)}` : ''}
                         </small>
                       </div>

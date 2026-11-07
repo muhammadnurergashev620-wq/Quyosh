@@ -17,7 +17,8 @@ import { useMe } from '@/features/session/hooks/useMe';
 import { REGIONS } from '@/lib/regions';
 import { env } from '@/lib/env';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate, formatDateTime } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatDateTime, formatNumber } from '@/lib/format';
 import { t } from '@/i18n';
 import { CATEGORY_LABEL, TICKET_STATUS } from './SupportPages';
 import { TYPE_LABEL } from './KnowledgePages';
@@ -46,7 +47,7 @@ export function AdminQueues() {
             {!!x.breaching && <small className="qs-sla is-breach">{t('{n} ta SLA buzilgan', { n: x.breaching })}</small>}
           </Link>
         ))}
-        {q.data.exchangeRate && <div className="qs-kpi"><small>{t('USD kursi (MB)')}</small><strong>{Math.round(Number(q.data.exchangeRate.rateToUzs)).toLocaleString('ru-RU')}</strong><small className={cx(q.data.exchangeRate.stale && 'qs-sla is-breach')}>{formatDate(q.data.exchangeRate.rateDate)}{q.data.exchangeRate.stale ? ` · ${t('eskirgan')}` : ''}</small></div>}
+        {q.data.exchangeRate && <div className="qs-kpi"><small>{t('USD kursi (MB)')}</small><strong>{formatNumber(Math.round(Number(q.data.exchangeRate.rateToUzs)))}</strong><small className={cx(q.data.exchangeRate.stale && 'qs-sla is-breach')}>{formatDate(q.data.exchangeRate.rateDate)}{q.data.exchangeRate.stale ? ` · ${t('eskirgan')}` : ''}</small></div>}
       </div>
     </section>
   );

@@ -18,7 +18,7 @@ import { shopService } from '@/features/shop/shop.service';
 import { PRICING_MODEL, SERVICE_TYPE } from '@/features/shop/labels';
 import type { Currency, PricingModel, ServiceInput, ServiceType, ShopService } from '@/features/shop/types';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatMoney } from '@/lib/utils';
+import { formatMoney } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 

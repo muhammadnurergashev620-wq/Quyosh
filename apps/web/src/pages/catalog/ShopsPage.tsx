@@ -17,6 +17,7 @@ import { t } from '@/i18n';
 import { CERT_TYPE } from '@/pages/m7/cert-labels';
 import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
+import { formatRating } from '@/lib/format';
 
 export function ShopLogo({ name }: { name: string }) {
   return <span className="qs-shopcard__logo" aria-hidden="true">{name.trim().charAt(0).toUpperCase()}</span>;
@@ -30,7 +31,7 @@ function ShopCard({ shop }: { shop: PublicShopCard }) {
         <ShopLogo name={shop.name} />
         <div className="qs-cell-title">
           <strong>{shop.name} <BadgeCheck size={16} color="var(--qs-color-success)" aria-label={t('Tasdiqlangan do‘kon')} /></strong>
-          <span className="qs-rating"><Star size={14} aria-hidden="true" /> {Number(shop.ratingAvg).toFixed(1)} <small className="qs-muted">({shop.ratingCount})</small></span>
+          <span className="qs-rating"><Star size={14} aria-hidden="true" /> {formatRating(shop.ratingAvg)} <small className="qs-muted">({shop.ratingCount})</small></span>
         </div>
       </header>
       {shop.description && <p>{shop.description}</p>}

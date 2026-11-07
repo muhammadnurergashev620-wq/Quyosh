@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { accountName } from '@/lib/account-name';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate, formatDateTime, formatNumber, formatRelativeTime } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatDateTime, formatNumber, formatRelativeTime } from '@/lib/format';
 import { DeviceList } from '@/features/auth/components/DeviceList';
 import { LogoutDialog } from '@/features/auth/components/LogoutDialog';
 import { AvatarEditor } from '@/features/profile/AvatarEditor';
@@ -174,7 +175,7 @@ export function AdminProfilePage() {
         <section className="gm-aprof__card">
           <div className="gm-aprof__cardhead">
             <h2>{t('So‘nggi amallar')}</h2>
-            {(user.isSuperAdmin || permissions.has('AUDIT')) && <Link to={`/admin/audit?actor=${user.accountNumber}`}><Button size="sm" variant="secondary">{t('Audit jurnalida ko‘rish')}</Button></Link>}
+            {(user.isSuperAdmin || permissions.has('AUDIT')) && <Link to={`/admin/audit?actor=${user.accountNumber}`} className="gm-button gm-button--secondary gm-button--sm">{t('Audit jurnalida ko‘rish')}</Link>}
           </div>
           {activity.length === 0 && <p className="gm-aprof__muted">{t('Hali amal bajarmagansiz.')}</p>}
           <ol className="gm-aprof__timeline">

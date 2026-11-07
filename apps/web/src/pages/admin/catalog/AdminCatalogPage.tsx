@@ -15,7 +15,8 @@ import { catalogService, type CategoryInput } from '@/features/catalog/catalog.s
 import { i18nText, SPEC_META, specValue } from '@/features/catalog/format';
 import { SPEC_KEYS, type AdminModel, type Category, type ModelStatus, type SpecKey } from '@/features/catalog/types';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate, formatDateTime, formatNumber } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatDateTime, formatDecimal, formatNumber } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
@@ -278,7 +279,7 @@ function RatesTab() {
           <thead><tr><th>{t('Sana')}</th><th className="qs-right">{t('Kurs')}</th><th>{t('Olingan vaqt')}</th></tr></thead>
           <tbody>
             {rates.data.history.map((row) => (
-              <tr key={row.id}><td>{row.rateDate.slice(0, 10).split('-').reverse().join('.')}</td><td className="qs-right qs-num">{Number(row.rateToUzs).toLocaleString('ru-RU', { maximumFractionDigits: 2 })}</td><td className="qs-muted">{formatDateTime(row.fetchedAt)}</td></tr>
+              <tr key={row.id}><td>{row.rateDate.slice(0, 10).split('-').reverse().join('.')}</td><td className="qs-right qs-num">{formatDecimal(Number(row.rateToUzs), 2)}</td><td className="qs-muted">{formatDateTime(row.fetchedAt)}</td></tr>
             ))}
           </tbody>
         </table>

@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { formatDateTime, formatDayMonth, formatNumber, formatTime } from '@/lib/utils';
+import { formatDateTime, formatDayMonth, formatNumber, formatTime } from '@/lib/format';
 import type { DevOpsTrafficPoint, DevOpsWindow } from '../types';
 import { t } from '@/i18n';
 import './DevOpsCharts.css';

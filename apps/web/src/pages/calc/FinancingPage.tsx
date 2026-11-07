@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/Input';
 import { calcService } from '@/features/calc/calc.service';
 import { sum, sumShort } from '@/features/calc/labels';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatPercent } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
@@ -47,7 +48,7 @@ export function FinancingPage() {
           {products.map((p) => (
             <button key={p.id} type="button" className={cx(picked.includes(p.id) && 'is-on')} onClick={() => setPicked((c) => (c.includes(p.id) ? c.filter((x) => x !== p.id) : [...c, p.id].slice(-3)))}>
               <strong>{p.providerName}</strong>
-              <small>{(Number(p.annualRate) * 100).toFixed(1)} % · {p.allowedTerms.join(', ')} {t('oy')} · {t('min. {p} %', { p: Math.round(Number(p.minDownPaymentPct) * 100) })}</small>
+              <small>{formatPercent(Number(p.annualRate), 1)} · {p.allowedTerms.join(', ')} {t('oy')} · {t('min. {p} %', { p: Math.round(Number(p.minDownPaymentPct) * 100) })}</small>
               {p.verifiedAt && <small>{t('Manba tekshirilgan: {d}', { d: formatDate(p.verifiedAt) })}</small>}
             </button>
           ))}

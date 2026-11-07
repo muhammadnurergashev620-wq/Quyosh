@@ -14,6 +14,7 @@ import { cx } from '@/lib/utils';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
+import { formatDecimal } from '@/lib/format';
 
 /** U8.13: elektr uzilishi kalkulyatori — default HYBRID; ON_GRID da raqam ko‘rsatilmaydi. */
 export function OutagePage() {
@@ -25,7 +26,7 @@ export function OutagePage() {
   const nameOf = (code?: string) => { const type = types.find((x) => x.code === code); return type ? i18nText(type.nameI18n as { uz: string }) : t('Texnika'); };
   const run = useMutation({ mutationFn: () => calcService.outage({ systemType, criticalItems: rows, backupHours: Number(hours) || 4 }) });
   const result = run.data;
-  const hoursText = (h: number | null) => (h === null ? '—' : t('{h} soat', { h: h.toFixed(1) }));
+  const hoursText = (h: number | null) => (h === null ? '—' : t('{h} soat', { h: formatDecimal(h, 1) }));
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Elektr o‘chganda')}</h1><p>{t('Muhim texnika uzilishda qancha ishlashini hisoblang.')}</p></div></div>

@@ -22,8 +22,6 @@
 .nd-pills button:hover { color: var(--nd-ink); }
 .nd-pills button.is-on { background: linear-gradient(135deg, #22d3ee, #2563eb); color: #04122b; box-shadow: 0 0 14px rgba(34, 211, 238, 0.4); }
 .nd-pills--sm button { padding: 5px 11px; font-size: 12px; }
-.nd-demo { display: inline-flex; align-items: center; gap: 6px; padding: 8px 13px; border-radius: 12px; border: 1px dashed var(--nd-line); background: transparent; color: var(--nd-muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
-.nd-demo.is-on { border-style: solid; border-color: var(--nd-cyan); color: var(--nd-cyan); background: rgba(34, 211, 238, 0.08); }
 
 .nd-kpis { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
 .nd-kpi { position: relative; display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: 16px; text-decoration: none; color: var(--nd-ink); background: var(--nd-card); border: 1px solid var(--nd-line); transition: border-color 150ms, transform 150ms; }

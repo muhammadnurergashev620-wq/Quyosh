@@ -9,7 +9,7 @@ import { SHOP_STATUS } from '@/features/shop/labels';
 import { ShopSwitcher } from '@/features/shop/components/ShopSwitcher';
 import type { ManagedShop } from '@/features/shop/types';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber, formatRating } from '@/lib/format';
 import { t } from '@/i18n';
 import { ShopKpis } from '@/pages/m7/ShopM7Pages';
 import '@/features/shop/shop.css';
@@ -44,12 +44,6 @@ export function ShopDashboardPage() {
         </div>
       </div>
 
-      {shop.status === 'SUSPENDED' && (
-        <Alert tone="danger" title={t('Do‘kon vaqtincha to‘xtatilgan')}>
-          {t('Faqat ko‘rish mumkin. Sabab: {reason}', { reason: shop.suspendReason ?? '—' })}
-        </Alert>
-      )}
-
       <ShopKpis shopId={shop.id} />
 
       <div className="qs-grid-2">
@@ -75,7 +69,7 @@ export function ShopDashboardPage() {
             <Link to="/dokon/katalog"><strong>{formatNumber(shop.counts.products)}</strong><small>{t('Faol mahsulotlar')}</small></Link>
             <Link to="/dokon/filiallar"><strong>{formatNumber(shop.counts.branches)}</strong><small>{t('Filiallar')}</small></Link>
             <Link to="/dokon/xizmatlar"><strong>{formatNumber(shop.counts.services)}</strong><small>{t('Xizmatlar')}</small></Link>
-            <div><strong>{Number(shop.ratingAvg).toFixed(1)}</strong><small>{t('Reyting ({n} ta sharh)', { n: shop.ratingCount })}</small></div>
+            <div><strong>{formatRating(shop.ratingAvg)}</strong><small>{t('Reyting ({n} ta sharh)', { n: shop.ratingCount })}</small></div>
           </div>
         </section>
       </div>

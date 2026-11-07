@@ -2,7 +2,8 @@ import { forwardRef } from 'react';
 import type { ChangeEvent } from 'react';
 import { Input } from './Input';
 import type { InputProps } from './Input';
-import { groupAmount, sanitizeMoney } from '@/lib/utils';
+import { sanitizeMoney } from '@/lib/utils';
+import { groupAmount } from '@/lib/format';
 import { t } from '@/i18n';
 
 export interface MoneyInputProps extends Omit<InputProps, 'value' | 'onChange' | 'type' | 'formatValue' | 'min' | 'max'> {

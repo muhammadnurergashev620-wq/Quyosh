@@ -22,7 +22,8 @@ import { i18nText } from '@/features/catalog/format';
 import { AddressSearch } from '@/pages/map/SitesPage';
 import type { QuickState } from './QuickCalcPage';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatNumber } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatNumber, formatPercent } from '@/lib/format';
 import { useAuthStore } from '@/store/auth.store';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
@@ -402,7 +403,7 @@ export function DetailedCalcPage() {
         </div>
         {state.financing.kind === 'LOAN' && (
           <>
-            <Select label={t('Moliyalashtirish mahsuloti')} value={state.financing.productId} onChange={(e) => { const p = reference.data?.financing.find((x) => x.id === e.target.value); set({ financing: { ...state.financing, productId: e.target.value, termMonths: p?.allowedTerms[0] ?? state.financing.termMonths, paymentType: p?.paymentType ?? state.financing.paymentType } }); }} options={[{ value: '', label: t('Qo‘lda kiritish') }, ...(reference.data?.financing ?? []).map((p) => ({ value: p.id, label: `${p.providerName} · ${(Number(p.annualRate) * 100).toFixed(1)} %` }))]} />
+            <Select label={t('Moliyalashtirish mahsuloti')} value={state.financing.productId} onChange={(e) => { const p = reference.data?.financing.find((x) => x.id === e.target.value); set({ financing: { ...state.financing, productId: e.target.value, termMonths: p?.allowedTerms[0] ?? state.financing.termMonths, paymentType: p?.paymentType ?? state.financing.paymentType } }); }} options={[{ value: '', label: t('Qo‘lda kiritish') }, ...(reference.data?.financing ?? []).map((p) => ({ value: p.id, label: `${p.providerName} · ${formatPercent(Number(p.annualRate), 1)}` }))]} />
             {!product && <Input label={t('Yillik stavka, %')} inputMode="decimal" value={state.financing.annualRate} onChange={(e) => set({ financing: { ...state.financing, annualRate: e.target.value.replace(/[^\d.,]/g, '') } }, false)} onBlur={() => setCommitted(state)} />}
             <Input label={t('Boshlang‘ich to‘lov, so‘m')} inputMode="numeric" value={state.financing.downPayment} onChange={(e) => set({ financing: { ...state.financing, downPayment: e.target.value.replace(/\D/g, '') } }, false)} onBlur={() => setCommitted(state)} hint={product ? t('Kamida {p} %', { p: Math.round(Number(product.minDownPaymentPct) * 100) }) : undefined} />
             <div className="qs-chips" role="group" aria-label={t('Muddat')}>

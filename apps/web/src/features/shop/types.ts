@@ -13,6 +13,7 @@ export interface MyShop {
   slug: string;
   name: string;
   status: ShopStatus;
+  suspendReason?: string | null;
   verificationStatus: ShopVerificationStatus;
   logoAssetId: string | null;
   memberRole: ShopMemberRole;

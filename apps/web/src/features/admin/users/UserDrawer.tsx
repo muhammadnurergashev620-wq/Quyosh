@@ -11,7 +11,7 @@ import type { UserAction } from '@/features/admin/user-actions';
 import type { AdminUser } from '@/features/admin/types';
 import { accountName } from '@/lib/account-name';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatDateTime, formatRelativeTime } from '@/lib/utils';
+import { formatDateTime, formatRelativeTime } from '@/lib/format';
 import { describeDevice } from '@/lib/user-agent';
 import { USER_STATUS } from './users-ui';
 import './UserDrawer.css';

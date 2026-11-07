@@ -52,7 +52,7 @@ export class ShopService {
     const rows = await this.db.shopMember.findMany({
       where: { userId, shop: { archivedAt: null } },
       orderBy: { createdAt: 'asc' },
-      select: { memberRole: true, permissions: true, shop: { select: { id: true, slug: true, name: true, status: true, verificationStatus: true, logoAssetId: true } } },
+      select: { memberRole: true, permissions: true, shop: { select: { id: true, slug: true, name: true, status: true, suspendReason: true, verificationStatus: true, logoAssetId: true } } },
     });
     return rows.map(({ shop, memberRole, permissions }) => ({ ...shop, memberRole, permissions: memberRole === 'OWNER' ? ['*'] : permissions }));
   }

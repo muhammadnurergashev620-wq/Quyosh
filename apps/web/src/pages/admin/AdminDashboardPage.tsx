@@ -1,19 +1,19 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Activity, Calculator, ClipboardList, FileText, Sparkles, Store, TrendingDown, TrendingUp, Users, Wrench } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { PageLoader } from '@/components/common/PageLoader';
 import { Alert } from '@/components/ui/Alert';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/lib/format';
 import { regionName } from '@/lib/regions';
 import { useDashboardOverview } from '@/features/admin/dashboard/useOverview';
-import { demoOverview } from '@/features/admin/dashboard/demo';
 import { Bars, Gauge, HBars, Histogram, Scatter, SmoothArea, Wave } from '@/features/admin/dashboard/charts';
 import '@/features/admin/dashboard/charts.css';
 import './AdminDashboardPage.css';
 import { t } from '@/i18n';
 import { AdminQueues } from '@/pages/m7/AdminM7Pages';
+import { formatRating } from '@/lib/format';
 
 const PERIODS = [7, 30, 90] as const;
 type SeriesKey = 'users' | 'calculations' | 'requests' | 'quotes';
@@ -70,13 +70,12 @@ function Card({ title, sub, value, icon, className, children, actions }: { title
 /** Admin boshqaruv paneli (TZ U12.1): neon uslubdagi katta dashboard — KPI, kunlik grafiklar, taqsimotlar, navbatlar. */
 export function AdminDashboardPage() {
   const [days, setDays] = useState<(typeof PERIODS)[number]>(30);
-  const [demo, setDemo] = useState(false);
   const [series, setSeries] = useState<SeriesKey>('users');
-  const query = useDashboardOverview(days, !demo);
-  const data = useMemo(() => (demo ? demoOverview(days) : query.data), [demo, days, query.data]);
+  const query = useDashboardOverview(days);
+  const data = query.data;
 
-  if (!demo && query.isLoading) return <PageLoader />;
-  if (!demo && (query.isError || !data)) return <Alert tone="danger">{getErrorMessage(query.error)}</Alert>;
+  if (query.isLoading) return <PageLoader />;
+  if (query.isError || !data) return <Alert tone="danger">{getErrorMessage(query.error)}</Alert>;
   if (!data) return <PageLoader />;
 
   const k = data.kpis;
@@ -94,13 +93,12 @@ export function AdminDashboardPage() {
       <div className="nd-head">
         <div>
           <h1>{t('Boshqaruv paneli')}</h1>
-          <p>{demo ? t('Namuna ma’lumotlar — haqiqiy bazaga tegmaydi') : t('Oxirgi {n} kun bo‘yicha platforma ko‘rsatkichlari', { n: days })}</p>
+          <p>{t('Oxirgi {n} kun bo‘yicha platforma ko‘rsatkichlari', { n: days })}</p>
         </div>
         <div className="nd-head__tools">
           <div className="nd-pills" role="group" aria-label={t('Davr')}>
             {PERIODS.map((p) => <button key={p} type="button" className={p === days ? 'is-on' : ''} onClick={() => setDays(p)}>{p} {t('kun')}</button>)}
           </div>
-          <button type="button" className={`nd-demo ${demo ? 'is-on' : ''}`} onClick={() => setDemo((v) => !v)} aria-pressed={demo}><Sparkles size={14} aria-hidden="true" /> {t('Namuna ko‘rinish')}</button>
         </div>
       </div>
 
@@ -149,7 +147,7 @@ export function AdminDashboardPage() {
         <Card className="nd-t" icon={<ClipboardList size={22} />} value={k.requests.total} title={t('So‘rovlar holati')}>
           {rows(d.requestStatus, REQUEST_STATUS).length ? <HBars rows={rows(d.requestStatus, REQUEST_STATUS)} max={k.requests.total} /> : <p className="nd-empty">{t('Ma’lumot yo‘q')}</p>}
         </Card>
-        <Card className="nd-t" icon={<Sparkles size={22} />} value={k.reviews.avg ? `${k.reviews.avg}★` : '—'} title={t('Sharhlar reytingi')} sub={t('{n} ta sharh', { n: k.reviews.total })}>
+        <Card className="nd-t" icon={<Sparkles size={22} />} value={k.reviews.avg ? `${formatRating(k.reviews.avg)}★` : '—'} title={t('Sharhlar reytingi')} sub={t('{n} ta sharh', { n: k.reviews.total })}>
           <Bars items={ratingItems} aria={t('Sharhlar reytingi taqsimoti')} height={170} />
         </Card>
         <Card className="nd-t" icon={<Calculator size={22} />} value={Object.values(d.calcType).reduce((a, b) => a + b, 0)} title={t('Tizim turlari')} sub={t('Hisoblar bo‘yicha')}>

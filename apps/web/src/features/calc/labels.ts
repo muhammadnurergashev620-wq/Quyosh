@@ -1,5 +1,5 @@
 import { MONTHS, lang, t } from '@/i18n';
-import { formatMoney, formatNumber } from '@/lib/utils';
+import { formatDecimal, formatKw, formatKwh, formatSum, formatSumShort } from '@/lib/format';
 import type { Insight, LimitingFactor, SystemType } from './types';
 
 const FULL_MONTHS = [t('Yanvar'), t('Fevral'), t('Mart'), t('Aprel'), t('May'), t('Iyun'), t('Iyul'), t('Avgust'), t('Sentabr'), t('Oktabr'), t('Noyabr'), t('Dekabr')];
@@ -51,18 +51,11 @@ export const ASSUMPTION_TEXT: Record<string, string> = {
   ESTIMATED_COSTS: t('Narxlar taxminiy: katalog medianasi yoki standart qiymat.'),
 };
 
-export const sum = (value: number) => formatMoney(value, t('so‘m'));
-/** Katta summalar: «12,4 mln so‘m». */
-export function sumShort(value: number): string {
-  const abs = Math.abs(value);
-  if (abs >= 1e9) return `${(value / 1e9).toLocaleString('ru-RU', { maximumFractionDigits: 1 })} ${t('mlrd so‘m')}`;
-  if (abs >= 1e6) return `${(value / 1e6).toLocaleString('ru-RU', { maximumFractionDigits: 1 })} ${t('mln so‘m')}`;
-  if (abs >= 1e3) return `${formatNumber(Math.round(value / 1e3))} ${t('ming so‘m')}`;
-  return sum(value);
-}
-export const kwh = (value: number) => `${formatNumber(value)} kWh`;
-export const kw = (value: number) => `${value.toLocaleString('ru-RU', { maximumFractionDigits: 2 })} ${t('kVt')}`;
-export const years = (value: number) => t('{n} yil', { n: value.toLocaleString('ru-RU', { maximumFractionDigits: 1 }) });
+export const sum = formatSum;
+export const sumShort = formatSumShort;
+export const kwh = formatKwh;
+export const kw = formatKw;
+export const years = (value: number) => t('{n} yil', { n: formatDecimal(value, 1) });
 
 /** U8.11 insight matnlari. */
 export function insightText(item: Insight, context: { maxGeneration: number }): string {
@@ -70,7 +63,7 @@ export function insightText(item: Insight, context: { maxGeneration: number }): 
     case 'BEST_SAVING_MONTH':
       return t('{month}da eng ko‘p tejaysiz — taxminan {sum}', { month: monthName(item.month!), sum: sumShort(item.value) });
     case 'LOWEST_GENERATION_MONTH':
-      return t('{month}da ishlab chiqarish eng yuqori oydagidan {x} marta kam', { month: monthName(item.month!), x: (context.maxGeneration / Math.max(item.value, 1)).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) });
+      return t('{month}da ishlab chiqarish eng yuqori oydagidan {x} marta kam', { month: monthName(item.month!), x: formatDecimal((context.maxGeneration / Math.max(item.value, 1)), 1) });
     case 'PEAK_IMPORT_MONTH':
       return t('{month}da tarmoqdan eng ko‘p olasiz — {kwh}', { month: monthName(item.month!), kwh: kwh(item.value) });
     case 'BATTERY_CRITICAL_MONTH':

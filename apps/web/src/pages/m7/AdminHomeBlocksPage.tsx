@@ -12,7 +12,8 @@ import { BLOCK_LABEL, type BlockContent, type BlockFields, type BlockLang, type 
 import { toUzbekCyrillic } from '@/i18n/translit';
 import { apiGet, apiPatch, apiPost, apiPut } from '@/services/api.client';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDateTime } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDateTime } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/m7/m7.css';

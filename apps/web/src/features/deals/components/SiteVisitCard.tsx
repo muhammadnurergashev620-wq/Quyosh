@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatDateTime, formatTime } from '@/lib/utils';
+import { formatDateTime, formatTime } from '@/lib/format';
 import { t } from '@/i18n';
 import { dealsService } from '../deals.service';
 import type { Side, SiteVisit } from '../types';

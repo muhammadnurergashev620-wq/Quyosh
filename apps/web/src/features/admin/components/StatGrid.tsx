@@ -1,7 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { cx, formatMoney } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatMoney } from '@/lib/format';
 import { statusLabel } from '@/lib/labels';
 import { t } from '@/i18n';
 

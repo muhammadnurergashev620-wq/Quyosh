@@ -22,6 +22,7 @@ import { SettingsPage } from '@/pages/SettingsPage';
 import { CustomerProfilePage } from '@/pages/customer/CustomerProfilePage';
 import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
 import { TermsPage } from '@/pages/legal/TermsPage';
+import { SuspendedBanner } from '@/features/shop/components/SuspendedBanner';
 
 const AdminHome = lazy(() => import('@/pages/admin/AdminHome').then((m) => ({ default: m.AdminHome })));
 const AdminUsersPage = lazy(() => import('@/pages/admin/AdminUsersPage').then((m) => ({ default: m.AdminUsersPage })));
@@ -98,7 +99,7 @@ const ShopMembersPage = lazy(() => import('@/pages/shop/ShopMembersPage').then((
 
 const only = (roles: Role[], element: ReactNode) => <RoleGuard roles={roles}>{element}</RoleGuard>;
 const customer = (el: ReactNode) => only(['CUSTOMER'], el);
-const shop = (el: ReactNode) => only(['SHOP'], el);
+const shop = (el: ReactNode) => only(['SHOP'], <><SuspendedBanner />{el}</>);
 const admin = (el: ReactNode) => only(['ADMIN'], el);
 
 const open = (el: ReactNode) => <PublicCustomerRoute>{el}</PublicCustomerRoute>;

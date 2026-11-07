@@ -2,7 +2,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
 import { Alert } from '@/components/ui/Alert';
 import { getErrorMessage } from '@/lib/error-messages';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/format';
 import { usePolicies, usePolicy } from '../hooks/useLegal';
 import { renderContent } from '../render-content';
 import type { PolicyType } from '../types';

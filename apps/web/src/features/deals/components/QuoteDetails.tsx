@@ -3,7 +3,8 @@ import type { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Star } from 'lucide-react';
 import { sum } from '@/features/calc/labels';
-import { cx, formatDate, formatRelativeTime } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatDecimal, formatRelativeTime } from '@/lib/format';
 import { t } from '@/i18n';
 import { dealsService } from '../deals.service';
 import { days, ITEM_TYPE, months, num } from '../labels';
@@ -47,7 +48,7 @@ function Diff({ now, before, render }: { now: unknown; before?: unknown; render:
 }
 
 const money = (v: string) => sum(num(v));
-const qty = (v: string) => num(v).toLocaleString('ru-RU', { maximumFractionDigits: 3 });
+const qty = (v: string) => formatDecimal(num(v), 3);
 
 export function QuoteBody({ snap, prev }: { snap: QuoteSnap; prev?: QuoteSnap | null }) {
   const p = prev ?? undefined;
@@ -97,12 +98,12 @@ export function QuoteBody({ snap, prev }: { snap: QuoteSnap; prev?: QuoteSnap | 
           <h3 style={{ margin: '0 0 6px', fontSize: 14 }}>{t('Moliyalashtirish')}</h3>
           <ul className="qs-list">
             {snap.financingOptions.map((f) => (
-              <li key={f.providerName}>{f.providerName}: {t('{r}% yillik, {n} oy', { r: (num(f.annualRate) * 100).toLocaleString('ru-RU', { maximumFractionDigits: 2 }), n: f.termMonths })}{f.monthlyPayment ? ` · ${t('oyiga ≈ {s}', { s: sum(f.monthlyPayment) })}` : ''}</li>
+              <li key={f.providerName}>{f.providerName}: {t('{r}% yillik, {n} oy', { r: formatDecimal(num(f.annualRate) * 100, 2), n: f.termMonths })}{f.monthlyPayment ? ` · ${t('oyiga ≈ {s}', { s: sum(f.monthlyPayment) })}` : ''}</li>
             ))}
           </ul>
         </div>
       )}
-      {snap.exchangeRateUsd && <small className="qs-muted">{t('USD narxlar MB kursi bo‘yicha o‘girilgan: 1 USD = {r} so‘m ({d})', { r: num(snap.exchangeRateUsd).toLocaleString('ru-RU'), d: snap.exchangeRateDate ?? '' })}</small>}
+      {snap.exchangeRateUsd && <small className="qs-muted">{t('USD narxlar MB kursi bo‘yicha o‘girilgan: 1 USD = {r} so‘m ({d})', { r: formatDecimal(num(snap.exchangeRateUsd), 2), d: snap.exchangeRateDate ?? '' })}</small>}
     </div>
   );
 }

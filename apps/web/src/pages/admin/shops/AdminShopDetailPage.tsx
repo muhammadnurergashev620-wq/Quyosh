@@ -18,7 +18,7 @@ import { MEMBER_ROLE, personName, SHOP_STATUS } from '@/features/shop/labels';
 import { getErrorMessage } from '@/lib/error-messages';
 import { regionName } from '@/lib/regions';
 import { env } from '@/lib/env';
-import { formatDate, formatDateTime } from '@/lib/utils';
+import { formatDate, formatDateTime, formatRating } from '@/lib/format';
 import { CERT_TYPE } from '@/pages/m7/cert-labels';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
@@ -175,7 +175,7 @@ export function AdminShopDetailPage() {
             <dt>{t('Yaratilgan')}</dt><dd>{formatDateTime(shop.createdAt)} · {shop.createdSource === 'ADMIN' ? t('admin') : t('o‘zi (eski)')}{shop.createdBy ? ` (${personName(shop.createdBy)})` : ''}</dd>
             <dt>{t('Mahsulotlar')}</dt><dd>{shop._count.products}</dd>
             <dt>{t('Xizmatlar')}</dt><dd>{shop._count.services}</dd>
-            <dt>{t('Reyting')}</dt><dd>{Number(shop.ratingAvg).toFixed(1)} ({shop.ratingCount})</dd>
+            <dt>{t('Reyting')}</dt><dd>{formatRating(shop.ratingAvg)} ({shop.ratingCount})</dd>
           </dl>
           {shop.description && <p style={{ marginBottom: 0, whiteSpace: 'pre-line' }}>{shop.description}</p>}
         </section>

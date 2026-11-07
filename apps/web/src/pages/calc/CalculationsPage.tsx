@@ -11,7 +11,8 @@ import { calcService } from '@/features/calc/calc.service';
 import { kw, kwh, LIMITING, sumShort, SYSTEM_TYPE, years } from '@/features/calc/labels';
 import type { SavedCalculationRow } from '@/features/calc/types';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
@@ -85,6 +86,18 @@ export function CompareCalculationsPage() {
   const [params] = useSearchParams();
   const ids = (params.get('ids') ?? '').split(',').filter(Boolean);
   const compare = useQuery({ queryKey: ['calculations', 'compare', ids], queryFn: () => calcService.compare(ids), enabled: ids.length >= 2 });
+  if (ids.length < 2) {
+    return (
+      <div className="qs-page">
+        <EmptyState
+          icon={<BarChart3 size={28} />}
+          title={t('Solishtirish uchun kamida 2 ta hisob tanlang')}
+          description={t('«Hisoblarim» ro‘yxatida hisoblarni belgilab, «Solishtirish» tugmasini bosing.')}
+          action={<Link to="/mijoz/hisoblar" className="gm-button gm-button--primary gm-button--md">{t('Hisoblarimga o‘tish')}</Link>}
+        />
+      </div>
+    );
+  }
   if (compare.isLoading) return <PageLoader />;
   if (compare.isError || !compare.data) return <Alert tone="danger">{getErrorMessage(compare.error)}</Alert>;
   return (

@@ -12,7 +12,8 @@ import { i18nText, keySpecs, sum } from '@/features/catalog/format';
 import { PRICING_MODEL, SERVICE_TYPE, STOCK_STATUS, WEEKDAYS } from '@/features/shop/labels';
 import { getErrorMessage } from '@/lib/error-messages';
 import { regionName } from '@/lib/regions';
-import { cx, formatNumber } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatNumber, formatRating } from '@/lib/format';
 import { useAuthStore } from '@/store/auth.store';
 import { rememberReturnTo } from '@/lib/return-to';
 import { ShopLogo } from './ShopsPage';
@@ -76,7 +77,7 @@ export function ShopProfilePage() {
             <div className="qs-page__actions">
               <Badge tone="success"><BadgeCheck size={13} /> {t('Tasdiqlangan do‘kon')}</Badge>
               {(shop as { certifications?: Array<{ certType: keyof typeof CERT_TYPE; brand: string | null }> }).certifications?.map((c, i) => <Badge key={i} tone="primary"><BadgeCheck size={13} /> {CERT_TYPE[c.certType]}{c.brand ? ` · ${c.brand}` : ''}</Badge>)}
-              <span className="qs-rating"><Star size={14} aria-hidden="true" /> {Number(shop.ratingAvg).toFixed(1)} <small className="qs-muted">({t('{n} ta sharh', { n: shop.ratingCount })})</small></span>
+              <span className="qs-rating"><Star size={14} aria-hidden="true" /> {formatRating(shop.ratingAvg)} <small className="qs-muted">({t('{n} ta sharh', { n: shop.ratingCount })})</small></span>
               {open !== null && <span className={cx('qs-open', open ? 'is-open' : 'is-closed')}>{open ? t('Hozir ochiq') : t('Hozir yopiq')}</span>}
             </div>
           </div>

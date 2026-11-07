@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { formatDate, formatDateTime, formatRelativeTime, initials } from './utils';
+import { initials } from './utils';
+import { formatDate, formatDateTime, formatRelativeTime } from './format';
 
 describe('formatDateTime / formatDate (Toshkent vaqti, o‘zbekcha oy nomlari)', () => {
   it('formats a UTC instant in Asia/Tashkent (UTC+5)', () => {

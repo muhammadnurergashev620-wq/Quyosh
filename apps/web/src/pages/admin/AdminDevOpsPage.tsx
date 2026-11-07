@@ -8,7 +8,8 @@ import { Badge } from '@/components/ui/Badge';
 import type { BadgeTone } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDateTime, formatNumber } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDateTime, formatDecimal, formatNumber } from '@/lib/format';
 import { useDevOps } from '@/features/admin/hooks/useAdmin';
 import { OpenStreetMapIcon, OsrmIcon, TelegramIcon, YandexMapsIcon } from '@/features/admin/components/BrandIcons';
 import { Sparkline, TrafficChart } from '@/features/admin/components/DevOpsCharts';
@@ -178,7 +179,7 @@ export function AdminDevOpsPage() {
               label={t('Xotira (RAM)')}
               level={usageLevel(data.system.usedMemPercent)}
               value={`${data.system.usedMemPercent}%`}
-              sub={`${((data.system.totalMemMB - data.system.freeMemMB) / 1024).toFixed(2)} GB / ${(data.system.totalMemMB / 1024).toFixed(2)} GB`}
+              sub={`${formatDecimal((data.system.totalMemMB - data.system.freeMemMB) / 1024, 2)} GB / ${formatDecimal(data.system.totalMemMB / 1024, 2)} GB`}
             >
               <Sparkline values={data.history.map((p) => p.mem)} tone={LEVEL_SPARK[usageLevel(data.system.usedMemPercent)]} max={100} />
             </Kpi>

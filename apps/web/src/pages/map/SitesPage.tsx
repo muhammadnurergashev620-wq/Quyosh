@@ -17,7 +17,7 @@ import { mapService, type SiteType } from '@/features/map/map.service';
 import { SITE_TYPE } from '@/features/map/labels';
 import { getErrorMessage } from '@/lib/error-messages';
 import { regionName } from '@/lib/regions';
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from '@/lib/format';
 import { lang, t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/map/map.css';

@@ -12,7 +12,8 @@ import { dealsService } from '@/features/deals/deals.service';
 import { num } from '@/features/deals/labels';
 import { useCurrentShop } from '@/features/shop/current-shop';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatRating } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
@@ -35,7 +36,7 @@ export function ShopReviewsPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Sharhlar')}</h1><p>{t('Faqat tasdiqlangan montajlardan keyingi sharhlar. Moderatsiyadagilar bu yerda ko‘rinmaydi.')}</p></div></div>
       <div className="qs-grid-3">
-        <div className="qs-card"><h2>{t('Reyting')}</h2><p className="qs-quote-card__total" style={{ margin: 0 }}>{avg.toFixed(1)} <Star size={20} fill="currentColor" color="var(--qs-color-accent)" /></p><small className="qs-muted">{t('{n} ta tasdiqlangan montaj asosida', { n: total })}</small></div>
+        <div className="qs-card"><h2>{t('Reyting')}</h2><p className="qs-quote-card__total" style={{ margin: 0 }}>{formatRating(avg)} <Star size={20} fill="currentColor" color="var(--qs-color-accent)" /></p><small className="qs-muted">{t('{n} ta tasdiqlangan montaj asosida', { n: total })}</small></div>
         <div className="qs-card" style={{ gridColumn: 'span 2' }}>
           <h2>{t('Taqsimot')}</h2>
           {dist.map((d) => (
@@ -97,7 +98,7 @@ export function FavoritesPage() {
             {!shops.length && <p className="qs-muted">—</p>}
             {shops.map((f) => (
               <div key={f.id} className="qs-pick">
-                <div><Link to={`/mijoz/dokonlar/${f.shop!.slug}`}><strong>{f.shop!.name}</strong></Link><small><Star size={12} /> {num(f.shop!.ratingAvg).toFixed(1)} ({f.shop!.ratingCount})</small></div>
+                <div><Link to={`/mijoz/dokonlar/${f.shop!.slug}`}><strong>{f.shop!.name}</strong></Link><small><Star size={12} /> {formatRating(f.shop!.ratingAvg)} ({f.shop!.ratingCount})</small></div>
                 <div className="qs-page__actions">
                   <Link className="gm-button gm-button--secondary gm-button--sm" to={`/mijoz/sorovlar?yangi=1&dokon=${f.shop!.id}`}>{t('Taklif so‘rash')}</Link>
                   <Button size="sm" variant="ghost" aria-label={t('Sevimlilardan olib tashlash')} onClick={() => remove.mutate({ shopId: f.shop!.id })}><Heart size={15} fill="currentColor" /></Button>
@@ -145,7 +146,7 @@ export function PublicShopReviews({ slug, shopName }: { slug: string; shopName: 
   const d = data.data;
   return (
     <section className="qs-card">
-      <header><h2>{t('Sharhlar')}</h2><span className="qs-muted">{num(d.ratingAvg).toFixed(1)} ★ · {t('{n} ta tasdiqlangan montaj asosida', { n: d.ratingCount })}</span></header>
+      <header><h2>{t('Sharhlar')}</h2><span className="qs-muted">{formatRating(d.ratingAvg)} ★ · {t('{n} ta tasdiqlangan montaj asosida', { n: d.ratingCount })}</span></header>
       {d.items.map((r) => (
         <div key={r.id} className="qs-review">
           <div className="qs-page__actions"><Stars value={r.rating} /><strong>{r.author ?? t('Mijoz')}</strong><small className="qs-muted">{formatDate(r.createdAt)}{r.systemPowerKw ? ` · ${num(r.systemPowerKw)} ${t('kVt')}` : ''}</small></div>

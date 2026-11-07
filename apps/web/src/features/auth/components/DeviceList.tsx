@@ -11,7 +11,7 @@ import { getErrorMessage } from '@/lib/error-messages';
 import { PANEL_LABEL } from '@/lib/panel';
 import { describeDevice } from '@/lib/user-agent';
 import type { DeviceKind } from '@/lib/user-agent';
-import { formatDateTime, formatRelativeTime } from '@/lib/utils';
+import { formatDateTime, formatRelativeTime } from '@/lib/format';
 import type { Role } from '@/types/common';
 import { useRevokeOtherSessions, useRevokeSession, useSessions } from '../hooks/useAuth';
 import { t } from '@/i18n';

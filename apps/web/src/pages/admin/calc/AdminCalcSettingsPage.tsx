@@ -12,7 +12,8 @@ import { PageLoader } from '@/components/common/PageLoader';
 import { adminCalcService, PUBLISH_STATUS, type CustomerType, type FinancingProduct } from '@/features/admin/calc/service';
 import { getErrorMessage } from '@/lib/error-messages';
 import { REGIONS } from '@/lib/regions';
-import { cx, formatDate, formatDateTime, formatNumber } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatDateTime, formatNumber, formatPercent } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
@@ -123,9 +124,9 @@ function FinancingTab() {
             {list.data?.map((product) => (
               <tr key={product.id}>
                 <td><div className="qs-cell-title"><strong>{product.providerName}</strong><small>{product.paymentType === 'ANNUITY' ? t('Annuitet') : t('Differensial')} · v{product.version}</small></div></td>
-                <td className="qs-num">{(Number(product.annualRate) * 100).toFixed(1)} %</td>
+                <td className="qs-num">{formatPercent(Number(product.annualRate), 1)}</td>
                 <td className="qs-num">{product.allowedTerms.length ? product.allowedTerms.join(', ') : `${product.minTermMonths}–${product.maxTermMonths}`} {t('oy')}</td>
-                <td className="qs-num">{(Number(product.minDownPaymentPct) * 100).toFixed(0)} %</td>
+                <td className="qs-num">{formatPercent(Number(product.minDownPaymentPct), 0)}</td>
                 <td><Badge tone={PUBLISH_STATUS[product.status].tone}>{PUBLISH_STATUS[product.status].label}</Badge></td>
                 <td className="qs-right">
                   <span className="qs-page__actions" style={{ justifyContent: 'flex-end' }}>

@@ -19,7 +19,8 @@ import { useCurrentShop } from '@/features/shop/current-shop';
 import { useShopMembers } from '@/features/shop/hooks';
 import { REGIONS } from '@/lib/regions';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDateTime, formatRelativeTime } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDateTime, formatNumber, formatRelativeTime } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
@@ -217,7 +218,7 @@ export function ShopRequestDetailPage() {
             <dl className="qs-dl">
               <div><dt>{t('Tizim')}</dt><dd>{SYSTEM_TYPE[r.systemType].title}{r.requiredCapacityKw ? ` · ${kw(num(r.requiredCapacityKw))}` : ''}</dd></div>
               <div><dt>{t('Ehtiyojlar')}</dt><dd>{[r.batteryNeeded && t('akkumulyator'), r.installationNeeded && t('montaj'), r.financingInterest && t('kredit')].filter(Boolean).join(', ') || '—'}</dd></div>
-              {c?.annualLoadKwh != null && <div><dt>{t('Yillik iste’mol')}</dt><dd>{Math.round(c.annualLoadKwh).toLocaleString('ru-RU')} kWh</dd></div>}
+              {c?.annualLoadKwh != null && <div><dt>{t('Yillik iste’mol')}</dt><dd>{formatNumber(Math.round(c.annualLoadKwh))} kWh</dd></div>}
               {(c?.usableAreaM2 ?? l.site?.usableAreaM2) ? <div><dt>{t('Foydali maydon')}</dt><dd>{Math.round(num(c?.usableAreaM2 ?? l.site?.usableAreaM2))} m²</dd></div> : null}
               {c?.systemPowerKw != null && <div><dt>{t('Hisob: quvvat')}</dt><dd>{kw(c.systemPowerKw)}{c.batteryKwh ? ` · ${c.batteryKwh} kWh` : ''}</dd></div>}
               {c?.initialCost != null && <div><dt>{t('Hisob: taxminiy narx')}</dt><dd>{sum(c.initialCost)}</dd></div>}

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/Button';
 import { useMe } from '@/features/session/hooks/useMe';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/format';
 import { t } from '@/i18n';
 import { m7Service } from './m7.service';
 import './m7.css';

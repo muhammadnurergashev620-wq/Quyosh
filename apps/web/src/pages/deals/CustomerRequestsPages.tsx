@@ -18,7 +18,8 @@ import { RequestWizard } from '@/features/deals/components/RequestWizard';
 import { publicShopsService } from '@/features/catalog/public-shops.service';
 import type { CompareRow, QuoteRequestDetail } from '@/features/deals/types';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate, formatDateTime } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatDateTime, formatDecimal, formatNumber, formatRating } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
@@ -86,7 +87,7 @@ function AddShopsModal({ request, open, onClose, onDone }: { request: QuoteReque
             const on = picked.includes(s.id);
             return (
               <div key={s.id} className={cx('qs-pick', on && 'is-on')}>
-                <div><strong>{s.name}</strong><small><Star size={12} /> {num(s.ratingAvg).toFixed(1)} ({s.ratingCount})</small></div>
+                <div><strong>{s.name}</strong><small><Star size={12} /> {formatRating(s.ratingAvg)} ({s.ratingCount})</small></div>
                 <Button size="sm" variant={on ? 'secondary' : 'primary'} disabled={!on && picked.length >= room} onClick={() => setPicked((cur) => (on ? cur.filter((x) => x !== s.id) : [...cur, s.id]))}>{on ? t('Olib tashlash') : t('Tanlash')}</Button>
               </div>
             );
@@ -132,7 +133,7 @@ export function CustomerRequestDetailPage() {
           <header><h2>{t('Hisob xulosasi')}</h2><Link to={`/mijoz/natija/${r.calculation.id}`}>{t('Hisobni ochish')}</Link></header>
           <dl className="qs-quote-card__facts">
             {r.calculation.brief.systemPowerKw != null && <div><dt>{t('Quvvat')}</dt><dd>{kw(r.calculation.brief.systemPowerKw)}</dd></div>}
-            {r.calculation.brief.annualGenerationKwh != null && <div><dt>{t('Yillik ishlab chiqarish')}</dt><dd>{Math.round(r.calculation.brief.annualGenerationKwh).toLocaleString('ru-RU')} kWh</dd></div>}
+            {r.calculation.brief.annualGenerationKwh != null && <div><dt>{t('Yillik ishlab chiqarish')}</dt><dd>{formatNumber(Math.round(r.calculation.brief.annualGenerationKwh))} kWh</dd></div>}
             {r.calculation.brief.initialCost != null && <div><dt>{t('Taxminiy narx')}</dt><dd>{sumShort(r.calculation.brief.initialCost)}</dd></div>}
             {r.calculation.brief.simplePaybackYears != null && <div><dt>{t('O‘zini oqlash')}</dt><dd>{years(r.calculation.brief.simplePaybackYears)}</dd></div>}
           </dl>
@@ -149,7 +150,7 @@ export function CustomerRequestDetailPage() {
                 <Badge tone={SHOP_REPLY_STATUS[s.status].tone}>{SHOP_REPLY_STATUS[s.status].label}</Badge>
                 {s.contactRevealedAt && <Badge tone="neutral">{t('Kontakt ochilgan · {d}', { d: formatDate(s.contactRevealedAt) })}</Badge>}
               </div>
-              <small className="qs-muted"><Star size={12} /> {num(s.shop.ratingAvg).toFixed(1)} ({s.shop.ratingCount}){responseTime(s.shop.avgResponseMinutes) ? ` · ${responseTime(s.shop.avgResponseMinutes)}` : ''}</small>
+              <small className="qs-muted"><Star size={12} /> {formatRating(s.shop.ratingAvg)} ({s.shop.ratingCount}){responseTime(s.shop.avgResponseMinutes) ? ` · ${responseTime(s.shop.avgResponseMinutes)}` : ''}</small>
               {s.declineReason && <small>{t('Rad etish sababi')}: {s.declineReason}</small>}
               {s.quote && (
                 <div className={cx('qs-quote-card', s.quote.status === 'EXPIRED' && 'is-expired')}>
@@ -275,12 +276,12 @@ export function CustomerQuotePage() {
 }
 
 const GROUPS: Array<{ title: string; rows: Array<[string, (q: CompareRow) => string]> }> = [
-  { title: t('Narx'), rows: [[t('Jami'), (q) => sum(num(q.total))], [t('1 kVt narxi'), (q) => (q.pricePerKw ? sumShort(q.pricePerKw) : '—')], [t('Chegirma'), (q) => (num(q.discountAmount) ? sumShort(num(q.discountAmount)) : '—')], [t('O‘zini oqlash'), (q) => (q.paybackRange ? t('{a}–{b} yil', { a: q.paybackRange[0].toLocaleString('ru-RU'), b: q.paybackRange[1].toLocaleString('ru-RU') }) : '—')]] },
+  { title: t('Narx'), rows: [[t('Jami'), (q) => sum(num(q.total))], [t('1 kVt narxi'), (q) => (q.pricePerKw ? sumShort(q.pricePerKw) : '—')], [t('Chegirma'), (q) => (num(q.discountAmount) ? sumShort(num(q.discountAmount)) : '—')], [t('O‘zini oqlash'), (q) => (q.paybackRange ? t('{a}–{b} yil', { a: formatDecimal(q.paybackRange[0], 1), b: formatDecimal(q.paybackRange[1], 1) }) : '—')]] },
   { title: t('Uskuna'), rows: [[t('Quvvat'), (q) => (q.systemPowerKw ? kw(num(q.systemPowerKw)) : '—')], [t('Tarkib'), (q) => q.items.filter((i) => i.itemType === 'EQUIPMENT').map((i) => `${i.titleSnapshot} × ${num(i.quantity)}`).join('; ') || '—']] },
   { title: t('Montaj va muddat'), rows: [[t('Montaj'), (q) => sumShort(num(q.installationSubtotal))], [t('Muddat'), (q) => days(q.durationDays)], [t('Amal qiladi'), (q) => formatDate(q.validUntil)]] },
   { title: t('Kafolat'), rows: [[t('Uskuna'), (q) => months(q.warrantyEquipmentMonths)], [t('Montaj'), (q) => months(q.warrantyInstallationMonths)]] },
   { title: t('Moliyalashtirish'), rows: [[t('Variant'), (q) => q.financingOptions.map((f) => `${f.providerName}${f.monthlyPayment ? `: ${sumShort(f.monthlyPayment)}/${t('oy')}` : ''}`).join('; ') || '—']] },
-  { title: t('Do‘kon'), rows: [[t('Reyting'), (q) => `${num(q.shop.ratingAvg).toFixed(1)} (${q.shop.ratingCount})`], [t('Javob tezligi'), (q) => responseTime(q.shop.avgResponseMinutes) ?? '—']] },
+  { title: t('Do‘kon'), rows: [[t('Reyting'), (q) => `${formatRating(q.shop.ratingAvg)} (${q.shop.ratingCount})`], [t('Javob tezligi'), (q) => responseTime(q.shop.avgResponseMinutes) ?? '—']] },
 ];
 
 /** U9.6: takliflarni solishtirish — belgilar faqat haqiqiy taqqoslashdan, "Faqat farqlar" mobilda default. */

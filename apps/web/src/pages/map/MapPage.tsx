@@ -17,6 +17,7 @@ import { cx } from '@/lib/utils';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
+import { formatNumber, formatRating } from '@/lib/format';
 
 /** U7.3: do‘konlar xaritasi — viewport bo‘yicha server klasterlari/markerlar, nuqtaga xizmat ko‘rsatadiganlar ro‘yxati. */
 export function MapPage() {
@@ -105,7 +106,7 @@ export function MapPage() {
               </header>
               {card.data && (
                 <>
-                  <span className="qs-rating"><Star size={14} aria-hidden="true" /> {Number(card.data.ratingAvg).toFixed(1)} <small className="qs-muted">({card.data.ratingCount})</small></span>
+                  <span className="qs-rating"><Star size={14} aria-hidden="true" /> {formatRating(card.data.ratingAvg)} <small className="qs-muted">({card.data.ratingCount})</small></span>
                   <small className="qs-muted">{card.data.serviceTypes.map((type) => SERVICE_TYPE[type]).join(' · ')}</small>
                   {card.data.branches[0] && <small><MapPin size={12} aria-hidden="true" /> {card.data.branches[0].address}</small>}
                   <Link className="gm-button gm-button--primary gm-button--sm" to={`/mijoz/dokonlar/${card.data.slug}`}>{t('Do‘kon sahifasi')}</Link>
@@ -126,7 +127,7 @@ export function MapPage() {
             <ul className="qs-list">
               {serving.data.map((shop) => (
                 <li key={shop.id}>
-                  <div><Link to={`/mijoz/dokonlar/${shop.slug}`}><strong>{shop.name}</strong></Link><small>{t('{km} km', { km: shop.distanceKm.toLocaleString('ru-RU') })} · ★ {Number(shop.ratingAvg).toFixed(1)}</small></div>
+                  <div><Link to={`/mijoz/dokonlar/${shop.slug}`}><strong>{shop.name}</strong></Link><small>{t('{km} km', { km: formatNumber(shop.distanceKm) })} · ★ {formatRating(shop.ratingAvg)}</small></div>
                 </li>
               ))}
             </ul>

@@ -16,14 +16,15 @@ import { m7Service } from '@/features/m7/m7.service';
 import type { Reminder, SystemDetail } from '@/features/m7/types';
 import { useMe } from '@/features/session/hooks/useMe';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatDate } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatDate, formatNumber } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
 import '@/features/m7/m7.css';
 
 const REMINDER_LABEL: Record<Reminder['type'], string> = { CLEANING: t('Panellarni tozalash'), INSPECTION: t('Yillik ko‘rik'), WARRANTY_EXPIRY: t('Kafolat tugashi') };
-const n0 = (v: number) => Math.round(v).toLocaleString('ru-RU');
+const n0 = (v: number) => formatNumber(Math.round(v));
 const pct = (v: number) => `${v > 0 ? '+' : ''}${Math.round(v * 100)} %`;
 
 /** U10.1: mijoz bosh paneli — avval kutilayotgan amallar. */

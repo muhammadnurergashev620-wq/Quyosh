@@ -8,7 +8,8 @@ import { useGeoJsonLayer, usePointPicker, usePolygonEditor } from '@/features/ma
 import { ringAreaM2, selfIntersects, toPolygon, type LngLat } from '@/features/map/geometry';
 import { mapService } from '@/features/map/map.service';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx, formatNumber } from '@/lib/utils';
+import { cx } from '@/lib/utils';
+import { formatNumber } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import type { Branch } from '../types';
 import { t } from '@/i18n';
