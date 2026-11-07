@@ -3340,4 +3340,9 @@ export const en: Record<string, string> = {
   "yangi model taklif qildi": "proposed a new model",
   "Oylik tejash (ixtiyoriy)": "Monthly saving (optional)",
   "So‘rov va montaj": "Requests and installation",
+  "Internet aloqasini tekshirib, qayta urinib ko‘ring.": "Check your internet connection and try again.",
+  "Ma’lumot hali yo‘q": "No data yet",
+  "Ma’lumotni yuklab bo‘lmadi": "Couldn’t load the data",
+  "Qidirish…": "Search…",
+  "Sahifa yo‘li": "Breadcrumb",
 };

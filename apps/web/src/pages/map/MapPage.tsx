@@ -13,11 +13,11 @@ import { inUzbekistan, type LngLat } from '@/features/map/geometry';
 import { SERVICE_TYPE } from '@/features/shop/labels';
 import type { ServiceType } from '@/features/shop/types';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
 import { formatNumber, formatRating } from '@/lib/format';
+import { Chip } from '@/components/ui/Chip';
 
 /** U7.3: do‘konlar xaritasi — viewport bo‘yicha server klasterlari/markerlar, nuqtaga xizmat ko‘rsatadiganlar ro‘yxati. */
 export function MapPage() {
@@ -90,9 +90,9 @@ export function MapPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Do‘konlar xaritasi')}</h1><p>{t('Yaqin do‘konlar va ularning xizmat hududlari.')}</p></div></div>
       <div className="qs-chips">
-        <button type="button" className={cx('qs-chip', !serviceType && 'is-on')} onClick={() => setServiceType('')}>{t('Barcha xizmatlar')}</button>
+        <Chip onClick={() => setServiceType('')} selected={!serviceType}>{t('Barcha xizmatlar')}</Chip>
         {(Object.keys(SERVICE_TYPE) as ServiceType[]).map((type) => (
-          <button key={type} type="button" className={cx('qs-chip', serviceType === type && 'is-on')} onClick={() => setServiceType(type)}>{SERVICE_TYPE[type]}</button>
+          <Chip key={type} onClick={() => setServiceType(type)} selected={serviceType === type}>{SERVICE_TYPE[type]}</Chip>
         ))}
       </div>
       {error ? <Alert tone="danger">{getErrorMessage(error)}</Alert> : null}

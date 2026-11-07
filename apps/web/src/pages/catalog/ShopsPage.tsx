@@ -12,12 +12,13 @@ import { SERVICE_TYPE } from '@/features/shop/labels';
 import type { ServiceType } from '@/features/shop/types';
 import { getErrorMessage } from '@/lib/error-messages';
 import { REGIONS, regionName } from '@/lib/regions';
-import { cx } from '@/lib/utils';
 import { t } from '@/i18n';
 import { CERT_TYPE } from '@/pages/m7/cert-labels';
 import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
 import { formatRating } from '@/lib/format';
+import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Chip } from '@/components/ui/Chip';
 
 export function ShopLogo({ name }: { name: string }) {
   return <span className="qs-shopcard__logo" aria-hidden="true">{name.trim().charAt(0).toUpperCase()}</span>;
@@ -36,10 +37,10 @@ function ShopCard({ shop }: { shop: PublicShopCard }) {
       </header>
       {shop.description && <p>{shop.description}</p>}
       {regions.length > 0 && <small className="qs-muted"><MapPin size={13} aria-hidden="true" /> {regions.join(', ')}</small>}
-      {!!shop.certifications?.length && <div className="qs-chips">{shop.certifications.map((c, i) => <span key={i} className="qs-chip is-on" style={{ cursor: 'default', minHeight: 26 }}><BadgeCheck size={12} /> {CERT_TYPE[c.certType]}{c.brand ? ` · ${c.brand}` : ''}</span>)}</div>}
+      {!!shop.certifications?.length && <div className="qs-chips">{shop.certifications.map((c, i) => <Chip key={i} selected><BadgeCheck size={12} /> {CERT_TYPE[c.certType]}{c.brand ? ` · ${c.brand}` : ''}</Chip>)}</div>}
       <div className="qs-chips">
-        {shop.serviceTypes.slice(0, 4).map((type) => <span key={type} className="qs-chip" style={{ cursor: 'default', minHeight: 26 }}>{SERVICE_TYPE[type]}</span>)}
-        {shop.productCount > 0 && <span className="qs-chip" style={{ cursor: 'default', minHeight: 26 }}>{t('{n} ta mahsulot', { n: shop.productCount })}</span>}
+        {shop.serviceTypes.slice(0, 4).map((type) => <Chip key={type}>{SERVICE_TYPE[type]}</Chip>)}
+        {shop.productCount > 0 && <Chip>{t('{n} ta mahsulot', { n: shop.productCount })}</Chip>}
       </div>
     </Link>
   );
@@ -70,24 +71,24 @@ export function ShopsPage() {
       <div className="qs-page__head"><div><h1>{t('Do‘konlar')}</h1><p>{t('Tasdiqlangan sotuvchi va montajchilar.')}</p></div></div>
       <div className="qs-toolbar">
         <Input label={t('Qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('Do‘kon nomi')} />
-        <select className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}>
+        <SelectMenu className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}>
           <option value="">{t('Barcha hududlar')}</option>
           {REGIONS.map((item) => <option key={item.code} value={item.code}>{item.name}</option>)}
-        </select>
-        <select className="qs-select" aria-label={t('Sertifikat')} value={cert} onChange={(e) => setCert(e.target.value)}>
+        </SelectMenu>
+        <SelectMenu className="qs-select" aria-label={t('Sertifikat')} value={cert} onChange={(e) => setCert(e.target.value)}>
           <option value="">{t('Barcha do‘konlar')}</option>
           {Object.entries(CERT_TYPE).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-        </select>
-        <select className="qs-select" aria-label={t('Saralash')} value={sort} onChange={(e) => setSort(e.target.value)}>
+        </SelectMenu>
+        <SelectMenu className="qs-select" aria-label={t('Saralash')} value={sort} onChange={(e) => setSort(e.target.value)}>
           <option value="rating">{t('Reyting bo‘yicha')}</option>
           <option value="new">{t('Yangilari')}</option>
           <option value="name">{t('Nomi bo‘yicha')}</option>
-        </select>
+        </SelectMenu>
       </div>
       <div className="qs-chips">
-        <button type="button" className={cx('qs-chip', !service && 'is-on')} onClick={() => setService('')}>{t('Barcha xizmatlar')}</button>
+        <Chip onClick={() => setService('')} selected={!service}>{t('Barcha xizmatlar')}</Chip>
         {(Object.keys(SERVICE_TYPE) as ServiceType[]).map((type) => (
-          <button key={type} type="button" className={cx('qs-chip', service === type && 'is-on')} onClick={() => setService(type)}>{SERVICE_TYPE[type]}</button>
+          <Chip key={type} onClick={() => setService(type)} selected={service === type}>{SERVICE_TYPE[type]}</Chip>
         ))}
       </div>
       {list.isLoading ? <PageLoader /> : list.isError ? <Alert tone="danger">{getErrorMessage(list.error)}</Alert> : !shops.length ? (

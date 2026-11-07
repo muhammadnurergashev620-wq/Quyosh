@@ -3,7 +3,6 @@ import type { FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Copy, ExternalLink, Plus, Trash2 } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
@@ -19,6 +18,10 @@ import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import { safeExternalUrl } from '@/lib/return-to';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Chip } from '@/components/ui/Chip';
+import { TabBar } from '@/components/ui/Tabs';
 
 const CUSTOMER_TYPE: Record<CustomerType, string> = { HOUSEHOLD: t('Maishiy'), LEGAL: t('Yuridik') };
 const COMPENSATION: Record<string, string> = { NONE: t('Kompensatsiya yo‘q'), NET_METERING: t('Net metering'), NET_BILLING: t('Net billing'), FEED_IN: t('Feed-in tarif') };
@@ -97,7 +100,7 @@ function TariffForm({ initial, onDone }: { initial?: Tariff; onDone: () => void 
             {tiers.map((row, index) => (
               <tr key={index}>
                 <td><input className="qs-input-sm" style={{ width: 120 }} aria-label={t('Oylar')} value={row.seasonMonths} placeholder="6,7,8" onChange={(e) => setTier(index, { seasonMonths: e.target.value })} /></td>
-                {tou && <td><select className="qs-select" aria-label={t('Davr')} value={row.touPeriod === 'ALL' ? 'DAY' : row.touPeriod} onChange={(e) => setTier(index, { touPeriod: e.target.value as TouPeriodType })}><option value="DAY">{TOU.DAY}</option><option value="NIGHT">{TOU.NIGHT}</option></select></td>}
+                {tou && <td><SelectMenu className="qs-select" aria-label={t('Davr')} value={row.touPeriod === 'ALL' ? 'DAY' : row.touPeriod} onChange={(e) => setTier(index, { touPeriod: e.target.value as TouPeriodType })}><option value="DAY">{TOU.DAY}</option><option value="NIGHT">{TOU.NIGHT}</option></SelectMenu></td>}
                 <td><input className="qs-input-sm" style={{ width: 100 }} aria-label={t('dan')} inputMode="decimal" value={row.minKwh} onChange={(e) => setTier(index, { minKwh: e.target.value })} /></td>
                 <td><input className="qs-input-sm" style={{ width: 100 }} aria-label={t('gacha')} inputMode="decimal" value={row.maxKwh} placeholder="∞" onChange={(e) => setTier(index, { maxKwh: e.target.value })} /></td>
                 <td><input className="qs-input-sm" style={{ width: 120 }} aria-label={t('Stavka')} inputMode="decimal" value={row.ratePerKwh} onChange={(e) => setTier(index, { ratePerKwh: e.target.value })} /></td>
@@ -136,13 +139,13 @@ function TariffsTab() {
   return (
     <>
       <div className="qs-toolbar">
-        <select className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}>
+        <SelectMenu className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}>
           <option value="">{t('Barcha hududlar')}</option>
           {REGIONS.map((item) => <option key={item.code} value={item.code}>{item.name}</option>)}
-        </select>
+        </SelectMenu>
         <div className="qs-chips">
           {(['', 'PUBLISHED', 'DRAFT', 'ARCHIVED'] as const).map((value) => (
-            <button key={value || 'all'} type="button" className={cx('qs-chip', status === value && 'is-on')} onClick={() => setStatus(value)}>{value ? PUBLISH_STATUS[value].label : t('Hammasi')}</button>
+            <Chip key={value || 'all'} onClick={() => setStatus(value)} selected={status === value}>{value ? PUBLISH_STATUS[value].label : t('Hammasi')}</Chip>
           ))}
         </div>
         <Button style={{ marginLeft: 'auto' }} onClick={() => setEditing('new')}><Plus size={16} /> {t('Tarif qo‘shish')}</Button>
@@ -168,7 +171,7 @@ function TariffsTab() {
                     ))}
                   </td>
                   <td>{formatDate(tariff.effectiveFrom)} — {tariff.effectiveUntil ? formatDate(tariff.effectiveUntil) : '∞'}</td>
-                  <td><Badge tone={PUBLISH_STATUS[tariff.status].tone}>{PUBLISH_STATUS[tariff.status].label}</Badge></td>
+                  <td><StatusBadge map={PUBLISH_STATUS} status={tariff.status} /></td>
                   <td className="qs-right">
                     <span className="qs-page__actions" style={{ justifyContent: 'flex-end' }}>
                       {tariff.status === 'DRAFT' && <Button size="sm" variant="secondary" onClick={() => setEditing(tariff)}>{t('Tahrirlash')}</Button>}
@@ -227,7 +230,7 @@ function ExportRulesTab() {
           {rules.data?.map((rule) => (
             <li key={rule.id}>
               <div><strong>{COMPENSATION[rule.compensationType]}</strong><small>{regionName(rule.regionCode)} · {CUSTOMER_TYPE[rule.customerType]} · {formatDate(rule.effectiveFrom)}{rule.ratePerKwh ? ` · ${formatNumber(Number(rule.ratePerKwh))} so‘m/kWh` : ''}</small></div>
-              <Badge tone={PUBLISH_STATUS[rule.status].tone}>{PUBLISH_STATUS[rule.status].label}</Badge>
+              <StatusBadge map={PUBLISH_STATUS} status={rule.status} />
               {rule.status === 'DRAFT' && <Button size="sm" onClick={() => run.mutate(() => adminCalcService.publishExportRule(rule.id))}>{t('Tasdiqlash')}</Button>}
               {rule.status === 'PUBLISHED' && <Button size="sm" variant="ghost" onClick={() => run.mutate(() => adminCalcService.archiveExportRule(rule.id))}>{t('Arxivlash')}</Button>}
             </li>
@@ -253,7 +256,7 @@ function ExportRulesTab() {
           {limits.data?.map((row) => (
             <li key={row.id}>
               <div><strong>{formatNumber(Number(row.maxKw))} kW</strong><small>{regionName(row.regionCode)} · {CUSTOMER_TYPE[row.customerType]} · {formatDate(row.effectiveFrom)}</small></div>
-              <Badge tone={PUBLISH_STATUS[row.status].tone}>{PUBLISH_STATUS[row.status].label}</Badge>
+              <StatusBadge map={PUBLISH_STATUS} status={row.status} />
               {row.status !== 'ARCHIVED' && <Button size="sm" variant="ghost" onClick={() => run.mutate(() => adminCalcService.archiveGridLimit(row.id))}>{t('Arxivlash')}</Button>}
             </li>
           ))}
@@ -269,10 +272,10 @@ export function AdminTariffsPage() {
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Tariflar')}</h1><p>{t('Elektr tariflari, eksport kompensatsiyasi va ulanish limitlari — versiyalangan, rasmiy manba bilan.')}</p></div></div>
-      <div className="qs-tabs" role="tablist">
+      <TabBar variant="tabs" role="tablist">
         <button type="button" role="tab" aria-selected={tab === 'tariffs'} className={cx(tab === 'tariffs' && 'is-on')} onClick={() => setTab('tariffs')}>{t('Tariflar')}</button>
         <button type="button" role="tab" aria-selected={tab === 'export'} className={cx(tab === 'export' && 'is-on')} onClick={() => setTab('export')}>{t('Eksport va limitlar')}</button>
-      </div>
+      </TabBar>
       {tab === 'tariffs' ? <TariffsTab /> : <ExportRulesTab />}
     </div>
   );

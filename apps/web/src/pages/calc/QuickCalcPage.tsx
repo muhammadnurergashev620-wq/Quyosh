@@ -26,6 +26,7 @@ import { track } from '@/features/m7/track';
 import '@/features/shop/shop.css';
 import '@/features/map/map.css';
 import '@/features/calc/calc.css';
+import { TabBar } from '@/components/ui/Tabs';
 
 type ConsumptionMode = 'kwh' | 'bill';
 
@@ -133,10 +134,10 @@ export function QuickCalcPage() {
               </Alert>
             ) : (
               <>
-                <div className="qs-segment" role="group" aria-label={t('Kiritish turi')}>
+                <TabBar variant="segmented" role="group" aria-label={t('Kiritish turi')}>
                   <button type="button" className={cx(state.mode === 'bill' && 'is-on')} disabled={tariffMissing} onClick={() => commit({ mode: 'bill', value: '' })}>{t('Oylik to‘lov, so‘m')}</button>
                   <button type="button" className={cx(state.mode === 'kwh' && 'is-on')} onClick={() => commit({ mode: 'kwh', value: '' })}>{t('Oylik sarf, kWh')}</button>
-                </div>
+                </TabBar>
                 <Input
                   label={state.mode === 'kwh' ? t('O‘rtacha oylik sarf, kWh') : t('O‘rtacha oylik to‘lov, so‘m')}
                   inputMode="numeric"

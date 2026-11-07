@@ -20,6 +20,7 @@ import '@/features/admin/list-shared.css';
 import './AdminUsersPage.css';
 import './AdminErrorsPage.css';
 import { t } from '@/i18n';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 const isoDay = (offset: number) => new Date(Date.now() - offset * 86_400_000).toISOString().slice(0, 10);
 const dayStart = (value: string) => (value ? new Date(`${value}T00:00:00`).toISOString() : undefined);
@@ -273,27 +274,27 @@ export function AdminErrorsPage() {
           </label>
           <label className="gm-ul__select">
             <span>{t('Jiddiylik')}</span>
-            <select value={severity} onChange={(event) => setSeverity(event.target.value as '' | 'ERROR' | 'WARNING')}>
+            <SelectMenu value={severity} onChange={(event) => setSeverity(event.target.value as '' | 'ERROR' | 'WARNING')}>
               <option value="">{t('Barchasi')}</option>
               <option value="ERROR">{t('Jiddiy')}</option>
               <option value="WARNING">{t('Ogohlantirish')}</option>
-            </select>
+            </SelectMenu>
           </label>
           <label className="gm-ul__select">
             <span>{t('Holat')}</span>
-            <select value={state} onChange={(event) => setState(event.target.value as '' | 'open' | 'resolved')}>
+            <SelectMenu value={state} onChange={(event) => setState(event.target.value as '' | 'open' | 'resolved')}>
               <option value="">{t('Barchasi')}</option>
               <option value="open">{t('Hal qilinmagan')}</option>
               <option value="resolved">{t('Yechilgan')}</option>
-            </select>
+            </SelectMenu>
           </label>
           <label className="gm-ul__select">
             <span>{t('Manba')}</span>
-            <select value={source} onChange={(event) => setSource(event.target.value as '' | 'SERVER' | 'CLIENT')}>
+            <SelectMenu value={source} onChange={(event) => setSource(event.target.value as '' | 'SERVER' | 'CLIENT')}>
               <option value="">{t('Barchasi')}</option>
               <option value="SERVER">{t('Server')}</option>
               <option value="CLIENT">{t('Veb / ilova')}</option>
-            </select>
+            </SelectMenu>
           </label>
           <Button variant="ghost" onClick={reset} disabled={!dirty}>
             <RotateCcw size={15} aria-hidden="true" /> {t('Tozalash')}
@@ -390,9 +391,9 @@ export function AdminErrorsPage() {
                 ),
               )}
               <button type="button" onClick={() => setPage(page + 1)} disabled={page >= data.pages} aria-label={t('Keyingi sahifa')}><ChevronRight size={16} /></button>
-              <select className="gm-adm2__size" value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} aria-label={t('Sahifadagi soni')}>
+              <SelectMenu className="gm-adm2__size" value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} aria-label={t('Sahifadagi soni')}>
                 {[10, 20, 50, 100].map((size) => <option key={size} value={size}>{t('{size} / sahifa', { size })}</option>)}
-              </select>
+              </SelectMenu>
             </nav>
           </footer>
         )}

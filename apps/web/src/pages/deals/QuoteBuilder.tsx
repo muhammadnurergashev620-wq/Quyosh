@@ -19,6 +19,9 @@ import { getErrorMessage } from '@/lib/error-messages';
 import { formatDate, formatDecimal } from '@/lib/format';
 import { useIdempotencyKey } from '@/hooks/useIdempotencyKey';
 import { t } from '@/i18n';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Chip } from '@/components/ui/Chip';
 
 interface Line {
   key: string;
@@ -189,7 +192,7 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
           <p>{lead.customer.firstName ?? t('Mijoz')} · №{lead.request.number}</p>
         </div>
         <div className="qs-page__actions">
-          {current && <Badge tone={QUOTE_STATUS[status].tone}>{QUOTE_STATUS[status].label}</Badge>}
+          {current && <StatusBadge map={QUOTE_STATUS} status={status} />}
           {editable && <Button variant="secondary" onClick={() => setTemplatesOpen(true)}><LayoutTemplate size={15} /> {t('Shablonlar')}</Button>}
           {current && status !== 'DRAFT' && <Button variant="secondary" onClick={() => void dealsService.quotePdf(current.id, 'uz', lead.request.number)}><Download size={15} /> PDF</Button>}
           <Button variant="ghost" onClick={onClose}><ArrowLeft size={15} /> {t('So‘rovga qaytish')}</Button>
@@ -209,23 +212,23 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
             {editable && (
               <div className="qs-chips" style={{ marginBottom: 12 }}>
                 {catalog.data?.products.slice(0, 8).map((p) => (
-                  <button key={p.shopProductId} type="button" className="qs-chip" onClick={() => setLines((all) => [...all, { key: key(), itemType: 'EQUIPMENT', productModelId: p.model.id, title: `${p.model.brand} ${p.model.model}`, quantity: '1', unitPrice: p.priceUzs ? String(p.priceUzs) : '', category: p.model.category.slug }])}>
+                  <Chip key={p.shopProductId} onClick={() => setLines((all) => [...all, { key: key(), itemType: 'EQUIPMENT', productModelId: p.model.id, title: `${p.model.brand} ${p.model.model}`, quantity: '1', unitPrice: p.priceUzs ? String(p.priceUzs) : '', category: p.model.category.slug }])}>
                     <Plus size={13} /> {p.model.brand} {p.model.model}{p.priceUzs ? ` · ${sumShort(p.priceUzs)}` : ''}{p.offer?.currency === 'USD' ? ' (USD→UZS)' : ''}
-                  </button>
+                  </Chip>
                 ))}
                 {catalog.data?.services.map((s) => (
-                  <button key={s.id} type="button" className="qs-chip" onClick={() => setLines((all) => [...all, { key: key(), itemType: s.serviceType === 'DELIVERY' ? 'DELIVERY' : 'INSTALLATION', serviceId: s.id, title: t('Xizmat: {s}', { s: s.serviceType }), quantity: s.pricingModel === 'PER_KW' ? f.systemPowerKw || '1' : '1', unitPrice: s.priceUzs ? String(s.priceUzs) : '' }])}>
+                  <Chip key={s.id} onClick={() => setLines((all) => [...all, { key: key(), itemType: s.serviceType === 'DELIVERY' ? 'DELIVERY' : 'INSTALLATION', serviceId: s.id, title: t('Xizmat: {s}', { s: s.serviceType }), quantity: s.pricingModel === 'PER_KW' ? f.systemPowerKw || '1' : '1', unitPrice: s.priceUzs ? String(s.priceUzs) : '' }])}>
                     <Plus size={13} /> {t('Xizmat')}: {s.serviceType}{s.priceUzs ? ` · ${sumShort(s.priceUzs)}` : ''}
-                  </button>
+                  </Chip>
                 ))}
               </div>
             )}
             <div className="qs-builder-lines">
               {lines.map((l) => (
                 <div key={l.key} className="qs-builder-line">
-                  <select className="qs-select" aria-label={t('Turi')} disabled={!editable} value={l.itemType} onChange={(e) => setLine(l.key, { itemType: e.target.value as QuoteItemType })}>
+                  <SelectMenu className="qs-select" aria-label={t('Turi')} disabled={!editable} value={l.itemType} onChange={(e) => setLine(l.key, { itemType: e.target.value as QuoteItemType })}>
                     {(['EQUIPMENT', 'INSTALLATION', 'DELIVERY', 'OTHER'] as QuoteItemType[]).map((tp) => <option key={tp} value={tp}>{ITEM_TYPE[tp]}</option>)}
-                  </select>
+                  </SelectMenu>
                   <input className="qs-input-sm" aria-label={t('Nomi')} disabled={!editable} value={l.title} maxLength={300} onChange={(e) => setLine(l.key, { title: e.target.value })} />
                   <input className="qs-input-sm" aria-label={t('Miqdor')} inputMode="decimal" disabled={!editable} value={l.quantity} onChange={(e) => setLine(l.key, { quantity: e.target.value.replace(/[^\d.,]/g, '') })} />
                   <input className="qs-input-sm" aria-label={t('Birlik narxi')} inputMode="numeric" disabled={!editable} value={l.unitPrice} onChange={(e) => setLine(l.key, { unitPrice: e.target.value.replace(/[^\d.,]/g, '') })} />

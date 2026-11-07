@@ -22,6 +22,7 @@ import './AdminUsersPage.css';
 import '@/features/admin/list-shared.css';
 import './AdminNotificationsPage.css';
 import { t } from '@/i18n';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 type Tab = '' | 'UNREAD' | 'HIGH' | 'SYSTEM';
 const isoDay = (offset: number) => new Date(Date.now() - offset * 86_400_000).toISOString().slice(0, 10);
@@ -177,17 +178,17 @@ export function AdminNotificationsPage() {
           </label>
           <label className="gm-ul__select">
             <span>{t('Kategoriyalar')}</span>
-            <select value={category} onChange={(event) => { setCategory(event.target.value as AdminNotificationCategory | ''); if (tab === 'SYSTEM') setTab(''); }} disabled={tab === 'SYSTEM'}>
+            <SelectMenu value={category} onChange={(event) => { setCategory(event.target.value as AdminNotificationCategory | ''); if (tab === 'SYSTEM') setTab(''); }} disabled={tab === 'SYSTEM'}>
               <option value="">{t('Barcha kategoriyalar')}</option>
               {CATEGORIES.map((key) => <option key={key} value={key}>{CATEGORY[key].label}</option>)}
-            </select>
+            </SelectMenu>
           </label>
           <label className="gm-ul__select">
             <span>{t('Darajalar')}</span>
-            <select value={priority} onChange={(event) => { setPriority(event.target.value as AdminNotificationPriority | ''); if (tab === 'HIGH') setTab(''); }} disabled={tab === 'HIGH'}>
+            <SelectMenu value={priority} onChange={(event) => { setPriority(event.target.value as AdminNotificationPriority | ''); if (tab === 'HIGH') setTab(''); }} disabled={tab === 'HIGH'}>
               <option value="">{t('Barcha darajalar')}</option>
               {(Object.keys(PRIORITY) as AdminNotificationPriority[]).map((key) => <option key={key} value={key}>{PRIORITY[key].label}</option>)}
-            </select>
+            </SelectMenu>
           </label>
           <div className="gm-ord2__date" ref={dateRef}>
             <label className="gm-ul__select">
@@ -211,11 +212,11 @@ export function AdminNotificationsPage() {
           </div>
           <label className="gm-ul__select">
             <span>{t('O‘qilganlik holati')}</span>
-            <select value={state} onChange={(event) => { setState(event.target.value as '' | 'UNREAD' | 'READ'); if (tab === 'UNREAD') setTab(''); }} disabled={tab === 'UNREAD'}>
+            <SelectMenu value={state} onChange={(event) => { setState(event.target.value as '' | 'UNREAD' | 'READ'); if (tab === 'UNREAD') setTab(''); }} disabled={tab === 'UNREAD'}>
               <option value="">{t('Barcha holatlar')}</option>
               <option value="UNREAD">{t('O‘qilmagan')}</option>
               <option value="READ">{t('O‘qilgan')}</option>
-            </select>
+            </SelectMenu>
           </label>
           <Button variant="ghost" onClick={reset} disabled={!dirty}>
             <RotateCcw size={15} aria-hidden="true" /> {t('Tozalash')}
@@ -319,9 +320,9 @@ export function AdminNotificationsPage() {
                 ),
               )}
               <button type="button" onClick={() => setPage(page + 1)} disabled={page >= data.pages} aria-label={t('Keyingi sahifa')}><ChevronRight size={16} /></button>
-              <select className="gm-adm2__size" value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} aria-label={t('Sahifadagi soni')}>
+              <SelectMenu className="gm-adm2__size" value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} aria-label={t('Sahifadagi soni')}>
                 {[10, 20, 50, 100].map((size) => <option key={size} value={size}>{t('{size} / sahifa', { size })}</option>)}
-              </select>
+              </SelectMenu>
             </nav>
           </footer>
         )}

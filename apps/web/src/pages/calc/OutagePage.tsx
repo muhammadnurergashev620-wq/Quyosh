@@ -15,6 +15,8 @@ import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
 import { formatDecimal } from '@/lib/format';
+import { SelectMenu } from '@/components/ui/SelectMenu';
+import { TabBar } from '@/components/ui/Tabs';
 
 /** U8.13: elektr uzilishi kalkulyatori — default HYBRID; ON_GRID da raqam ko‘rsatilmaydi. */
 export function OutagePage() {
@@ -31,7 +33,7 @@ export function OutagePage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Elektr o‘chganda')}</h1><p>{t('Muhim texnika uzilishda qancha ishlashini hisoblang.')}</p></div></div>
       <section className="qs-card qs-form">
-        <div className="qs-segment" role="group">{(Object.keys(SYSTEM_TYPE) as SystemType[]).map((type) => <button key={type} type="button" className={cx(systemType === type && 'is-on')} onClick={() => setSystemType(type)}>{SYSTEM_TYPE[type].title}</button>)}</div>
+        <TabBar variant="segmented" role="group">{(Object.keys(SYSTEM_TYPE) as SystemType[]).map((type) => <button key={type} type="button" className={cx(systemType === type && 'is-on')} onClick={() => setSystemType(type)}>{SYSTEM_TYPE[type].title}</button>)}</TabBar>
         <div className="qs-appliances">
           {rows.map((row, index) => (
             <div key={index} className="qs-appliance">
@@ -44,10 +46,10 @@ export function OutagePage() {
             </div>
           ))}
         </div>
-        <select className="qs-select" aria-label={t('Texnika qo‘shish')} value="" onChange={(e) => { const type = types.find((x) => x.code === e.target.value); if (type) setRows([...rows, { code: type.code, powerW: type.defaultPowerW, count: 1, hoursPerDay: Number(type.defaultHoursPerDay) }]); }}>
+        <SelectMenu className="qs-select" aria-label={t('Texnika qo‘shish')} value="" onChange={(e) => { const type = types.find((x) => x.code === e.target.value); if (type) setRows([...rows, { code: type.code, powerW: type.defaultPowerW, count: 1, hoursPerDay: Number(type.defaultHoursPerDay) }]); }}>
           <option value="">{t('+ Texnika qo‘shish…')}</option>
           {types.map((type) => <option key={type.code} value={type.code}>{i18nText(type.nameI18n as { uz: string })}</option>)}
-        </select>
+        </SelectMenu>
         <Input label={t('Uzilish davomiyligi, soat')} inputMode="numeric" value={hours} onChange={(e) => setHours(e.target.value.replace(/\D/g, ''))} />
         <div className="qs-form__actions"><Button loading={run.isPending} disabled={!rows.length} onClick={() => run.mutate()}><Plus size={14} /> {t('Hisoblash')}</Button></div>
         {run.isError && <Alert tone="danger">{getErrorMessage(run.error)}</Alert>}

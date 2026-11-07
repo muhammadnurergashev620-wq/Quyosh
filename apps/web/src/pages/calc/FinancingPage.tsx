@@ -11,6 +11,7 @@ import { formatDate, formatPercent } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
+import { Chip } from '@/components/ui/Chip';
 
 /** U8.12: kredit kalkulyatori — mahsulotlarni tanlab solishtirish. */
 export function FinancingPage() {
@@ -43,7 +44,7 @@ export function FinancingPage() {
             error={downTooLow ? t('Kamida {p} % — {s}', { p: Math.round(minPct * 100), s: sum(minDown) }) : undefined} />
           <MoneyInput label={t('Oylik tejash (ixtiyoriy)')} value={saving} onValueChange={setSaving} />
         </div>
-        <div className="qs-chips">{[6, 12, 18, 24, 36].map((n) => <button key={n} type="button" className={cx('qs-chip', term === n && 'is-on')} onClick={() => setTerm(n)}>{t('{n} oy', { n })}</button>)}</div>
+        <div className="qs-chips">{[6, 12, 18, 24, 36].map((n) => <Chip key={n} onClick={() => setTerm(n)} selected={term === n}>{t('{n} oy', { n })}</Chip>)}</div>
         <div className="qs-choice">
           {products.map((p) => (
             <button key={p.id} type="button" className={cx(picked.includes(p.id) && 'is-on')} onClick={() => setPicked((c) => (c.includes(p.id) ? c.filter((x) => x !== p.id) : [...c, p.id].slice(-3)))}>

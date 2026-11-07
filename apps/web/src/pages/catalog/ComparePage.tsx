@@ -13,6 +13,7 @@ import { cx } from '@/lib/utils';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
+import { Chip } from '@/components/ui/Chip';
 
 /** U7.5: solishtirish — ustunlar mahsulotlar, qatorlar xususiyatlar; farqlar va eng yaxshi qiymat belgilanadi. */
 export function ComparePage() {
@@ -47,7 +48,7 @@ export function ComparePage() {
                 <th key={model.id}>
                   <div className="qs-cell-title">
                     <Link to={`/mijoz/mahsulotlar/${model.slug}`}><strong>{model.brand} {model.model}</strong></Link>
-                    <button type="button" className="qs-chip" style={{ minHeight: 26, width: 'fit-content' }} onClick={() => remove(model.id)}><X size={12} /> {t('Olib tashlash')}</button>
+                    <Chip onClick={() => remove(model.id)}><X size={12} /> {t('Olib tashlash')}</Chip>
                   </div>
                 </th>
               ))}

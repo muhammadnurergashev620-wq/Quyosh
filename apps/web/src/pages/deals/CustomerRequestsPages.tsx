@@ -23,6 +23,8 @@ import { formatDate, formatDateTime, formatDecimal, formatNumber, formatRating }
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 const shopInitial = (name: string) => name.trim().charAt(0).toUpperCase();
 const isExpiring = (validUntil: string | null | undefined, status: string) => !!validUntil && ['SENT', 'VIEWED'].includes(status) && new Date(validUntil).getTime() - Date.now() <= 48 * 3_600_000;
@@ -56,7 +58,7 @@ export function CustomerRequestsPage() {
                 </div>
               </div>
               <div className="qs-req-card__side">
-                <Badge tone={REQUEST_STATUS[r.status].tone}>{REQUEST_STATUS[r.status].label}</Badge>
+                <StatusBadge map={REQUEST_STATUS} status={r.status} />
                 <small className="qs-muted">{r.quoteCount ? t('{n} ta taklif · {s} dan', { n: r.quoteCount, s: sumShort(num(r.minTotal)) }) : t('Taklif hali yo‘q')}</small>
                 {r.unread > 0 && <span className="qs-unread" aria-label={t('{n} ta o‘qilmagan', { n: r.unread })}>{r.unread}</span>}
               </div>
@@ -123,7 +125,7 @@ export function CustomerRequestDetailPage() {
           <p>{SYSTEM_TYPE[r.systemType].title}{r.requiredCapacityKw ? ` · ${kw(num(r.requiredCapacityKw))}` : ''} · {formatDate(r.createdAt)}</p>
         </div>
         <div className="qs-page__actions">
-          <Badge tone={REQUEST_STATUS[r.status].tone}>{REQUEST_STATUS[r.status].label}</Badge>
+          <StatusBadge map={REQUEST_STATUS} status={r.status} />
           {quotes.length >= 2 && <Button variant="secondary" onClick={() => navigate(`/mijoz/sorovlar/${id}/solishtirish`)}><Scale size={16} /> {t('Takliflarni solishtirish')}</Button>}
           {r.status === 'OPEN' && <Button variant="ghost" onClick={() => setClosing(true)}>{t('So‘rovni yopish')}</Button>}
         </div>
@@ -147,7 +149,7 @@ export function CustomerRequestDetailPage() {
             <div className="qs-shop-row__body">
               <div className="qs-shop-row__title">
                 <Link to={`/mijoz/dokonlar/${s.shop.slug}`}><strong>{s.shop.name}</strong></Link>
-                <Badge tone={SHOP_REPLY_STATUS[s.status].tone}>{SHOP_REPLY_STATUS[s.status].label}</Badge>
+                <StatusBadge map={SHOP_REPLY_STATUS} status={s.status} />
                 {s.contactRevealedAt && <Badge tone="neutral">{t('Kontakt ochilgan · {d}', { d: formatDate(s.contactRevealedAt) })}</Badge>}
               </div>
               <small className="qs-muted"><Star size={12} /> {formatRating(s.shop.ratingAvg)} ({s.shop.ratingCount}){responseTime(s.shop.avgResponseMinutes) ? ` · ${responseTime(s.shop.avgResponseMinutes)}` : ''}</small>
@@ -159,7 +161,7 @@ export function CustomerRequestDetailPage() {
                     <span className="qs-page__actions">
                       {isExpiring(s.quote.validUntil, s.quote.status) && <Badge tone="warning">{t('Muddati tugayapti')}</Badge>}
                       {s.quote.currentRevision > 1 && !s.quote.viewedAt && <Badge tone="primary">{t('Yangilandi')}</Badge>}
-                      <Badge tone={QUOTE_STATUS[s.quote.status].tone}>{QUOTE_STATUS[s.quote.status].label}</Badge>
+                      <StatusBadge map={QUOTE_STATUS} status={s.quote.status} />
                     </span>
                   </div>
                   <dl className="qs-quote-card__facts">
@@ -237,7 +239,7 @@ export function CustomerQuotePage() {
           <p><Link to={`/mijoz/sorovlar/${q.requestId}`}>{t('So‘rov №{n}', { n: q.request.number })}</Link> · {t('Tahrir {n}', { n: q.currentRevision })} · {formatDateTime(q.sentAt)}</p>
         </div>
         <div className="qs-page__actions">
-          <Badge tone={QUOTE_STATUS[q.status].tone}>{QUOTE_STATUS[q.status].label}</Badge>
+          <StatusBadge map={QUOTE_STATUS} status={q.status} />
           {isExpiring(q.validUntil, q.status) && <Badge tone="warning">{t('Muddati tugayapti · {d}', { d: formatDate(q.validUntil) })}</Badge>}
         </div>
       </div>
@@ -252,9 +254,9 @@ export function CustomerQuotePage() {
       <div className="qs-page__actions">
         {open && <Button onClick={() => setAccepting(true)}>{t('Tanlash')}</Button>}
         {open && <Button variant="ghost" onClick={() => setRejecting(true)}>{t('Rad etish')}</Button>}
-        <select className="qs-select" aria-label={t('PDF tili')} value={lang} onChange={(e) => setLang(e.target.value as typeof lang)}>
+        <SelectMenu className="qs-select" aria-label={t('PDF tili')} value={lang} onChange={(e) => setLang(e.target.value as typeof lang)}>
           <option value="uz">O‘zbekcha</option><option value="oz">Ўзбекча</option><option value="ru">Русский</option><option value="en">English</option>
-        </select>
+        </SelectMenu>
         <Button variant="secondary" onClick={() => void dealsService.quotePdf(q.id, lang, q.request.number)}><Download size={15} /> PDF</Button>
         {q.installation && <Button variant="secondary" onClick={() => navigate(`/mijoz/montajlar/${q.installation!.id}`)}>{t('Montajga o‘tish')}</Button>}
       </div>
@@ -311,7 +313,7 @@ export function CompareQuotesPage() {
                     <strong>{q.shop.name}</strong>
                     <span className="qs-num">{sum(num(q.total))}</span>
                     <span className="qs-chips">{q.badges.map((b) => <Badge key={b} tone="success">{BADGE_TEXT[b]}</Badge>)}{q.expiringSoon && <Badge tone="warning">{t('Muddati tugayapti')}</Badge>}</span>
-                    {['SENT', 'VIEWED'].includes(q.status) ? <Button size="sm" onClick={() => navigate(`/mijoz/takliflar/${q.id}`)}>{t('Tanlash')}</Button> : <Badge tone={QUOTE_STATUS[q.status].tone}>{QUOTE_STATUS[q.status].label}</Badge>}
+                    {['SENT', 'VIEWED'].includes(q.status) ? <Button size="sm" onClick={() => navigate(`/mijoz/takliflar/${q.id}`)}>{t('Tanlash')}</Button> : <StatusBadge map={QUOTE_STATUS} status={q.status} />}
                   </div>
                 </th>
               ))}

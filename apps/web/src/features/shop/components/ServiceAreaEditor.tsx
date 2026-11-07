@@ -14,6 +14,8 @@ import { useAppStore } from '@/store/app.store';
 import type { Branch } from '../types';
 import { t } from '@/i18n';
 import '@/features/map/map.css';
+import { Chip } from '@/components/ui/Chip';
+import { TabBar } from '@/components/ui/Tabs';
 
 const RADII = [10, 25, 50, 80];
 
@@ -46,14 +48,14 @@ export function ServiceAreaEditor({ shopId, branch, onDone }: { shopId: string; 
   return (
     <div className="qs-form">
       {current.data && <Alert tone="info">{t('Hozirgi hudud: {km} km². Yangisi saqlansa, almashtiriladi.', { km: formatNumber(Number(current.data.areaKm2)) })}</Alert>}
-      <div className="qs-tabs" role="tablist">
+      <TabBar variant="tabs" role="tablist">
         <button type="button" role="tab" aria-selected={mode === 'radius'} className={cx(mode === 'radius' && 'is-on')} onClick={() => setMode('radius')}>{t('Radius bo‘yicha')}</button>
         <button type="button" role="tab" aria-selected={mode === 'draw'} className={cx(mode === 'draw' && 'is-on')} onClick={() => setMode('draw')}>{t('Xaritada chizish')}</button>
-      </div>
+      </TabBar>
       {mode === 'radius' ? (
         <div className="qs-chips">
           {RADII.map((value) => (
-            <button key={value} type="button" className={cx('qs-chip', radius === value && 'is-on')} onClick={() => setRadius(value)}>{t('{n} km', { n: value })}</button>
+            <Chip key={value} onClick={() => setRadius(value)} selected={radius === value}>{t('{n} km', { n: value })}</Chip>
           ))}
         </div>
       ) : (

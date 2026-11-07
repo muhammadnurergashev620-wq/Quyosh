@@ -26,6 +26,8 @@ import { kw as kwLabel } from '@/features/calc/labels';
 import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
 import '@/features/m7/m7.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { TabBar } from '@/components/ui/Tabs';
 
 const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
 
@@ -96,11 +98,11 @@ export function ShopProfilePage() {
       </section>
       {!hasSession && shop.phoneMasked && <p className="qs-muted" style={{ margin: 0 }}>{t('Raqamni ko‘rish uchun kiring')}</p>}
 
-      <div className="qs-tabs" role="tablist">
+      <TabBar variant="tabs" role="tablist">
         {([['overview', t('Umumiy')], ['services', t('Xizmatlar va narxlar')], ['products', t('Mahsulotlar ({n})', { n: shop.productCount })], ['portfolio', t('Portfolio')]] as const).map(([key, label]) => (
           <button key={key} type="button" role="tab" aria-selected={tab === key} className={cx(tab === key && 'is-on')} onClick={() => setTab(key)}>{label}</button>
         ))}
-      </div>
+      </TabBar>
 
       {tab === 'overview' && (
         <div className="qs-grid-2">
@@ -174,7 +176,7 @@ export function ShopProfilePage() {
                     <tr key={product.id}>
                       <td><div className="qs-cell-title"><Link to={`/mijoz/mahsulotlar/${product.productModel.slug}`}><strong>{product.productModel.brand} {product.productModel.model}</strong></Link><small>{i18nText(product.productModel.category.nameI18n)} · {keySpecs(product.productModel).slice(0, 2).join(' · ')}</small></div></td>
                       <td className="qs-num">{best ? (best.currency === 'USD' ? `${formatNumber(Number(best.price))} $` : sum(best.price)) : t('So‘rov orqali')}</td>
-                      <td>{best ? <Badge tone={STOCK_STATUS[best.stockStatus].tone}>{STOCK_STATUS[best.stockStatus].label}</Badge> : '—'}</td>
+                      <td>{best ? <StatusBadge map={STOCK_STATUS} status={best.stockStatus} /> : '—'}</td>
                     </tr>
                   );
                 })}

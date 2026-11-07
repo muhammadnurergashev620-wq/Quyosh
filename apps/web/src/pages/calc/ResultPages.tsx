@@ -20,6 +20,7 @@ import { useIdempotencyKey } from '@/hooks/useIdempotencyKey';
 import { lang as currentLang, t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/calc/calc.css';
+import { TabBar } from '@/components/ui/Tabs';
 
 /** Saqlangan hisobdan — to‘g‘ridan-to‘g‘ri so‘rov wizard’iga (U9.1, asos avtomatik); saqlanmagan bo‘lsa — xarita. */
 function OffersCta({ calculationId }: { calculationId?: string }) {
@@ -77,9 +78,9 @@ function PdfModal({ id, open, onClose }: { id: string; open: boolean; onClose: (
     <Modal open={open} onClose={close} title={t('PDF hisobot')}>
       <div className="qs-form">
         <Select label={t('Til')} value={lang} onChange={(e) => setLang(e.target.value as 'uz' | 'oz' | 'ru' | 'en')} options={[{ value: 'uz', label: 'O‘zbekcha' }, { value: 'oz', label: 'Ўзбекча' }, { value: 'ru', label: 'Русский' }, { value: 'en', label: 'English' }]} />
-        <div className="qs-segment" role="group" aria-label={t('QR-kod')}>
+        <TabBar variant="segmented" role="group" aria-label={t('QR-kod')}>
           {([['SHARE', t('QR: ulashish havolasi')], ['CABINET', t('QR: kabinetga')], ['NONE', t('QR yo‘q')]] as const).map(([value, label]) => <button key={value} type="button" className={cx(qr === value && 'is-on')} onClick={() => setQr(value)}>{label}</button>)}
-        </div>
+        </TabBar>
         {jobId && !ready && status.data?.status !== 'FAILED' && <div className="qs-sun-wait"><svg viewBox="0 0 42 22" aria-hidden="true"><path d="M2,20 A19,17 0 0 1 40,20" fill="none" stroke="var(--qs-color-border)" strokeWidth="1.5" /><circle r="3" /></svg>{t('PDF tayyorlanmoqda…')}</div>}
         {status.data?.status === 'FAILED' && <Alert tone="danger">{t('PDF tayyorlanmadi. Qayta urinib ko‘ring.')}</Alert>}
         {create.isError && <Alert tone="danger">{getErrorMessage(create.error)}</Alert>}
@@ -101,9 +102,9 @@ function ShareModal({ id, open, onClose }: { id: string; open: boolean; onClose:
     <Modal open={open} onClose={onClose} title={t('Hisobni ulashish')}>
       <div className="qs-form">
         <Alert tone="info">{t('Havolada aniq manzil va tom chizmasi ko‘rinmaydi.')}</Alert>
-        <div className="qs-segment" role="group">
+        <TabBar variant="segmented" role="group">
           {([7, 30, null] as const).map((value) => <button key={String(value)} type="button" className={cx(days === value && 'is-on')} onClick={() => setDays(value)}>{value ? t('{n} kun', { n: value }) : t('Muddatsiz')}</button>)}
-        </div>
+        </TabBar>
         {link && (
           <div className="qs-inline-price" style={{ flexWrap: 'wrap' }}>
             <code style={{ overflowWrap: 'anywhere' }}>{link}</code>

@@ -1,185 +1,180 @@
+/* ───────────── Button (U5.1) — yagona tugma. Faqat --qs-* tokenlar. ───────────── */
 .gm-button {
+  --btn-radius: var(--qs-radius-12);
+  --btn-icon: 18px;
   position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--qs-space-2);
-  border-radius: 12px;
-  border: 1.5px solid transparent;
+  border-radius: var(--btn-radius);
+  border: 1px solid transparent;
   cursor: pointer;
   font-family: var(--qs-font-display);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.005em;
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    opacity 0.15s ease,
-    transform 0.12s ease;
   white-space: nowrap;
   text-decoration: none;
   user-select: none;
+  overflow: hidden;
+  transition:
+    background-color var(--qs-dur-2) var(--qs-ease-standard),
+    border-color var(--qs-dur-2) var(--qs-ease-standard),
+    color var(--qs-dur-2) var(--qs-ease-standard),
+    box-shadow var(--qs-dur-2) var(--qs-ease-standard),
+    opacity var(--qs-dur-2) var(--qs-ease-standard),
+    transform var(--qs-dur-2) var(--qs-ease-standard);
 }
 
-.gm-button:disabled {
+/* Teginish maydoni ≥ 44 px (sm tugmada ko‘rinmas kengaytma) */
+.gm-button--sm::after {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
+}
+
+.gm-button:hover:not(:disabled) { transform: translateY(-1px); }
+.gm-button:active:not(:disabled) { transform: scale(0.98); transition-duration: var(--qs-dur-1); }
+.gm-button:focus-visible { outline: none; box-shadow: var(--qs-ring); }
+
+.gm-button:disabled,
+.gm-button[aria-disabled='true'] {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.45;
+  box-shadow: none;
+  transform: none;
 }
+.gm-button.is-loading:disabled { cursor: progress; opacity: 0.85; }
 
-.gm-button.is-loading:disabled {
-  cursor: progress;
-  opacity: 0.85;
-}
+/* ── O‘lchamlar ── */
+.gm-button--sm { min-height: var(--qs-btn-h-sm); padding: 0 var(--qs-space-3); font-size: var(--qs-btn-fs-sm); --btn-radius: var(--qs-radius-10); --btn-icon: 16px; }
+.gm-button--md { min-height: var(--qs-btn-h-md); padding: 0 var(--qs-btn-px); font-size: var(--qs-btn-fs-md); }
+.gm-button--lg { min-height: var(--qs-btn-h-lg); padding: 0 calc(var(--qs-btn-px) + 4px); font-size: var(--qs-btn-fs-lg); --btn-radius: var(--qs-radius-md); --btn-icon: 20px; }
+.gm-button--full { width: 100%; }
 
-.gm-button:active:not(:disabled) {
-  transform: scale(0.98);
-}
+/* Faqat ikonka: kvadrat */
+.gm-button--icon { padding: 0; aspect-ratio: 1; }
+.gm-button--icon.gm-button--sm { width: var(--qs-btn-h-sm); }
+.gm-button--icon.gm-button--md { width: 40px; min-height: 40px; }
+.gm-button--icon.gm-button--lg { width: 48px; min-height: 48px; }
 
-.gm-button:focus-visible {
-  outline: 2px solid var(--qs-focus-ring);
-  outline-offset: 2px;
-}
-
-.gm-button--md {
-  min-height: var(--qs-btn-h-md);
-  padding: 0 var(--qs-btn-px);
-  font-size: var(--qs-btn-fs-md);
-}
-
-.gm-button--sm {
-  min-height: var(--qs-btn-h-sm);
-  padding: 0 calc(var(--qs-btn-px) - 4px);
-  font-size: var(--qs-btn-fs-sm);
-}
-
-.gm-button--lg {
-  min-height: var(--qs-btn-h-lg);
-  padding: 0 calc(var(--qs-btn-px) + 4px);
-  font-size: var(--qs-btn-fs-lg);
-}
-
-.gm-button--full {
-  width: 100%;
-}
-
+/* ── Variantlar ── */
 .gm-button--primary {
   background: var(--qs-color-primary);
   color: var(--qs-color-primary-contrast);
-  box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--qs-color-primary) 70%, transparent);
+  box-shadow: var(--qs-shadow-glow);
 }
-
 .gm-button--primary:hover:not(:disabled) {
   background: var(--qs-color-primary-hover);
-  box-shadow: 0 10px 22px -8px color-mix(in srgb, var(--qs-color-primary) 75%, transparent);
-  color: var(--qs-color-primary-contrast);
+  box-shadow: 0 12px 26px -10px color-mix(in srgb, var(--qs-color-primary) 80%, transparent);
 }
+.gm-button--primary:active:not(:disabled) { background: var(--qs-color-primary-active); }
 
 .gm-button--secondary {
   background: var(--qs-color-surface);
   border-color: var(--qs-color-border-strong);
   color: var(--qs-color-text);
+  box-shadow: var(--qs-shadow-xs);
 }
-
 .gm-button--secondary:hover:not(:disabled) {
   background: var(--qs-color-surface-muted);
-  color: var(--qs-color-text);
+  border-color: color-mix(in srgb, var(--qs-color-primary) 40%, var(--qs-color-border-strong));
 }
+
+.gm-button--soft {
+  background: var(--qs-color-primary-soft);
+  color: var(--qs-color-primary);
+}
+.gm-button--soft:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-primary) 18%, var(--qs-color-primary-soft)); }
 
 .gm-button--ghost {
   background: transparent;
-  color: var(--qs-color-text);
+  color: var(--qs-color-text-muted);
 }
-
-.gm-button--ghost:hover:not(:disabled) {
-  background: var(--qs-color-surface-muted);
-  color: var(--qs-color-text);
-}
+.gm-button--ghost:hover:not(:disabled) { background: var(--qs-color-surface-muted); color: var(--qs-color-text); }
 
 .gm-button--danger {
   background: var(--qs-color-danger);
-  color: #fff;
+  color: var(--qs-color-on-dark);
+  box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--qs-color-danger) 70%, transparent);
 }
+.gm-button--danger:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-danger) 88%, var(--qs-color-ink)); }
 
-.gm-button--danger:hover:not(:disabled) {
-  filter: brightness(0.92);
-  color: #fff;
+.gm-button--danger-soft {
+  background: var(--qs-color-danger-bg);
+  color: var(--qs-color-danger);
+  border-color: var(--qs-color-danger-border);
 }
+.gm-button--danger-soft:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-danger) 16%, var(--qs-color-danger-bg)); }
 
+/* Accent — faqat bosh saytdagi asosiy CTA: hover’da ichidan yorug‘lik chizig‘i bir marta o‘tadi */
 .gm-button--accent {
   background: var(--qs-color-accent);
   color: var(--qs-color-accent-contrast);
-  box-shadow: 0 6px 16px -6px rgba(255, 176, 32, 0.8);
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--qs-color-accent) 85%, transparent);
 }
-
-.gm-button--accent:hover:not(:disabled) {
-  filter: brightness(0.96);
-  color: var(--qs-color-accent-contrast);
-}
-
-.gm-button__spinner {
+.gm-button--accent::before {
+  content: '';
   position: absolute;
   inset: 0;
-  margin: auto;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, color-mix(in srgb, var(--qs-color-on-dark) 55%, transparent) 50%, transparent 70%);
+  transform: translateX(-120%);
 }
+.gm-button--accent:hover:not(:disabled)::before { animation: gm-button-sheen var(--qs-dur-5) var(--qs-ease-out) 1; }
+.gm-button--accent:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-accent) 92%, var(--qs-color-ink)); }
+@keyframes gm-button-sheen { to { transform: translateX(120%); } }
 
-.gm-button.is-loading .gm-button__label {
-  opacity: 0; /* ko‘rinmas, lekin ekran o‘quvchi uchun nom saqlanadi */
-}
-
-/* Faqat ikonka: kvadrat, balandlik bilan teng kenglik. */
-.gm-button--icon {
+.gm-button--link {
+  min-height: auto;
   padding: 0;
-  aspect-ratio: 1;
+  background: transparent;
+  color: var(--qs-color-primary);
+  border-radius: var(--qs-radius-xs);
+  overflow: visible;
 }
-.gm-button--icon.gm-button--sm { width: var(--qs-btn-h-sm); }
-.gm-button--icon.gm-button--md { width: var(--qs-btn-h-md); }
-.gm-button--icon.gm-button--lg { width: var(--qs-btn-h-lg); }
+.gm-button--link:hover:not(:disabled) { transform: none; text-decoration: underline; text-underline-offset: 3px; }
 
-/* Strelkali CTA: hover’da strelka 2 px o‘ngga. */
-.gm-button .lucide-arrow-right {
-  transition: transform 0.15s ease;
-}
-.gm-button:hover:not(:disabled) .lucide-arrow-right {
-  transform: translateX(2px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .gm-button,
-  .gm-button .lucide-arrow-right {
-    transition: none;
-  }
-  .gm-button:active:not(:disabled),
-  .gm-button:hover:not(:disabled) .lucide-arrow-right {
-    transform: none;
-  }
+/* Success holati (1,5 s) */
+.gm-button.is-success,
+.gm-button.is-success:hover:not(:disabled) {
+  background: var(--qs-color-success);
+  border-color: var(--qs-color-success);
+  color: var(--qs-color-on-dark);
 }
 
-.gm-button > svg {
-  display: block;
-  flex-shrink: 0;
-}
+/* ── Ichki tuzilma ── */
+.gm-button__spinner { position: absolute; inset: 0; margin: auto; }
+.gm-button.is-loading .gm-button__label { opacity: 0; } /* ko‘rinmas, lekin ekran o‘quvchi nomida qoladi */
 
-/* Yozuv va belgi (ikonka) tugma markazida, bir chiziqda turishi uchun */
 .gm-button__label {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: inherit;
+  gap: var(--qs-space-2);
   line-height: 1.2;
   text-align: center;
 }
+.gm-button__icon { display: inline-flex; }
+.gm-button__label svg,
+.gm-button > svg { flex: none; width: var(--btn-icon); height: var(--btn-icon); }
 
-.gm-button__label.gm-visually-hidden {
-  display: inline-block;
+/* Strelkali CTA: hover’da strelka 3 px o‘ngga */
+.gm-button .lucide-arrow-right { transition: transform var(--qs-dur-2) var(--qs-ease-standard); }
+.gm-button:hover:not(:disabled) .lucide-arrow-right { transform: translateX(3px); }
+
+/* Guruh: 8 px; mobilda vertikal, asosiy tugma pastda */
+.gm-button-group { display: flex; flex-wrap: wrap; gap: var(--qs-space-2); align-items: center; }
+.gm-button-group--end { justify-content: flex-end; }
+.gm-button-group--between { justify-content: space-between; }
+@media (max-width: 639px) {
+  .gm-button-group { flex-direction: column; align-items: stretch; }
+  .gm-button-group > .gm-button { width: 100%; }
 }
 
-.gm-button__label > svg {
-  flex: none;
-  width: 18px;
-  height: 18px;
-}
-
-.gm-button--sm .gm-button__label > svg {
-  width: 16px;
-  height: 16px;
+@media (prefers-reduced-motion: reduce) {
+  .gm-button, .gm-button .lucide-arrow-right { transition-duration: var(--qs-dur-1); }
+  .gm-button:hover:not(:disabled), .gm-button:active:not(:disabled), .gm-button:hover:not(:disabled) .lucide-arrow-right { transform: none; }
+  .gm-button--accent:hover:not(:disabled)::before { animation: none; }
 }

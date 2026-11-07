@@ -1,45 +1,37 @@
 .gm-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 10px;
-  border-radius: 999px;
+  gap: 5px;
+  height: 24px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: var(--qs-radius-pill);
+  font-family: var(--qs-font-sans);
   font-size: 12px;
-  font-weight: 700;
-  line-height: 1.5;
+  font-weight: 600;
+  line-height: 1;
   white-space: nowrap;
+  vertical-align: middle;
 }
+.gm-badge__icon { display: inline-flex; }
+.gm-badge__icon svg { width: 12px; height: 12px; stroke-width: 2.4; }
 
-.gm-badge::before {
+.gm-badge--neutral { background: var(--qs-color-neutral-bg); color: var(--qs-color-text-muted); border-color: var(--qs-color-border); }
+.gm-badge--info { background: var(--qs-color-info-bg); color: var(--qs-color-info); border-color: var(--qs-color-info-border); }
+.gm-badge--primary { background: var(--qs-color-primary-soft); color: var(--qs-color-primary); border-color: color-mix(in srgb, var(--qs-color-primary) 25%, transparent); }
+.gm-badge--success { background: var(--qs-color-success-bg); color: var(--qs-color-success); border-color: var(--qs-color-success-border); }
+.gm-badge--warning { background: var(--qs-color-warning-bg); color: var(--qs-color-warning); border-color: var(--qs-color-warning-border); }
+.gm-badge--danger { background: var(--qs-color-danger-bg); color: var(--qs-color-danger); border-color: var(--qs-color-danger-border); }
+
+/* Jonli holat: 6 px pulsatsiyalanuvchi nuqta */
+.gm-badge__pulse { position: relative; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.gm-badge__pulse::after {
   content: '';
-  width: 6px;
-  height: 6px;
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
   background: currentColor;
-  opacity: 0.85;
+  animation: gm-badge-pulse 1.6s var(--qs-ease-out) infinite;
 }
-
-.gm-badge--neutral {
-  background: var(--qs-color-surface-muted);
-  color: var(--qs-color-text-muted);
-}
-
-.gm-badge--primary {
-  background: var(--qs-color-primary-soft);
-  color: var(--qs-color-primary);
-}
-
-.gm-badge--success {
-  background: var(--qs-color-success-bg);
-  color: var(--qs-color-success);
-}
-
-.gm-badge--warning {
-  background: var(--qs-color-warning-bg);
-  color: var(--qs-color-warning);
-}
-
-.gm-badge--danger {
-  background: var(--qs-color-danger-bg);
-  color: var(--qs-color-danger);
-}
+@keyframes gm-badge-pulse { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(2.8); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .gm-badge__pulse::after { animation: none; } }

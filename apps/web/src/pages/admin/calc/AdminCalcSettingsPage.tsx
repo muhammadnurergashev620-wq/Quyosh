@@ -17,6 +17,8 @@ import { formatDate, formatDateTime, formatNumber, formatPercent } from '@/lib/f
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { TabBar } from '@/components/ui/Tabs';
 
 const MONTHS = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 'Iyl', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'];
 
@@ -56,7 +58,7 @@ function SettingsTab() {
               <strong className="qs-mono">{row.modelVersion}</strong>
               <small>{formatDate(row.effectiveFrom)} — {row.effectiveUntil ? formatDate(row.effectiveUntil) : '∞'}{row.sourceNotes ? ` · ${row.sourceNotes}` : ''}</small>
             </div>
-            <Badge tone={PUBLISH_STATUS[row.status].tone}>{PUBLISH_STATUS[row.status].label}</Badge>
+            <StatusBadge map={PUBLISH_STATUS} status={row.status} />
             {row.status === 'DRAFT' && <Button size="sm" loading={run.isPending} onClick={() => run.mutate(() => adminCalcService.publishSettings(row.id))}>{t('Tasdiqlash')}</Button>}
           </li>
         ))}
@@ -127,7 +129,7 @@ function FinancingTab() {
                 <td className="qs-num">{formatPercent(Number(product.annualRate), 1)}</td>
                 <td className="qs-num">{product.allowedTerms.length ? product.allowedTerms.join(', ') : `${product.minTermMonths}–${product.maxTermMonths}`} {t('oy')}</td>
                 <td className="qs-num">{formatPercent(Number(product.minDownPaymentPct), 0)}</td>
-                <td><Badge tone={PUBLISH_STATUS[product.status].tone}>{PUBLISH_STATUS[product.status].label}</Badge></td>
+                <td><StatusBadge map={PUBLISH_STATUS} status={product.status} /></td>
                 <td className="qs-right">
                   <span className="qs-page__actions" style={{ justifyContent: 'flex-end' }}>
                     <Button size="sm" variant="secondary" onClick={() => open(product)}>{t('Tahrirlash')}</Button>
@@ -244,9 +246,9 @@ export function AdminCalcSettingsPage() {
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Kalkulyator sozlamalari')}</h1><p>{t('Hisob parametrlari va ma’lumot manbalari. Har o‘zgarish auditga yoziladi.')}</p></div></div>
-      <div className="qs-tabs" role="tablist">
+      <TabBar variant="tabs" role="tablist">
         {tabs.map(([key, label]) => <button key={key} type="button" role="tab" aria-selected={tab === key} className={cx(tab === key && 'is-on')} onClick={() => setTab(key)}>{label}</button>)}
-      </div>
+      </TabBar>
       {tab === 'settings' && <SettingsTab />}
       {tab === 'financing' && <FinancingTab />}
       {tab === 'yield' && <RegionalYieldTab />}

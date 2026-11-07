@@ -3,7 +3,6 @@ import type { DragEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle2, Download, FileSpreadsheet, RotateCcw } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { PageLoader } from '@/components/common/PageLoader';
 import { useCurrentShop } from '@/features/shop/current-shop';
@@ -17,6 +16,7 @@ import { formatDateTime, formatNumber } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const IMPORT_STATUS: Record<ImportSummary['status'], { label: string; tone: 'neutral' | 'success' | 'warning' | 'danger' }> = {
@@ -97,7 +97,7 @@ export function ShopImportPage() {
         <section className="qs-card">
           <header>
             <h2>2. {t('Tekshirish natijasi')}</h2>
-            <Badge tone={IMPORT_STATUS[summary.status].tone}>{IMPORT_STATUS[summary.status].label}</Badge>
+            <StatusBadge map={IMPORT_STATUS} status={summary.status} />
           </header>
           <p className="qs-stat-line">
             <span>{t('Jami')}: <b>{formatNumber(summary.rowCount)}</b></span>
@@ -155,7 +155,7 @@ export function ShopImportPage() {
             {history.data.map((job) => (
               <li key={job.id}>
                 <div><strong>{job.fileName}</strong><small>{formatDateTime(job.createdAt)} · {t('{rows} qator, {errors} xato', { rows: job.rowCount, errors: job.errorCount })}</small></div>
-                <Badge tone={IMPORT_STATUS[job.status].tone}>{IMPORT_STATUS[job.status].label}</Badge>
+                <StatusBadge map={IMPORT_STATUS} status={job.status} />
               </li>
             ))}
           </ul>

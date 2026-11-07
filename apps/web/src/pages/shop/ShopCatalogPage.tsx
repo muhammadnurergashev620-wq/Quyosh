@@ -21,12 +21,14 @@ import { catalogService } from '@/features/catalog/catalog.service';
 import { i18nText, keySpecs, SPEC_META } from '@/features/catalog/format';
 import type { Category, ModelCard, Offer, OfferInput, ShopProduct, SpecKey } from '@/features/catalog/types';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
 import { formatDate, formatNumber } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
 import { ApiError } from '@/types/api';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Chip } from '@/components/ui/Chip';
 
 const productsKey = (shopId: string | null) => ['shop', shopId ?? '-', 'products'];
 
@@ -75,9 +77,9 @@ function OfferCell({ shopId, product, offer, writable }: { shopId: string; produ
       <small>
         {offer.branch?.name ?? t('Barcha filiallar')} ·{' '}
         {writable ? (
-          <select aria-label={t('Zaxira holati')} value={offer.stockStatus} onChange={(e) => save.mutate({ price: offer.price, stockStatus: e.target.value as StockStatus })} style={{ font: 'inherit', border: 0, background: 'transparent', color: 'inherit' }}>
+          <SelectMenu aria-label={t('Zaxira holati')} value={offer.stockStatus} onChange={(e) => save.mutate({ price: offer.price, stockStatus: e.target.value as StockStatus })} style={{ font: 'inherit', border: 0, background: 'transparent', color: 'inherit' }}>
             {(Object.keys(STOCK_STATUS) as StockStatus[]).map((value) => <option key={value} value={value}>{STOCK_STATUS[value].label}</option>)}
-          </select>
+          </SelectMenu>
         ) : STOCK_STATUS[offer.stockStatus].label}
         {offer.validUntil && ` · ${t('{date} gacha', { date: formatDate(offer.validUntil) })}`}
       </small>
@@ -288,10 +290,10 @@ export function ShopCatalogPage() {
         <Input label={t('Qidirish')} value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder={t('Brend yoki model')} />
         <div className="qs-chips" role="group" aria-label={t('Holat')}>
           {(['', 'ACTIVE', 'DRAFT', 'ARCHIVED'] as const).map((value) => (
-            <button key={value || 'all'} type="button" className={cx('qs-chip', status === value && 'is-on')} onClick={() => { setStatus(value); setPage(1); }}>
+            <Chip key={value || 'all'} onClick={() => { setStatus(value); setPage(1); }} selected={status === value}>
               {value ? PRODUCT_STATUS[value].label : t('Hammasi')}
               {value && counts[value] !== undefined && <span>{counts[value]}</span>}
-            </button>
+            </Chip>
           ))}
         </div>
       </div>
@@ -324,7 +326,7 @@ export function ShopCatalogPage() {
                       {offersWritable && <Button size="sm" variant="ghost" onClick={() => setOfferFor(product)}><Plus size={14} /> {t('Narx')}</Button>}
                     </div>
                   </td>
-                  <td><Badge tone={PRODUCT_STATUS[product.status].tone}>{PRODUCT_STATUS[product.status].label}</Badge></td>
+                  <td><StatusBadge map={PRODUCT_STATUS} status={product.status} /></td>
                   <td className="qs-muted">{formatDate(product.updatedAt)}</td>
                   {writable && (
                     <td className="qs-right">
@@ -355,10 +357,10 @@ export function ShopCatalogPage() {
             <>
               <input aria-label={t('Foiz')} placeholder="+5 / -10" value={percent} onChange={(e) => setPercent(e.target.value.replace(/[^\d.,+-]/g, ''))} style={{ width: 90 }} />
               <Button size="sm" variant="secondary" loading={bulk.isPending} disabled={!Number(percent.replace(',', '.'))} onClick={() => bulk.mutate({ ids, action: 'PRICE_PERCENT', percent: Number(percent.replace(',', '.')) })}>{t('Narxni % ga o‘zgartirish')}</Button>
-              <select aria-label={t('Zaxira holati')} defaultValue="" onChange={(e) => e.target.value && bulk.mutate({ ids, action: 'STOCK', stockStatus: e.target.value })}>
+              <SelectMenu aria-label={t('Zaxira holati')} defaultValue="" onChange={(e) => e.target.value && bulk.mutate({ ids, action: 'STOCK', stockStatus: e.target.value })}>
                 <option value="" disabled>{t('Zaxira holati…')}</option>
                 {(Object.keys(STOCK_STATUS) as StockStatus[]).map((value) => <option key={value} value={value}>{STOCK_STATUS[value].label}</option>)}
-              </select>
+              </SelectMenu>
             </>
           )}
           <Button size="sm" variant="secondary" onClick={() => bulk.mutate({ ids, action: 'ARCHIVE' })}>{t('Arxivlash')}</Button>

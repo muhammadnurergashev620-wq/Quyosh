@@ -21,6 +21,7 @@ import { t } from '@/i18n';
 import { dealsService } from '../deals.service';
 import '@/features/calc/calc.css';
 import { responseTime } from '../labels';
+import { TabBar } from '@/components/ui/Tabs';
 
 type Basis = { kind: 'calc' | 'site'; id: string; title: string; systemType?: SystemType; powerKw?: number; siteId?: string | null };
 interface PickShop { id: string; name: string; ratingAvg: string; ratingCount: number; distanceKm?: number; avgResponseMinutes?: number | null; serving: boolean }
@@ -188,11 +189,11 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
 
           {step === 1 && (
             <>
-              <div className="qs-segment" role="radiogroup" aria-label={t('Tizim turi')}>
+              <TabBar variant="segmented" role="radiogroup" aria-label={t('Tizim turi')}>
                 {(['ON_GRID', 'HYBRID', 'OFF_GRID'] as SystemType[]).map((st) => (
                   <button key={st} type="button" role="radio" aria-checked={systemType === st} className={cx(systemType === st && 'is-on')} onClick={() => { setSystemType(st); setBattery(st !== 'ON_GRID'); }}>{SYSTEM_TYPE[st].title}</button>
                 ))}
-              </div>
+              </TabBar>
               <Input label={t('Kerakli quvvat')} suffix={t('kVt')} inputMode="decimal" value={capacity} onChange={(e) => setCapacity(e.target.value.replace(/[^\d.,]/g, ''))} hint={basis?.powerKw ? t('Hisobdan olindi') : undefined} />
               <div className="qs-chips">
                 <label className="qs-check"><input type="checkbox" checked={battery} onChange={(e) => setBattery(e.target.checked)} /> {t('Akkumulyator kerak')}</label>

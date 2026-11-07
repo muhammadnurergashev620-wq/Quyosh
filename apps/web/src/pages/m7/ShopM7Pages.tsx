@@ -24,6 +24,8 @@ import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
 import '@/features/m7/m7.css';
+import { SelectMenu } from '@/components/ui/SelectMenu';
+import { TabBar } from '@/components/ui/Tabs';
 
 const regionName = (code: string) => REGIONS.find((r) => r.code === code)?.name ?? (code === 'unknown' ? t('Ko‘rsatilmagan') : code);
 const minutes = (m: number | null) => (m === null ? '—' : m < 60 ? t('{n} daq', { n: m }) : t('{n} soat', { n: Math.round(m / 60) }));
@@ -89,9 +91,9 @@ function ProjectForm({ shopId, project, installations, onClose }: { shopId: stri
           <Input label={t('Sana')} type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} />
         </div>
         <label className="gm-field__label" htmlFor="ptype">{t('Tizim turi')}</label>
-        <select id="ptype" className="qs-select" value={f.type} onChange={(e) => setF({ ...f, type: e.target.value as SystemType })}><option value="">—</option>{(['ON_GRID', 'HYBRID', 'OFF_GRID'] as SystemType[]).map((s) => <option key={s} value={s}>{SYSTEM_TYPE[s].title}</option>)}</select>
+        <SelectMenu id="ptype" className="qs-select" value={f.type} onChange={(e) => setF({ ...f, type: e.target.value as SystemType })}><option value="">—</option>{(['ON_GRID', 'HYBRID', 'OFF_GRID'] as SystemType[]).map((s) => <option key={s} value={s}>{SYSTEM_TYPE[s].title}</option>)}</SelectMenu>
         <label className="gm-field__label" htmlFor="pinst">{t('Platformadagi montajga bog‘lash («Tasdiqlangan montaj» belgisi)')}</label>
-        <select id="pinst" className="qs-select" value={f.installationId} onChange={(e) => setF({ ...f, installationId: e.target.value })}><option value="">—</option>{installations.map((i) => <option key={i.id} value={i.id}>№{i.quote.request.number} · {formatDate(i.confirmedAt)}{i.quote.systemPowerKw ? ` · ${kw(Number(i.quote.systemPowerKw))}` : ''}</option>)}</select>
+        <SelectMenu id="pinst" className="qs-select" value={f.installationId} onChange={(e) => setF({ ...f, installationId: e.target.value })}><option value="">—</option>{installations.map((i) => <option key={i.id} value={i.id}>№{i.quote.request.number} · {formatDate(i.confirmedAt)}{i.quote.systemPowerKw ? ` · ${kw(Number(i.quote.systemPowerKw))}` : ''}</option>)}</SelectMenu>
         <Textarea label={t('Tavsif')} value={f.description} maxLength={4000} onChange={(e) => setF({ ...f, description: e.target.value })} />
         <div className="qs-thumbs" aria-label={t('Rasmlar (sudrab tartiblang)')}>
           {images.map((img, i) => (
@@ -188,17 +190,17 @@ export function WidgetPage() {
           {!c.contrast.ok && <Alert tone="warning">{t('Oq matn bilan kontrast {r}:1 (kamida 4,5:1 kerak). Vidjetda yaqin mos rang ishlatiladi:', { r: c.contrast.ratio })} <button type="button" className="gm-link" onClick={() => setTheme({ ...theme, primaryColor: c.contrast.suggestion! })}>{c.contrast.suggestion}</button></Alert>}
           <Input label={t('Sarlavha')} value={theme.title} maxLength={80} onChange={(e) => setTheme({ ...theme, title: e.target.value })} />
           <label className="gm-field__label" htmlFor="wlang">{t('Til')}</label>
-          <select id="wlang" className="qs-select" value={theme.lang} onChange={(e) => setTheme({ ...theme, lang: e.target.value as 'uz' | 'oz' | 'ru' | 'en' })}><option value="uz">O‘zbekcha</option><option value="oz">Ўзбекча</option><option value="ru">Русский</option><option value="en">English</option></select>
+          <SelectMenu id="wlang" className="qs-select" value={theme.lang} onChange={(e) => setTheme({ ...theme, lang: e.target.value as 'uz' | 'oz' | 'ru' | 'en' })}><option value="uz">O‘zbekcha</option><option value="oz">Ўзбекча</option><option value="ru">Русский</option><option value="en">English</option></SelectMenu>
           <label className="qs-check"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} /> {t('Vidjet faol')}</label>
           {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}
           {save.isSuccess && <Alert tone="success">{t('Saqlandi')}</Alert>}
           <div className="qs-form__actions"><Button loading={save.isPending} onClick={() => save.mutate()}>{t('Saqlash')}</Button></div>
         </section>
         <section className="qs-page" style={{ gap: 'var(--qs-space-3)' }}>
-          <div className="qs-tabs" role="tablist">
+          <TabBar variant="tabs" role="tablist">
             <button type="button" role="tab" aria-selected={device === 'desktop'} className={cx(device === 'desktop' && 'is-on')} onClick={() => setDevice('desktop')}><Monitor size={15} /> Desktop</button>
             <button type="button" role="tab" aria-selected={device === 'mobile'} className={cx(device === 'mobile' && 'is-on')} onClick={() => setDevice('mobile')}><Smartphone size={15} /> {t('Mobil')}</button>
-          </div>
+          </TabBar>
           <div className={cx('qs-widget-preview', device === 'mobile' && 'is-mobile')}><iframe key={rev} src={c.frameUrl} title={t('Vidjet preview')} /></div>
           <div className="qs-card">
             <header><h2>{t('Embed kodi')}</h2><Button size="sm" variant="secondary" onClick={() => { void navigator.clipboard.writeText(c.embed); setCopied(true); window.setTimeout(() => setCopied(false), 2000); }}><Copy size={14} /> {copied ? t('Nusxalandi') : t('Nusxalash')}</Button></header>

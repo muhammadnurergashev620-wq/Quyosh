@@ -25,6 +25,10 @@ import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
 import { QuoteBuilder } from './QuoteBuilder';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Chip } from '@/components/ui/Chip';
+import { TabBar } from '@/components/ui/Tabs';
 
 const region = (code: string | null) => REGIONS.find((r) => r.code === code)?.name ?? null;
 const TABS: Array<{ key: RequestShopStatus | 'ALL'; label: string }> = [
@@ -59,7 +63,7 @@ function LeadCard({ row, onOpen, draggable, onDragStart, menu }: { row: ShopLead
         </div>
       </div>
       <div className="qs-req-card__side" onClick={(e) => e.stopPropagation()}>
-        <Badge tone={LEAD_STATUS[row.status].tone}>{LEAD_STATUS[row.status].label}</Badge>
+        <StatusBadge map={LEAD_STATUS} status={row.status} />
         <ResponseTimer row={row} />
         {row.unread > 0 && <span className="qs-unread">{row.unread}</span>}
         {row.quote && <small className="qs-muted">{sumShort(num(row.quote.total))}</small>}
@@ -99,17 +103,17 @@ export function ShopRequestsPage({ quotedOnly = false }: { quotedOnly?: boolean 
         <div><h1>{quotedOnly ? t('Takliflar') : t('So‘rovlar')}</h1><p>{t('Tez javob reytingingizni oshiradi: o‘rtacha javob vaqti profilingizda ko‘rinadi.')}</p></div>
         <div className="qs-page__actions">
           <label className="qs-check"><input type="checkbox" checked={mine} onChange={(e) => setMine(e.target.checked)} /> {t('Faqat menga tayinlangan')}</label>
-          <div className="qs-tabs" role="tablist" aria-label={t('Ko‘rinish')}>
+          <TabBar variant="tabs" role="tablist" aria-label={t('Ko‘rinish')}>
             <button type="button" role="tab" aria-selected={view === 'list'} className={cx(view === 'list' && 'is-on')} onClick={() => setParams({})}><List size={15} /> {t('Ro‘yxat')}</button>
             <button type="button" role="tab" aria-selected={view === 'pipeline'} className={cx(view === 'pipeline' && 'is-on')} onClick={() => setParams({ korinish: 'pipeline' })}><Kanban size={15} /> {t('Pipeline')}</button>
-          </div>
+          </TabBar>
         </div>
       </div>
       {view === 'list' ? (
         <>
-          <div className="qs-tabs" role="tablist">
+          <TabBar variant="tabs" role="tablist">
             {TABS.map((tb) => <button key={tb.key} type="button" role="tab" aria-selected={tab === tb.key} className={cx(tab === tb.key && 'is-on')} onClick={() => setTab(tb.key)}>{tb.label}</button>)}
-          </div>
+          </TabBar>
           {!items.length ? (
             <EmptyState icon={<ClipboardList size={30} />} title={t('So‘rov yo‘q')} description={t('Xizmat hududingizni va katalogni to‘ldiring — mijozlar sizni xaritada va qidiruvda topadi.')} />
           ) : (
@@ -138,9 +142,9 @@ export function ShopRequestsPage({ quotedOnly = false }: { quotedOnly?: boolean 
                   draggable={canMove}
                   onDragStart={(e) => e.dataTransfer.setData('text/plain', row.id)}
                   menu={canMove ? (
-                    <select className="qs-select" style={{ height: 30, fontSize: 12.5 }} aria-label={t('Bosqich')} value={row.pipelineStage} onChange={(e) => move.mutate({ id: row.id, stage: e.target.value as PipelineStage })}>
+                    <SelectMenu className="qs-select" style={{ height: 30, fontSize: 12.5 }} aria-label={t('Bosqich')} value={row.pipelineStage} onChange={(e) => move.mutate({ id: row.id, stage: e.target.value as PipelineStage })}>
                       {STAGES.map((s) => <option key={s} value={s}>{PIPELINE[s]}</option>)}
-                    </select>
+                    </SelectMenu>
                   ) : undefined}
                 />
               ))}
@@ -184,9 +188,9 @@ export function ShopRequestDetailPage() {
       <div className="qs-page__head">
         <div><h1>{l.customer.firstName ?? t('Mijoz')} · №{r.number}</h1><p>{region(r.regionCode) ?? t('Hudud ko‘rsatilmagan')} · {formatDateTime(l.sentAt)}</p></div>
         <div className="qs-page__actions">
-          <Badge tone={LEAD_STATUS[l.status].tone}>{LEAD_STATUS[l.status].label}</Badge>
+          <StatusBadge map={LEAD_STATUS} status={l.status} />
           {l.quote ? (
-            <Button variant="secondary" onClick={() => setBuilder(true)}><FileText size={15} /> {t('Taklif')} · {sumShort(num(l.quote.total))} <Badge tone={QUOTE_STATUS[l.quote.status].tone}>{QUOTE_STATUS[l.quote.status].label}</Badge></Button>
+            <Button variant="secondary" onClick={() => setBuilder(true)}><FileText size={15} /> {t('Taklif')} · {sumShort(num(l.quote.total))} <StatusBadge map={QUOTE_STATUS} status={l.quote.status} /></Button>
           ) : (
             openForQuote && can('quote.draft') && <Button onClick={() => setBuilder(true)}><FileText size={15} /> {t('Taklif tayyorlash')}</Button>
           )}
@@ -233,22 +237,22 @@ export function ShopRequestDetailPage() {
           onActivity={refresh}
           canWrite={can('messages.write')}
           canAsk={['SENT', 'VIEWED'].includes(l.status)}
-          context={<><strong>{SYSTEM_TYPE[r.systemType].title}{r.requiredCapacityKw ? ` · ${kw(num(r.requiredCapacityKw))}` : ''}</strong><Badge tone={LEAD_STATUS[l.status].tone}>{LEAD_STATUS[l.status].label}</Badge>{l.quote && <span>{t('Taklif')}: {sum(num(l.quote.total))}</span>}</>}
+          context={<><strong>{SYSTEM_TYPE[r.systemType].title}{r.requiredCapacityKw ? ` · ${kw(num(r.requiredCapacityKw))}` : ''}</strong><StatusBadge map={LEAD_STATUS} status={l.status} />{l.quote && <span>{t('Taklif')}: {sum(num(l.quote.total))}</span>}</>}
         />
         <aside className="qs-page" style={{ gap: 'var(--qs-space-4)' }}>
           <div className="qs-card">
             <h2>{t('Lead')}</h2>
             <div className="qs-form">
               <label className="gm-field__label" htmlFor="stage">{t('Bosqich')}</label>
-              <select id="stage" className="qs-select" disabled={!can('requests.assign')} value={l.pipelineStage} onChange={(e) => update.mutate({ pipelineStage: e.target.value as PipelineStage })}>
+              <SelectMenu id="stage" className="qs-select" disabled={!can('requests.assign')} value={l.pipelineStage} onChange={(e) => update.mutate({ pipelineStage: e.target.value as PipelineStage })}>
                 {STAGES.map((s) => <option key={s} value={s}>{PIPELINE[s]}</option>)}
-              </select>
+              </SelectMenu>
               <label className="gm-field__label" htmlFor="assignee">{t('Mas’ul xodim')}</label>
-              <select id="assignee" className="qs-select" disabled={!can('requests.assign')} value={l.assignedMember?.id ?? ''} onChange={(e) => update.mutate(e.target.value ? { assignedMemberId: e.target.value } : { unassign: true })}>
+              <SelectMenu id="assignee" className="qs-select" disabled={!can('requests.assign')} value={l.assignedMember?.id ?? ''} onChange={(e) => update.mutate(e.target.value ? { assignedMemberId: e.target.value } : { unassign: true })}>
                 <option value="">{t('Tayinlanmagan')}</option>
                 {(members.data?.members ?? []).map((m) => <option key={m.id} value={m.id}>{[m.user.firstName, m.user.lastName].filter(Boolean).join(' ') || m.user.phone}</option>)}
                 {l.assignedMember && !members.data && <option value={l.assignedMember.id}>{l.assignedMember.name}</option>}
-              </select>
+              </SelectMenu>
             </div>
           </div>
           <div className="qs-card qs-notes">
@@ -264,7 +268,7 @@ export function ShopRequestDetailPage() {
       <Modal open={declineOpen} onClose={() => setDeclineOpen(false)} title={t('So‘rovni rad etish')} footer={<Button variant="danger" loading={decline.isPending} onClick={() => decline.mutate()}>{t('Rad etish')}</Button>}>
         <div className="qs-form">
           <div className="qs-chips" role="radiogroup" aria-label={t('Sabab')}>
-            {DECLINE_PRESETS.map((p) => <button key={p} type="button" role="radio" aria-checked={preset === p} className={cx('qs-chip', preset === p && 'is-on')} onClick={() => setPreset(p)}>{p}</button>)}
+            {DECLINE_PRESETS.map((p) => <Chip key={p} role="radio" aria-checked={preset === p} onClick={() => setPreset(p)} selected={preset === p}>{p}</Chip>)}
           </div>
           <Textarea label={t('Izoh (ixtiyoriy)')} value={declineNote} maxLength={800} onChange={(e) => setDeclineNote(e.target.value)} />
           <small className="qs-muted">{t('Sabab mijozga ko‘rinadi.')}</small>

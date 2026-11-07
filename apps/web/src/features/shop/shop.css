@@ -119,7 +119,5 @@
 .qs-tabs button:hover { color: var(--qs-color-text); border-color: var(--qs-color-primary); }
 .qs-tabs button.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: var(--qs-color-primary-contrast, #fff); }
 .qs-tabs button:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); }
-.qs-select { height: 38px; padding: 0 32px 0 12px; border: 1px solid var(--qs-color-border); border-radius: 10px; background: var(--qs-color-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center; color: var(--qs-color-text); font: inherit; font-size: 14px; appearance: none; cursor: pointer; }
-.qs-select:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); border-color: var(--qs-color-primary); }
 .qs-input-sm { height: 34px; padding: 0 8px; border: 1px solid var(--qs-color-border); border-radius: 8px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-size: 14px; font-variant-numeric: tabular-nums; }
 .qs-input-sm:focus { outline: none; border-color: var(--qs-color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); }

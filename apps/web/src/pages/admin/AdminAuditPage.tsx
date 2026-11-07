@@ -26,6 +26,7 @@ import './AdminUsersPage.css';
 import '@/features/admin/list-shared.css';
 import './AdminAuditPage.css';
 import { t } from '@/i18n';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 const GROUP_ICON: Record<AuditGroup, ReactNode> = {
   auth: <LogIn size={16} />,
@@ -233,24 +234,24 @@ export function AdminAuditPage() {
           </label>
           <label className="gm-ul__select">
             <span>{t('Amal turi')}</span>
-            <select value={action} onChange={(event) => setAction(event.target.value)}>
+            <SelectMenu value={action} onChange={(event) => setAction(event.target.value)}>
               <option value="">{t('Barcha amallar')}</option>
               {ACTION_OPTIONS.map(([code, info]) => <option key={code} value={code}>{info.label}</option>)}
-            </select>
+            </SelectMenu>
           </label>
           <label className="gm-ul__select">
             <span>{t('Foydalanuvchi roli')}</span>
-            <select value={role} onChange={(event) => setRole(event.target.value as RoleTab)}>
+            <SelectMenu value={role} onChange={(event) => setRole(event.target.value as RoleTab)}>
               {ROLE_TABS.map((tab) => <option key={tab.value} value={tab.value}>{tab.value ? tab.label : t('Barcha rollar')}</option>)}
-            </select>
+            </SelectMenu>
           </label>
           <label className="gm-ul__select">
             <span>{t('Status')}</span>
-            <select value={outcome} onChange={(event) => setOutcome(event.target.value as '' | 'SUCCESS' | 'FAILED')}>
+            <SelectMenu value={outcome} onChange={(event) => setOutcome(event.target.value as '' | 'SUCCESS' | 'FAILED')}>
               <option value="">{t('Barcha holatlar')}</option>
               <option value="SUCCESS">{OUTCOME.SUCCESS.label}</option>
               <option value="FAILED">{OUTCOME.FAILED.label}</option>
-            </select>
+            </SelectMenu>
           </label>
           <div className="gm-ul__filters" ref={filterRef}>
             <Button variant="secondary" onClick={() => setFiltersOpen((open) => !open)} aria-expanded={filtersOpen}>
@@ -260,10 +261,10 @@ export function AdminAuditPage() {
               <div className="gm-ul__pop">
                 <label>
                   <span>{t('Bo‘lim')}</span>
-                  <select value={category} onChange={(event) => { setCategory(event.target.value); setAction(''); }}>
+                  <SelectMenu value={category} onChange={(event) => { setCategory(event.target.value); setAction(''); }}>
                     <option value="">{t('Barcha bo‘limlar')}</option>
                     {CATEGORY_OPTIONS.map((key) => <option key={key} value={GROUP_INFO[key].prefix}>{GROUP_INFO[key].label}</option>)}
-                  </select>
+                  </SelectMenu>
                 </label>
                 <label>
                   <span>{t('Bajaruvchi ID (raqam)')}</span>
@@ -380,9 +381,9 @@ export function AdminAuditPage() {
                 ),
               )}
               <button type="button" onClick={() => setPage(page + 1)} disabled={page >= data.pages} aria-label={t('Keyingi sahifa')}><ChevronRight size={16} /></button>
-              <select className="gm-adm2__size" value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} aria-label={t('Sahifadagi soni')}>
+              <SelectMenu className="gm-adm2__size" value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} aria-label={t('Sahifadagi soni')}>
                 {[10, 20, 50, 100].map((size) => <option key={size} value={size}>{t('{size} / sahifa', { size })}</option>)}
-              </select>
+              </SelectMenu>
             </nav>
           </footer>
         )}

@@ -23,6 +23,7 @@ import { CERT_TYPE } from '@/pages/m7/cert-labels';
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 
 type Member = AdminShopDetail['members'][number];
 interface Issued { title: string; login: string | null; password: string }
@@ -119,7 +120,7 @@ export function AdminShopDetailPage() {
           <p>{[shop.stir && `STIR ${shop.stir}`, shop.phone, shop.email].filter(Boolean).join(' · ')}</p>
         </div>
         <div className="qs-page__actions">
-          <Badge tone={SHOP_STATUS[shop.status].tone}>{SHOP_STATUS[shop.status].label}</Badge>
+          <StatusBadge map={SHOP_STATUS} status={shop.status} />
         </div>
       </div>
 

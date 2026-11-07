@@ -17,6 +17,7 @@ import { formatDate, formatRating } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
+import { TabBar } from '@/components/ui/Tabs';
 
 /** U11.11: sharhlar — yangi/javobsiz filtri, reyting taqsimoti, bitta ommaviy javob. */
 export function ShopReviewsPage() {
@@ -48,10 +49,10 @@ export function ShopReviewsPage() {
           ))}
         </div>
       </div>
-      <div className="qs-tabs" role="tablist">
+      <TabBar variant="tabs" role="tablist">
         <button type="button" role="tab" aria-selected={filter === 'all'} className={cx(filter === 'all' && 'is-on')} onClick={() => setFilter('all')}>{t('Barchasi')}</button>
         <button type="button" role="tab" aria-selected={filter === 'unanswered'} className={cx(filter === 'unanswered' && 'is-on')} onClick={() => setFilter('unanswered')}>{t('Javobsiz')}</button>
-      </div>
+      </TabBar>
       {!rows.length ? (
         <EmptyState icon={<MessageSquareQuote size={30} />} title={t('Sharh yo‘q')} description={t('Montaj qabul qilingach, mijoz sharh qoldirishi mumkin.')} />
       ) : (

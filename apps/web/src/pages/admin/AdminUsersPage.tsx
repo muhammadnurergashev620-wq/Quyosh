@@ -27,6 +27,7 @@ import type { UserAction } from '@/features/admin/user-actions';
 import type { AdminUser, ManagedStatus, UserFilters } from '@/features/admin/types';
 import './AdminUsersPage.css';
 import { t } from '@/i18n';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 const PAGE_SIZE = 20;
 type RoleFilter = '' | 'CUSTOMER' | 'SHOP';
@@ -278,12 +279,12 @@ export function AdminUsersPage() {
           </label>
           <label className="gm-ul__select">
             <span>{t('Holat')}</span>
-            <select value={status} onChange={(event) => setStatus(event.target.value as ManagedStatus | '')}>
+            <SelectMenu value={status} onChange={(event) => setStatus(event.target.value as ManagedStatus | '')}>
               <option value="">{t('Barcha holatlar')}</option>
               {STATUSES.map((value) => (
                 <option key={value} value={value}>{USER_STATUS[value].label}</option>
               ))}
-            </select>
+            </SelectMenu>
           </label>
           <div className="gm-ul__filters" ref={filterRef}>
             <Button variant="secondary" onClick={() => setFiltersOpen((open) => !open)} aria-expanded={filtersOpen}>

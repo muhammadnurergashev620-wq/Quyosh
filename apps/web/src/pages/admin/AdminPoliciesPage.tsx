@@ -3,7 +3,6 @@ import type { FormEvent } from 'react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
 import { Alert } from '@/components/ui/Alert';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
@@ -14,9 +13,10 @@ import { useAdminPolicies, useCreatePolicy, usePublishPolicy } from '@/features/
 import { POLICY_TYPE_LABEL } from '@/features/legal/types';
 import type { PolicyType } from '@/features/legal/types';
 import { t } from '@/i18n';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 
 const TYPE_OPTIONS = (Object.keys(POLICY_TYPE_LABEL) as PolicyType[]).map((value) => ({ value, label: POLICY_TYPE_LABEL[value] }));
-const STATUS_TONE = { DRAFT: 'warning', PUBLISHED: 'success', ARCHIVED: 'neutral' } as const;
+const POLICY_STATUS = { DRAFT: { label: t('Qoralama'), tone: 'warning' }, PUBLISHED: { label: t('E’lon qilingan'), tone: 'success' }, ARCHIVED: { label: t('Arxivda'), tone: 'neutral' } } as const;
 
 export function AdminPoliciesPage() {
   const policies = useAdminPolicies();
@@ -74,7 +74,7 @@ export function AdminPoliciesPage() {
                 <h3>
                   {policy.title} <small>v{policy.version}</small>
                 </h3>
-                <Badge tone={STATUS_TONE[policy.status]}>{policy.status}</Badge>
+                <StatusBadge map={POLICY_STATUS} status={policy.status} />
               </div>
               <p className="gm-card__meta">
                 {POLICY_TYPE_LABEL[policy.type]}

@@ -20,6 +20,9 @@ import { formatDate, formatDateTime, formatDecimal, formatNumber } from '@/lib/f
 import { useAppStore } from '@/store/app.store';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { Chip } from '@/components/ui/Chip';
+import { TabBar } from '@/components/ui/Tabs';
 
 const MODEL_STATUS: Record<ModelStatus, { label: string; tone: 'neutral' | 'success' | 'warning' | 'danger' }> = {
   PENDING: { label: t('Tekshiruvda'), tone: 'warning' },
@@ -88,7 +91,7 @@ function ModelReview({ model, onClose }: { model: AdminModel; onClose: () => voi
         <summary>{t('Boshqa xususiyatni qo‘shish')}</summary>
         <div className="qs-chips" style={{ marginTop: 8 }}>
           {SPEC_KEYS.filter((key) => specs[key] === undefined && key !== 'warrantyMonths').map((key) => (
-            <button key={key} type="button" className="qs-chip" onClick={() => setSpecs({ ...specs, [key]: '' })}>{SPEC_META[key].label}</button>
+            <Chip key={key} onClick={() => setSpecs({ ...specs, [key]: '' })}>{SPEC_META[key].label}</Chip>
           ))}
         </div>
       </details>
@@ -138,9 +141,9 @@ function ModelsTab() {
         <Input label={t('Qidirish')} value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('Brend yoki model')} />
         <div className="qs-chips">
           {(['PENDING', 'APPROVED', 'REJECTED', 'MERGED', undefined] as const).map((value) => (
-            <button key={value ?? 'all'} type="button" className={cx('qs-chip', status === value && 'is-on')} onClick={() => { setStatus(value); setPage(1); }}>
+            <Chip key={value ?? 'all'} onClick={() => { setStatus(value); setPage(1); }} selected={status === value}>
               {value ? MODEL_STATUS[value].label : t('Hammasi')}{value && <span>{list.data.counts[value] ?? 0}</span>}
-            </button>
+            </Chip>
           ))}
         </div>
       </div>
@@ -157,7 +160,7 @@ function ModelsTab() {
                     <td>{i18nText(model.category.nameI18n)}</td>
                     <td className="qs-num">{specValue(key, model[key])}</td>
                     <td>{model.proposedByShop?.name ?? '—'}</td>
-                    <td><Badge tone={MODEL_STATUS[model.status].tone}>{MODEL_STATUS[model.status].label}</Badge></td>
+                    <td><StatusBadge map={MODEL_STATUS} status={model.status} /></td>
                     <td className="qs-muted">{formatDate(model.createdAt)}</td>
                   </tr>
                 );
@@ -294,11 +297,11 @@ export function AdminCatalogPage() {
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Katalog moderatsiyasi')}</h1><p>{t('Yagona uskuna katalogi: do‘konlar taklif qilgan modellar, kategoriyalar va kurs.')}</p></div></div>
-      <div className="qs-tabs" role="tablist">
+      <TabBar variant="tabs" role="tablist">
         {([['models', t('Modellar')], ['categories', t('Kategoriyalar')], ['rates', t('Valyuta kursi')]] as const).map(([key, label]) => (
           <button key={key} type="button" role="tab" aria-selected={tab === key} className={cx(tab === key && 'is-on')} onClick={() => setTab(key)}>{label}</button>
         ))}
-      </div>
+      </TabBar>
       {tab === 'models' && <ModelsTab />}
       {tab === 'categories' && <CategoriesTab />}
       {tab === 'rates' && <RatesTab />}

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { CheckCircle2, Circle } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Badge } from '@/components/ui/Badge';
 import { PageLoader } from '@/components/common/PageLoader';
 import { useCurrentShop } from '@/features/shop/current-shop';
 import { useManagedShop } from '@/features/shop/hooks';
@@ -13,6 +12,7 @@ import { formatNumber, formatRating } from '@/lib/format';
 import { t } from '@/i18n';
 import { ShopKpis } from '@/pages/m7/ShopM7Pages';
 import '@/features/shop/shop.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 
 const CHECKLIST: Record<ManagedShop['checklist'][number]['key'], { label: string; to: string }> = {
   profile: { label: t('Logo va tavsif'), to: '/dokon/profil' },
@@ -40,7 +40,7 @@ export function ShopDashboardPage() {
         </div>
         <div className="qs-page__actions">
           <ShopSwitcher />
-          <Badge tone={SHOP_STATUS[shop.status].tone}>{SHOP_STATUS[shop.status].label}</Badge>
+          <StatusBadge map={SHOP_STATUS} status={shop.status} />
         </div>
       </div>
 

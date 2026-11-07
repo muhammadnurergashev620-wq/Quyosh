@@ -31,6 +31,9 @@ import { track } from '@/features/m7/track';
 import '@/features/shop/shop.css';
 import '@/features/map/map.css';
 import '@/features/calc/calc.css';
+import { SelectMenu } from '@/components/ui/SelectMenu';
+import { Chip } from '@/components/ui/Chip';
+import { TabBar } from '@/components/ui/Tabs';
 
 const DETAILED_DRAFT_KIND = 'detailed';
 
@@ -135,11 +138,11 @@ function AreaStep({ state, set, result }: { state: DetailedState; set: (patch: P
 
   return (
     <div className="qs-form">
-      <div className="qs-segment" role="group" aria-label={t('Maydon usuli')}>
+      <TabBar variant="segmented" role="group" aria-label={t('Maydon usuli')}>
         {([['DRAW', t('Xaritada chizish')], ...(hasSession ? [['SITE', t('Saqlangan obyekt')]] : []), ['PRESET', t('Taxminiy hajm')], ['MANUAL', t('Raqam bilan')]] as Array<[DetailedState['areaMode'], string]>).map(([key, label]) => (
           <button key={key} type="button" className={cx(state.areaMode === key && 'is-on')} onClick={() => set({ areaMode: key, siteId: key === 'SITE' ? state.siteId : null })}>{label}</button>
         ))}
-      </div>
+      </TabBar>
       {state.areaMode === 'DRAW' && (
         <>
           <div className="qs-map-draw">
@@ -227,9 +230,9 @@ function AppliancesEditor({ rows, onChange }: { rows: ApplianceRow[]; onChange: 
     <div className="qs-form">
       <div className="qs-chips">
         {reference.data?.templates.map((template) => (
-          <button key={template.code} type="button" className="qs-chip" onClick={() => onChange(template.itemsJson.flatMap((item) => { const type = types.find((x) => x.code === item.applianceTypeCode); return type ? [{ code: type.code, powerW: type.defaultPowerW, count: item.count, hoursPerDay: item.hoursPerDay, months: type.defaultMonths, isCritical: !!item.isCritical }] : []; }))}>
+          <Chip key={template.code} onClick={() => onChange(template.itemsJson.flatMap((item) => { const type = types.find((x) => x.code === item.applianceTypeCode); return type ? [{ code: type.code, powerW: type.defaultPowerW, count: item.count, hoursPerDay: item.hoursPerDay, months: type.defaultMonths, isCritical: !!item.isCritical }] : []; }))}>
             {i18nText(template.nameI18n as { uz: string })}
-          </button>
+          </Chip>
         ))}
       </div>
       <div className="qs-appliances">
@@ -244,10 +247,10 @@ function AppliancesEditor({ rows, onChange }: { rows: ApplianceRow[]; onChange: 
           </div>
         ))}
       </div>
-      <select className="qs-select" aria-label={t('Texnika qo‘shish')} value="" onChange={(e) => { const type = types.find((x) => x.code === e.target.value); if (type) onChange([...rows, { code: type.code, powerW: type.defaultPowerW, count: 1, hoursPerDay: Number(type.defaultHoursPerDay), months: type.defaultMonths, isCritical: false }]); }}>
+      <SelectMenu className="qs-select" aria-label={t('Texnika qo‘shish')} value="" onChange={(e) => { const type = types.find((x) => x.code === e.target.value); if (type) onChange([...rows, { code: type.code, powerW: type.defaultPowerW, count: 1, hoursPerDay: Number(type.defaultHoursPerDay), months: type.defaultMonths, isCritical: false }]); }}>
         <option value="">{t('+ Texnika qo‘shish…')}</option>
         {types.map((type) => <option key={type.code} value={type.code}>{i18nText(type.nameI18n as { uz: string })} · {type.defaultPowerW} W</option>)}
-      </select>
+      </SelectMenu>
       <p className="qs-stat-line">
         <span>{t('Oylik')}: <b>{kwh(Math.round(monthly))}</b></span>
         <span>{t('Yillik')}: <b>{kwh(Math.round(monthly * 12))}</b></span>
@@ -342,7 +345,7 @@ export function DetailedCalcPage() {
   } else if (step === 3) {
     body = (
       <div className="qs-form">
-        <div className="qs-segment" role="tablist">{consumptionTabs.map(([key, label]) => <button key={key} type="button" role="tab" aria-selected={state.consumptionTab === key} className={cx(state.consumptionTab === key && 'is-on')} onClick={() => set({ consumptionTab: key })}>{label}</button>)}</div>
+        <TabBar variant="segmented" role="tablist">{consumptionTabs.map(([key, label]) => <button key={key} type="button" role="tab" aria-selected={state.consumptionTab === key} className={cx(state.consumptionTab === key && 'is-on')} onClick={() => set({ consumptionTab: key })}>{label}</button>)}</TabBar>
         {state.consumptionTab === 'kwh' && <Input label={t('O‘rtacha oylik sarf, kWh')} inputMode="numeric" value={state.kwhValue} onChange={(e) => set({ kwhValue: e.target.value.replace(/[^\d]/g, '') }, false)} onBlur={() => setCommitted(state)} />}
         {state.consumptionTab === 'bill' && <Input label={t('O‘rtacha oylik to‘lov, so‘m')} inputMode="numeric" value={state.billValue} onChange={(e) => set({ billValue: e.target.value.replace(/[^\d]/g, '') }, false)} onBlur={() => setCommitted(state)} />}
         {state.consumptionTab === 'twelve' && (
@@ -397,10 +400,10 @@ export function DetailedCalcPage() {
   } else {
     body = (
       <div className="qs-form">
-        <div className="qs-segment" role="group">
+        <TabBar variant="segmented" role="group">
           <button type="button" className={cx(state.financing.kind === 'CASH' && 'is-on')} onClick={() => set({ financing: { ...state.financing, kind: 'CASH' } })}>{t('Naqd')}</button>
           <button type="button" className={cx(state.financing.kind === 'LOAN' && 'is-on')} onClick={() => set({ financing: { ...state.financing, kind: 'LOAN' } })}>{t('Kredit / bo‘lib to‘lash')}</button>
-        </div>
+        </TabBar>
         {state.financing.kind === 'LOAN' && (
           <>
             <Select label={t('Moliyalashtirish mahsuloti')} value={state.financing.productId} onChange={(e) => { const p = reference.data?.financing.find((x) => x.id === e.target.value); set({ financing: { ...state.financing, productId: e.target.value, termMonths: p?.allowedTerms[0] ?? state.financing.termMonths, paymentType: p?.paymentType ?? state.financing.paymentType } }); }} options={[{ value: '', label: t('Qo‘lda kiritish') }, ...(reference.data?.financing ?? []).map((p) => ({ value: p.id, label: `${p.providerName} · ${formatPercent(Number(p.annualRate), 1)}` }))]} />
@@ -408,10 +411,10 @@ export function DetailedCalcPage() {
             <Input label={t('Boshlang‘ich to‘lov, so‘m')} inputMode="numeric" value={state.financing.downPayment} onChange={(e) => set({ financing: { ...state.financing, downPayment: e.target.value.replace(/\D/g, '') } }, false)} onBlur={() => setCommitted(state)} hint={product ? t('Kamida {p} %', { p: Math.round(Number(product.minDownPaymentPct) * 100) }) : undefined} />
             <div className="qs-chips" role="group" aria-label={t('Muddat')}>
               {(product?.allowedTerms.length ? product.allowedTerms : [6, 12, 18, 24, 36]).map((term) => (
-                <button key={term} type="button" className={cx('qs-chip', state.financing.termMonths === term && 'is-on')} onClick={() => set({ financing: { ...state.financing, termMonths: term } })}>{t('{n} oy', { n: term })}</button>
+                <Chip key={term} onClick={() => set({ financing: { ...state.financing, termMonths: term } })} selected={state.financing.termMonths === term}>{t('{n} oy', { n: term })}</Chip>
               ))}
             </div>
-            {!product && <div className="qs-segment" role="group"><button type="button" className={cx(state.financing.paymentType === 'ANNUITY' && 'is-on')} onClick={() => set({ financing: { ...state.financing, paymentType: 'ANNUITY' } })}>{t('Annuitet')}</button><button type="button" className={cx(state.financing.paymentType === 'DIFFERENTIATED' && 'is-on')} onClick={() => set({ financing: { ...state.financing, paymentType: 'DIFFERENTIATED' } })}>{t('Differensial')}</button></div>}
+            {!product && <TabBar variant="segmented" role="group"><button type="button" className={cx(state.financing.paymentType === 'ANNUITY' && 'is-on')} onClick={() => set({ financing: { ...state.financing, paymentType: 'ANNUITY' } })}>{t('Annuitet')}</button><button type="button" className={cx(state.financing.paymentType === 'DIFFERENTIATED' && 'is-on')} onClick={() => set({ financing: { ...state.financing, paymentType: 'DIFFERENTIATED' } })}>{t('Differensial')}</button></TabBar>}
             {result?.financing && (
               <p className="qs-stat-line">
                 <span>{t('Oylik to‘lov')}: <b>{result.financing.firstPayment === result.financing.lastPayment ? sumShort(result.financing.firstPayment) : `${sumShort(result.financing.firstPayment)} → ${sumShort(result.financing.lastPayment)}`}</b></span>

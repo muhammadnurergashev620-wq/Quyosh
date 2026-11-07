@@ -18,6 +18,7 @@ import { formatDateTime } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
+import { TabBar } from '@/components/ui/Tabs';
 
 const FLAG_TEXT: Record<string, string> = {
   SELF_REVIEW: t('O‘z do‘koniga sharh'),
@@ -38,7 +39,7 @@ function Reviews() {
   const act = useMutation({ mutationFn: ({ id, decision }: { id: string; decision: 'PUBLISHED' | 'HIDDEN' }) => adminDealsService.moderate(id, decision), onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['admin-reviews'] }) });
   return (
     <>
-      <div className="qs-tabs">{(['PENDING', 'PUBLISHED', 'HIDDEN'] as const).map((s) => <button key={s} type="button" className={cx(status === s && 'is-on')} onClick={() => setStatus(s)}>{s === 'PENDING' ? t('Tekshiruvda') : s === 'PUBLISHED' ? t('E’lon qilingan') : t('Yashirilgan')}</button>)}</div>
+      <TabBar variant="tabs">{(['PENDING', 'PUBLISHED', 'HIDDEN'] as const).map((s) => <button key={s} type="button" className={cx(status === s && 'is-on')} onClick={() => setStatus(s)}>{s === 'PENDING' ? t('Tekshiruvda') : s === 'PUBLISHED' ? t('E’lon qilingan') : t('Yashirilgan')}</button>)}</TabBar>
       {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ro‘yxat bo‘sh')} /> : (
         <div className="qs-table-wrap">
           <table className="qs-table">
@@ -74,7 +75,7 @@ function Complaints() {
   const act = useMutation({ mutationFn: ({ id, s }: { id: string; s: 'RESOLVED' | 'REJECTED' }) => adminDealsService.resolveComplaint(id, s), onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['admin-complaints'] }) });
   return (
     <>
-      <div className="qs-tabs">{(['OPEN', 'RESOLVED', 'REJECTED'] as const).map((s) => <button key={s} type="button" className={cx(status === s && 'is-on')} onClick={() => setStatus(s)}>{s === 'OPEN' ? t('Ochiq') : s === 'RESOLVED' ? t('Hal qilingan') : t('Rad etilgan')}</button>)}</div>
+      <TabBar variant="tabs">{(['OPEN', 'RESOLVED', 'REJECTED'] as const).map((s) => <button key={s} type="button" className={cx(status === s && 'is-on')} onClick={() => setStatus(s)}>{s === 'OPEN' ? t('Ochiq') : s === 'RESOLVED' ? t('Hal qilingan') : t('Rad etilgan')}</button>)}</TabBar>
       {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ro‘yxat bo‘sh')} /> : (
         <div className="qs-table-wrap">
           <table className="qs-table">
@@ -179,9 +180,9 @@ export function AdminModerationPage() {
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Sharhlar va shikoyatlar')}</h1><p>{t('Risk belgilari sababi faqat adminga ko‘rinadi (TZ 13.4).')}</p></div></div>
-      <div className="qs-tabs" role="tablist">
+      <TabBar variant="tabs" role="tablist">
         {([['reviews', t('Sharhlar')], ['complaints', t('Shikoyatlar')], ['disputes', t('Montaj e’tirozlari')], ['settings', t('Sozlamalar')]] as Array<[Tab, string]>).map(([k, label]) => <button key={k} type="button" role="tab" aria-selected={tab === k} className={cx(tab === k && 'is-on')} onClick={() => setTab(k)}>{label}</button>)}
-      </div>
+      </TabBar>
       {tab === 'reviews' && <Reviews />}
       {tab === 'complaints' && <Complaints />}
       {tab === 'disputes' && <Disputes />}

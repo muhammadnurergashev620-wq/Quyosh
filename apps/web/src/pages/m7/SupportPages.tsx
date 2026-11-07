@@ -24,6 +24,8 @@ import { t } from '@/i18n';
 import { ArticleCardView } from './KnowledgePages';
 import '@/features/shop/shop.css';
 import '@/features/m7/m7.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 export const CATEGORY_LABEL: Record<string, string> = {
   ACCOUNT: t('Akkaunt va kirish'), CALCULATOR: t('Kalkulyator'), REQUEST_QUOTE: t('So‘rov va takliflar'), INSTALLATION: t('Montaj'),
@@ -66,7 +68,7 @@ function NewTicket({ onDone }: { onDone: (r: { id: string; code: string; firstRe
   return (
     <div className="qs-form">
       <label className="gm-field__label" htmlFor="cat">{t('Kategoriya')}</label>
-      <select id="cat" className="qs-select" value={category} onChange={(e) => setCategory(e.target.value)}>{Object.entries(CATEGORY_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select>
+      <SelectMenu id="cat" className="qs-select" value={category} onChange={(e) => setCategory(e.target.value)}>{Object.entries(CATEGORY_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</SelectMenu>
       <Input label={t('Mavzu')} value={subject} maxLength={200} onChange={(e) => setSubject(e.target.value)} required />
       {!!suggestions.data?.length && (
         <Alert tone="info" title={t('Balki bu javob yordam beradi?')}>
@@ -78,12 +80,12 @@ function NewTicket({ onDone }: { onDone: (r: { id: string; code: string; firstRe
       {hasSession && (
         <>
           <label className="gm-field__label" htmlFor="rel">{t('Bog‘liq obyekt (ixtiyoriy)')}</label>
-          <select id="rel" className="qs-select" value={related} onChange={(e) => setRelated(e.target.value)}>
+          <SelectMenu id="rel" className="qs-select" value={related} onChange={(e) => setRelated(e.target.value)}>
             <option value="">—</option>
             {calcs.data?.map((c) => <option key={c.id} value={`Calculation:${c.id}`}>{t('Hisob')}: {c.title || formatDateTime(c.createdAt)}</option>)}
             {requests.data?.map((r) => <option key={r.id} value={`QuoteRequest:${r.id}`}>{t('So‘rov №{n}', { n: r.number })}</option>)}
             {installs.data?.map((i) => <option key={i.id} value={`Installation:${i.id}`}>{t('Montaj')}: {i.shop.name}</option>)}
-          </select>
+          </SelectMenu>
           <div className="qs-page__actions">
             <label className="gm-button gm-button--secondary gm-button--sm" style={{ cursor: 'pointer' }}>
               <Paperclip size={14} /> {t('Fayl biriktirish')}
@@ -159,7 +161,7 @@ export function TicketsPage() {
           {list.data.map((x) => (
             <Link key={x.id} to={`/mijoz/murojaatlar/${x.id}`} className="qs-req-card">
               <div><h3>{x.code} · {x.subject}</h3><div className="qs-req-card__meta"><span>{CATEGORY_LABEL[x.category] ?? x.category}</span><span>{formatRelativeTime(x.lastMessageAt)}</span></div></div>
-              <div className="qs-req-card__side"><Badge tone={TICKET_STATUS[x.status].tone}>{TICKET_STATUS[x.status].label}</Badge></div>
+              <div className="qs-req-card__side"><StatusBadge map={TICKET_STATUS} status={x.status} /></div>
             </Link>
           ))}
         </div>
@@ -187,7 +189,7 @@ export function TicketPage() {
       <div className="qs-page__head">
         <div><h1>{x.code} · {x.subject}</h1><p>{CATEGORY_LABEL[x.category] ?? x.category} · {formatDateTime(x.createdAt)}</p></div>
         <div className="qs-page__actions">
-          <Badge tone={TICKET_STATUS[x.status].tone}>{TICKET_STATUS[x.status].label}</Badge>
+          <StatusBadge map={TICKET_STATUS} status={x.status} />
           {!closed && x.status !== 'RESOLVED' && <Button variant="secondary" loading={resolve.isPending} onClick={() => resolve.mutate()}>{t('Hal bo‘ldi deb belgilash')}</Button>}
           {x.status === 'RESOLVED' && <Button variant="ghost" loading={reopen.isPending} onClick={() => reopen.mutate()}>{t('Qayta ochish')}</Button>}
         </div>

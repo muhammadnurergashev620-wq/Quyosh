@@ -1,0 +1,141 @@
+/* ═══════════ Yagona dizayn qatlami — eng oxirida yuklanadi, eski qatlamlardagi farqlarni bir xil holatga keltiradi ═══════════ */
+
+/* ── Form maydonlari (U5): 46 px, radius 12, surface-muted fon; focus — surface + halqa ── */
+.gm-field { gap: 6px; }
+.gm-field__label { font-size: 12.5px; font-weight: 600; color: var(--qs-color-text); }
+.gm-field__control,
+.qs-input-sm,
+.gm-chooser__search input {
+  border-radius: var(--qs-radius-12);
+}
+.gm-field__control {
+  min-height: 46px;
+  border: 1px solid var(--qs-color-border);
+  background: var(--qs-color-surface-muted);
+  font-size: 14.5px;
+  transition: border-color var(--qs-dur-2) var(--qs-ease-standard), background-color var(--qs-dur-2) var(--qs-ease-standard), box-shadow var(--qs-dur-2) var(--qs-ease-standard);
+}
+textarea.gm-field__control { min-height: 108px; padding-top: 12px; padding-bottom: 12px; }
+.gm-field__control:hover:not(:disabled) { border-color: var(--qs-color-border-strong); }
+.gm-field__control:focus,
+.gm-field__control:focus-visible {
+  outline: none;
+  background: var(--qs-color-surface);
+  border-color: var(--qs-color-primary);
+  box-shadow: 0 0 0 3px var(--qs-color-primary-ring);
+}
+.gm-field__control:-webkit-autofill,
+.gm-field__control:-webkit-autofill:hover,
+.gm-field__control:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--qs-color-surface-muted) inset;
+  box-shadow: 0 0 0 1000px var(--qs-color-surface-muted) inset;
+}
+.gm-field__control--error, .gm-field__control[aria-invalid='true'] { border-color: var(--qs-color-danger); }
+.gm-field__control--error:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-color-danger) 22%, transparent); }
+.gm-field__hint { font-size: 12.5px; color: var(--qs-color-text-muted); }
+.gm-field__select { width: 100%; }
+
+/* Kichik (jadval/filtr ichidagi) maydon */
+.qs-input-sm { height: 36px; border: 1px solid var(--qs-color-border); background: var(--qs-color-surface-muted); }
+.qs-input-sm:focus { outline: none; background: var(--qs-color-surface); border-color: var(--qs-color-primary); box-shadow: 0 0 0 3px var(--qs-color-primary-ring); }
+
+/* Nativ select qolgan joylar (komponentga ko‘chirilguncha) ham bir xil ko‘rinishda */
+select:not(.gm-selectx__native) {
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 40px;
+  padding: 0 34px 0 12px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: var(--qs-radius-12);
+  background-color: var(--qs-color-surface-muted);
+  color: var(--qs-color-text);
+  font: inherit;
+  font-size: 14px;
+}
+
+/* ── Checkbox va radio: maxsus ko‘rinish, belgi chiziq animatsiyasi bilan (160 ms) ── */
+input[type='checkbox']:not([role='switch']):not(.gm-visually-hidden)::after { transition: opacity var(--qs-dur-2) var(--qs-ease-out), transform var(--qs-dur-2) var(--qs-ease-out); }
+input[type='radio'] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-grid;
+  place-content: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1.5px solid var(--qs-color-border-strong);
+  border-radius: 50%;
+  background: var(--qs-color-surface);
+  cursor: pointer;
+  transition: border-color var(--qs-dur-2) var(--qs-ease-standard);
+}
+input[type='radio']::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--qs-color-primary);
+  transform: scale(0);
+  transition: transform var(--qs-dur-2) var(--qs-ease-out);
+}
+input[type='radio']:checked { border-color: var(--qs-color-primary); }
+input[type='radio']:checked::before { transform: scale(1); }
+input[type='radio']:focus-visible { outline: none; box-shadow: var(--qs-ring); }
+
+/* Switch 40×24 */
+.gm-switch__track { width: 40px; height: 24px; transition: background-color var(--qs-dur-2) var(--qs-ease-standard); }
+.gm-switch__thumb { width: 20px; height: 20px; background: var(--qs-color-on-dark); transition: transform var(--qs-dur-2) var(--qs-ease-out); }
+.gm-switch input:focus-visible + .gm-switch__track, .gm-switch:focus-within .gm-switch__track { box-shadow: var(--qs-ring); }
+
+/* ── Jadval (U5): sticky sarlavha, 52 px qator, hover, raqamlar o‘ngda ── */
+.qs-table th, .gm-ul__table th {
+  position: sticky; top: 0; z-index: 1;
+  height: 44px; padding: 0 14px;
+  background: var(--qs-color-surface-muted); color: var(--qs-color-text-muted);
+  font-size: 12.5px; font-weight: 600; letter-spacing: .01em; text-align: left; white-space: nowrap;
+}
+.qs-table td { padding: 14px; border-top: 1px solid var(--qs-color-border); vertical-align: middle; }
+.qs-table tbody tr { transition: background-color var(--qs-dur-2) var(--qs-ease-standard); }
+.qs-table tbody tr:hover td { background: color-mix(in srgb, var(--qs-color-primary) 4%, transparent); }
+.qs-table .qs-num, .qs-table .qs-right { text-align: right; font-variant-numeric: tabular-nums; }
+.qs-table-wrap, .gm-ul__table { border-radius: var(--qs-radius-md); box-shadow: var(--qs-shadow-xs); }
+
+/* ── Modal / Drawer / Confirm: qorong‘i fon + 4 px blur, radius 26, scale .98 → 1 (260 ms) ── */
+.gm-modal-overlay, .gm-udr__backdrop {
+  background: var(--qs-color-overlay);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.gm-modal { border-radius: var(--qs-radius-xl); box-shadow: var(--qs-shadow-lg); animation: gm-modal-in var(--qs-dur-3) var(--qs-ease-out); }
+@keyframes gm-modal-in { from { opacity: 0; transform: scale(.98) translateY(6px); } }
+.gm-udr { box-shadow: var(--qs-shadow-lg); animation: gm-udr-in var(--qs-dur-3) var(--qs-ease-out); }
+.gm-modal__close:focus-visible { outline: none; box-shadow: var(--qs-ring); }
+@media (max-width: 639px) {
+  .gm-modal { border-radius: var(--qs-radius-xl) var(--qs-radius-xl) 0 0; }
+}
+
+/* ── Skeleton: shimmer (1,4 s, chapdan o‘ngga) ── */
+.gm-skeleton {
+  background: linear-gradient(90deg, var(--qs-color-surface-muted) 0%, color-mix(in srgb, var(--qs-color-surface) 70%, var(--qs-color-surface-muted)) 45%, var(--qs-color-surface-muted) 90%);
+  background-size: 220% 100%;
+  animation: gm-skeleton-shimmer 1.4s linear infinite;
+}
+
+/* ── EmptyState: 64 px ikonka-doira, Onest 700 18 px sarlavha ── */
+.gm-empty-state { gap: var(--qs-space-2); padding: var(--qs-space-6) var(--qs-space-4); }
+.gm-empty-state__icon { width: 64px; height: 64px; border-radius: 50%; background: var(--qs-color-primary-soft); color: var(--qs-color-primary); box-shadow: 0 0 0 8px color-mix(in srgb, var(--qs-color-primary-soft) 45%, transparent); }
+.gm-empty-state__title { font-family: var(--qs-font-display); font-weight: 700; font-size: 18px; }
+.gm-empty-state__description { max-width: 46ch; }
+
+/* ── Umumiy fokus: har bir interaktiv elementda ko‘rinadi ── */
+a:focus-visible, button:focus-visible, [role='button']:focus-visible, [tabindex]:focus-visible { outline: none; box-shadow: var(--qs-ring); border-radius: var(--qs-radius-sm); }
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-modal, .gm-udr { animation-duration: var(--qs-dur-1); }
+  .gm-skeleton { animation: none; }
+}
+
+/* SelectMenu o‘rami hech qachon ramka/fon olmaydi (eski .qs-select kabi klasslar triggerga emas, o‘ramga tushadi). */
+.gm-selectx[class] { border: 0; padding: 0; background: none; box-shadow: none; min-height: 0; height: auto; appearance: none; }
+.gm-selectx.qs-select, .gm-selectx.gm-field__select { width: 100%; }

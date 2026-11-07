@@ -22,6 +22,8 @@ import { formatDate, formatDateTime } from '@/lib/format';
 import { contentText, t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { TabBar } from '@/components/ui/Tabs';
 
 const ORDER: InstallationStatus[] = ['AGREED', 'SITE_VISIT_SCHEDULED', 'INSTALLATION_SCHEDULED', 'INSTALLED', 'CONFIRMED'];
 const i18n = (value: Record<string, string> | undefined) => contentText(value);
@@ -126,13 +128,13 @@ function Checklist({ view, onDone }: { view: InstallationView; onDone: () => voi
                   <strong>{i18n(item.titleI18n)}{item.required ? '' : ` (${t('ixtiyoriy')})`}</strong>
                   {item.hintI18n && <small>{i18n(item.hintI18n)}</small>}
                 </div>
-                <div className="qs-seg" role="radiogroup" aria-label={i18n(item.titleI18n)}>
+                <TabBar variant="segmented" role="radiogroup" aria-label={i18n(item.titleI18n)}>
                   {(['OK', 'ISSUE', 'NA'] as const).map((st) => (
                     <button key={st} type="button" role="radio" aria-checked={a?.status === st} className={cx(a?.status === st && 'is-on', st === 'ISSUE' && 'is-issue')} onClick={() => set(item.code, { status: st })}>
                       {st === 'OK' ? t('OK') : st === 'ISSUE' ? t('Muammo bor') : t('Tegishli emas')}
                     </button>
                   ))}
-                </div>
+                </TabBar>
               </div>
               {a?.status === 'ISSUE' && <Textarea label={t('Muammoni yozing')} required autoFocus value={a.comment ?? ''} maxLength={2000} onChange={(e) => set(item.code, { comment: e.target.value })} />}
               {(item.photoRequired || a?.status === 'ISSUE') && (
@@ -269,7 +271,7 @@ export function InstallationPage() {
           <p>{v.quote.systemType ? SYSTEM_TYPE[v.quote.systemType].title : ''}{v.quote.systemPowerKw ? ` · ${kw(num(v.quote.systemPowerKw))}` : ''} · {sum(num(v.quote.total))}</p>
         </div>
         <div className="qs-page__actions">
-          <Badge tone={INSTALLATION_STATUS[v.status].tone}>{INSTALLATION_STATUS[v.status].label}</Badge>
+          <StatusBadge map={INSTALLATION_STATUS} status={v.status} />
           {chatLink && <Link className="gm-button gm-button--secondary gm-button--md" to={chatLink}><MessageCircle size={16} /> {t('Yozishma')}</Link>}
           <Link className="gm-button gm-button--ghost gm-button--md" to={customer ? `/mijoz/takliflar/${v.quote.id}` : `/dokon/sorovlar/${v.requestShopId ?? ''}`}>{t('Taklif')}</Link>
         </div>
@@ -366,7 +368,7 @@ function InstallationsList({ side, shopId }: { side: 'CUSTOMER' | 'SHOP'; shopId
                   {row.scheduledDate && <span>{t('Montaj: {d}', { d: formatDate(row.scheduledDate) })}</span>}
                 </div>
               </div>
-              <div className="qs-req-card__side"><Badge tone={INSTALLATION_STATUS[row.status].tone}>{INSTALLATION_STATUS[row.status].label}</Badge></div>
+              <div className="qs-req-card__side"><StatusBadge map={INSTALLATION_STATUS} status={row.status} /></div>
             </Link>
           ))}
         </div>

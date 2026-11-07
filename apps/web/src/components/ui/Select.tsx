@@ -2,13 +2,14 @@ import { forwardRef, useId } from 'react';
 import type { SelectHTMLAttributes } from 'react';
 import { cx } from '@/lib/utils';
 import './Field.css';
+import { SelectMenu } from './SelectMenu';
 
 export interface SelectOption {
   value: string;
   label: string;
 }
 
-export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children'> {
+export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children' | 'size'> {
   label: string;
   options: SelectOption[];
   placeholder?: string;
@@ -29,13 +30,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <label htmlFor={fieldId} className="gm-field__label">
           {label}
         </label>
-        <select
+        <SelectMenu
           ref={ref}
           id={fieldId}
           required={required}
           aria-invalid={!!error}
           aria-describedby={describedBy}
-          className={cx('gm-field__control', error && 'gm-field__control--error', className)}
+          invalid={!!error}
+          className={cx('gm-field__select', className)}
           autoComplete="off"
           // value (controlled) berilgan bo‘lsa defaultValue qo‘yilmaydi — React ogohlantirishi chiqmasin.
           {...(rest.value === undefined && rest.defaultValue === undefined ? { defaultValue: '' } : {})}
@@ -51,7 +53,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               {option.label}
             </option>
           ))}
-        </select>
+        </SelectMenu>
         {hint && !error && (
           <p id={hintId} className="gm-field__hint">
             {hint}

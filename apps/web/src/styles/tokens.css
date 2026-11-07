@@ -75,6 +75,47 @@
   --qs-grad-primary: var(--qs-color-primary);
   --qs-grad-soft: var(--qs-color-primary-soft);
   --qs-ease: cubic-bezier(.2,.75,.2,1);
+
+  /* ── U2 to‘ldirilgan tokenlar (UI sayqal) ── */
+  --qs-color-info: #2563eb;
+  --qs-color-success-border: color-mix(in srgb, var(--qs-color-success) 25%, transparent);
+  --qs-color-warning-border: color-mix(in srgb, var(--qs-color-warning) 25%, transparent);
+  --qs-color-danger-border: color-mix(in srgb, var(--qs-color-danger) 25%, transparent);
+  --qs-color-info-border: color-mix(in srgb, var(--qs-color-info) 25%, transparent);
+  --qs-color-neutral-bg: var(--qs-color-surface-muted);
+  --qs-color-primary-active: color-mix(in srgb, var(--qs-color-primary-hover) 88%, var(--qs-color-ink));
+  --qs-color-primary-ring: color-mix(in srgb, var(--qs-color-primary) 32%, transparent);
+  --qs-color-on-dark: #ffffff;
+  --qs-color-overlay: rgba(7, 12, 26, .5);
+  /* Turga mos aksent ranglar (bildirishnoma, ikonka-qutilar) */
+  --qs-color-violet: #7c3aed;
+  --qs-color-violet-bg: #f1eafe;
+  --qs-color-teal: #0e7490;
+  --qs-color-teal-bg: #e1f4f8;
+
+  --qs-shadow-xs: 0 1px 2px rgba(18, 28, 70, .06);
+  --qs-shadow-glow: 0 8px 20px -8px color-mix(in srgb, var(--qs-color-primary) 70%, transparent);
+
+  --qs-radius-xs: 6px;
+  --qs-radius-10: 10px;
+  --qs-radius-12: 12px;
+  --qs-radius-card: 20px;
+  --qs-radius-pill: 999px;
+
+  --qs-space-20: 20px;
+  --qs-space-40: 40px;
+
+  --qs-dur-1: 90ms;
+  --qs-dur-2: 160ms;
+  --qs-dur-3: 260ms;
+  --qs-dur-4: 480ms;
+  --qs-dur-5: 900ms;
+  --qs-ease-out: cubic-bezier(.16, 1, .3, 1);
+  --qs-ease-standard: cubic-bezier(.2, .75, .2, 1);
+  --qs-ease-in: cubic-bezier(.5, 0, .75, 0);
+
+  /* Fokus halqasi: 2 px primary + 2 px fon bo‘shlig‘i */
+  --qs-ring: 0 0 0 2px var(--qs-color-bg), 0 0 0 4px var(--qs-focus-ring);
 }
 
 :root[data-panel='SHOP'] { --qs-color-primary:#059669; --qs-color-primary-hover:#047857; --qs-color-primary-soft:#d9f4e8; --qs-color-info-bg:#d9f4e8; --qs-focus-ring:#059669; }
@@ -111,6 +152,13 @@
   --qs-shadow-sm:0 1px 2px rgba(0,0,0,.35);
   --qs-shadow-md:0 12px 32px rgba(0,0,0,.42);
   --qs-shadow-lg:0 26px 72px rgba(0,0,0,.58);
+  --qs-shadow-xs:0 1px 2px rgba(0,0,0,.3);
+  --qs-color-info:#7ea6ff;
+  --qs-color-overlay: rgba(2, 5, 12, .62);
+  --qs-color-violet:#b69cff;
+  --qs-color-violet-bg:#221a3d;
+  --qs-color-teal:#5fd0e6;
+  --qs-color-teal-bg:#0f2a33;
 }
 :root[data-theme='dark'][data-panel='SHOP'] { --qs-color-primary:#34d399; --qs-color-primary-hover:#5fe0b2; --qs-color-primary-soft:#0e2d27; --qs-color-primary-contrast:#04231a; --qs-focus-ring:#5fe0b2; }
 :root[data-theme='dark'][data-panel='ADMIN'] { --qs-color-primary:#7d9fe8; --qs-color-primary-hover:#a1bbf2; --qs-color-primary-soft:#172a55; --qs-color-primary-contrast:#0a1328; --qs-focus-ring:#a1bbf2; }

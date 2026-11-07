@@ -15,6 +15,7 @@ import type { ManagedShop } from '@/features/shop/types';
 import { getErrorMessage } from '@/lib/error-messages';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 
 function ProfileForm({ shop }: { shop: ManagedShop }) {
   const [description, setDescription] = useState(shop.description ?? '');
@@ -50,8 +51,8 @@ export function ShopOwnProfilePage() {
         <div><h1>{t('Do‘kon profili')}</h1><p>{shop.name}</p></div>
         <div className="qs-page__actions">
           <ShopSwitcher />
-          <Badge tone={SHOP_STATUS[shop.status].tone}>{SHOP_STATUS[shop.status].label}</Badge>
-          <Badge tone={VERIFICATION_STATUS[shop.verificationStatus].tone}>{VERIFICATION_STATUS[shop.verificationStatus].label}</Badge>
+          <StatusBadge map={SHOP_STATUS} status={shop.status} />
+          <StatusBadge map={VERIFICATION_STATUS} status={shop.verificationStatus} />
         </div>
       </div>
       <section className="qs-card"><ProfileForm shop={shop} /></section>

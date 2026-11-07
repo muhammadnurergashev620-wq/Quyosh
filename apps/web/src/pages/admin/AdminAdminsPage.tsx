@@ -35,6 +35,7 @@ import './AdminUsersPage.css';
 import '@/features/admin/list-shared.css';
 import './AdminAdminsPage.css';
 import { t } from '@/i18n';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 type RoleFilter = '' | 'SUPER' | 'ADMIN' | 'DELEGATE';
 type MfaFilter = '' | 'on' | 'off';
@@ -331,26 +332,26 @@ export function AdminAdminsPage() {
           </label>
           <label className="gm-ul__select">
             <span>{t('Rol')}</span>
-            <select value={role} onChange={(event) => setRole(event.target.value as RoleFilter)}>
+            <SelectMenu value={role} onChange={(event) => setRole(event.target.value as RoleFilter)}>
               <option value="">{t('Barcha rollar')}</option>
               <option value="SUPER">{t('Superadmin')}</option>
               <option value="ADMIN">{t('Admin')}</option>
               <option value="DELEGATE">{t('Admin yarata oladi')}</option>
-            </select>
+            </SelectMenu>
           </label>
           <label className="gm-ul__select">
             <span>{t('Holat')}</span>
-            <select value={status} onChange={(event) => setStatus(event.target.value)}>
+            <SelectMenu value={status} onChange={(event) => setStatus(event.target.value)}>
               <option value="">{t('Barcha holatlar')}</option>
               {Object.entries(ADMIN_STATUS).map(([value, info]) => <option key={value} value={value}>{info.label}</option>)}
-            </select>
+            </SelectMenu>
           </label>
           <label className="gm-ul__select">
             <span>{t('Bo‘lim')}</span>
-            <select value={section} onChange={(event) => setSection(event.target.value)}>
+            <SelectMenu value={section} onChange={(event) => setSection(event.target.value)}>
               <option value="">{t('Barcha bo‘limlar')}</option>
               {ADMIN_PERMISSION_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
+            </SelectMenu>
           </label>
           <div className="gm-ul__filters" ref={filterRef}>
             <Button variant="secondary" onClick={() => setFiltersOpen((open) => !open)} aria-expanded={filtersOpen}>
@@ -360,11 +361,11 @@ export function AdminAdminsPage() {
               <div className="gm-ul__pop">
                 <label>
                   <span>MFA</span>
-                  <select value={mfa} onChange={(event) => setMfa(event.target.value as MfaFilter)}>
+                  <SelectMenu value={mfa} onChange={(event) => setMfa(event.target.value as MfaFilter)}>
                     <option value="">{t('Barchasi')}</option>
                     <option value="on">{t('Yoqilgan')}</option>
                     <option value="off">{t('O‘chirilgan')}</option>
-                  </select>
+                  </SelectMenu>
                 </label>
                 <label>
                   <span>{t('Ro‘yxatdan o‘tgan (dan)')}</span>
@@ -514,9 +515,9 @@ export function AdminAdminsPage() {
                 ),
               )}
               <button type="button" onClick={() => setPage(page + 1)} disabled={page >= pages} aria-label={t('Keyingi sahifa')}><ChevronRight size={16} /></button>
-              <select className="gm-adm2__size" value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} aria-label={t('Sahifadagi soni')}>
+              <SelectMenu className="gm-adm2__size" value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} aria-label={t('Sahifadagi soni')}>
                 {[10, 20, 50].map((size) => <option key={size} value={size}>{t('{size} / sahifa', { size })}</option>)}
-              </select>
+              </SelectMenu>
             </nav>
           </footer>
         )}

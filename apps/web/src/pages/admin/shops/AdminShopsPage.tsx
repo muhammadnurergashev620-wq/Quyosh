@@ -16,10 +16,11 @@ import { personName, SHOP_STATUS } from '@/features/shop/labels';
 import type { ShopStatus } from '@/features/shop/types';
 import { REGIONS } from '@/lib/regions';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
 import { formatDate } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { Chip } from '@/components/ui/Chip';
 
 /** TZ 3.7.1: admin do‘kon + egasining hisobini yaratadi; vaqtincha parolni tizim yaratadi va bir marta ko‘rsatiladi. */
 function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -140,10 +141,10 @@ export function AdminShopsPage() {
         <Input label={t('Qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('Nom, STIR yoki telefon')} />
           <div className="qs-chips" role="group" aria-label={t('Holat')}>
             {statuses.map((status) => (
-              <button key={status ?? 'all'} type="button" className={cx('qs-chip', filters.status === status && 'is-on')} onClick={() => setFilters({ ...filters, status, page: 1 })}>
+              <Chip key={status ?? 'all'} onClick={() => setFilters({ ...filters, status, page: 1 })} selected={filters.status === status}>
                 {status ? SHOP_STATUS[status].label : t('Hammasi')}
                 {status && <span>{counts[status] ?? 0}</span>}
-              </button>
+              </Chip>
             ))}
           </div>
       </div>
@@ -158,7 +159,7 @@ export function AdminShopsPage() {
                 <tr key={shop.id} className="is-clickable" onClick={() => navigate(`/admin/dokonlar/${shop.id}`)}>
                   <td><div className="qs-cell-title"><strong>{shop.name}</strong><small>{[shop.stir && `STIR ${shop.stir}`, shop.phone].filter(Boolean).join(' · ')}</small></div></td>
                   <td>{shop.owner ? personName(shop.owner) : <Badge tone="warning">{t('Egasiz')}</Badge>}</td>
-                  <td><Badge tone={SHOP_STATUS[shop.status].tone}>{SHOP_STATUS[shop.status].label}</Badge></td>
+                  <td><StatusBadge map={SHOP_STATUS} status={shop.status} /></td>
                   <td className="qs-right qs-num">{shop._count.branches} / {shop._count.products}</td>
                   <td className="qs-muted">{formatDate(shop.createdAt)}{shop.createdSource === 'ADMIN' && <div><small>{t('admin yaratgan')}</small></div>}</td>
                 </tr>

@@ -24,6 +24,9 @@ import { CATEGORY_LABEL, TICKET_STATUS } from './SupportPages';
 import { TYPE_LABEL } from './KnowledgePages';
 import '@/features/shop/shop.css';
 import '@/features/m7/m7.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { SelectMenu } from '@/components/ui/SelectMenu';
+import { TabBar } from '@/components/ui/Tabs';
 
 const QUEUE_LABEL: Record<string, string> = {
   models: t('ProductModel takliflari'), reviews: t('Moderatsiyadagi sharhlar'),
@@ -67,8 +70,8 @@ export function AdminSupportPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Yordam navbati')}</h1><p>{t('Birinchi javob muddati ish vaqti bo‘yicha (Du–Ju 09:00–18:00).')}</p></div></div>
       <div className="qs-page__actions">
-        <select className="qs-select" aria-label={t('Holat')} value={status} onChange={(e) => setStatus(e.target.value)}><option value="">{t('Faol')}</option>{Object.entries(TICKET_STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</select>
-        <select className="qs-select" aria-label={t('Mas’ul')} value={assignee} onChange={(e) => setAssignee(e.target.value)}><option value="">{t('Hammasi')}</option><option value="mine">{t('Menga')}</option><option value="unassigned">{t('Tayinlanmagan')}</option></select>
+        <SelectMenu className="qs-select" aria-label={t('Holat')} value={status} onChange={(e) => setStatus(e.target.value)}><option value="">{t('Faol')}</option>{Object.entries(TICKET_STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</SelectMenu>
+        <SelectMenu className="qs-select" aria-label={t('Mas’ul')} value={assignee} onChange={(e) => setAssignee(e.target.value)}><option value="">{t('Hammasi')}</option><option value="mine">{t('Menga')}</option><option value="unassigned">{t('Tayinlanmagan')}</option></SelectMenu>
         <input className="qs-input-sm" placeholder={t('Mavzu yoki SUP-raqam')} aria-label={t('Qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
       {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<FileText size={28} />} title={t('Murojaat yo‘q')} /> : (
@@ -82,7 +85,7 @@ export function AdminSupportPage() {
                   <td>{x.subject}</td>
                   <td>{CATEGORY_LABEL[x.category] ?? x.category}</td>
                   <td><Badge tone={x.priority === 'URGENT' ? 'danger' : x.priority === 'HIGH' ? 'warning' : 'neutral'}>{x.priority}</Badge></td>
-                  <td><Badge tone={TICKET_STATUS[x.status].tone}>{TICKET_STATUS[x.status].label}</Badge></td>
+                  <td><StatusBadge map={TICKET_STATUS} status={x.status} /></td>
                   <td><span className={cx('qs-sla', slaClass(x.sla))}>{x.sla === 'MET' ? t('Javob berilgan') : x.minutesLeft !== null && x.minutesLeft !== undefined ? (x.minutesLeft < 0 ? t('{d} kechikdi', { d: dur(-x.minutesLeft) }) : t('{d} qoldi', { d: dur(x.minutesLeft) })) : '—'}</span></td>
                 </tr>
               ))}
@@ -115,8 +118,8 @@ export function AdminTicketPage() {
       <div className="qs-page__head">
         <div><h1>{x.code} · {x.subject}</h1><p>{CATEGORY_LABEL[x.category] ?? x.category} · {formatDateTime(x.createdAt)}</p></div>
         <div className="qs-page__actions">
-          <select className="qs-select" aria-label={t('Ustuvorlik')} value={x.priority} onChange={(e) => update.mutate({ priority: e.target.value })}>{['URGENT', 'HIGH', 'NORMAL'].map((p) => <option key={p}>{p}</option>)}</select>
-          <select className="qs-select" aria-label={t('Holat')} value={x.status} onChange={(e) => update.mutate({ status: e.target.value })}>{Object.entries(TICKET_STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</select>
+          <SelectMenu className="qs-select" aria-label={t('Ustuvorlik')} value={x.priority} onChange={(e) => update.mutate({ priority: e.target.value })}>{['URGENT', 'HIGH', 'NORMAL'].map((p) => <option key={p}>{p}</option>)}</SelectMenu>
+          <SelectMenu className="qs-select" aria-label={t('Holat')} value={x.status} onChange={(e) => update.mutate({ status: e.target.value })}>{Object.entries(TICKET_STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</SelectMenu>
           <Button variant="secondary" onClick={() => update.mutate(x.assigneeId ? { unassign: true } : { assigneeId: me.data?.id })}>{x.assigneeId ? (x.assigneeId === me.data?.id ? t('Menga tayinlangan · olib tashlash') : t('Tayinlashni olib tashlash')) : t('O‘zimga olish')}</Button>
         </div>
       </div>
@@ -130,9 +133,9 @@ export function AdminTicketPage() {
           {x.status !== 'CLOSED' && (
             <div className="qs-card qs-form">
               {!!templates.data?.length && (
-                <select className="qs-select" aria-label={t('Shablon')} value="" onChange={(e) => { const tpl = templates.data!.find((tp) => tp.id === e.target.value); if (tpl) setText(tr(tpl.bodyI18n)); }}>
+                <SelectMenu className="qs-select" aria-label={t('Shablon')} value="" onChange={(e) => { const tpl = templates.data!.find((tp) => tp.id === e.target.value); if (tpl) setText(tr(tpl.bodyI18n)); }}>
                   <option value="">{t('Javob shabloni…')}</option>{templates.data.filter((tp) => tp.active).map((tp) => <option key={tp.id} value={tp.id}>{tr(tp.titleI18n)}</option>)}
-                </select>
+                </SelectMenu>
               )}
               <Textarea label={internal ? t('Ichki izoh (foydalanuvchiga ko‘rinmaydi)') : t('Javob')} value={text} maxLength={8000} onChange={(e) => setText(e.target.value)} />
               <label className="qs-check"><input type="checkbox" checked={internal} onChange={(e) => setInternal(e.target.checked)} /> {t('Ichki izoh')}</label>
@@ -239,14 +242,14 @@ export function AdminArticleEditorPage() {
       {save.isSuccess && <Alert tone="success">{t('Saqlandi')}</Alert>}
       <div className="qs-grid-2 qs-grid-main">
         <section className="qs-card qs-form">
-          <div className="qs-tabs" role="tablist">
+          <TabBar variant="tabs" role="tablist">
             {LANGS.map(([l, label]) => <button key={l} type="button" role="tab" aria-selected={lang === l} className={cx(lang === l && 'is-on')} onClick={() => setLang(l)}>{label} <Badge tone={completeness[l] === 3 ? 'success' : l === 'oz' || l === 'en' ? 'neutral' : 'warning'}>{completeness[l]}/3</Badge></button>)}
-          </div>
+          </TabBar>
           {lang === 'en' && <small className="qs-muted">English text is optional: if empty, the Uzbek text is shown to English readers.</small>}
           {lang === 'oz' && <small className="qs-muted">{t('Kirill matni bo‘sh bo‘lsa, lotin matnidan avtomatik transliteratsiya qilinadi.')}</small>}
           <Input label={t('Sarlavha')} value={f.title[lang] ?? ''} onChange={(e) => setL('title', e.target.value)} />
           <Textarea label={t('Qisqa tavsif')} value={f.summary[lang] ?? ''} onChange={(e) => setL('summary', e.target.value)} />
-          <div className="qs-tabs"><button type="button" className={cx(!preview && 'is-on')} onClick={() => setPreview(false)}>Markdown</button><button type="button" className={cx(preview && 'is-on')} onClick={() => setPreview(true)}>{t('Ko‘rinish')}</button></div>
+          <TabBar variant="tabs"><button type="button" className={cx(!preview && 'is-on')} onClick={() => setPreview(false)}>Markdown</button><button type="button" className={cx(preview && 'is-on')} onClick={() => setPreview(true)}>{t('Ko‘rinish')}</button></TabBar>
           {preview ? <div className="qs-card"><Markdown source={f.body[lang] ?? ''} /></div> : <Textarea label={t('Matn (Markdown)')} rows={18} value={f.body[lang] ?? ''} onChange={(e) => setL('body', e.target.value)} />}
           <Input label={t('SEO sarlavha ({n}/60)', { n: (f.seoTitle[lang] ?? '').length })} value={f.seoTitle[lang] ?? ''} onChange={(e) => setL('seoTitle', e.target.value)} />
           <Textarea label={t('SEO tavsif ({n}/160)', { n: (f.seoDesc[lang] ?? '').length })} value={f.seoDesc[lang] ?? ''} onChange={(e) => setL('seoDesc', e.target.value)} />
@@ -254,16 +257,16 @@ export function AdminArticleEditorPage() {
         <aside className="qs-card qs-form">
           <Input label="Slug" value={f.slug} onChange={(e) => setF({ ...f, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })} />
           <label className="gm-field__label" htmlFor="acat">{t('Kategoriya')}</label>
-          <select id="acat" className="qs-select" value={f.categoryId} onChange={(e) => setF({ ...f, categoryId: e.target.value })}><option value="">—</option>{cats.data?.map((c) => <option key={c.id} value={c.id}>{tr(c.nameI18n)}</option>)}</select>
+          <SelectMenu id="acat" className="qs-select" value={f.categoryId} onChange={(e) => setF({ ...f, categoryId: e.target.value })}><option value="">—</option>{cats.data?.map((c) => <option key={c.id} value={c.id}>{tr(c.nameI18n)}</option>)}</SelectMenu>
           <label className="gm-field__label" htmlFor="atype">{t('Tur')}</label>
-          <select id="atype" className="qs-select" value={f.articleType} onChange={(e) => setF({ ...f, articleType: e.target.value as ArticleType })}>{Object.entries(TYPE_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select>
+          <SelectMenu id="atype" className="qs-select" value={f.articleType} onChange={(e) => setF({ ...f, articleType: e.target.value as ArticleType })}>{Object.entries(TYPE_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</SelectMenu>
           <label className="gm-field__label" htmlFor="acta">CTA</label>
-          <select id="acta" className="qs-select" value={f.ctaType} onChange={(e) => setF({ ...f, ctaType: e.target.value as CtaType })}>{['NONE', 'CALCULATOR', 'OUTAGE', 'FINANCING', 'SHOPS'].map((c) => <option key={c}>{c}</option>)}</select>
+          <SelectMenu id="acta" className="qs-select" value={f.ctaType} onChange={(e) => setF({ ...f, ctaType: e.target.value as CtaType })}>{['NONE', 'CALCULATOR', 'OUTAGE', 'FINANCING', 'SHOPS'].map((c) => <option key={c}>{c}</option>)}</SelectMenu>
           <Input label={t('Teglar (vergul bilan)')} value={f.tags} onChange={(e) => setF({ ...f, tags: e.target.value })} />
           <Textarea label={t('Manbalar (har qatorda URL)')} value={f.sourceUrls} onChange={(e) => setF({ ...f, sourceUrls: e.target.value })} />
           <Input label={t('Tekshirilgan sana')} type="date" value={f.verifiedAt} onChange={(e) => setF({ ...f, verifiedAt: e.target.value })} />
           <label className="gm-field__label" htmlFor="astatus">{t('Holat')}</label>
-          <select id="astatus" className="qs-select" value={f.status} onChange={(e) => setF({ ...f, status: e.target.value as typeof f.status })}><option value="DRAFT">{t('Qoralama')}</option><option value="PUBLISHED">{t('Nashr qilingan')}</option><option value="ARCHIVED">{t('Arxiv')}</option></select>
+          <SelectMenu id="astatus" className="qs-select" value={f.status} onChange={(e) => setF({ ...f, status: e.target.value as typeof f.status })}><option value="DRAFT">{t('Qoralama')}</option><option value="PUBLISHED">{t('Nashr qilingan')}</option><option value="ARCHIVED">{t('Arxiv')}</option></SelectMenu>
         </aside>
       </div>
     </div>
@@ -285,7 +288,7 @@ export function AdminReportsPage() {
         <div className="qs-page__actions">
           <input className="qs-input-sm" type="date" aria-label={t('Dan')} value={from} onChange={(e) => setFrom(e.target.value)} />
           <input className="qs-input-sm" type="date" aria-label={t('Gacha')} value={to} onChange={(e) => setTo(e.target.value)} />
-          <select className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}><option value="">{t('Barcha hududlar')}</option>{REGIONS.map((r) => <option key={r.code} value={r.code}>{r.name}</option>)}</select>
+          <SelectMenu className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}><option value="">{t('Barcha hududlar')}</option>{REGIONS.map((r) => <option key={r.code} value={r.code}>{r.name}</option>)}</SelectMenu>
         </div>
       </div>
       {f.isError && <Alert tone="danger">{getErrorMessage(f.error)}</Alert>}

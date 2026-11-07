@@ -17,6 +17,7 @@ import { formatDateTime } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/m7/m7.css';
+import { TabBar } from '@/components/ui/Tabs';
 
 interface AdminBlock {
   id: string;
@@ -217,13 +218,13 @@ function BlockEditor({ block, onSaved }: { block: AdminBlock; onSaved: (b: Admin
         </div>
       </header>
       {hint && <p className="qs-muted" style={{ margin: 0 }}>{hint()}</p>}
-      <div className="qs-tabs" role="tablist" aria-label={t('Til')}>
+      <TabBar variant="tabs" role="tablist" aria-label={t('Til')}>
         {LANGS.map(([code, label]) => (
           <button key={code} type="button" role="tab" aria-selected={lang === code} className={cx(lang === code && 'is-on')} onClick={() => setLang(code)}>
             {label} {code === 'oz' || code === 'en' ? (value[code] ? '✓' : '·') : complete(block.type, value[code]) ? '✓' : '!'}
           </button>
         ))}
-      </div>
+      </TabBar>
       {lang === 'oz' && <p className="qs-muted" style={{ margin: 0 }}>{t('Kirill matni ixtiyoriy: bo‘sh maydonlar o‘zbek lotinidan avtomatik o‘giriladi.')}</p>}
       {lang === 'en' && <p className="qs-muted" style={{ margin: 0 }}>English text is optional: empty fields are translated automatically from the built-in dictionary.</p>}
       <div className="qs-form">

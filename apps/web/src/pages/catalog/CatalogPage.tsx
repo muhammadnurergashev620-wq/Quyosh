@@ -17,6 +17,7 @@ import { CompareBar, ProductCard } from './CatalogParts';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 const SORTS = [
   { value: 'offers', label: t('Tavsiya etilgan') },
@@ -86,10 +87,10 @@ export function CatalogPage() {
           {!!brands.data?.length && (
             <div>
               <h3>{t('Brend')}</h3>
-              <select aria-label={t('Brend')} value={filters.brand ?? ''} onChange={(e) => set('brend', e.target.value || undefined)}>
+              <SelectMenu aria-label={t('Brend')} value={filters.brand ?? ''} onChange={(e) => set('brend', e.target.value || undefined)}>
                 <option value="">{t('Barcha brendlar')}</option>
                 {brands.data.map((item) => <option key={item.brand} value={item.brand}>{item.brand} ({item.count})</option>)}
-              </select>
+              </SelectMenu>
             </div>
           )}
           {showPower && (
@@ -116,9 +117,9 @@ export function CatalogPage() {
             <Button size="sm" variant="secondary" className="qs-catalog__filter-btn" onClick={() => setFiltersOpen((open) => !open)}><SlidersHorizontal size={16} /> {t('Filtrlar')}</Button>
             <Input label={t('Qidirish')} value={params.get('q') ?? ''} onChange={(e) => set('q', e.target.value || undefined)} placeholder={t('Brend yoki model')} />
             <span>{models.data ? t('{n} ta model', { n: formatNumber(models.data.total) }) : ''}</span>
-            <select aria-label={t('Saralash')} value={filters.sort} onChange={(e) => set('saralash', e.target.value)}>
+            <SelectMenu aria-label={t('Saralash')} value={filters.sort} onChange={(e) => set('saralash', e.target.value)}>
               {SORTS.map((sort) => <option key={sort.value} value={sort.value}>{sort.label}</option>)}
-            </select>
+            </SelectMenu>
           </div>
           {models.data?.rate?.stale && <Alert tone="warning">{t('Valyuta kursi eskirgan bo‘lishi mumkin ({date}).', { date: models.data.rate.rateDate })}</Alert>}
           {models.isLoading ? (

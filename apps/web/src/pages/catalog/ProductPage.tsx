@@ -3,7 +3,6 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, FileText, Store } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
@@ -22,6 +21,8 @@ import { t } from '@/i18n';
 import { track } from '@/features/m7/track';
 import '@/features/shop/shop.css';
 import '@/features/catalog/catalog.css';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 /** U7.5: mahsulot sahifasi — xususiyatlar, datasheet va «Bu modelni sotayotgan do‘konlar». */
 export function ProductPage() {
@@ -83,14 +84,14 @@ export function ProductPage() {
               <h2>{t('Bu modelni sotayotgan do‘konlar')}</h2>
             </header>
             <div className="qs-form__row" style={{ marginBottom: 12 }}>
-              <select className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}>
+              <SelectMenu className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}>
                 <option value="">{t('Barcha hududlar')}</option>
                 {REGIONS.map((item) => <option key={item.code} value={item.code}>{item.name}</option>)}
-              </select>
-              <select className="qs-select" aria-label={t('Saralash')} value={sort} onChange={(e) => setSort(e.target.value as 'price' | 'updated')}>
+              </SelectMenu>
+              <SelectMenu className="qs-select" aria-label={t('Saralash')} value={sort} onChange={(e) => setSort(e.target.value as 'price' | 'updated')}>
                 <option value="price">{t('Narx bo‘yicha')}</option>
                 <option value="updated">{t('Yangilangan sana bo‘yicha')}</option>
-              </select>
+              </SelectMenu>
             </div>
             {offers.isLoading ? <PageLoader /> : !offers.data?.items.length ? (
               <EmptyState icon={<Store size={28} />} title={t('Hozircha taklif yo‘q')} description={t('Bu model hozircha do‘konlar katalogida yo‘q. Taklif so‘rovida do‘kondan shu modelni so‘rashingiz mumkin.')} />
@@ -104,7 +105,7 @@ export function ProductPage() {
                       <strong>{price.main}</strong>
                       <small>{[offer.branch?.name, regionName(offer.branch?.regionCode)].filter(Boolean).join(' · ') || t('Barcha filiallar')}</small>
                       <small style={{ textAlign: 'right' }}>{price.note ?? (offer.vatIncluded ? t('QQS bilan') : t('QQSsiz'))}</small>
-                      <small><Badge tone={STOCK_STATUS[offer.stockStatus].tone}>{STOCK_STATUS[offer.stockStatus].label}</Badge></small>
+                      <small><StatusBadge map={STOCK_STATUS} status={offer.stockStatus} /></small>
                       <small style={{ textAlign: 'right' }}>{t('Yangilangan: {date}', { date: formatDate(offer.updatedAt) })}</small>
                     </div>
                   );

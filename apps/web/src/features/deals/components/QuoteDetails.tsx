@@ -9,6 +9,7 @@ import { t } from '@/i18n';
 import { dealsService } from '../deals.service';
 import { days, ITEM_TYPE, months, num } from '../labels';
 import type { QuoteView } from '../types';
+import { SelectMenu } from '@/components/ui/SelectMenu';
 
 /** Revision snapshot va joriy taklif uchun yagona ko‘rinish (farqlarni solishtirish uchun). */
 export interface QuoteSnap {
@@ -120,9 +121,9 @@ export function QuoteWithRevisions({ quote }: { quote: QuoteView }) {
     <div className="qs-page" style={{ gap: 'var(--qs-space-3)' }}>
       {quote.revisions.length > 0 && (
         <div className="qs-page__actions">
-          <select className="qs-select" aria-label={t('Tahrir')} value={revision} onChange={(e) => setRevision(Number(e.target.value))}>
+          <SelectMenu className="qs-select" aria-label={t('Tahrir')} value={revision} onChange={(e) => setRevision(Number(e.target.value))}>
             {quote.revisions.map((r) => <option key={r.revision} value={r.revision}>{t('Tahrir {n} · {ago}', { n: r.revision, ago: formatRelativeTime(r.createdAt) })}</option>)}
-          </select>
+          </SelectMenu>
           {revision > 1 && <small className="qs-muted"><span className="qs-diff">{t('o‘zgargan')}</span> — {t('oldingi tahrirga nisbatan')}</small>}
         </div>
       )}

@@ -13,6 +13,7 @@ import '@/styles/polish.css';
 import '@/styles/compact.css';
 import '@/styles/cards.css';
 import '@/styles/premium.css';
+import '@/styles/system.css';
 
 
 // Trekped/sichqoncha bilan chapga–o‘ngga surilganda brauzer «orqaga/oldinga» sahifaga o‘tib ketmasin:
