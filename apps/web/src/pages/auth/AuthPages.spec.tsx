@@ -22,7 +22,7 @@ function renderAt(path: string) {
 describe('admin has no self-registration', () => {
   beforeEach(() => useAuthStore.setState({ preferredRole: null, hasSession: false }));
 
-  it('shows the registration link to customers and masters', () => {
+  it('shows the registration link on the customer login page (shop panel hides it by env role)', () => {
     for (const role of ['CUSTOMER', 'SHOP'] as const) {
       useAuthStore.setState({ preferredRole: role });
       const { unmount } = renderAt('/login');

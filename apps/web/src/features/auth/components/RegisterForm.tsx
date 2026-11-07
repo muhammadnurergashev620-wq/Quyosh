@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/Input';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
-import { env } from '@/lib/env';
 import { splitFullName } from '@/lib/account-name';
 import { getErrorMessage } from '@/lib/error-messages';
 import { useRegister } from '../hooks/useAuth';
@@ -78,7 +77,7 @@ export function RegisterForm() {
         {...register('acceptedTerms')}
       />
       <Button type="submit" loading={register_.isPending} fullWidth>
-        {env.appRole === 'SHOP' ? t('Do‘kon egasi sifatida ro‘yxatdan o‘tish') : t('Mijoz sifatida ro‘yxatdan o‘tish')}
+        {t('Mijoz sifatida ro‘yxatdan o‘tish')}
       </Button>
     </form>
   );
