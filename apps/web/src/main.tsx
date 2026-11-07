@@ -5,19 +5,15 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/jetbrains-mono/500.css';
-import { installGlobalErrorReporting } from '@/lib/error-reporter';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { App } from './App';
+import { loadDictionary } from '@/i18n';
 import '@/styles/global.css';
-import { applyUiSize, getUiSize } from '@/lib/ui-size';
 import '@/styles/polish.css';
 import '@/styles/compact.css';
 import '@/styles/cards.css';
 import '@/styles/premium.css';
 
-
-applyUiSize(getUiSize());
 
 // Trekped/sichqoncha bilan chapga–o‘ngga surilganda brauzer «orqaga/oldinga» sahifaga o‘tib ketmasin:
 // gorizontal g‘ildirak harakati, agar ostida gorizontal skroll qilinadigan element bo‘lmasa, to‘xtatiladi.
@@ -45,13 +41,19 @@ window.addEventListener(
   { passive: false },
 );
 
-installGlobalErrorReporting();
+/** Avval tanlangan til lug‘ati, keyin ilova modullari (ular modul darajasida `t()` chaqiradi). */
+async function boot() {
+  await loadDictionary();
+  const [{ App }, { applyUiSize, getUiSize }, { installGlobalErrorReporting }] = await Promise.all([import('./App'), import('@/lib/ui-size'), import('@/lib/error-reporter')]);
+  applyUiSize(getUiSize());
+  installGlobalErrorReporting();
+  const rootElement = document.getElementById('root');
+  if (!rootElement) throw new Error('#root element not found');
+  createRoot(rootElement).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+}
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('#root element not found');
-
-createRoot(rootElement).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+void boot();

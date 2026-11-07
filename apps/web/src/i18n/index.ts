@@ -1,13 +1,4 @@
 import { toUzbekCyrillic } from './translit';
-import { ru } from './ru';
-import { ruExtra } from './ru.extra';
-import { ruQuyosh } from './ru.quyosh';
-import { ruM2 } from './ru.m2';
-import { ruM3 } from './ru.m3';
-import { ruM5 } from './ru.m5';
-import { ruM6 } from './ru.m6';
-import { ruM7 } from './ru.m7';
-import { en } from './en';
 
 /** TZ 1.3 / U18: o‘zbek lotin, o‘zbek kirill, rus, ingliz. */
 export type Lang = 'uz' | 'uz-Cyrl' | 'ru' | 'en';
@@ -60,8 +51,21 @@ const norm = (value: string) => value.replace(/[‘’ʻʼ`]/g, "'").trim();
 function buildIndex(source: Record<string, string>): Map<string, string> {
   return new Map(Object.entries(source).map(([key, value]) => [norm(key), value]));
 }
-const RU = buildIndex({ ...ru, ...ruExtra, ...ruQuyosh, ...ruM2, ...ruM3, ...ruM5, ...ruM6, ...ruM7 });
-const EN = buildIndex(en);
+/**
+ * Lug‘at faqat tanlangan til uchun, ilova boshlanishidan oldin dinamik yuklanadi (audit A-02): o‘zbek tilida — umuman yuklanmaydi,
+ * rus/ingliz tilida — faqat o‘sha til bo‘lagi. `main.tsx` `loadDictionary()` ni kutib, keyin ilovani import qiladi.
+ */
+let DICT: Map<string, string> | null = null;
+
+export async function loadDictionary(): Promise<void> {
+  if (DICT || lang === 'uz' || lang === 'uz-Cyrl') return;
+  if (lang === 'en') {
+    DICT = buildIndex((await import('./en')).en);
+    return;
+  }
+  const [a, b, c, d, e, f, g, h] = await Promise.all([import('./ru'), import('./ru.extra'), import('./ru.quyosh'), import('./ru.m2'), import('./ru.m3'), import('./ru.m5'), import('./ru.m6'), import('./ru.m7')]);
+  DICT = buildIndex({ ...a.ru, ...b.ruExtra, ...c.ruQuyosh, ...d.ruM2, ...e.ruM3, ...f.ruM5, ...g.ruM6, ...h.ruM7 });
+}
 
 function interpolate(text: string, params?: Record<string, string | number | null | undefined>): string {
   if (!params) return text;
@@ -82,7 +86,8 @@ function matchTrailingPeriod(source: string, translated: string): string {
 export function t(key: string, params?: Record<string, string | number | null | undefined>): string {
   if (lang === 'uz') return interpolate(key, params);
   if (lang === 'uz-Cyrl') return toUzbekCyrillic(interpolate(key, params));
-  const dict = lang === 'en' ? EN : RU;
+  const dict = DICT;
+  if (!dict) return interpolate(key, params);
   const core = norm(key);
   let text = dict.get(core);
   if (text === undefined) text = matchPattern(dict, core, key);

@@ -4,7 +4,9 @@ async function load(language?: string) {
   vi.resetModules();
   localStorage.clear();
   if (language) localStorage.setItem('quyosh.lang', language);
-  return import('./index');
+  const mod = await import('./index');
+  await mod.loadDictionary();
+  return mod;
 }
 
 afterEach(() => localStorage.clear());
