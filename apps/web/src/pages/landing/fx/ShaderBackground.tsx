@@ -93,7 +93,7 @@ export function ShaderBackground({ variant = 'page' }: { variant?: 'page' | 'bra
       const styles = getComputedStyle(root);
       dark = variant === 'brand' || root.getAttribute('data-theme') === 'dark';
       // Brend panelida rang temaga bog‘liq bo‘lmasin (qorong‘i temada --qs-color-primary yorqin bo‘lib ketadi): panel bo‘yicha qat’iy rang.
-      const panelColor: Record<string, string> = { MASTER: '#087f61', ADMIN: '#1e3a8a' };
+      const panelColor: Record<string, string> = { SHOP: '#059669', ADMIN: '#1e3a8a' };
       const brandColor = panelColor[root.getAttribute('data-panel') ?? ''] ?? '#1456ff';
       const primary = variant === 'brand' ? parse(brandColor, [0.08, 0.34, 1]) : parse(styles.getPropertyValue('--qs-color-primary').trim(), [0.1, 0.3, 1]);
       const accent = parse(styles.getPropertyValue('--qs-color-accent').trim(), [1, 0.69, 0.12]);
@@ -149,10 +149,14 @@ export function ShaderBackground({ variant = 'page' }: { variant?: 'page' | 'bra
     window.addEventListener('resize', resize);
 
     let frame = 0;
+    let idle = 0;
+    let last = 0;
     const start = performance.now();
-    const loop = () => {
+    // 30 fps yetarli (fon sekin harakatlanadi) — asosiy oqim ikki baravar kam band bo‘ladi (Lighthouse TBT).
+    const loop = (now: number) => {
       frame = requestAnimationFrame(loop);
-      if (!visible || document.hidden) return;
+      if (!visible || document.hidden || now - last < 33) return;
+      last = now;
       mouse.x += (mouse.tx - mouse.x) * 0.06;
       mouse.y += (mouse.ty - mouse.y) * 0.06;
       mouse.strength += (mouse.target - mouse.strength) * 0.04;
@@ -161,10 +165,20 @@ export function ShaderBackground({ variant = 'page' }: { variant?: 'page' | 'bra
       gl.uniform1f(uStrength, mouse.strength);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
-    loop();
+    // Birinchi kadr darhol (fon bo‘sh qolmasin), animatsiya — sahifa yuklanib, brauzer bo‘shagandan keyin.
+    gl.uniform1f(uTime, 0);
+    gl.uniform2f(uMouse, 0.5 * canvas.width, 0.5 * canvas.height);
+    gl.uniform1f(uStrength, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    const begin = () => { frame = requestAnimationFrame(loop); };
+    const hasIdle = typeof window.requestIdleCallback === 'function';
+    if (hasIdle) idle = window.requestIdleCallback(begin, { timeout: 2500 });
+    else idle = globalThis.setTimeout(begin, 1200) as unknown as number;
 
     return () => {
       cancelAnimationFrame(frame);
+      if (hasIdle) window.cancelIdleCallback(idle);
+      else globalThis.clearTimeout(idle);
       observer.disconnect();
       themeObserver.disconnect();
       window.removeEventListener('pointermove', onMove);
