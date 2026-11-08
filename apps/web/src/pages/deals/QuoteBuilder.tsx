@@ -201,10 +201,10 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
       {templatesOpen && <TemplatesModal shopId={shopId} hasLines={lines.length > 0} current={templateBody} onApply={applyTemplate} onClose={() => setTemplatesOpen(false)} />}
       {!editable && <Alert tone="info">{t('Bu taklifni endi o‘zgartirib bo‘lmaydi ({s}).', { s: QUOTE_STATUS[status].label })}</Alert>}
       <div className="qs-builder">
-        <div className="qs-page" style={{ gap: 'var(--qs-space-4)' }}>
+        <div className="qs-page qs-gap-4">
           <div className="qs-card">
             <header><h2>{t('Qatorlar')}</h2></header>
-            <div className="qs-page__actions" style={{ marginBottom: 10 }}>
+            <div className="qs-page__actions qs-mb-3">
               <Search size={16} />
               <input className="qs-input-sm" style={{ flex: 1, minWidth: 200 }} placeholder={t('Katalogdan qidirish (brend, model)')} aria-label={t('Katalogdan qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} />
               {catalog.data?.exchangeRate && <small className="qs-muted">{t('MB kursi: 1 USD = {r} so‘m ({d})', { r: formatDecimal(num(catalog.data.exchangeRate.rateToUzs), 2), d: formatDate(catalog.data.exchangeRate.rateDate) })}</small>}

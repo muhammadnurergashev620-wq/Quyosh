@@ -51,7 +51,7 @@ function Reviews() {
                   <td><div className="qs-cell-title"><strong>{[r.user.firstName, r.user.lastName].filter(Boolean).join(' ')}</strong><small>{r.user.phone} · {t('akkaunt: {d}', { d: formatDateTime(r.user.createdAt) })}</small></div></td>
                   <td><div className="qs-cell-title"><Badge tone={r.riskScore >= 40 ? 'danger' : r.riskScore > 0 ? 'warning' : 'success'}>{r.riskScore}</Badge>{r.riskFlags.map((f) => <small key={f}>{FLAG_TEXT[f] ?? f}</small>)}</div></td>
                   <td className="qs-right">
-                    <div className="qs-page__actions" style={{ justifyContent: 'flex-end' }}>
+                    <div className="qs-page__actions qs-justify-end">
                       {r.moderationStatus !== 'PUBLISHED' && !r.riskFlags.includes('SELF_REVIEW') && <Button size="sm" onClick={() => act.mutate({ id: r.id, decision: 'PUBLISHED' })}>{t('E’lon qilish')}</Button>}
                       {r.moderationStatus !== 'HIDDEN' && <Button size="sm" variant="ghost" onClick={() => act.mutate({ id: r.id, decision: 'HIDDEN' })}>{t('Yashirish')}</Button>}
                     </div>

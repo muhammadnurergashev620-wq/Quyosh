@@ -51,7 +51,7 @@ export function ProductPage() {
 
   return (
     <div className="qs-page">
-      <Link to={`/mijoz/mahsulotlar?kategoriya=${data.category.slug}`} className="qs-muted" style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}><ArrowLeft size={16} /> {i18nText(data.category.nameI18n)}</Link>
+      <Link to={`/mijoz/mahsulotlar?kategoriya=${data.category.slug}`} className="qs-muted qs-inline-flex qs-gap-2 qs-items-center"><ArrowLeft size={16} /> {i18nText(data.category.nameI18n)}</Link>
       <div className="qs-product">
         <div className="qs-form">
           <div className="qs-product__gallery"><CategoryGlyph slug={data.category.slug} size={120} /></div>
@@ -63,7 +63,7 @@ export function ProductPage() {
               </tbody>
             </table>
             {data.datasheetFileId && (
-              <Button variant="secondary" size="sm" style={{ marginTop: 12 }} onClick={() => void mediaService.getSignedUrl(data.datasheetFileId!, 'original').then((result) => window.open(result.url, '_blank', 'noopener'))}>
+              <Button variant="secondary" size="sm" className="qs-mt-3" onClick={() => void mediaService.getSignedUrl(data.datasheetFileId!, 'original').then((result) => window.open(result.url, '_blank', 'noopener'))}>
                 <FileText size={16} /> {t('Datasheet (PDF)')}
               </Button>
             )}
@@ -83,7 +83,7 @@ export function ProductPage() {
             <header>
               <h2>{t('Bu modelni sotayotgan do‘konlar')}</h2>
             </header>
-            <div className="qs-form__row" style={{ marginBottom: 12 }}>
+            <div className="qs-form__row qs-mb-3">
               <SelectMenu className="qs-select" aria-label={t('Hudud')} value={region} onChange={(e) => setRegion(e.target.value)}>
                 <option value="">{t('Barcha hududlar')}</option>
                 {REGIONS.map((item) => <option key={item.code} value={item.code}>{item.name}</option>)}

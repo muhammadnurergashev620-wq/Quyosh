@@ -58,7 +58,7 @@ export function ServiceAreaEditor({ shopId, branch, onDone }: { shopId: string; 
           ))}
         </div>
       ) : (
-        <p className="qs-muted" style={{ margin: 0 }}>{t('Hudud chegarasini xaritada ketma-ket bosib chizing; nuqtalarni sudrab tuzatish mumkin.')}</p>
+        <p className="qs-muted qs-m-0">{t('Hudud chegarasini xaritada ketma-ket bosib chizing; nuqtalarni sudrab tuzatish mumkin.')}</p>
       )}
       <MapView center={center} zoom={mode === 'radius' ? 8 : 9} onStyleReady={onStyleReady} className="qs-map--form" ariaLabel={t('Xizmat hududi xaritasi')}>
         {mode === 'draw' && (

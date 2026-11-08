@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { BarChart3, Plus } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
 import { calcService } from '@/features/calc/calc.service';
@@ -33,11 +33,11 @@ export function CalculationsPage() {
         <div><h1>{t('Hisoblarim')}</h1><p>{t('Saqlangan hisoblar o‘zgarmaydi; yangi tarif bilan «Qayta hisoblash» yangi yozuv yaratadi.')}</p></div>
         <div className="qs-page__actions">
           {selected.length >= 2 && <Button variant="secondary" onClick={() => navigate(`/mijoz/hisoblar/solishtirish?ids=${selected.join(',')}`)}>{t('Solishtirish ({n})', { n: selected.length })}</Button>}
-          <Link className="gm-button gm-button--primary gm-button--md" to="/mijoz/kalkulyator"><Plus size={16} /> {t('Yangi hisob')}</Link>
+          <ButtonLink to="/mijoz/kalkulyator"><Plus size={16} /> {t('Yangi hisob')}</ButtonLink>
         </div>
       </div>
       {!list.data?.length ? (
-        <EmptyState icon={<BarChart3 size={30} />} title={t('Hali hisob saqlanmagan')} action={<Link className="gm-button gm-button--primary gm-button--md" to="/mijoz/kalkulyator">{t('Hisoblash')}</Link>} />
+        <EmptyState icon={<BarChart3 size={30} />} title={t('Hali hisob saqlanmagan')} action={<ButtonLink to="/mijoz/kalkulyator">{t('Hisoblash')}</ButtonLink>} />
       ) : (
         <div className="qs-table-wrap">
           <table className="qs-table">
@@ -93,7 +93,7 @@ export function CompareCalculationsPage() {
           icon={<BarChart3 size={28} />}
           title={t('Solishtirish uchun kamida 2 ta hisob tanlang')}
           description={t('«Hisoblarim» ro‘yxatida hisoblarni belgilab, «Solishtirish» tugmasini bosing.')}
-          action={<Link to="/mijoz/hisoblar" className="gm-button gm-button--primary gm-button--md">{t('Hisoblarimga o‘tish')}</Link>}
+          action={<ButtonLink to="/mijoz/hisoblar">{t('Hisoblarimga o‘tish')}</ButtonLink>}
         />
       </div>
     );

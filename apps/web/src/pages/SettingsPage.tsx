@@ -106,7 +106,7 @@ export function SettingsPage() {
 
   return (
     <div className="gm-pmenu-page">
-      <div className="gm-page-header" style={{ marginBottom: 0 }}>
+      <div className="gm-page-header qs-mb-0">
         <h1>{t('Sozlamalar')}</h1>
       </div>
       <ProfileMenuList

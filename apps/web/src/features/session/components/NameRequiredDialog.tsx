@@ -47,7 +47,7 @@ export function NameRequiredDialog() {
       }
     >
       <form id="gm-name-form" className="gm-form" onSubmit={handleSubmit}>
-        <p style={{ margin: 0, color: 'var(--qs-color-text-muted)' }}>
+        <p className="qs-m-0 qs-text-muted">
           {t('Boshqa foydalanuvchilar sizni ismingiz bilan ko‘radi. Davom etish uchun ism va familiyangizni birga yozing.')}
         </p>
         {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}

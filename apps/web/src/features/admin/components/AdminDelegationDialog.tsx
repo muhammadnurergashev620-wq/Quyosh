@@ -30,7 +30,7 @@ export function AdminDelegationDialog({ admin, onClose }: { admin: AdminAccount;
       }
     >
       <div className="gm-newadm">
-        <p style={{ margin: 0 }}>
+        <p className="qs-m-0">
           <strong>{name}</strong>{' '}{t('· ID {accountNumber}', { accountNumber: admin.accountNumber })}
         </p>
         {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}

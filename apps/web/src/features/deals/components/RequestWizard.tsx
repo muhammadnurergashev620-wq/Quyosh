@@ -126,7 +126,7 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
   const footer = done ? (
     <Button onClick={() => { close(); navigate(`/mijoz/sorovlar/${done.id}`); }}>{t('So‘rovni ochish')}</Button>
   ) : (
-    <div className="qs-form__actions" style={{ width: '100%' }}>
+    <div className="qs-form__actions qs-w-full">
       {step > 0 && <Button variant="ghost" onClick={() => setStep(step - 1)}>{t('Orqaga')}</Button>}
       {step < 3 ? (
         <Button disabled={!canNext || !!blocked} onClick={() => setStep(step + 1)}>{t('Davom etish')}</Button>

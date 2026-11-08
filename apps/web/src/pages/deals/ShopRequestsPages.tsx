@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 import type { DragEvent } from 'react';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ClipboardList, Clock, FileText, Kanban, List, Lock, MapPin, Phone, StickyNote, XCircle } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -193,12 +193,12 @@ export function ShopRequestDetailPage() {
           ) : (
             openForQuote && can('quote.draft') && <Button onClick={() => setBuilder(true)}><FileText size={15} /> {t('Taklif tayyorlash')}</Button>
           )}
-          {l.quote?.installation && <Link className="gm-button gm-button--secondary gm-button--md" to={`/dokon/montajlar/${l.quote.installation.id}`}>{t('Montaj')}</Link>}
+          {l.quote?.installation && <ButtonLink variant="secondary" to={`/dokon/montajlar/${l.quote.installation.id}`}>{t('Montaj')}</ButtonLink>}
           {['SENT', 'VIEWED', 'CLARIFICATION_REQUESTED'].includes(l.status) && <Button variant="ghost" onClick={() => setDeclineOpen(true)}><XCircle size={15} /> {t('Rad etish')}</Button>}
         </div>
       </div>
       <div className="qs-lead">
-        <aside className="qs-page" style={{ gap: 'var(--qs-space-4)' }}>
+        <aside className="qs-page qs-gap-4">
           <div className="qs-card">
             <h2>{t('Mijoz')}</h2>
             {l.customer.revealed ? (
@@ -226,7 +226,7 @@ export function ShopRequestDetailPage() {
               {c?.systemPowerKw != null && <div><dt>{t('Hisob: quvvat')}</dt><dd>{kw(c.systemPowerKw)}{c.batteryKwh ? ` · ${c.batteryKwh} kWh` : ''}</dd></div>}
               {c?.initialCost != null && <div><dt>{t('Hisob: taxminiy narx')}</dt><dd>{sum(c.initialCost)}</dd></div>}
             </dl>
-            {r.notes && <p style={{ marginBottom: 0 }}>«{r.notes}»</p>}
+            {r.notes && <p className="qs-mb-0">«{r.notes}»</p>}
           </div>
         </aside>
         <ChatPanel
@@ -238,7 +238,7 @@ export function ShopRequestDetailPage() {
           canAsk={['SENT', 'VIEWED'].includes(l.status)}
           context={<><strong>{SYSTEM_TYPE[r.systemType].title}{r.requiredCapacityKw ? ` · ${kw(num(r.requiredCapacityKw))}` : ''}</strong><StatusBadge map={LEAD_STATUS} status={l.status} />{l.quote && <span>{t('Taklif')}: {sum(num(l.quote.total))}</span>}</>}
         />
-        <aside className="qs-page" style={{ gap: 'var(--qs-space-4)' }}>
+        <aside className="qs-page qs-gap-4">
           <div className="qs-card">
             <h2>{t('Lead')}</h2>
             <div className="qs-form">

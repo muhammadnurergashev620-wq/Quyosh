@@ -88,7 +88,7 @@ function ModelReview({ model, onClose }: { model: AdminModel; onClose: () => voi
       </div>
       <details>
         <summary>{t('Boshqa xususiyatni qo‘shish')}</summary>
-        <div className="qs-chips" style={{ marginTop: 8 }}>
+        <div className="qs-chips qs-mt-2">
           {SPEC_KEYS.filter((key) => specs[key] === undefined && key !== 'warrantyMonths').map((key) => (
             <Chip key={key} onClick={() => setSpecs({ ...specs, [key]: '' })}>{SPEC_META[key].label}</Chip>
           ))}

@@ -133,7 +133,7 @@ export function CatalogPage() {
             <div className="qs-products">{models.data.items.map((item) => <ProductCard key={item.id} item={item} />)}</div>
           )}
           {models.data && models.data.pages > 1 && (
-            <div className="qs-page__actions" style={{ justifyContent: 'center', marginTop: 16 }}>
+            <div className="qs-page__actions qs-justify-center qs-mt-4">
               <Button size="sm" variant="ghost" disabled={(filters.page ?? 1) <= 1} onClick={() => set('sahifa', String((filters.page ?? 1) - 1))}>{t('Oldingi')}</Button>
               <span className="qs-muted">{filters.page} / {models.data.pages}</span>
               <Button size="sm" variant="ghost" disabled={(filters.page ?? 1) >= models.data.pages} onClick={() => set('sahifa', String((filters.page ?? 1) + 1))}>{t('Keyingi')}</Button>

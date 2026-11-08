@@ -73,7 +73,7 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
         />
       ) : (
         <form className="qs-form" onSubmit={(e) => { e.preventDefault(); create.mutate(); }} noValidate>
-          <h3 style={{ margin: 0 }}>{t('Do‘kon ma’lumotlari')}</h3>
+          <h3 className="qs-m-0">{t('Do‘kon ma’lumotlari')}</h3>
           <Input label={t('Do‘kon nomi')} value={form.name} onChange={(e) => set({ name: e.target.value })} required maxLength={120} />
           <div className="qs-form__row">
             <Input label={t('STIR')} inputMode="numeric" value={form.stir} onChange={(e) => set({ stir: e.target.value.replace(/\D/g, '').slice(0, 9) })} required placeholder="123456789" />
@@ -91,7 +91,7 @@ function CreateShopModal({ open, onClose }: { open: boolean; onClose: () => void
               </ul>
             </Alert>
           )}
-          <h3 style={{ margin: '8px 0 0' }}>{t('Egasining hisobi')}</h3>
+          <h3 className="qs-m-0 qs-mt-2">{t('Egasining hisobi')}</h3>
           <div className="qs-form__row">
             <Input label={t('Ism')} value={form.ownerFirstName} onChange={(e) => set({ ownerFirstName: e.target.value })} required maxLength={100} />
             <Input label={t('Familiya (ixtiyoriy)')} value={form.ownerLastName} onChange={(e) => set({ ownerLastName: e.target.value })} maxLength={100} />
@@ -169,7 +169,7 @@ export function AdminShopsPage() {
         </div>
       )}
       {list.data.pages > 1 && (
-        <div className="qs-page__actions" style={{ justifyContent: 'center' }}>
+        <div className="qs-page__actions qs-justify-center">
           <Button size="sm" variant="ghost" disabled={(filters.page ?? 1) <= 1} onClick={() => setFilters({ ...filters, page: (filters.page ?? 1) - 1 })}>{t('Oldingi')}</Button>
           <span className="qs-muted">{filters.page ?? 1} / {list.data.pages}</span>
           <Button size="sm" variant="ghost" disabled={(filters.page ?? 1) >= list.data.pages} onClick={() => setFilters({ ...filters, page: (filters.page ?? 1) + 1 })}>{t('Keyingi')}</Button>

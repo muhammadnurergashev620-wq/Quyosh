@@ -1,3 +1,4 @@
+import { ButtonLink } from '@/components/ui/Button';
 import { Link } from 'react-router-dom';
 import { CheckCircle2, Circle } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
@@ -77,10 +78,10 @@ export function ShopDashboardPage() {
       <section className="qs-card">
         <header><h2>{t('Tezkor amallar')}</h2></header>
         <div className="qs-page__actions">
-          {can('catalog.write') && <Link className="gm-button gm-button--secondary gm-button--md" to="/dokon/katalog">{t('Mahsulot qo‘shish')}</Link>}
-          {can('catalog.write') && <Link className="gm-button gm-button--secondary gm-button--md" to="/dokon/import">{t('Narxlarni import qilish')}</Link>}
-          {can('branches.write') && <Link className="gm-button gm-button--secondary gm-button--md" to="/dokon/filiallar">{t('Filial qo‘shish')}</Link>}
-          {isOwner && <Link className="gm-button gm-button--secondary gm-button--md" to="/dokon/xodimlar">{t('Xodimlar')}</Link>}
+          {can('catalog.write') && <ButtonLink variant="secondary" to="/dokon/katalog">{t('Mahsulot qo‘shish')}</ButtonLink>}
+          {can('catalog.write') && <ButtonLink variant="secondary" to="/dokon/import">{t('Narxlarni import qilish')}</ButtonLink>}
+          {can('branches.write') && <ButtonLink variant="secondary" to="/dokon/filiallar">{t('Filial qo‘shish')}</ButtonLink>}
+          {isOwner && <ButtonLink variant="secondary" to="/dokon/xodimlar">{t('Xodimlar')}</ButtonLink>}
         </div>
       </section>
     </div>

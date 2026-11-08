@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link } from 'react-router-dom';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FileUp, Package, Plus, Search } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { MoneyInput } from '@/components/ui/MoneyInput';
@@ -204,7 +203,7 @@ function AddProductModal({ shopId, open, onClose }: { shopId: string; open: bool
         </div>
       ) : (
         <form className="qs-form" onSubmit={(e) => { e.preventDefault(); create.mutate(); }}>
-          <div className="qs-card" style={{ padding: 12 }}>
+          <div className="qs-card qs-p-3">
             <strong>{selected.brand} {selected.model}</strong>
             <div className="qs-muted">{i18nText(selected.category.nameI18n)} · {keySpecs(selected).join(' · ')}</div>
             {selected.status === 'PENDING' && <Badge tone="warning">{t('Model tekshiruvda — mahsulot qoralama bo‘lib qo‘shiladi')}</Badge>}
@@ -281,7 +280,7 @@ export function ShopCatalogPage() {
         <div><h1>{t('Mahsulotlar')}</h1><p>{t('Yagona katalogdagi modellar va sizning narxlaringiz.')}</p></div>
         {writable && (
           <div className="qs-page__actions">
-            <Link to="/dokon/import" className="gm-button gm-button--secondary gm-button--md"><FileUp size={18} /> {t('Import')}</Link>
+            <ButtonLink to="/dokon/import" variant="secondary"><FileUp size={18} /> {t('Import')}</ButtonLink>
             <Button onClick={() => setAdding(true)}><Plus size={18} /> {t('Mahsulot qo‘shish')}</Button>
           </div>
         )}

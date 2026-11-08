@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { ArrowRight, BookOpen, Clock, Search, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
 import { m7Service } from '@/features/m7/m7.service';
@@ -69,7 +69,7 @@ export function KnowledgeHomePage() {
       {q ? (
         <section>
           <h2>{t('«{q}» bo‘yicha natijalar', { q })}</h2>
-          {list.isLoading ? <PageLoader /> : !list.data?.items.length ? <EmptyState icon={<Search size={28} />} title={t('Hech narsa topilmadi')} description={t('Boshqa so‘z bilan qidiring yoki yordam markaziga yozing.')} action={<Link className="gm-button gm-button--primary gm-button--md" to="/mijoz/yordam">{t('Yordam markazi')}</Link>} /> : <div className="qs-kcards">{list.data.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div>}
+          {list.isLoading ? <PageLoader /> : !list.data?.items.length ? <EmptyState icon={<Search size={28} />} title={t('Hech narsa topilmadi')} description={t('Boshqa so‘z bilan qidiring yoki yordam markaziga yozing.')} action={<ButtonLink to="/mijoz/yordam">{t('Yordam markazi')}</ButtonLink>} /> : <div className="qs-kcards">{list.data.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div>}
         </section>
       ) : (
         <>
@@ -170,7 +170,7 @@ export function ArticlePage() {
         </nav>
         <article>
           <Badge tone="neutral">{TYPE_LABEL[art.articleType]}</Badge>
-          <h1 style={{ margin: '8px 0' }}>{tr(art.titleI18n)}</h1>
+          <h1 className="qs-my-2 qs-mx-0">{tr(art.titleI18n)}</h1>
           <div className="qs-article__meta">
             <span><Clock size={13} /> {t('{n} daqiqa o‘qish', { n: art.readingMinutes })}</span>
             {art.verifiedAt && <span>{t('Tekshirilgan: {d}', { d: formatDate(art.verifiedAt) })}</span>}
@@ -181,9 +181,9 @@ export function ArticlePage() {
             <div className="qs-sources"><strong>{t('Manbalar')}</strong><ul>{art.sourceUrls.map((u) => <li key={u}>{safeExternalUrl(u) ? <a href={safeExternalUrl(u)} target="_blank" rel="noopener noreferrer">{u}</a> : u}</li>)}</ul></div>
           )}
           {cta && (
-            <div className="qs-cta-card" style={{ marginTop: 20 }}>
+            <div className="qs-cta-card qs-mt-5">
               <h3>{cta.title}</h3><p>{cta.text}</p>
-              <Link className="gm-button gm-button--md" to={cta.to} onClick={() => track({ eventType: 'cta_click', entityId: art.id, properties: { cta: art.ctaType } })}>{cta.button} <ArrowRight size={16} /></Link>
+              <ButtonLink to={cta.to} onClick={() => track({ eventType: 'cta_click', entityId: art.id, properties: { cta: art.ctaType } })}>{cta.button} <ArrowRight size={16} /></ButtonLink>
             </div>
           )}
           <div className="qs-page__actions" style={{ marginTop: 20 }}>

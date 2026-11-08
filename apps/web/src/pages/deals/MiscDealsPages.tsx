@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Heart, MessageSquareQuote, Send, Star } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Textarea';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
@@ -36,7 +36,7 @@ export function ShopReviewsPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Sharhlar')}</h1><p>{t('Faqat tasdiqlangan montajlardan keyingi sharhlar. Moderatsiyadagilar bu yerda ko‘rinmaydi.')}</p></div></div>
       <div className="qs-grid-3">
-        <div className="qs-card"><h2>{t('Reyting')}</h2><p className="qs-quote-card__total" style={{ margin: 0 }}>{formatRating(avg)} <Star size={20} fill="currentColor" color="var(--qs-color-accent)" /></p><small className="qs-muted">{t('{n} ta tasdiqlangan montaj asosida', { n: total })}</small></div>
+        <div className="qs-card"><h2>{t('Reyting')}</h2><p className="qs-quote-card__total qs-m-0">{formatRating(avg)} <Star size={20} fill="currentColor" color="var(--qs-color-accent)" /></p><small className="qs-muted">{t('{n} ta tasdiqlangan montaj asosida', { n: total })}</small></div>
         <div className="qs-card" style={{ gridColumn: 'span 2' }}>
           <h2>{t('Taqsimot')}</h2>
           {dist.map((d) => (
@@ -90,7 +90,7 @@ export function FavoritesPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Sevimlilar')}</h1><p>{t('Saqlangan do‘konlar va mahsulotlar.')}</p></div></div>
       {!list.data?.length ? (
-        <EmptyState icon={<Heart size={30} />} title={t('Hali hech narsa saqlanmagan')} description={t('Do‘kon yoki mahsulot sahifasida yurakcha tugmasini bosing.')} action={<Link className="gm-button gm-button--primary gm-button--md" to="/mijoz/dokonlar">{t('Do‘konlar')}</Link>} />
+        <EmptyState icon={<Heart size={30} />} title={t('Hali hech narsa saqlanmagan')} description={t('Do‘kon yoki mahsulot sahifasida yurakcha tugmasini bosing.')} action={<ButtonLink to="/mijoz/dokonlar">{t('Do‘konlar')}</ButtonLink>} />
       ) : (
         <div className="qs-grid-2">
           <div className="qs-card">
@@ -100,7 +100,7 @@ export function FavoritesPage() {
               <div key={f.id} className="qs-pick">
                 <div><Link to={`/mijoz/dokonlar/${f.shop!.slug}`}><strong>{f.shop!.name}</strong></Link><small><Star size={12} /> {formatRating(f.shop!.ratingAvg)} ({f.shop!.ratingCount})</small></div>
                 <div className="qs-page__actions">
-                  <Link className="gm-button gm-button--secondary gm-button--sm" to={`/mijoz/sorovlar?yangi=1&dokon=${f.shop!.id}`}>{t('Taklif so‘rash')}</Link>
+                  <ButtonLink variant="secondary" size="sm" to={`/mijoz/sorovlar?yangi=1&dokon=${f.shop!.id}`}>{t('Taklif so‘rash')}</ButtonLink>
                   <Button size="sm" variant="ghost" aria-label={t('Sevimlilardan olib tashlash')} onClick={() => remove.mutate({ shopId: f.shop!.id })}><Heart size={15} fill="currentColor" /></Button>
                 </div>
               </div>

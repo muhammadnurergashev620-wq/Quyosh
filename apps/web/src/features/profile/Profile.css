@@ -414,7 +414,7 @@
   font-size: 0.9rem;
   text-decoration: none;
   transition:
-    transform 0.18s var(--qs-ease, ease),
+    transform 0.18s var(--qs-ease),
     border-color 0.18s,
     background-color 0.18s,
     box-shadow 0.18s;
@@ -447,7 +447,7 @@
 .gm-plink__arrow {
   flex: none;
   color: var(--qs-color-text-muted);
-  transition: transform 0.18s var(--qs-ease, ease), color 0.18s;
+  transition: transform 0.18s var(--qs-ease), color 0.18s;
 }
 .gm-plink:hover .gm-plink__arrow,
 .gm-plink:focus-visible .gm-plink__arrow {
@@ -539,7 +539,7 @@
   align-items: center;
   gap: 4px;
   padding: 5px 12px;
-  transition: transform 0.15s var(--qs-ease, ease), background-color 0.15s;
+  transition: transform 0.15s var(--qs-ease), background-color 0.15s;
 }
 .gm-ptags li:hover {
   transform: translateY(-1px);

@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowDown, ArrowUp, Eye, EyeOff, History, Plus, Save, Send, Trash2, Undo2 } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonAnchor } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
@@ -147,7 +147,7 @@ export function AdminHomeBlocksPage() {
         </div>
         <div className="qs-page__actions">
           {drafts > 0 && <Badge tone="warning">{t('{n} ta qoralama', { n: drafts })}</Badge>}
-          <a className="gm-button gm-button--secondary gm-button--md" href="/admin/bosh-sahifa/korinish" target="_blank" rel="noreferrer"><Eye size={16} /> {t('Ko‘rinish')}</a>
+          <ButtonAnchor variant="secondary" href="/admin/bosh-sahifa/korinish" target="_blank" rel="noreferrer"><Eye size={16} /> {t('Ko‘rinish')}</ButtonAnchor>
         </div>
       </div>
       {(toggle.isError || reorder.isError) && <Alert tone="danger">{getErrorMessage(toggle.error ?? reorder.error)}</Alert>}
@@ -217,7 +217,7 @@ function BlockEditor({ block, onSaved }: { block: AdminBlock; onSaved: (b: Admin
           <Button size="sm" variant="ghost" onClick={() => setHistory(true)}><History size={14} /> {t('Versiyalar')}</Button>
         </div>
       </header>
-      {hint && <p className="qs-muted" style={{ margin: 0 }}>{hint()}</p>}
+      {hint && <p className="qs-muted qs-m-0">{hint()}</p>}
       <TabBar variant="tabs" role="tablist" aria-label={t('Til')}>
         {LANGS.map(([code, label]) => (
           <Tab key={code} role="tab" aria-selected={lang === code} onClick={() => setLang(code)} selected={lang === code}>

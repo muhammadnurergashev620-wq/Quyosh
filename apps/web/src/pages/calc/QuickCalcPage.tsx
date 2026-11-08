@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ArrowRight, Calculator, Save } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { MapView, useMapHandle } from '@/features/map/MapView';
@@ -112,7 +112,7 @@ export function QuickCalcPage() {
     <div className="qs-page">
       <div className="qs-page__head">
         <div><h1>{t('Tez hisob')}</h1><p>{t('Uchta savol — va quyosh tizimi sizga qancha tejashini ko‘rasiz.')}</p></div>
-        <Link className="gm-button gm-button--ghost gm-button--md" to="/mijoz/kalkulyator/batafsil">{t('Batafsil hisob')}</Link>
+        <ButtonLink variant="ghost" to="/mijoz/kalkulyator/batafsil">{t('Batafsil hisob')}</ButtonLink>
       </div>
 
       <div className="qs-quick">
@@ -188,9 +188,9 @@ export function QuickCalcPage() {
               <Kpis result={result} pending={estimate.pending} compact />
               {estimate.retryAt && <Alert tone="warning">{t('Juda tez o‘zgartiryapsiz — bir oz kutib yangilanadi')}</Alert>}
               {result.warnings.filter((w) => WARNING_TEXT[w] && w !== 'TARIFF_NOT_FOUND').map((w) => <Alert key={w} tone="info">{WARNING_TEXT[w]}</Alert>)}
-              <p className="qs-muted" style={{ margin: 0, fontSize: 13 }}>{LIMITING[result.limitingFactor]}</p>
+              <p className="qs-muted qs-m-0 qs-fs-13">{LIMITING[result.limitingFactor]}</p>
               <div className="qs-page__actions">
-                <Link className="gm-button gm-button--md" style={{ background: 'var(--qs-color-accent)', color: '#1a1205' }} to="/mijoz/xarita">{t('Do‘konlardan taklif olish')} <ArrowRight size={16} /></Link>
+                <ButtonLink variant="accent" to="/mijoz/xarita">{t('Do‘konlardan taklif olish')} <ArrowRight size={16} /></ButtonLink>
                 <Button variant="secondary" onClick={() => navigate('/mijoz/kalkulyator/batafsil?qadam=1', { state: { fromQuick: committed } })}>{t('Batafsil hisob')}</Button>
                 <Button variant="ghost" loading={save.isPending} onClick={() => (hasSession ? save.mutate() : requireLogin())}><Save size={16} /> {t('Saqlash')}</Button>
               </div>

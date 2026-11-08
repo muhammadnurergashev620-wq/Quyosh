@@ -26,9 +26,9 @@ export function WebPushPrompt() {
         <small>{t('Yangi xabar, taklif va qo‘ng‘iroqlar sayt yopiq bo‘lsa ham ko‘rinadi.')}</small>
       </div>
       <Button size="sm" loading={busy} onClick={() => void enable()}>{t('Yoqish')}</Button>
-      <button type="button" className="gm-webpush__close" aria-label={t('Keyinroq')} onClick={() => { dismissWebPush(); setVisible(false); }}>
-        <X size={16} aria-hidden="true" />
-      </button>
+      <Button type="button" variant="ghost" size="sm" iconOnly className="gm-webpush__close" aria-label={t('Keyinroq')} onClick={() => { dismissWebPush(); setVisible(false); }}>
+        <X />
+      </Button>
     </section>
   );
 }

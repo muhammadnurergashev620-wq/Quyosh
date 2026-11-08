@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, BellRing, Calculator, CalendarClock, CheckCircle2, ClipboardList, Download, MessageCircle, Plus, Sun, Zap } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -46,14 +46,14 @@ export function CustomerDashboardPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1><Sun size={24} color="var(--qs-color-accent)" /> {hello}{me.data?.firstName ? `, ${me.data.firstName}` : ''}!</h1></div></div>
       {x.empty ? (
-        <EmptyState icon={<Calculator size={30} />} title={t('Birinchi hisobingizni qiling')} description={t('Manzil va oylik sarfingiz bo‘yicha quvvat, narx va tejashni 1–2 daqiqada bilib oling.')} action={<Link className="gm-button gm-button--primary gm-button--md" to="/mijoz/kalkulyator">{t('Hisoblash')}</Link>} />
+        <EmptyState icon={<Calculator size={30} />} title={t('Birinchi hisobingizni qiling')} description={t('Manzil va oylik sarfingiz bo‘yicha quvvat, narx va tejashni 1–2 daqiqada bilib oling.')} action={<ButtonLink to="/mijoz/kalkulyator">{t('Hisoblash')}</ButtonLink>} />
       ) : (
         <>
           <section className="qs-card">
             <h2>{t('Sizdan kutilayotgan amallar')}</h2>
             {!x.actions.length ? <p className="qs-muted qs-line"><CheckCircle2 size={15} /> {t('Hozircha hammasi joyida.')}</p> : (
               <div className="qs-req-list">
-                {x.actions.map((a) => { const l = actionLink(a); return <div key={`${a.kind}-${a.id}`} className="qs-pick"><span>{l.text}</span><Link className="gm-button gm-button--primary gm-button--sm" to={l.to}>{l.button}</Link></div>; })}
+                {x.actions.map((a) => { const l = actionLink(a); return <div key={`${a.kind}-${a.id}`} className="qs-pick"><span>{l.text}</span><ButtonLink size="sm" to={l.to}>{l.button}</ButtonLink></div>; })}
               </div>
             )}
           </section>
@@ -61,7 +61,7 @@ export function CustomerDashboardPage() {
             <section className="qs-card">
               <header><h2>{t('Ochiq so‘rovlar')}</h2><Link to="/mijoz/sorovlar">{t('Hammasi')}</Link></header>
               {!x.openRequests.length ? (
-                <div className="qs-mini-empty"><p className="qs-muted">{t('Ochiq so‘rov yo‘q. Hisob natijasidan do‘konlarga so‘rov yuborib, narx takliflarini oling.')}</p><Link className="gm-button gm-button--secondary gm-button--sm" to="/mijoz/hisoblar">{t('Hisoblarimdan so‘rov yuborish')}</Link></div>
+                <div className="qs-mini-empty"><p className="qs-muted">{t('Ochiq so‘rov yo‘q. Hisob natijasidan do‘konlarga so‘rov yuborib, narx takliflarini oling.')}</p><ButtonLink variant="secondary" size="sm" to="/mijoz/hisoblar">{t('Hisoblarimdan so‘rov yuborish')}</ButtonLink></div>
               ) : x.openRequests.map((r) => <p key={r.id} className="qs-line"><Link to={`/mijoz/sorovlar/${r.id}`}>№{r.number} · {r.title}</Link> <Badge tone={r.quotes ? 'success' : 'neutral'}>{t('{n} ta taklif', { n: r.quotes })}</Badge></p>)}
             </section>
             <section className="qs-card">
@@ -82,7 +82,7 @@ export function CustomerDashboardPage() {
           {!!x.reminders.length && (
             <section className="qs-card">
               <h2><BellRing size={17} /> {t('Yaqin eslatmalar')}</h2>
-              {x.reminders.map((r) => <p key={r.id} style={{ margin: '6px 0' }}><Link to={`/mijoz/tizimim/${r.installedSystemId}`}>{REMINDER_LABEL[r.type]}</Link> · {formatDate(r.nextAt)}</p>)}
+              {x.reminders.map((r) => <p key={r.id} className="qs-my-2 qs-mx-0"><Link to={`/mijoz/tizimim/${r.installedSystemId}`}>{REMINDER_LABEL[r.type]}</Link> · {formatDate(r.nextAt)}</p>)}
             </section>
           )}
         </>
@@ -105,7 +105,7 @@ function AddSystemModal({ open, onClose }: { open: boolean; onClose: () => void 
   return (
     <Modal open={open} onClose={onClose} title={t('Tizim qo‘shish')} footer={<Button disabled={!f.title.trim() || !f.power || !f.date} loading={add.isPending} onClick={() => add.mutate()}>{t('Saqlash')}</Button>}>
       <div className="qs-form">
-        <p className="qs-muted" style={{ margin: 0 }}>{t('Platformadan tashqarida o‘rnatilgan tizimni qo‘shib, ishlab chiqarish va eslatmalarni kuzating.')}</p>
+        <p className="qs-muted qs-m-0">{t('Platformadan tashqarida o‘rnatilgan tizimni qo‘shib, ishlab chiqarish va eslatmalarni kuzating.')}</p>
         <Input label={t('Nomi')} value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} placeholder={t('Masalan: Uy tomi')} />
         <div className="qs-form__row">
           <Input label={t('Quvvat')} suffix={t('kVt')} inputMode="decimal" value={f.power} onChange={(e) => setF({ ...f, power: e.target.value.replace(/[^\d.,]/g, '') })} />
@@ -207,7 +207,7 @@ export function SystemPage() {
     <div className="qs-page">
       <div className="qs-page__head">
         <div><h1>{x.title ?? x.shop?.name ?? t('O‘rnatilgan tizim')}</h1><p>{kw(Number(x.systemPowerKw))} · {SYSTEM_TYPE[x.systemType].title} · {t('O‘rnatilgan: {d}', { d: formatDate(x.installedAt) })}{x.shop ? ` · ${x.shop.name}` : ''}</p></div>
-        <div className="qs-page__actions">{x.requestShopId && <Link className="gm-button gm-button--secondary gm-button--md" to={`/mijoz/chat/${x.requestShopId}`}><MessageCircle size={16} /> {t('Do‘konga yozish')}</Link>}</div>
+        <div className="qs-page__actions">{x.requestShopId && <ButtonLink variant="secondary" to={`/mijoz/chat/${x.requestShopId}`}><MessageCircle size={16} /> {t('Do‘konga yozish')}</ButtonLink>}</div>
       </div>
       {lastAlert && lastAlert.deviation !== null && (
         <Alert tone="warning" title={t('{p}: ishlab chiqarish prognozdan {d} farq qildi', { p: lastAlert.period, d: pct(lastAlert.deviation) })}>
@@ -264,7 +264,7 @@ export function SystemPage() {
         <h2><ClipboardList size={17} /> {t('Hujjatlar')}</h2>
         <div className="qs-page__actions">
           {x.quoteId && <Button variant="secondary" onClick={() => void dealsService.quotePdf(x.quoteId!, 'uz', 0)}><Download size={15} /> {t('Taklif PDF')}</Button>}
-          {x.installationId && <Link className="gm-button gm-button--secondary gm-button--md" to={`/mijoz/montajlar/${x.installationId}`}>{t('Montaj va chek-list')}</Link>}
+          {x.installationId && <ButtonLink variant="secondary" to={`/mijoz/montajlar/${x.installationId}`}>{t('Montaj va chek-list')}</ButtonLink>}
           {!x.quoteId && !x.installationId && <p className="qs-muted" style={{ margin: 0 }}>{t('Qo‘lda qo‘shilgan tizim uchun hujjatlar yo‘q.')}</p>}
         </div>
         {x.checklist && <p className="qs-muted">{t('Chek-list: {ok} OK, {issue} muammo', { ok: x.checklist.filter((c) => c.status === 'OK').length, issue: x.checklist.filter((c) => c.status === 'ISSUE').length })}</p>}

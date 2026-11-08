@@ -232,3 +232,11 @@
   --qs-google-text: #3c4043;
   --qs-google-border: #dadce0;
 }
+
+/* ── Umumiy rgb kanallari (shaffoflik bilan: rgb(var(--qs-white-rgb) / .6)) va kod bloki ── */
+:root {
+  --qs-white-rgb: 255 255 255;
+  --qs-black-rgb: 0 0 0;
+  --qs-code-bg: #0b1220;
+  --qs-code-text: #e2e8f0;
+}

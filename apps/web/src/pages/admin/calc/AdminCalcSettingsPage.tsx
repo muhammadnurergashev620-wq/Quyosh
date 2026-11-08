@@ -130,7 +130,7 @@ function FinancingTab() {
                 <td className="qs-num">{formatPercent(Number(product.minDownPaymentPct), 0)}</td>
                 <td><StatusBadge map={PUBLISH_STATUS} status={product.status} /></td>
                 <td className="qs-right">
-                  <span className="qs-page__actions" style={{ justifyContent: 'flex-end' }}>
+                  <span className="qs-page__actions qs-justify-end">
                     <Button size="sm" variant="secondary" onClick={() => open(product)}>{t('Tahrirlash')}</Button>
                     {product.status === 'DRAFT' && <Button size="sm" onClick={() => run.mutate(() => adminCalcService.publishFinancing(product.id))}>{t('Tasdiqlash')}</Button>}
                     {product.status === 'PUBLISHED' && <Button size="sm" variant="ghost" onClick={() => run.mutate(() => adminCalcService.archiveFinancing(product.id))}>{t('Arxivlash')}</Button>}

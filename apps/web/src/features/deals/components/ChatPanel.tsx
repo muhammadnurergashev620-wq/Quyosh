@@ -164,7 +164,7 @@ export function ChatPanel({ rsId, side, visits, context, canWrite = true, canAsk
       <div className="qs-chat__context">{context}</div>
       <div className="qs-chat__stream" ref={streamRef} onScroll={onScroll} aria-live="polite">
         {messages.isLoading && <Spinner />}
-        {!messages.isLoading && items.length === 0 && <p className="qs-muted" style={{ textAlign: 'center' }}>{t('Hali xabar yo‘q. Savolingizni yozing.')}</p>}
+        {!messages.isLoading && items.length === 0 && <p className="qs-muted qs-text-center">{t('Hali xabar yo‘q. Savolingizni yozing.')}</p>}
         {items.map((item) => {
           if (item.kind === 'visit') return <SiteVisitCard key={`v-${item.visit.id}`} visit={item.visit} rsId={rsId} side={side} onChanged={() => { void queryClient.invalidateQueries({ queryKey: ['chat', rsId] }); onActivity?.(); }} />;
           if (item.kind === 'pending') {

@@ -1,3 +1,4 @@
+import { ButtonLink } from '@/components/ui/Button';
 import { useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -34,7 +35,7 @@ export function CustomerConversationsPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Chat')}</h1><p>{t('Do‘konlar bilan yozishmalar. Kontakt ochilmaguncha ham yozishish mumkin.')}</p></div></div>
       {!list.data?.length ? (
-        <EmptyState icon={<MessageCircle size={30} />} title={t('Hali yozishma yo‘q')} description={t('Taklif so‘rovi yuborganingizdan keyin do‘konlar bilan shu yerda yozishasiz.')} action={<Link className="gm-button gm-button--primary gm-button--md" to="/mijoz/sorovlar?yangi=1">{t('Taklif so‘rash')}</Link>} />
+        <EmptyState icon={<MessageCircle size={30} />} title={t('Hali yozishma yo‘q')} description={t('Taklif so‘rovi yuborganingizdan keyin do‘konlar bilan shu yerda yozishasiz.')} action={<ButtonLink to="/mijoz/sorovlar?yangi=1">{t('Taklif so‘rash')}</ButtonLink>} />
       ) : (
         <div className={cx('qs-chat-layout', rsId && 'has-active')}>
           <nav className="qs-convos" aria-label={t('Suhbatlar')}>

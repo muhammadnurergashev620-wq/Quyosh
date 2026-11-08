@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Camera, CheckCircle2, ClipboardCheck, MessageCircle, PartyPopper, Wrench } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink, buttonClass } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
@@ -139,7 +139,7 @@ function Checklist({ view, onDone }: { view: InstallationView; onDone: () => voi
               {a?.status === 'ISSUE' && <Textarea label={t('Muammoni yozing')} required autoFocus value={a.comment ?? ''} maxLength={2000} onChange={(e) => set(item.code, { comment: e.target.value })} />}
               {(item.photoRequired || a?.status === 'ISSUE') && (
                 <div className="qs-page__actions">
-                  <label className="gm-button gm-button--secondary gm-button--sm" style={{ cursor: 'pointer' }}>
+                  <label className={buttonClass({ variant: 'secondary', size: 'sm' })}>
                     <Camera size={15} /> {item.photoRequired ? t('Rasmga olish (majburiy)') : t('Rasm qo‘shish')}
                     <input type="file" accept="image/*" capture="environment" hidden onChange={(e) => void photo(item, e.target.files?.[0])} />
                   </label>
@@ -151,7 +151,7 @@ function Checklist({ view, onDone }: { view: InstallationView; onDone: () => voi
           );
         })}
       </ul>
-      <div className="qs-progress" style={{ marginTop: 12 }}>
+      <div className="qs-progress qs-mt-3">
         <div className="qs-progress__bar"><span style={{ width: `${template.length ? (answered / template.length) * 100 : 0}%` }} /></div>
         <strong className="qs-num">{t('{a} / {b} band', { a: answered, b: template.length })}</strong>
       </div>
@@ -272,8 +272,8 @@ export function InstallationPage() {
         </div>
         <div className="qs-page__actions">
           <StatusBadge map={INSTALLATION_STATUS} status={v.status} />
-          {chatLink && <Link className="gm-button gm-button--secondary gm-button--md" to={chatLink}><MessageCircle size={16} /> {t('Yozishma')}</Link>}
-          <Link className="gm-button gm-button--ghost gm-button--md" to={customer ? `/mijoz/takliflar/${v.quote.id}` : `/dokon/sorovlar/${v.requestShopId ?? ''}`}>{t('Taklif')}</Link>
+          {chatLink && <ButtonLink variant="secondary" to={chatLink}><MessageCircle size={16} /> {t('Yozishma')}</ButtonLink>}
+          <ButtonLink variant="ghost" to={customer ? `/mijoz/takliflar/${v.quote.id}` : `/dokon/sorovlar/${v.requestShopId ?? ''}`}>{t('Taklif')}</ButtonLink>
         </div>
       </div>
       {customer && v.status === 'INSTALLED' && <Alert tone="warning" title={t('Do‘kon montaj bajarilganini bildirdi')}>{t('Tekshirib, chek-list orqali qabul qiling. Muammo bo‘lsa — yozing yoki e’tiroz bildiring.')}</Alert>}

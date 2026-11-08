@@ -1,3 +1,4 @@
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -102,14 +103,14 @@ export function MapPage() {
             <div className="qs-map__card" role="dialog" aria-label={card.data?.name ?? t('Do‘kon')}>
               <header>
                 <strong>{card.data?.name ?? '…'}</strong>
-                <button type="button" className="qs-map__close" aria-label={t('Yopish')} onClick={() => setSelected(null)}><X size={16} /></button>
+                <Button type="button" variant="ghost" size="sm" iconOnly className="qs-map__close" aria-label={t('Yopish')} onClick={() => setSelected(null)}><X /></Button>
               </header>
               {card.data && (
                 <>
                   <span className="qs-rating"><Star size={14} aria-hidden="true" /> {formatRating(card.data.ratingAvg)} <small className="qs-muted">({card.data.ratingCount})</small></span>
                   <small className="qs-muted">{card.data.serviceTypes.map((type) => SERVICE_TYPE[type]).join(' · ')}</small>
                   {card.data.branches[0] && <small><MapPin size={12} aria-hidden="true" /> {card.data.branches[0].address}</small>}
-                  <Link className="gm-button gm-button--primary gm-button--sm" to={`/mijoz/dokonlar/${card.data.slug}`}>{t('Do‘kon sahifasi')}</Link>
+                  <ButtonLink size="sm" to={`/mijoz/dokonlar/${card.data.slug}`}>{t('Do‘kon sahifasi')}</ButtonLink>
                 </>
               )}
             </div>

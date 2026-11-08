@@ -1,3 +1,4 @@
+import { ButtonLink } from '@/components/ui/Button';
 import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Check, ChevronDown, Globe, LogOut, Moon, Search, Settings, ShieldCheck, Sun, UserRound } from 'lucide-react';
@@ -90,8 +91,8 @@ export function PanelHeader({ role }: { role: Role | null }) {
 
           {guest ? (
             <span className="gm-aheader__guest">
-              <Link to="/register" className="gm-button gm-button--ghost gm-button--sm">{t('Ro‘yxatdan o‘tish')}</Link>
-              <Link to="/login" className="gm-button gm-button--primary gm-button--sm">{t('Kirish')}</Link>
+              <ButtonLink to="/register" variant="ghost" size="sm">{t('Ro‘yxatdan o‘tish')}</ButtonLink>
+              <ButtonLink to="/login" size="sm">{t('Kirish')}</ButtonLink>
             </span>
           ) : (
             <>

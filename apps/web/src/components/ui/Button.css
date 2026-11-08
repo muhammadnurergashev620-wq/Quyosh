@@ -178,3 +178,4 @@
   .gm-button:hover:not(:disabled), .gm-button:active:not(:disabled), .gm-button:hover:not(:disabled) .lucide-arrow-right { transform: none; }
   .gm-button--accent:hover:not(:disabled)::before { animation: none; }
 }
+label.gm-button { cursor: pointer; } /* fayl tanlash: label tugma ko‘rinishida */

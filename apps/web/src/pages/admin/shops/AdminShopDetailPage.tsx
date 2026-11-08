@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, ExternalLink, KeyRound, Plus, Trash2, UserPlus } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonAnchor } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Select } from '@/components/ui/Select';
@@ -113,7 +113,7 @@ export function AdminShopDetailPage() {
 
   return (
     <div className="qs-page">
-      <Link to="/admin/dokonlar" className="qs-muted" style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}><ArrowLeft size={16} /> {t('Do‘konlar')}</Link>
+      <Link to="/admin/dokonlar" className="qs-muted qs-inline-flex qs-gap-2 qs-items-center"><ArrowLeft size={16} /> {t('Do‘konlar')}</Link>
       <div className="qs-page__head">
         <div>
           <h1>{shop.name}</h1>
@@ -128,7 +128,7 @@ export function AdminShopDetailPage() {
         <Button variant="secondary" onClick={() => setAddingMember(true)}><UserPlus size={16} /> {t('Xodim qo‘shish')}</Button>
         {shop.status === 'ACTIVE' && <Button variant="danger" onClick={() => setSuspending(true)}>{t('To‘xtatish')}</Button>}
         {shop.status === 'SUSPENDED' && <Button loading={resume.isPending} onClick={() => resume.mutate()}>{t('Qayta faollashtirish')}</Button>}
-        {shop.status === 'ACTIVE' && <a className="gm-button gm-button--ghost gm-button--md" href={`${env.customerUrl.replace(/\/mijoz\/?$/, '')}/mijoz/dokonlar/${shop.slug}`} target="_blank" rel="noreferrer"><ExternalLink size={16} /> {t('Do‘kon profili')}</a>}
+        {shop.status === 'ACTIVE' && <ButtonAnchor variant="ghost" href={`${env.customerUrl.replace(/\/mijoz\/?$/, '')}/mijoz/dokonlar/${shop.slug}`} target="_blank" rel="noreferrer"><ExternalLink size={16} /> {t('Do‘kon profili')}</ButtonAnchor>}
       </div>
       {shop.status === 'SUSPENDED' && shop.suspendReason && <Alert tone="danger" title={t('To‘xtatilgan')}>{shop.suspendReason}</Alert>}
 

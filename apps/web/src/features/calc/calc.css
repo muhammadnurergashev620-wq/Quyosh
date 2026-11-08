@@ -10,10 +10,10 @@
 .qs-calc-kpis strong { font-family: var(--qs-font-display); font-size: clamp(20px, 2vw, 26px); font-variant-numeric: tabular-nums; line-height: 1.15; }
 .qs-calc-kpis span { font-size: 12.5px; }
 .qs-calc-kpis.is-pending > div { opacity: 0.6; transition: opacity 0.2s ease; }
-.qs-cta-card { display: grid; gap: 10px; align-content: center; padding: 20px; border-radius: 18px; background: var(--qs-color-ink, #07111d); color: #fff; }
-.qs-cta-card h3 { margin: 0; color: #fff; font-family: var(--qs-font-display); font-size: 19px; }
-.qs-cta-card p { margin: 0; color: rgba(255, 255, 255, 0.75); font-size: 14px; }
-.qs-cta-card .gm-button { background: var(--qs-color-accent); color: #1a1205; border-color: transparent; }
+.qs-cta-card { display: grid; gap: 10px; align-content: center; padding: 20px; border-radius: 18px; background: var(--qs-color-ink); color: var(--qs-color-on-dark); }
+.qs-cta-card h3 { margin: 0; color: var(--qs-color-on-dark); font-family: var(--qs-font-display); font-size: 19px; }
+.qs-cta-card p { margin: 0; color: rgb(var(--qs-white-rgb) / 0.75); font-size: 14px; }
+.qs-cta-card .gm-button { background: var(--qs-color-accent); color: var(--qs-color-accent-contrast); border-color: transparent; }
 .qs-insights { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--qs-space-3); }
 @media (max-width: 640px) { .qs-insights { grid-auto-flow: column; grid-auto-columns: 82%; grid-template-columns: none; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; } .qs-insight { scroll-snap-align: start; } }
 .qs-insight { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--qs-color-border); background: var(--qs-color-surface); }
@@ -42,7 +42,7 @@
 .qs-choice button.is-on { border-color: var(--qs-color-primary); background: var(--qs-color-primary-soft); box-shadow: inset 0 0 0 1px var(--qs-color-primary); }
 .qs-segment { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--qs-color-border); border-radius: 12px; background: var(--qs-color-surface); flex-wrap: wrap; }
 .qs-segment button { padding: 7px 14px; border: 0; border-radius: 9px; background: transparent; color: var(--qs-color-text-muted); font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; }
-.qs-segment button.is-on { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast, #fff); }
+.qs-segment button.is-on { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); }
 .qs-sun-wait { display: flex; gap: 10px; align-items: center; color: var(--qs-color-text-muted); font-size: 14px; }
 .qs-sun-wait svg { width: 42px; height: 22px; }
 .qs-sun-wait circle { fill: var(--qs-color-accent); animation: qs-sun-arc 1.6s linear infinite; offset-path: path('M2,20 A19,17 0 0 1 40,20'); }
@@ -51,7 +51,7 @@
 
 /* Batafsil hisob */
 .qs-wizard { display: grid; grid-template-columns: minmax(0, 7fr) minmax(280px, 5fr); gap: var(--qs-space-5); align-items: start; }
-.qs-wizard__aside { position: sticky; top: calc(var(--qs-header-height, 64px) + 16px); display: grid; gap: 12px; }
+.qs-wizard__aside { position: sticky; top: calc(var(--qs-header-height) + 16px); display: grid; gap: 12px; }
 @media (max-width: 1023px) {
   .qs-wizard { grid-template-columns: minmax(0, 1fr); }
   .qs-wizard__aside { position: fixed; left: 0; right: 0; bottom: 64px; top: auto; z-index: 20; padding: 10px 14px; background: var(--qs-color-surface); border-top: 1px solid var(--qs-color-border); box-shadow: var(--qs-shadow-lg); min-height: 78px; }
@@ -69,7 +69,7 @@
 .qs-calc-kpis.is-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .qs-map--draw { height: 460px; }
 @media (max-width: 760px) { .qs-map--draw { height: 56dvh; } }
-.qs-map__crosshair { position: absolute; left: 50%; top: 50%; z-index: 2; transform: translate(-50%, -50%); color: #fff; filter: drop-shadow(0 0 2px rgba(0,0,0,.8)); pointer-events: none; }
+.qs-map__crosshair { position: absolute; left: 50%; top: 50%; z-index: 2; transform: translate(-50%, -50%); color: var(--qs-color-on-dark); filter: drop-shadow(0 0 2px rgb(var(--qs-black-rgb) / .8)); pointer-events: none; }
 .qs-list > li.is-active { border-color: var(--qs-color-primary); box-shadow: inset 0 0 0 1px var(--qs-color-primary); }
 .qs-kpi-label { display: inline-flex; align-items: center; gap: 4px; }
 .qs-kpi-note { font-size: 15px; }

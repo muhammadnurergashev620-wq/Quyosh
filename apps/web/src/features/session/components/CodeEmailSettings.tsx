@@ -57,7 +57,7 @@ export function CodeEmailSettings() {
       {!showForm && (
         <div className="gm-codemail__current">
           <span>{maskEmail(user.email as string)}</span>
-          <button type="button" onClick={() => setEditing(true)}>{t('Emailni o‘zgartirish')}</button>
+          <Button type="button" variant="link" size="sm" onClick={() => setEditing(true)}>{t('Emailni o‘zgartirish')}</Button>
         </div>
       )}
 

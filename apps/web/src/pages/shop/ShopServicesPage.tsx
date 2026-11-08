@@ -124,7 +124,7 @@ export function ShopServicesPage() {
                   <td><Badge tone={service.active ? 'success' : 'neutral'}>{service.active ? t('Faol') : t('Nofaol')}</Badge></td>
                   {writable && (
                     <td className="qs-right">
-                      <span className="qs-page__actions" style={{ justifyContent: 'flex-end' }}>
+                      <span className="qs-page__actions qs-justify-end">
                         <Button size="sm" variant="secondary" onClick={() => setEditing(service)}>{t('Tahrirlash')}</Button>
                         <Button size="sm" variant="ghost" onClick={() => setRemoving(service)}>{t('O‘chirish')}</Button>
                       </span>

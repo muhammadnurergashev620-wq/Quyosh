@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Eye, FileText, Plus, Save } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonAnchor } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -40,7 +40,7 @@ export function AdminQueues() {
   if (!q.data || !me.data) return null;
   const allowed = (p: string) => !!me.data!.isSuperAdmin || (me.data!.adminPermissions ?? []).includes(p);
   return (
-    <section style={{ marginTop: 20 }}>
+    <section className="qs-mt-5">
       <h2>{t('Navbatlar')}</h2>
       <div className="qs-kpi-grid">
         {q.data.queues.filter((x) => allowed(x.permission)).map((x) => (
@@ -124,7 +124,7 @@ export function AdminTicketPage() {
         </div>
       </div>
       <div className="qs-grid-2 qs-grid-main">
-        <div className="qs-page" style={{ gap: 'var(--qs-space-3)' }}>
+        <div className="qs-page qs-gap-3">
           <div className="qs-card qs-ticket-thread">
             {x.messages?.map((m) => m.senderSide === 'SYSTEM'
               ? <div key={m.id} className="qs-msg--system">{m.body} · {formatDateTime(m.createdAt)}</div>
@@ -234,7 +234,7 @@ export function AdminArticleEditorPage() {
       <div className="qs-page__head">
         <div><h1>{isNew ? t('Yangi material') : tr(f.title) || f.slug}</h1></div>
         <div className="qs-page__actions">
-          {!isNew && category && <a className="gm-button gm-button--ghost gm-button--md" href={`${env.customerUrl.replace(/\/mijoz\/?$/, '')}/mijoz/bilim/${category.slug}/${f.slug}`} target="_blank" rel="noreferrer"><Eye size={15} /> {t('Foydalanuvchi sifatida ko‘rish')}</a>}
+          {!isNew && category && <ButtonAnchor variant="ghost" href={`${env.customerUrl.replace(/\/mijoz\/?$/, '')}/mijoz/bilim/${category.slug}/${f.slug}`} target="_blank" rel="noreferrer"><Eye size={15} /> {t('Foydalanuvchi sifatida ko‘rish')}</ButtonAnchor>}
           <Button loading={save.isPending} disabled={!f.slug || !f.categoryId || !f.title.uz} onClick={() => save.mutate()}><Save size={15} /> {t('Saqlash')}</Button>
         </div>
       </div>
@@ -297,7 +297,7 @@ export function AdminReportsPage() {
           <div className="qs-hbars">
             {f.data?.steps.map((s) => <div key={s.step} className="qs-hbar"><span>{LABEL[s.step] ?? s.step}</span><div><span style={{ width: `${(s.count / max) * 100}%` }} /></div><strong>{s.count}{s.conversion !== null ? <small className="qs-muted"> · {s.conversion}%</small> : null}</strong></div>)}
           </div>
-          <div className="qs-table-wrap" style={{ marginTop: 16 }}>
+          <div className="qs-table-wrap qs-mt-4">
             <table className="qs-table"><thead><tr><th>{t('Bosqich')}</th><th className="qs-right">{t('Soni')}</th><th className="qs-right">{t('Oldingidan konversiya')}</th></tr></thead>
               <tbody>{f.data?.steps.map((s) => <tr key={s.step}><td>{LABEL[s.step] ?? s.step}</td><td className="qs-right qs-num">{s.count}</td><td className="qs-right qs-num">{s.conversion === null ? '—' : `${s.conversion} %`}</td></tr>)}</tbody></table>
           </div>

@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle2, LifeBuoy, Paperclip, Send, Star } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge, type BadgeTone } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink, buttonClass } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
@@ -23,6 +23,7 @@ import { formatDateTime, formatRelativeTime } from '@/lib/format';
 import { t } from '@/i18n';
 import { ArticleCardView } from './KnowledgePages';
 import '@/features/shop/shop.css';
+import '@/features/deals/deals.css';
 import '@/features/m7/m7.css';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { SelectMenu } from '@/components/ui/SelectMenu';
@@ -73,7 +74,7 @@ function NewTicket({ onDone }: { onDone: (r: { id: string; code: string; firstRe
       <Input label={t('Mavzu')} value={subject} maxLength={200} onChange={(e) => setSubject(e.target.value)} required />
       {!!suggestions.data?.length && (
         <Alert tone="info" title={t('Balki bu javob yordam beradi?')}>
-          <div className="qs-kcards" style={{ marginTop: 8 }}>{suggestions.data.slice(0, 3).map((a) => <ArticleCardView key={a.id} a={a} />)}</div>
+          <div className="qs-kcards qs-mt-2">{suggestions.data.slice(0, 3).map((a) => <ArticleCardView key={a.id} a={a} />)}</div>
           <small className="qs-muted">{t('Javob topilmasa — murojaatni baribir yuboring.')}</small>
         </Alert>
       )}
@@ -88,7 +89,7 @@ function NewTicket({ onDone }: { onDone: (r: { id: string; code: string; firstRe
             {installs.data?.map((i) => <option key={i.id} value={`Installation:${i.id}`}>{t('Montaj')}: {i.shop.name}</option>)}
           </SelectMenu>
           <div className="qs-page__actions">
-            <label className="gm-button gm-button--secondary gm-button--sm" style={{ cursor: 'pointer' }}>
+            <label className={buttonClass({ variant: 'secondary', size: 'sm' })}>
               <Paperclip size={14} /> {t('Fayl biriktirish')}
               <input type="file" hidden accept="image/*,application/pdf" disabled={files.length >= 5 || !me.data} onChange={(e) => { const f = e.target.files?.[0]; if (f) upload.mutate(f); e.target.value = ''; }} />
             </label>
@@ -128,7 +129,7 @@ export function HelpCenterPage() {
       <div className="qs-page__head">
         <div><h1>{t('Qanday yordam bera olamiz?')}</h1><p>{t('Savolingizga javob qidiring yoki murojaat yuboring — odatda 4 ish soati ichida javob beramiz.')}</p></div>
         <div className="qs-page__actions">
-          {hasSession && <Link className="gm-button gm-button--secondary gm-button--md" to="/mijoz/murojaatlar">{t('Murojaatlarim')}</Link>}
+          {hasSession && <ButtonLink variant="secondary" to="/mijoz/murojaatlar">{t('Murojaatlarim')}</ButtonLink>}
           <Button onClick={() => { setDone(null); setOpen(true); }}><LifeBuoy size={16} /> {t('Murojaat yuborish')}</Button>
         </div>
       </div>
@@ -142,7 +143,7 @@ export function HelpCenterPage() {
             <CheckCircle2 size={44} color="var(--qs-color-success)" />
             <h2 style={{ margin: 0 }}>{done.code}</h2>
             <p>{t('Birinchi javob muddati: {d} (ish vaqti bo‘yicha).', { d: formatDateTime(done.firstResponseDueAt) })}</p>
-            {hasSession ? <Link className="gm-button gm-button--primary gm-button--md" to={`/mijoz/murojaatlar/${done.id}`}>{t('Murojaatni ochish')}</Link> : <p className="qs-muted">{t('Javobni shu telefon raqami bilan kirib ko‘rasiz.')}</p>}
+            {hasSession ? <ButtonLink to={`/mijoz/murojaatlar/${done.id}`}>{t('Murojaatni ochish')}</ButtonLink> : <p className="qs-muted">{t('Javobni shu telefon raqami bilan kirib ko‘rasiz.')}</p>}
           </div>
         ) : <NewTicket onDone={setDone} />}
       </Modal>
@@ -156,8 +157,8 @@ export function TicketsPage() {
   if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
   return (
     <div className="qs-page">
-      <div className="qs-page__head"><div><h1>{t('Murojaatlar')}</h1></div><div className="qs-page__actions"><Link className="gm-button gm-button--primary gm-button--md" to="/mijoz/yordam">{t('Yangi murojaat')}</Link></div></div>
-      {!list.data?.length ? <EmptyState icon={<LifeBuoy size={30} />} title={t('Murojaat yo‘q')} action={<Link className="gm-button gm-button--primary gm-button--md" to="/mijoz/yordam">{t('Yordam markazi')}</Link>} /> : (
+      <div className="qs-page__head"><div><h1>{t('Murojaatlar')}</h1></div><div className="qs-page__actions"><ButtonLink to="/mijoz/yordam">{t('Yangi murojaat')}</ButtonLink></div></div>
+      {!list.data?.length ? <EmptyState icon={<LifeBuoy size={30} />} title={t('Murojaat yo‘q')} action={<ButtonLink to="/mijoz/yordam">{t('Yordam markazi')}</ButtonLink>} /> : (
         <div className="qs-req-list">
           {list.data.map((x) => (
             <Link key={x.id} to={`/mijoz/murojaatlar/${x.id}`} className="qs-req-card">

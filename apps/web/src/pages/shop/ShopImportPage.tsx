@@ -116,7 +116,7 @@ export function ShopImportPage() {
                   </tbody>
                 </table>
               </div>
-              <div className="qs-page__actions" style={{ marginTop: 12 }}>
+              <div className="qs-page__actions qs-mt-3">
                 <Button variant="ghost" size="sm" onClick={() => download(`/imports/${summary.id}/errors.csv`, `import-xatolar.csv`)}><Download size={14} /> {t('Xatolar faylini yuklab olish')}</Button>
               </div>
             </>

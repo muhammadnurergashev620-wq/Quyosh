@@ -151,7 +151,7 @@ function AreaStep({ state, set, result }: { state: DetailedState; set: (patch: P
               {current && (
                 <div className="qs-map__overlay">
                   <span>{current.points.length < 3 ? t('Tom burchaklarini ketma-ket belgilang ({n}/3)', { n: current.points.length }) : <>{t('Taxminiy maydon')}: <strong>{formatNumber(ringAreaM2(current.points))} m²</strong></>}</span>
-                  <span style={{ marginLeft: 'auto', display: 'inline-flex', gap: 6 }}>
+                  <span className="qs-ml-auto qs-inline-flex qs-gap-2">
                     {mobile && <Button size="sm" onClick={addCenter}><Plus size={14} /> {t('Nuqta qo‘shish')}</Button>}
                     <Button size="sm" variant="secondary" disabled={!current.points.length} onClick={() => updateArea(current.id, { points: current.points.slice(0, -1) })} aria-label={t('Orqaga')}><Undo2 size={14} /></Button>
                     <Button size="sm" variant="ghost" disabled={current.points.length < 3} onClick={() => setActive(null)}>{t('Yopish')}</Button>

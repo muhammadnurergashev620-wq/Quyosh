@@ -22,7 +22,7 @@ function ConnectionProblem({ onRetry }: { onRetry: () => void }) {
       <div style={{ display: 'grid', gap: 12, justifyItems: 'center', maxWidth: 320 }}>
         <WifiOff size={36} aria-hidden="true" />
         <h2>{t('Serverga ulanib bo‘lmadi')}</h2>
-        <p style={{ color: 'var(--qs-color-text-muted)' }}>{t('Internetni tekshiring yoki birozdan keyin qayta urinib ko‘ring.')}</p>
+        <p className="qs-text-muted">{t('Internetni tekshiring yoki birozdan keyin qayta urinib ko‘ring.')}</p>
         <Button onClick={onRetry}>{t('Qayta urinish')}</Button>
         <Button variant="ghost" size="sm" onClick={() => clear()}>{t('Akkauntdan chiqish')}</Button>
       </div>

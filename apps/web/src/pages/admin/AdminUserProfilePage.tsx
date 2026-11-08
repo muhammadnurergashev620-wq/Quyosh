@@ -8,7 +8,7 @@ import { formatDateTime, formatRelativeTime } from '@/lib/format';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import type { BadgeTone } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { accountName } from '@/lib/account-name';
 import { getErrorMessage } from '@/lib/error-messages';
 import { AvatarEditor } from '@/features/profile/AvatarEditor';
@@ -82,7 +82,7 @@ export function AdminUserProfilePage() {
         <ArrowLeft size={16} />{' '}{isAdminAccount ? t('Adminlar') : t('Foydalanuvchilar')}</Link>
       {user.isLoading && <PageLoader />}
       {user.isError && <Alert tone="danger">{getErrorMessage(user.error)}</Alert>}
-      {number === null && <EmptyState title={t('Foydalanuvchi topilmadi')} description={t('Havola noto‘g‘ri: foydalanuvchi ID raqami bo‘lishi kerak.')} action={<Link to="/admin/foydalanuvchilar" className="gm-button gm-button--secondary gm-button--md">{t('Foydalanuvchilar ro‘yxati')}</Link>} />}
+      {number === null && <EmptyState title={t('Foydalanuvchi topilmadi')} description={t('Havola noto‘g‘ri: foydalanuvchi ID raqami bo‘lishi kerak.')} action={<ButtonLink to="/admin/foydalanuvchilar" variant="secondary">{t('Foydalanuvchilar ro‘yxati')}</ButtonLink>} />}
       {data && isAdminAccount && (
         <AdminAccountProfile data={data} viewerId={me.data?.id} viewerIsSuper={!!me.data?.isSuperAdmin} viewerNumber={me.data?.accountNumber} onDelete={() => setAction('DELETE')} />
       )}

@@ -1,3 +1,4 @@
+import { ButtonLink } from '@/components/ui/Button';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -25,7 +26,7 @@ export function ComparePage() {
   if (ids.length < 2) {
     return (
       <div className="qs-page">
-        <EmptyState icon={<Scale size={30} />} title={t('Solishtirish uchun kamida 2 ta mahsulot tanlang')} action={<Link className="gm-button gm-button--primary gm-button--md" to="/mijoz/mahsulotlar">{t('Katalogga o‘tish')}</Link>} />
+        <EmptyState icon={<Scale size={30} />} title={t('Solishtirish uchun kamida 2 ta mahsulot tanlang')} action={<ButtonLink to="/mijoz/mahsulotlar">{t('Katalogga o‘tish')}</ButtonLink>} />
       </div>
     );
   }

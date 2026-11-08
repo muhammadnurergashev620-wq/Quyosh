@@ -173,7 +173,7 @@ export function ResultView({ result, actions, cta, shared }: { result: EstimateR
       {result.lifetime && (
         <Section title={t('25 yil')}>
           <CashflowChart title={t('Jamg‘arilgan pul oqimi')} points={result.lifetime.years.map((y) => ({ year: y.year, value: y.cumulative }))} markers={replacements} format={sumShort} />
-          <p className="qs-muted" style={{ margin: 0 }}>{t('Belgilar — invertor yoki akkumulyator almashtirish yillari. CO₂ tejalishi: {t} t.', { t: formatDecimal((result.lifetime.co2Kg / 1000), 1) })}</p>
+          <p className="qs-muted qs-m-0">{t('Belgilar — invertor yoki akkumulyator almashtirish yillari. CO₂ tejalishi: {t} t.', { t: formatDecimal((result.lifetime.co2Kg / 1000), 1) })}</p>
           <details>
             <summary>{t('Kengaytirilgan ko‘rsatkichlar')}</summary>
             <dl className="qs-dl" style={{ marginTop: 8 }}>

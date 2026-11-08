@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { BadgeCheck, MapPin, Phone, Star } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonAnchor, ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
 import { publicShopsService, type PublicShopProfile } from '@/features/catalog/public-shops.service';
@@ -85,18 +85,18 @@ export function ShopProfilePage() {
           </div>
           <div className="qs-page__actions">
             {contact.data ? (
-              <a className="gm-button gm-button--secondary gm-button--md" href={`tel:${contact.data.phone}`}><Phone size={16} /> {contact.data.phone}</a>
+              <ButtonAnchor variant="secondary" href={`tel:${contact.data.phone}`}><Phone size={16} /> {contact.data.phone}</ButtonAnchor>
             ) : hasSession ? (
               <Button variant="secondary" loading={contact.isPending} onClick={() => contact.mutate()}><Phone size={16} /> {shop.phoneMasked ?? t('Telefon')}</Button>
             ) : (
-              <Link className="gm-button gm-button--secondary gm-button--md" to="/login" onClick={() => rememberReturnTo(`/mijoz/dokonlar/${slug}`)} title={t('Raqamni ko‘rish uchun kiring')}><Phone size={16} /> {shop.phoneMasked}</Link>
+              <ButtonLink variant="secondary" to="/login" onClick={() => rememberReturnTo(`/mijoz/dokonlar/${slug}`)} title={t('Raqamni ko‘rish uchun kiring')}><Phone size={16} /> {shop.phoneMasked}</ButtonLink>
             )}
             {hasSession && <FavoriteButton shopId={shop.id} />}
-            <Link className="gm-button gm-button--primary gm-button--md" to={`/mijoz/sorovlar?yangi=1&dokon=${shop.id}`} onClick={() => !hasSession && rememberReturnTo(`/mijoz/sorovlar?yangi=1&dokon=${shop.id}`)}>{t('Taklif so‘rash')}</Link>
+            <ButtonLink to={`/mijoz/sorovlar?yangi=1&dokon=${shop.id}`} onClick={() => !hasSession && rememberReturnTo(`/mijoz/sorovlar?yangi=1&dokon=${shop.id}`)}>{t('Taklif so‘rash')}</ButtonLink>
           </div>
         </div>
       </section>
-      {!hasSession && shop.phoneMasked && <p className="qs-muted" style={{ margin: 0 }}>{t('Raqamni ko‘rish uchun kiring')}</p>}
+      {!hasSession && shop.phoneMasked && <p className="qs-muted qs-m-0">{t('Raqamni ko‘rish uchun kiring')}</p>}
 
       <TabBar variant="tabs" role="tablist">
         {([['overview', t('Umumiy')], ['services', t('Xizmatlar va narxlar')], ['products', t('Mahsulotlar ({n})', { n: shop.productCount })], ['portfolio', t('Portfolio')]] as const).map(([key, label]) => (

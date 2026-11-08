@@ -156,7 +156,7 @@ export function CustomerRequestDetailPage() {
               {s.declineReason && <small>{t('Rad etish sababi')}: {s.declineReason}</small>}
               {s.quote && (
                 <div className={cx('qs-quote-card', s.quote.status === 'EXPIRED' && 'is-expired')}>
-                  <div className="qs-page__actions" style={{ justifyContent: 'space-between' }}>
+                  <div className="qs-page__actions qs-justify-between">
                     <span className="qs-quote-card__total">{sum(num(s.quote.total))}</span>
                     <span className="qs-page__actions">
                       {isExpiring(s.quote.validUntil, s.quote.status) && <Badge tone="warning">{t('Muddati tugayapti')}</Badge>}

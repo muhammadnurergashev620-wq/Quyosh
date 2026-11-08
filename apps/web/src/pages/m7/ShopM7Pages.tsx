@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, BadgeCheck, Copy, Download, Image as ImageIcon, Monitor, Plus, Smartphone, Trash2 } from 'lucide-react';
+import { AlertTriangle, BadgeCheck, Copy, Download, Image as ImageIcon, Monitor, Plus, Smartphone, Trash2, X } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonClass } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
@@ -98,11 +98,11 @@ function ProjectForm({ shopId, project, installations, onClose }: { shopId: stri
         <div className="qs-thumbs" aria-label={t('Rasmlar (sudrab tartiblang)')}>
           {images.map((img, i) => (
             <figure key={img.fileId} draggable onDragStart={() => setDrag(i)} onDragOver={(e) => e.preventDefault()} onDrop={() => { if (drag !== null) move(drag, i); setDrag(null); }}>
-              {img.thumb ? <img src={img.thumb} alt="" /> : <div style={{ width: 90, height: 70, display: 'grid', placeItems: 'center', borderRadius: 8, background: 'var(--qs-color-surface-muted)' }}><ImageIcon size={20} /></div>}
-              <button type="button" aria-label={t('Olib tashlash')} onClick={() => setImages((x) => x.filter((y) => y.fileId !== img.fileId))}>×</button>
+              {img.thumb ? <img src={img.thumb} alt="" /> : <div className="qs-thumbs__empty"><ImageIcon size={20} /></div>}
+              <Button type="button" variant="secondary" size="sm" iconOnly className="qs-thumbs__remove" aria-label={t('Olib tashlash')} onClick={() => setImages((x) => x.filter((y) => y.fileId !== img.fileId))}><X /></Button>
             </figure>
           ))}
-          <label className="gm-button gm-button--secondary gm-button--sm" style={{ cursor: 'pointer', alignSelf: 'center' }}>
+          <label className={buttonClass({ variant: 'secondary', size: 'sm' })} style={{ alignSelf: 'center' }}>
             <Plus size={14} /> {t('Rasm')}
             <input type="file" hidden accept="image/*" multiple onChange={(e) => { Array.from(e.target.files ?? []).slice(0, 20 - images.length).forEach((file) => upload.mutate(file)); e.target.value = ''; }} />
           </label>
@@ -196,7 +196,7 @@ export function WidgetPage() {
           {save.isSuccess && <Alert tone="success">{t('Saqlandi')}</Alert>}
           <div className="qs-form__actions"><Button loading={save.isPending} onClick={() => save.mutate()}>{t('Saqlash')}</Button></div>
         </section>
-        <section className="qs-page" style={{ gap: 'var(--qs-space-3)' }}>
+        <section className="qs-page qs-gap-3">
           <TabBar variant="tabs" role="tablist">
             <Tab role="tab" aria-selected={device === 'desktop'} onClick={() => setDevice('desktop')} selected={device === 'desktop'}><Monitor size={15} /> Desktop</Tab>
             <Tab role="tab" aria-selected={device === 'mobile'} onClick={() => setDevice('mobile')} selected={device === 'mobile'}><Smartphone size={15} /> {t('Mobil')}</Tab>
@@ -205,7 +205,7 @@ export function WidgetPage() {
           <div className="qs-card">
             <header><h2>{t('Embed kodi')}</h2><Button size="sm" variant="secondary" onClick={() => { void navigator.clipboard.writeText(c.embed); setCopied(true); window.setTimeout(() => setCopied(false), 2000); }}><Copy size={14} /> {copied ? t('Nusxalandi') : t('Nusxalash')}</Button></header>
             <code className="qs-code">{c.embed}</code>
-            <ol className="qs-list" style={{ marginTop: 12 }}>
+            <ol className="qs-list qs-mt-3">
               <li>{t('Yuqorida saytingiz domenini qo‘shing va «Vidjet faol» ni yoqing.')}</li>
               <li>{t('Kodni sahifa HTML’ida vidjet chiqishi kerak bo‘lgan joyga qo‘ying.')}</li>
               <li>{t('Mijoz natijadan keyin telefonini tasdiqlab, faqat sizga so‘rov yuboradi.')}</li>

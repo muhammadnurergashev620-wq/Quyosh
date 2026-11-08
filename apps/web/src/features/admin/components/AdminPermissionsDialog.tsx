@@ -28,7 +28,7 @@ export function AdminPermissionsDialog({ admin, onClose, allowed }: { admin: Adm
       }
     >
       <div className="gm-newadm">
-        <p style={{ margin: 0 }}>
+        <p className="qs-m-0">
           <strong>{name}</strong>{' '}{t('· ID {accountNumber}. Faqat belgilangan bo‘limlar ochiq bo‘ladi, qolganlari yashiriladi va serverda ham taqiqlanadi.', { accountNumber: admin.accountNumber })}</p>
         {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}
         <PermissionPicker value={permissions} onChange={setPermissions} disabled={save.isPending} allowed={allowed} />

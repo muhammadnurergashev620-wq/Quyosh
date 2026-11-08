@@ -7,7 +7,7 @@
 .qs-req-card h3 { margin: 0; font-size: 15.5px; }
 .qs-req-card__meta { display: flex; flex-wrap: wrap; gap: 6px 12px; margin-top: 4px; color: var(--qs-color-text-muted); font-size: 13px; }
 .qs-req-card__side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; }
-.qs-unread { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--qs-color-primary); color: var(--qs-color-primary-contrast, #fff); font-size: 11.5px; font-weight: 800; }
+.qs-unread { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); font-size: 11.5px; font-weight: 800; }
 
 /* Do‘kon qatori (so‘rov sahifasi) */
 .qs-shop-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 14px; align-items: start; padding: 16px 0; border-top: 1px solid var(--qs-color-border); }
@@ -66,7 +66,7 @@
 .qs-msg__files { display: flex; flex-wrap: wrap; gap: 6px; }
 .qs-msg__files a, .qs-msg__files span { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--qs-color-border); border-radius: 8px; background: var(--qs-color-surface); color: inherit; font-size: 12.5px; text-decoration: none; white-space: nowrap; }
 .qs-msg__files img { display: block; max-width: 180px; max-height: 140px; border-radius: 8px; object-fit: cover; }
-.qs-chat__new { position: sticky; bottom: 4px; align-self: center; padding: 6px 12px; border: 0; border-radius: 999px; background: var(--qs-color-primary); color: var(--qs-color-primary-contrast, #fff); font: inherit; font-size: 12.5px; font-weight: 700; box-shadow: var(--qs-shadow-md); cursor: pointer; }
+.qs-chat__new { position: sticky; bottom: 4px; align-self: center; padding: 6px 12px; border: 0; border-radius: 999px; background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); font: inherit; font-size: 12.5px; font-weight: 700; box-shadow: var(--qs-shadow-md); cursor: pointer; }
 .qs-chat__composer { display: grid; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--qs-color-border); }
 .qs-chat__composer-row { display: flex; gap: 8px; align-items: flex-end; }
 .qs-chat__composer textarea { flex: 1; min-height: 44px; max-height: 160px; padding: 10px 12px; border: 1px solid var(--qs-color-border); border-radius: 12px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; resize: vertical; }
@@ -87,7 +87,7 @@
 .qs-steps-v li { position: relative; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; padding-bottom: 18px; }
 .qs-steps-v li::before { content: ''; position: absolute; top: 18px; bottom: -2px; left: 10px; width: 2px; background: var(--qs-color-border); }
 .qs-steps-v li:last-child::before { display: none; }
-.qs-steps-v i { position: relative; z-index: 1; width: 22px; height: 22px; border: 2px solid var(--qs-color-border-strong, var(--qs-color-border)); border-radius: 50%; background: var(--qs-color-surface); }
+.qs-steps-v i { position: relative; z-index: 1; width: 22px; height: 22px; border: 2px solid var(--qs-color-border-strong); border-radius: 50%; background: var(--qs-color-surface); }
 .qs-steps-v li.is-done i { border-color: var(--qs-color-success); background: var(--qs-color-success); }
 .qs-steps-v li.is-current i { border-color: var(--qs-color-accent); background: var(--qs-color-accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--qs-color-accent) 25%, transparent); }
 .qs-steps-v strong { display: block; font-size: 14.5px; }
@@ -103,8 +103,8 @@
 .qs-seg { display: inline-flex; border: 1px solid var(--qs-color-border); border-radius: 10px; overflow: hidden; }
 .qs-seg button { min-height: 34px; padding: 0 12px; border: 0; border-left: 1px solid var(--qs-color-border); background: var(--qs-color-surface); color: var(--qs-color-text-muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .qs-seg button:first-child { border-left: 0; }
-.qs-seg button.is-on { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast, #fff); }
-.qs-seg button.is-on.is-issue { background: var(--qs-color-warning); color: #1a1205; }
+.qs-seg button.is-on { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); }
+.qs-seg button.is-on.is-issue { background: var(--qs-color-warning); color: var(--qs-color-accent-contrast); }
 .qs-seg button:focus-visible { outline: none; box-shadow: inset var(--qs-focus-ring); }
 .qs-progress { display: flex; align-items: center; gap: 10px; }
 .qs-progress__bar { flex: 1; height: 8px; border-radius: 99px; background: var(--qs-color-surface-muted); overflow: hidden; }
@@ -112,7 +112,7 @@
 
 /* Yulduzlar (U9.10) */
 .qs-stars { display: inline-flex; gap: 4px; }
-.qs-stars button { padding: 2px; border: 0; background: none; color: var(--qs-color-border-strong, #cbd5e1); cursor: pointer; }
+.qs-stars button { padding: 2px; border: 0; background: none; color: var(--qs-color-border-strong); cursor: pointer; }
 .qs-stars button.is-on { color: var(--qs-color-accent); }
 .qs-stars button:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); border-radius: 6px; }
 .qs-stars--static { color: var(--qs-color-accent); font-size: 14px; letter-spacing: 1px; }
@@ -153,6 +153,6 @@
 .qs-kanban .qs-req-card { grid-template-columns: minmax(0, 1fr); padding: 12px; }
 .qs-kanban .qs-req-card__side { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-start; text-align: left; }
 .qs-builder { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--qs-space-4); align-items: start; }
-.qs-builder__summary { position: sticky; top: calc(var(--qs-header-height, 64px) + 12px); display: grid; gap: var(--qs-space-4); }
+.qs-builder__summary { position: sticky; top: calc(var(--qs-header-height) + 12px); display: grid; gap: var(--qs-space-4); }
 @media (max-width: 1100px) { .qs-builder { grid-template-columns: minmax(0, 1fr); } .qs-builder__summary { position: static; } }
 @media (max-width: 900px) { .qs-chat { min-height: 420px; max-height: calc(100dvh - 250px); } }

@@ -64,7 +64,7 @@ export function OutagePage() {
             <div><small>{t('Invertor')}</small><strong>{result.inverterOk ? t('Yetarli') : t('Yetarli emas')}</strong><span className="qs-muted">{kw(result.inverterKw ?? 0)}</span></div>
           </div>
           {!!result.months.length && <p className="qs-muted">{[1, 7].map((m) => { const row = result.months[m - 1]; return row ? `${monthName(m)}: ${row.dayUnlimited ? t('kunduzi cheklanmagan') : hoursText(row.backupHoursDay)}` : ''; }).join(' · ')}</p>}
-          <p className="qs-muted" style={{ marginBottom: 0 }}>{t('Aniq tizim uchun')} <Link to="/mijoz/kalkulyator/batafsil">{t('Batafsil hisob')}</Link>.</p>
+          <p className="qs-muted qs-mb-0">{t('Aniq tizim uchun')} <Link to="/mijoz/kalkulyator/batafsil">{t('Batafsil hisob')}</Link>.</p>
         </section>
       ))}
     </div>

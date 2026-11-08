@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Building2, Plus, Search } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -27,7 +27,7 @@ export function AddressSearch({ onPick }: { onPick: (point: LngLat, label: strin
   const config = useMapConfig();
   const [q, setQ] = useState('');
   const search = useMutation({ mutationFn: () => mapService.geocode(q.trim(), lang === 'ru' ? 'ru' : 'uz') });
-  if (!config.data?.geocodingAvailable) return <p className="qs-muted" style={{ margin: 0 }}>{t('Manzil qidiruvi hozircha mavjud emas — xaritada nuqta qo‘ying yoki «Mening joylashuvim»ni bosing.')}</p>;
+  if (!config.data?.geocodingAvailable) return <p className="qs-muted qs-m-0">{t('Manzil qidiruvi hozircha mavjud emas — xaritada nuqta qo‘ying yoki «Mening joylashuvim»ni bosing.')}</p>;
   return (
     <div className="qs-form" style={{ gap: 8 }}>
       <form className="qs-toolbar" onSubmit={(e: FormEvent) => { e.preventDefault(); if (q.trim().length >= 2) search.mutate(); }}>
@@ -110,7 +110,7 @@ export function SitesPage() {
                 <small>{[SITE_TYPE[site.siteType], regionName(site.regionCode), site.address].filter(Boolean).join(' · ')}</small>
                 <small>{t('{n} ta maydon · foydali {m} m²', { n: site.areaCount, m: formatNumber(Number(site.usableAreaM2)) })}</small>
               </div>
-              <Link className="gm-button gm-button--secondary gm-button--sm" to={`/mijoz/obyektlar/${site.id}`}>{t('Ochish')}</Link>
+              <ButtonLink variant="secondary" size="sm" to={`/mijoz/obyektlar/${site.id}`}>{t('Ochish')}</ButtonLink>
             </li>
           ))}
         </ul>

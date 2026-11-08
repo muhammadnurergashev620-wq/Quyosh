@@ -8,9 +8,9 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  border: 2px solid var(--qs-color-surface, #fff);
+  border: 2px solid var(--qs-color-surface);
   background: var(--qs-color-primary);
-  color: #fff;
+  color: var(--qs-color-on-dark);
   cursor: pointer;
   padding: 0;
   transition: transform 0.15s ease, opacity 0.15s ease;
@@ -19,5 +19,5 @@
 .gm-avedit__btn:disabled { opacity: 0.6; cursor: progress; }
 .gm-avedit__btn:focus-visible { outline: 2px solid var(--qs-color-primary); outline-offset: 2px; }
 .gm-avedit__btn--edit { right: -4px; }
-.gm-avedit__btn--remove { left: -4px; background: var(--qs-color-danger, #d64545); }
+.gm-avedit__btn--remove { left: -4px; background: var(--qs-color-danger); }
 .gm-avedit--sm .gm-avedit__btn { width: 22px; height: 22px; }

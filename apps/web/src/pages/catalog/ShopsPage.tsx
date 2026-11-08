@@ -96,7 +96,7 @@ export function ShopsPage() {
       ) : (
         <div className="qs-shops">{shops.map((shop) => <ShopCard key={shop.id} shop={shop} />)}</div>
       )}
-      {list.hasNextPage && <div className="qs-page__actions" style={{ justifyContent: 'center' }}><Button variant="secondary" loading={list.isFetchingNextPage} onClick={() => void list.fetchNextPage()}>{t('Yana ko‘rsatish')}</Button></div>}
+      {list.hasNextPage && <div className="qs-page__actions qs-justify-center"><Button variant="secondary" loading={list.isFetchingNextPage} onClick={() => void list.fetchNextPage()}>{t('Yana ko‘rsatish')}</Button></div>}
     </div>
   );
 }

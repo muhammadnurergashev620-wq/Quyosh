@@ -101,7 +101,7 @@ export function SiteDetailPage() {
 
   return (
     <div className="qs-page">
-      <Link to="/mijoz/obyektlar" className="qs-muted" style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}><ArrowLeft size={16} /> {t('Obyektlarim')}</Link>
+      <Link to="/mijoz/obyektlar" className="qs-muted qs-inline-flex qs-gap-2 qs-items-center"><ArrowLeft size={16} /> {t('Obyektlarim')}</Link>
       <div className="qs-page__head">
         <div>
           <h1>{data.title}</h1>

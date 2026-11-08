@@ -3,7 +3,7 @@ import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-route
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowRight, Copy, FileDown, RefreshCw, Save, Share2 } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonAnchor, ButtonLink } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Select } from '@/components/ui/Select';
 import { PageLoader } from '@/components/common/PageLoader';
@@ -27,7 +27,7 @@ function OffersCta({ calculationId }: { calculationId?: string }) {
     <div className="qs-cta-card">
       <h3>{t('Yaqin do‘konlardan narx taklifi oling')}</h3>
       <p>{t('Hududingizga xizmat ko‘rsatadigan tasdiqlangan do‘konlar.')}</p>
-      <Link className="gm-button gm-button--md" to={calculationId ? `/mijoz/sorovlar?yangi=1&hisob=${calculationId}` : '/mijoz/xarita'}>{t('Do‘konlardan taklif olish')} <ArrowRight size={16} /></Link>
+      <ButtonLink to={calculationId ? `/mijoz/sorovlar?yangi=1&hisob=${calculationId}` : '/mijoz/xarita'}>{t('Do‘konlardan taklif olish')} <ArrowRight size={16} /></ButtonLink>
     </div>
   );
 }
@@ -106,7 +106,7 @@ function ShareModal({ id, open, onClose }: { id: string; open: boolean; onClose:
         </TabBar>
         {link && (
           <div className="qs-inline-price" style={{ flexWrap: 'wrap' }}>
-            <code style={{ overflowWrap: 'anywhere' }}>{link}</code>
+            <code className="qs-break">{link}</code>
             <Button size="sm" variant="secondary" onClick={() => void navigator.clipboard.writeText(link).then(() => pushToast(t('Nusxa olindi'), 'success'))}><Copy size={14} /> {t('Nusxa')}</Button>
           </div>
         )}
@@ -160,7 +160,7 @@ export function SharedResultPage() {
   return (
     <>
       <Alert tone="info" title={t('Bu ulashilgan hisob')}>{t('O‘z uyingiz uchun hisoblang — 3 daqiqa.')} <Link to="/mijoz/kalkulyator">{t('O‘z hisobingizni qiling')}</Link></Alert>
-      <ResultView result={shared.data.result} shared cta={<div className="qs-cta-card"><h3>{t('O‘z hisobingizni qiling')}</h3><p>{t('Manzil, iste’mol va tomingiz bo‘yicha.')}</p><a className="gm-button gm-button--md" href={`${env.customerUrl.replace(/\/mijoz\/?$/, '')}/mijoz/kalkulyator`}>{t('Kalkulyator')} <ArrowRight size={16} /></a></div>} />
+      <ResultView result={shared.data.result} shared cta={<div className="qs-cta-card"><h3>{t('O‘z hisobingizni qiling')}</h3><p>{t('Manzil, iste’mol va tomingiz bo‘yicha.')}</p><ButtonAnchor href={`${env.customerUrl.replace(/\/mijoz\/?$/, '')}/mijoz/kalkulyator`}>{t('Kalkulyator')} <ArrowRight size={16} /></ButtonAnchor></div>} />
     </>
   );
 }

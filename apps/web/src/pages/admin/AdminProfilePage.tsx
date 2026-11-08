@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Activity, BadgeCheck, Check, Clock, KeyRound, LogIn, LogOut, Mail, MonitorSmartphone, Phone, Settings, ShieldCheck, UserPlus, UserRound, X } from 'lucide-react';
 import { PageLoader } from '@/components/common/PageLoader';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { accountName } from '@/lib/account-name';
 import { getErrorMessage } from '@/lib/error-messages';
 import { cx } from '@/lib/utils';
@@ -176,7 +176,7 @@ export function AdminProfilePage() {
         <section className="gm-aprof__card">
           <div className="gm-aprof__cardhead">
             <h2>{t('So‘nggi amallar')}</h2>
-            {(user.isSuperAdmin || permissions.has('AUDIT')) && <Link to={`/admin/audit?actor=${user.accountNumber}`} className="gm-button gm-button--secondary gm-button--sm">{t('Audit jurnalida ko‘rish')}</Link>}
+            {(user.isSuperAdmin || permissions.has('AUDIT')) && <ButtonLink to={`/admin/audit?actor=${user.accountNumber}`} variant="secondary" size="sm">{t('Audit jurnalida ko‘rish')}</ButtonLink>}
           </div>
           {activity.length === 0 && <p className="gm-aprof__muted">{t('Hali amal bajarmagansiz.')}</p>}
           <ol className="gm-aprof__timeline">

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, FileText, Lock, ScrollText } from 'lucide-react';
@@ -39,8 +40,7 @@ export function TermsPage() {
   return (
     <div className="gm-terms">
       <header className="gm-terms__bar">
-        <button type="button" className="gm-terms__back" onClick={goBack}>
-          <ArrowLeft size={18} aria-hidden="true" />{' '}{t('Orqaga')}</button>
+        <Button type="button" variant="ghost" size="sm" leftIcon={<ArrowLeft />} onClick={goBack}>{t('Orqaga')}</Button>
         <LogoLink />
       </header>
 

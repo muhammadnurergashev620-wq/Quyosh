@@ -163,7 +163,7 @@ function TariffsTab() {
             <Chip key={value || 'all'} onClick={() => setStatus(value)} selected={status === value}>{value ? PUBLISH_STATUS[value].label : t('Hammasi')}</Chip>
           ))}
         </div>
-        <Button style={{ marginLeft: 'auto' }} onClick={() => setEditing('new')}><Plus size={16} /> {t('Tarif qo‘shish')}</Button>
+        <Button className="qs-ml-auto" onClick={() => setEditing('new')}><Plus size={16} /> {t('Tarif qo‘shish')}</Button>
       </div>
       <Alert tone="info">{t('Tasdiqlangan tarif o‘zgartirilmaydi — eski hisoblar shu versiya bilan o‘qiladi. O‘zgarish uchun nusxa oling, yangi sana qo‘ying va eski tarifga tugash sanasini belgilang.')}</Alert>
       {!list.data.length ? <EmptyState title={t('Tarif yo‘q')} description={t('Tarif bo‘lmasa kalkulyator moliyaviy natijani hisoblamaydi («Tarif ma’lumoti yo‘q»).')} /> : (

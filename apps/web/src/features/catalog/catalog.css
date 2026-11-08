@@ -1,6 +1,6 @@
 /* U7.5 mahsulot katalogi, mahsulot sahifasi, solishtirish; U7.4 do‘konlar. */
 .qs-catalog { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: var(--qs-space-5); align-items: start; }
-.qs-catalog__filters { position: sticky; top: calc(var(--qs-header-height, 64px) + 16px); display: grid; gap: var(--qs-space-4); padding: 16px; border: 1px solid var(--qs-color-border); border-radius: 16px; background: var(--qs-color-surface); }
+.qs-catalog__filters { position: sticky; top: calc(var(--qs-header-height) + 16px); display: grid; gap: var(--qs-space-4); padding: 16px; border: 1px solid var(--qs-color-border); border-radius: 16px; background: var(--qs-color-surface); }
 .qs-catalog__filters h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--qs-color-text-muted); }
 .qs-catalog__cats { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
 .qs-catalog__cats button { display: flex; justify-content: space-between; width: 100%; padding: 7px 10px; border: 0; border-radius: 8px; background: none; color: inherit; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
@@ -20,7 +20,7 @@
 
 .qs-pcard { position: relative; display: flex; flex-direction: column; border: 1px solid var(--qs-color-border); border-radius: 16px; background: var(--qs-color-surface); overflow: hidden; color: inherit; text-decoration: none; transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease; }
 .qs-pcard:hover { border-color: var(--qs-color-primary); box-shadow: 0 12px 28px -20px var(--qs-color-primary); transform: translateY(-1px); }
-.qs-pcard__media { display: grid; place-items: center; aspect-ratio: 4 / 3; background: var(--qs-grad-soft, var(--qs-color-surface-muted)); color: var(--qs-color-primary); }
+.qs-pcard__media { display: grid; place-items: center; aspect-ratio: 4 / 3; background: var(--qs-grad-soft); color: var(--qs-color-primary); }
 .qs-pcard__body { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px 14px; flex: 1; }
 .qs-pcard__brand { font-size: 12px; font-weight: 700; color: var(--qs-color-text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
 .qs-pcard__name { font-weight: 700; font-size: 15px; line-height: 1.3; overflow-wrap: anywhere; }
@@ -38,7 +38,7 @@
 
 .qs-product { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--qs-space-5); align-items: start; }
 @media (max-width: 1000px) { .qs-product { grid-template-columns: minmax(0, 1fr); } }
-.qs-product__gallery { display: grid; place-items: center; aspect-ratio: 4 / 3; border-radius: 20px; background: var(--qs-grad-soft, var(--qs-color-surface-muted)); color: var(--qs-color-primary); }
+.qs-product__gallery { display: grid; place-items: center; aspect-ratio: 4 / 3; border-radius: 20px; background: var(--qs-grad-soft); color: var(--qs-color-primary); }
 .qs-specs { width: 100%; border-collapse: collapse; font-size: 14px; }
 .qs-specs th, .qs-specs td { padding: 9px 4px; border-bottom: 1px solid var(--qs-color-border); text-align: left; }
 .qs-specs th { width: 55%; color: var(--qs-color-text-muted); font-weight: 500; }
@@ -65,7 +65,7 @@
 .qs-shop-hero__cover { aspect-ratio: 21 / 6; max-height: 220px; width: 100%; background:
   radial-gradient(circle at 82% 120%, color-mix(in srgb, var(--qs-color-accent) 85%, transparent) 0 18%, transparent 19%),
   radial-gradient(circle at 82% 120%, color-mix(in srgb, var(--qs-color-accent) 30%, transparent) 0 30%, transparent 31%),
-  linear-gradient(120deg, var(--qs-color-primary), color-mix(in srgb, var(--qs-color-primary) 55%, #0b1530)); }
+  linear-gradient(120deg, var(--qs-color-primary), color-mix(in srgb, var(--qs-color-primary) 55%, var(--qs-color-ink))); }
 .qs-shop-hero__cover img { width: 100%; height: 100%; object-fit: cover; }
 .qs-shop-hero__info { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; padding: 14px 20px 20px; }
 .qs-shop-hero__info .qs-shopcard__logo { width: 88px; height: 88px; margin-top: -58px; border-radius: 22px; border: 4px solid var(--qs-color-surface); font-size: 32px; box-shadow: var(--qs-shadow-md); }
