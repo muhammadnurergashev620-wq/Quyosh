@@ -78,3 +78,4 @@
 
 .gm-dropdown__sep { height: 1px; margin: var(--qs-space-1) var(--qs-space-2); background: var(--qs-color-border); }
 .gm-dropdown__text { flex: 1; min-width: 0; }
+.gm-dropdown__gap { display: inline-block; width: 16px; }

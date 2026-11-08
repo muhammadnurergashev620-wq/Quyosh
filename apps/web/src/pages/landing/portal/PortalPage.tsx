@@ -33,6 +33,7 @@ import { ShaderBackground } from '../fx/ShaderBackground';
 import { Marquee } from '../fx/Marquee';
 import { Statement } from '../fx/Statement';
 import { ScrollFilm } from '../film/ScrollFilm';
+import { ButtonAnchor } from '@/components/ui/Button';
 import './portal.css';
 
 /** Panel manzili: dev'da alohida port (VITE_DEV_*_URL), production'da shu domendagi yo‘l (TZ 5.2). */
@@ -111,12 +112,12 @@ function Header() {
       <div className="qs-portal__tools">
         <ThemeToggle />
         <LanguageSwitcher />
-        <a className="gm-button gm-button--secondary gm-button--sm qs-portal__login" href={CUSTOMER_LOGIN}>
+        <ButtonAnchor variant="secondary" size="sm" className="qs-portal__login" href={CUSTOMER_LOGIN}>
           {t('Kirish')}
-        </a>
-        <a className="gm-button gm-button--primary gm-button--sm" href={CUSTOMER_REGISTER}>
+        </ButtonAnchor>
+        <ButtonAnchor variant="primary" size="sm" href={CUSTOMER_REGISTER}>
           {t('Ro‘yxatdan o‘tish')}
-        </a>
+        </ButtonAnchor>
       </div>
     </header>
   );
@@ -140,9 +141,9 @@ function Hero({ f }: F) {
         </ul>
       )}
       <div className="gm-film__cta">
-        <a href={CUSTOMER_PANEL} className="gm-button gm-button--primary gm-button--md">
-          {str(f, 'ctaPrimary', t('Mijoz paneliga o‘tish'))} <ArrowRight size={16} aria-hidden="true" />
-        </a>
+        <ButtonAnchor href={CUSTOMER_PANEL} variant="accent" size="lg" rightIcon={<ArrowRight />}>
+          {str(f, 'ctaPrimary', t('Mijoz paneliga o‘tish'))}
+        </ButtonAnchor>
       </div>
       <p className="gm-film__sunline">{sunLine()}</p>
     </>
@@ -259,7 +260,7 @@ function Finale({ f }: F) {
       <div className="qs-finale__inner">
         <h2>{f ? fill(str(f, 'title', ''), { h, m }) : t('Bugun quyosh {h} soat {m} daqiqa porlaydi. Uning qancha qismi sizniki?', { h, m })}</h2>
         <div className="gm-film__cta">
-          <a href={CUSTOMER_PANEL} className="gm-button gm-button--primary gm-button--md">{str(f, 'ctaPrimary', t('Mijoz paneliga o‘tish'))} <ArrowRight size={16} aria-hidden="true" /></a>
+          <ButtonAnchor href={CUSTOMER_PANEL} variant="accent" size="lg" rightIcon={<ArrowRight />}>{str(f, 'ctaPrimary', t('Mijoz paneliga o‘tish'))}</ButtonAnchor>
         </div>
       </div>
     </section>
@@ -330,7 +331,7 @@ export function PortalPage({ preview = false }: { preview?: boolean }) {
       <Header />
       <main>
         {/* Kino-scroll (HERO) bloklar yuklanguncha ham ko‘rinadi — matn standart, keyin CMS matni. */}
-        <ScrollFilm hero={<Hero f={fields('HERO')} />} finalCta={<div className="gm-film__cta"><a href={CUSTOMER_PANEL} className="gm-button gm-button--primary gm-button--md">{heroCta} <ArrowRight size={16} aria-hidden="true" /></a></div>} />
+        <ScrollFilm hero={<Hero f={fields('HERO')} />} finalCta={<div className="gm-film__cta"><ButtonAnchor href={CUSTOMER_PANEL} variant="accent" size="lg" rightIcon={<ArrowRight />}>{heroCta}</ButtonAnchor></div>} />
         {order.filter((type) => type === 'STATS').map(section)}
         <section className="qs-portal__belt" aria-label={t('Tizim turlari')}>
           <Marquee items={SERVICES} />

@@ -74,7 +74,7 @@ export function PanelHeader({ role }: { role: Role | null }) {
             }
             items={LANGUAGES.map((item) => ({
               label: item.label,
-              icon: item.code === lang ? <Check size={16} /> : <span className="gm-aheader__menu-gap" />,
+              icon: item.code === lang ? <Check size={16} /> : <span className="gm-dropdown__gap" />,
               onSelect: () => setLanguage(item.code),
             }))}
           />

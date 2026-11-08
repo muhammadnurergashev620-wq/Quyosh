@@ -15,7 +15,7 @@ export function LanguageSwitcher() {
       }
       items={LANGUAGES.map((item) => ({
         label: item.label,
-        icon: item.code === lang ? <Check size={16} /> : <span style={{ width: 16, display: 'inline-block' }} />,
+        icon: item.code === lang ? <Check size={16} /> : <span className="gm-dropdown__gap" />,
         onSelect: () => setLanguage(item.code),
       }))}
     />

@@ -189,3 +189,27 @@
     --qs-header-height: 56px;
   }
 }
+
+/* ── Bosh sayt (landing): doim to‘q kinematik sahna — mavzuga bog‘liq emas ── */
+:root {
+  --qs-land-bg: #060d2b;
+  --qs-land-bg-2: #0b1f4d;
+  --qs-land-bg-3: #071433;
+  --qs-land-bg-4: #071028;
+  --qs-land-ink: #f4f7ff;
+  --qs-land-white: #ffffff;
+  --qs-land-sun: #ffb020;
+  --qs-land-sun-soft: #ffd27a;
+  --qs-land-gold: #f0b84b;
+  --qs-land-on-gold: #1a1205;
+  --qs-land-blue: #2f6bff;
+  --qs-land-mint: #45d7a3;
+  /* rgb kanallari (shaffoflik bilan: rgb(var(--x) / .5)) */
+  --qs-land-night-rgb: 6 13 43;
+  --qs-land-text-rgb: 231 238 255;
+  --qs-land-white-rgb: 255 255 255;
+  --qs-land-line-rgb: 160 185 255;
+  --qs-land-gold-rgb: 242 198 107;
+  --qs-land-deep-rgb: 20 86 255;
+  --qs-land-shadow-rgb: 20 30 60;
+}

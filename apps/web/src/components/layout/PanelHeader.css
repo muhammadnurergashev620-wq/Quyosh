@@ -181,7 +181,6 @@
   font-family: var(--qs-font-mono);
   font-size: 11px;
 }
-.gm-aheader__menu-gap { display: inline-block; width: 16px; }
 
 /* Planshet va telefon */
 @media (max-width: 1099px) {
