@@ -18,7 +18,8 @@ import { REGIONS } from '@/lib/regions';
 import { env } from '@/lib/env';
 import { getErrorMessage } from '@/lib/error-messages';
 import { cx } from '@/lib/utils';
-import { formatDate, formatDateTime, formatNumber } from '@/lib/format';
+import { formatDate, formatDateTime } from '@/lib/format';
+import { StatCard, StatGrid } from '@/components/ui/StatCard';
 import { t } from '@/i18n';
 import { CATEGORY_LABEL, TICKET_STATUS } from './SupportPages';
 import { TYPE_LABEL } from './KnowledgePages';
@@ -42,16 +43,28 @@ export function AdminQueues() {
   return (
     <section className="qs-mt-5">
       <h2>{t('Navbatlar')}</h2>
-      <div className="qs-kpi-grid">
+      <StatGrid columns={4} className="nd-queues">
         {q.data.queues.filter((x) => allowed(x.permission)).map((x) => (
-          <Link key={x.key} className="qs-kpi" to={x.to}>
-            <small>{QUEUE_LABEL[x.key] ?? x.key}</small>
-            <strong>{x.count}</strong>
-            {!!x.breaching && <small className="qs-sla is-breach">{t('{n} ta SLA buzilgan', { n: x.breaching })}</small>}
-          </Link>
+          <StatCard
+            key={x.key}
+            variant="compact"
+            to={x.to}
+            tone={x.breaching ? 'danger' : x.count > 0 ? 'warning' : 'neutral'}
+            label={QUEUE_LABEL[x.key] ?? x.key}
+            value={x.count}
+            note={x.breaching ? <span className="qs-text-danger">{t('{n} ta SLA buzilgan', { n: x.breaching })}</span> : undefined}
+          />
         ))}
-        {q.data.exchangeRate && <div className="qs-kpi"><small>{t('USD kursi (MB)')}</small><strong>{formatNumber(Math.round(Number(q.data.exchangeRate.rateToUzs)))}</strong><small className={cx(q.data.exchangeRate.stale && 'qs-sla is-breach')}>{formatDate(q.data.exchangeRate.rateDate)}{q.data.exchangeRate.stale ? ` · ${t('eskirgan')}` : ''}</small></div>}
-      </div>
+        {q.data.exchangeRate && (
+          <StatCard
+            variant="compact"
+            tone={q.data.exchangeRate.stale ? 'danger' : 'info'}
+            label={t('USD kursi (MB)')}
+            value={Math.round(Number(q.data.exchangeRate.rateToUzs))}
+            note={<span className={cx(q.data.exchangeRate.stale && 'qs-text-danger')}>{formatDate(q.data.exchangeRate.rateDate)}{q.data.exchangeRate.stale ? ` · ${t('eskirgan')}` : ''}</span>}
+          />
+        )}
+      </StatGrid>
     </section>
   );
 }

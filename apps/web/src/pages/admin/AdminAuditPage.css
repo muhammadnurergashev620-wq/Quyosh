@@ -1,9 +1,9 @@
 .gm-aud__tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-left: auto; }
-.gm-aud__icon--blue { background: #e3edff; color: #2f6fed; }
-.gm-aud__icon--green { background: #def5ea; color: #12a672; }
-.gm-aud__icon--violet { background: #eee8ff; color: #7c5cf0; }
-.gm-aud__icon--red { background: #fde4e7; color: var(--qs-color-danger); }
-.gm-aud__icon--amber { background: #ffecd0; color: #e08a12; }
+.gm-aud__icon--blue { background: var(--qs-color-info-bg); color: var(--qs-color-info); }
+.gm-aud__icon--green { background: var(--qs-color-success-bg); color: var(--qs-color-success); }
+.gm-aud__icon--violet { background: var(--qs-color-violet-bg); color: var(--qs-color-violet); }
+.gm-aud__icon--red { background: var(--qs-color-danger-bg); color: var(--qs-color-danger); }
+.gm-aud__icon--amber { background: var(--qs-color-warning-bg); color: var(--qs-color-warning); }
 .gm-aud .gm-ukpi__icon { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; }
 .gm-aud__chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; white-space: nowrap; background: var(--qs-color-surface-muted); }
 .gm-aud__chip--primary { background: var(--qs-color-primary-soft); color: var(--qs-color-primary); }

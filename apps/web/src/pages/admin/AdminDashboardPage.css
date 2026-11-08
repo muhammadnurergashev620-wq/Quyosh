@@ -3,8 +3,8 @@
 .qs-dash__grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .qs-kpi {
   display: grid; gap: 6px; padding: 22px; border-radius: 20px; text-decoration: none; color: var(--qs-color-text);
-  background: var(--qs-color-surface); border: 1px solid var(--qs-color-border); box-shadow: var(--qs-shadow-sm, 0 1px 2px rgba(18, 28, 70, .05));
-  transition: border-color 160ms cubic-bezier(.2, .75, .2, 1);
+  background: var(--qs-color-surface); border: 1px solid var(--qs-color-border); box-shadow: var(--qs-shadow-xs);
+  transition: border-color var(--qs-dur-2) var(--qs-ease-standard);
 }
 .qs-kpi:hover { border-color: color-mix(in srgb, var(--qs-color-primary) 40%, var(--qs-color-border)); }
 .qs-kpi__icon { color: var(--qs-color-primary); }
@@ -12,35 +12,22 @@
 .qs-kpi small { color: var(--qs-color-text-muted); }
 
 /* ── Neon dashboard ── */
-.qs-dash.nd { gap: 18px; padding: 18px; border-radius: 24px; background: radial-gradient(1200px 500px at 15% -10%, #1b2150 0%, var(--nd-bg) 55%); color: var(--nd-ink); }
+.qs-dash.nd { gap: var(--qs-space-5); padding: 0; color: var(--nd-ink); }
 .nd h1 { color: var(--nd-ink); font-size: clamp(22px, 2.2vw, 28px); }
 .nd-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; }
 .nd-head p { margin: 4px 0 0; color: var(--nd-muted); font-size: 13px; }
 .nd-head__tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.nd-pills { display: inline-flex; gap: 4px; padding: 4px; border-radius: 12px; background: var(--nd-card); border: 1px solid var(--nd-line); }
-.nd-pills button { border: 0; background: transparent; color: var(--nd-muted); padding: 7px 14px; border-radius: 9px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
-.nd-pills button:hover { color: var(--nd-ink); }
-.nd-pills button.is-on { background: linear-gradient(135deg, #22d3ee, #2563eb); color: #04122b; box-shadow: 0 0 14px rgba(34, 211, 238, 0.4); }
-.nd-pills--sm button { padding: 5px 11px; font-size: 12px; }
 
-.nd-kpis { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
-.nd-kpi { position: relative; display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: 16px; text-decoration: none; color: var(--nd-ink); background: var(--nd-card); border: 1px solid var(--nd-line); transition: border-color 150ms, transform 150ms; }
-.nd-kpi:hover { border-color: var(--nd-cyan); transform: translateY(-2px); }
-.nd-kpi__icon { display: grid; place-items: center; flex: 0 0 auto; width: 46px; height: 46px; border-radius: 14px; color: var(--nd-cyan); border: 1.5px solid rgba(34, 211, 238, 0.55); background: rgba(34, 211, 238, 0.08); }
-.nd-kpi__body { display: grid; gap: 1px; min-width: 0; }
-.nd-kpi__body strong { white-space: nowrap; font-family: var(--qs-font-display); font-size: 25px; line-height: 1.1; color: var(--nd-cyan); font-variant-numeric: tabular-nums; }
-.nd-kpi__body small { color: var(--nd-muted); font-size: 12px; }
-.nd-kpi__note { opacity: 0.85; }
-.nd-kpi__delta { justify-self: start; margin-top: 3px; display: inline-flex; align-items: center; gap: 3px; font-style: normal; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 99px; }
-.nd-kpi__delta--up { color: var(--nd-good); background: rgba(52, 211, 153, 0.12); }
-.nd-kpi__delta--down { color: var(--nd-bad); background: rgba(251, 113, 133, 0.12); }
-.nd-kpi__delta--flat { color: var(--nd-muted); }
+.gm-stat-grid.nd-kpis { --cols: 6; }
+@media (max-width: 1400px) { .gm-stat-grid.nd-kpis { --cols: 3; } }
+@media (max-width: 760px) { .gm-stat-grid.nd-kpis { --cols: 2; } }
 
 .nd-grid { display: grid; gap: 14px; grid-template-columns: repeat(12, minmax(0, 1fr)); }
-.nd-card { min-width: 0; padding: 18px; border-radius: 18px; background: var(--nd-card); border: 1px solid var(--nd-line); box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.8); }
+.nd-card { min-width: 0; padding: var(--qs-space-5); border-radius: var(--qs-radius-card); background: var(--nd-card); border: 1px solid var(--nd-line); box-shadow: var(--qs-shadow-xs); }
 .nd-card > header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
-.nd-card__icon { color: var(--nd-cyan); display: grid; place-items: center; }
-.nd-card__value { white-space: nowrap; font-family: var(--qs-font-display); font-size: 30px; line-height: 1; color: var(--nd-cyan); font-variant-numeric: tabular-nums; }
+.nd-card__icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--qs-radius-12); background: var(--qs-color-primary-soft); color: var(--qs-color-primary); }
+.nd-card__icon svg { width: 20px; height: 20px; }
+.nd-card__value { white-space: nowrap; font-family: var(--qs-font-display); font-size: 28px; line-height: 1; color: var(--nd-ink); font-variant-numeric: tabular-nums; }
 .nd-card__title { display: grid; gap: 2px; min-width: 0; }
 .nd-card__title h2 { margin: 0; font-size: 15px; font-weight: 700; color: var(--nd-ink); }
 .nd-card__title small { color: var(--nd-muted); font-size: 11.5px; }
@@ -59,7 +46,7 @@
 @media (max-width: 760px) { .qs-dash.nd { padding: 12px; border-radius: 16px; } .nd-b, .nd-c, .nd-s, .nd-t { grid-column: span 12; } .nd-hbars, .nd-c .nd-hbars { grid-template-columns: 1fr; } }
 
 /* Dashboard keng ekranda butun kenglikdan foydalanadi (umumiy 1180px chegarasidan chiqadi). */
-.gm-app-layout__content:has(> .qs-dash.nd) { max-width: min(1680px, 100%); padding-inline: clamp(12px, 1.6vw, 28px); }
+.gm-app-layout__content:has(> .gm-page-enter > .qs-dash.nd) { max-width: min(1680px, 100%); padding-inline: clamp(12px, 1.6vw, 28px); }
 
 /* Navbatlar (AdminQueues) neon mavzuga mos */
 .nd section > h2 { color: var(--nd-ink); font-size: 16px; margin: 4px 0 10px; }
@@ -67,4 +54,7 @@
 .nd .qs-kpi-grid .qs-kpi { display: grid; gap: 4px; padding: 16px; border-radius: 16px; background: var(--nd-card); border: 1px solid var(--nd-line); color: var(--nd-ink); box-shadow: none; }
 .nd .qs-kpi-grid .qs-kpi:hover { border-color: var(--nd-cyan); }
 .nd .qs-kpi-grid .qs-kpi small { color: var(--nd-muted); }
-.nd .qs-kpi-grid .qs-kpi strong { color: var(--nd-cyan); font-size: 28px; }
+.nd .qs-kpi-grid .qs-kpi strong { color: var(--nd-ink); font-size: 28px; }
+.gm-stat-grid.nd-queues { --cols: 7; }
+@media (max-width: 1400px) { .gm-stat-grid.nd-queues { --cols: 4; } }
+@media (max-width: 760px) { .gm-stat-grid.nd-queues { --cols: 2; } }

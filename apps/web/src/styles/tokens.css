@@ -240,3 +240,7 @@
   --qs-code-bg: #0b1220;
   --qs-code-text: #e2e8f0;
 }
+
+/* ── Pushti (bildirishnoma toifasi) va kod bloki ikkilamchi matni ── */
+:root { --qs-color-pink: #d6338a; --qs-color-pink-bg: #fbe3ef; --qs-code-muted: #6b7fa8; }
+:root[data-theme='dark'] { --qs-color-pink: #ff8cc6; --qs-color-pink-bg: #3b1a2d; }

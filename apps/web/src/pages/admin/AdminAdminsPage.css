@@ -419,7 +419,7 @@
 .gm-adm__open:focus-visible::after { outline: 3px solid var(--qs-focus-ring); outline-offset: 2px; }
 .gm-adm__twofa, .gm-adm__actions, .gm-adm__perms { position: relative; z-index: 1; }
 .gm-adm__perms { pointer-events: none; }
-.gm-adm__twofa { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; background: var(--qs-color-surface-muted, rgba(100, 116, 139, 0.08)); }
+.gm-adm__twofa { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; background: var(--qs-color-surface-muted); }
 .gm-adm__twofa > div { display: grid; gap: 2px; min-width: 0; }
 .gm-adm__twofa strong { font-size: 13.5px; }
 .gm-adm__twofa span { color: var(--qs-color-text-muted); font-size: 12.5px; }

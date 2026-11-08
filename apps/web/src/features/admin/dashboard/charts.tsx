@@ -72,10 +72,11 @@ function Tooltip({ tip, w, h }: { tip: Tip | null; w: number; h: number }) {
   );
 }
 
-const Defs = ({ id, from, to }: { id: string; from: string; to: string }) => (
+/** Maydon gradienti: ranglar CSS'dan (.nd-stop-1/2 → tizim tokenlari). */
+const Defs = ({ id }: { id: string }) => (
   <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stopColor={from} stopOpacity="0.55" />
-    <stop offset="100%" stopColor={to} stopOpacity="0.02" />
+    <stop offset="0%" className="nd-stop-1" stopOpacity="0.55" />
+    <stop offset="100%" className="nd-stop-2" stopOpacity="0.02" />
   </linearGradient>
 );
 
@@ -103,7 +104,7 @@ export function SmoothArea({ values, labels, unit = '', aria, height = 260 }: { 
   return (
     <div ref={boxRef}>
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} className="nd-svg" onMouseLeave={() => setTip(null)}>
-      <defs><Defs id={`${uid}a`} from="#22d3ee" to="#2563eb" /><linearGradient id={`${uid}l`} x1="0" x2="1"><stop offset="0" stopColor="#38bdf8" /><stop offset="1" stopColor="#22d3ee" /></linearGradient></defs>
+      <defs><Defs id={`${uid}a`} /><linearGradient id={`${uid}l`} x1="0" x2="1"><stop offset="0" className="nd-stop-1" /><stop offset="1" className="nd-stop-2" /></linearGradient></defs>
       {ticks.map((tick) => (
         <g key={tick}>
           <line x1={pad.l} x2={W - pad.r} y1={y(tick)} y2={y(tick)} className="nd-gl" />
@@ -147,7 +148,7 @@ export function Bars({ items, aria, height = 200 }: { items: Array<{ label: stri
     <div ref={boxRef}>
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} className="nd-svg" onMouseLeave={() => setTip(null)}>
       <defs>
-        <linearGradient id={`${uid}b`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2dd4bf" /><stop offset="1" stopColor="#1d4ed8" stopOpacity="0.55" /></linearGradient>
+        <linearGradient id={`${uid}b`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" className="nd-stop-1" /><stop offset="1" className="nd-stop-2" stopOpacity="0.55" /></linearGradient>
       </defs>
       {[0, 0.5, 1].map((f) => (
         <g key={f}><line x1={pad.l} x2={W - pad.r} y1={y(f * max)} y2={y(f * max)} className="nd-gl" /><text x={pad.l - 6} y={y(f * max) + 4} textAnchor="end" className="nd-axis">{compact(f * max)}</text></g>
@@ -194,7 +195,7 @@ export function Gauge({ percent, label, aria }: { percent: number; label: string
   const p = Math.max(0, Math.min(100, percent));
   return (
     <svg viewBox="0 0 160 160" role="img" aria-label={aria} className="nd-gauge">
-      <defs><linearGradient id={`${uid}g`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#22d3ee" /><stop offset="1" stopColor="#2563eb" /></linearGradient></defs>
+      <defs><linearGradient id={`${uid}g`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" className="nd-stop-1" /><stop offset="1" className="nd-stop-2" /></linearGradient></defs>
       <circle cx="80" cy="80" r={r} className="nd-gauge__track" />
       <circle cx="80" cy="80" r={r} fill="none" stroke={`url(#${uid}g)`} strokeWidth="11" strokeLinecap="round" strokeDasharray={`${(p / 100) * c} ${c}`} transform="rotate(-90 80 80)" className="nd-glow" />
       <text x="80" y="82" textAnchor="middle" className="nd-gauge__v">{Math.round(p)}%</text>
@@ -214,7 +215,7 @@ export function Histogram({ values, labels, aria, height = 150 }: { values: numb
   return (
     <div ref={boxRef}>
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} className="nd-svg" onMouseLeave={() => setTip(null)}>
-      <defs><linearGradient id={`${uid}h`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#34e8d4" /><stop offset="1" stopColor="#2563eb" /></linearGradient></defs>
+      <defs><linearGradient id={`${uid}h`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" className="nd-stop-1" /><stop offset="1" className="nd-stop-2" /></linearGradient></defs>
       {values.map((v, i) => {
         const h = Math.max(2, (v / max) * (H - 18));
         return (
@@ -269,9 +270,9 @@ export function Wave({ values, labels, aria, height = 150 }: { values: number[];
   return (
     <div ref={boxRef}>
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={aria} className="nd-svg" onMouseLeave={() => setTip(null)}>
-      <defs><linearGradient id={`${uid}w`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#38bdf8" stopOpacity="0.95" /><stop offset="1" stopColor="#2563eb" stopOpacity="0.15" /></linearGradient></defs>
+      <defs><linearGradient id={`${uid}w`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" className="nd-stop-1" stopOpacity="0.95" /><stop offset="1" className="nd-stop-2" stopOpacity="0.15" /></linearGradient></defs>
       <path d={`${line} L${W},${H} L0,${H} Z`} fill={`url(#${uid}w)`} />
-      <path d={line} fill="none" stroke="#7dd3fc" strokeWidth={1.6} />
+      <path d={line} fill="none" className="nd-line" strokeWidth={1.6} />
       {values.map((v, i) => (
         <rect key={i} x={x(i) - W / values.length / 2} y={0} width={W / values.length} height={H} fill="transparent" onMouseEnter={() => setTip({ x: x(i), y: y(v), title: (labels[i] ?? '').slice(5).replace('-', '.'), value: formatNumber(v) })} />
       ))}

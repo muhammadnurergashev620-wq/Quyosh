@@ -1,29 +1,35 @@
-/* Neon dashboard: har doim to‘q karta (yorug‘ mavzuda ham), shuning uchun o‘z o‘zgaruvchilari. */
+/* Dashboard o‘zgaruvchilari — yagona tizim tokenlariga bog‘langan (yorug‘/to‘q mavzuga bo‘ysunadi). */
 .nd {
-  --nd-bg: #0f1226;
-  --nd-card: #181c36;
-  --nd-card-2: #1d2242;
-  --nd-line: #2a3060;
-  --nd-ink: #eef1ff;
-  --nd-muted: #98a1c9;
-  --nd-cyan: #22d3ee;
-  --nd-blue: #3b82f6;
-  --nd-good: #34d399;
-  --nd-bad: #fb7185;
+  --nd-bg: var(--qs-color-bg);
+  --nd-card: var(--qs-color-surface);
+  --nd-card-2: var(--qs-color-surface-muted);
+  --nd-line: var(--qs-color-border);
+  --nd-ink: var(--qs-color-text);
+  --nd-muted: var(--qs-color-text-muted);
+  --nd-cyan: var(--qs-color-primary);
+  --nd-blue: var(--qs-color-info);
+  --nd-good: var(--qs-color-success);
+  --nd-bad: var(--qs-color-danger);
+  --nd-c1: var(--qs-color-primary);
+  --nd-c2: var(--qs-color-teal);
+  --nd-track: var(--qs-color-surface-muted);
 }
+/* SVG gradient to‘xtash nuqtalari (stop-color atributida var() ishlamaydi) */
+.nd-stop-1 { stop-color: var(--nd-c2); }
+.nd-stop-2 { stop-color: var(--nd-c1); }
 .nd-svg { display: block; width: 100%; height: auto; overflow: visible; }
 .nd-gl { stroke: var(--nd-line); stroke-width: 1; stroke-dasharray: 2 4; opacity: 0.8; }
 .nd-axis { fill: var(--nd-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
-.nd-dot { fill: #eaffff; stroke: #22d3ee; stroke-width: 3; }
-.nd-dot--on { fill: #22d3ee; stroke: #0f1226; stroke-width: 2; }
-.nd-cross { stroke: #38bdf8; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.7; }
-.nd-glow { filter: drop-shadow(0 0 5px rgba(34, 211, 238, 0.55)); }
+.nd-dot { fill: var(--nd-card); stroke: var(--nd-c1); stroke-width: 3; }
+.nd-dot--on { fill: var(--nd-c1); stroke: var(--nd-card); stroke-width: 2; }
+.nd-cross { stroke: var(--nd-c1); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.7; }
+.nd-glow { filter: drop-shadow(0 4px 8px color-mix(in srgb, var(--nd-c1) 30%, transparent)); }
 .nd-bar { transition: opacity 120ms; }
 .nd-svg g:hover > .nd-bar { opacity: 0.8; }
-.nd-pt { fill: #2dd4bf; fill-opacity: 0.85; stroke: #0f1226; stroke-width: 1; }
-.nd-pt--hot { fill: #60a5fa; }
-.nd-pt:hover { fill: #ffffff; }
-.nd-tip { fill: #0b0e1f; stroke: var(--nd-cyan); stroke-width: 1; opacity: 0.97; }
+.nd-pt { fill: var(--nd-c2); fill-opacity: 0.85; stroke: var(--nd-card); stroke-width: 1; }
+.nd-pt--hot { fill: var(--nd-c1); }
+.nd-pt:hover { fill: var(--qs-color-accent); }
+.nd-tip { fill: var(--qs-color-surface); stroke: var(--nd-cyan); stroke-width: 1; opacity: 0.97; }
 .nd-tip__t { fill: var(--nd-muted); font-size: 10.5px; }
 .nd-tip__v { fill: var(--nd-ink); font-size: 12.5px; font-weight: 700; }
 
@@ -33,11 +39,12 @@
 .nd-hbars div span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nd-hbars b { color: var(--nd-ink); font-weight: 700; font-variant-numeric: tabular-nums; }
 .nd-hbars em { color: var(--nd-muted); font-style: normal; font-weight: 500; }
-.nd-hbars i { display: block; height: 7px; border-radius: 99px; background: #262b52; overflow: hidden; }
-.nd-hbars u { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #22d3ee, #3b82f6); box-shadow: 0 0 10px rgba(34, 211, 238, 0.5); }
+.nd-hbars i { display: block; height: 7px; border-radius: var(--qs-radius-pill); background: var(--nd-track); overflow: hidden; }
+.nd-hbars u { display: block; height: 100%; border-radius: var(--qs-radius-pill); background: linear-gradient(90deg, var(--nd-c2), var(--nd-c1)); }
 .nd-hbars--one { grid-template-columns: 1fr; }
 
 .nd-gauge { display: block; width: min(100%, 190px); margin: 0 auto; }
-.nd-gauge__track { fill: none; stroke: #262b52; stroke-width: 11; }
-.nd-gauge__v { fill: var(--nd-cyan); font-size: 30px; font-weight: 800; font-family: var(--qs-font-display, inherit); }
+.nd-gauge__track { fill: none; stroke: var(--nd-track); stroke-width: 11; }
+.nd-gauge__v { fill: var(--nd-cyan); font-size: 30px; font-weight: 800; font-family: var(--qs-font-display); }
 .nd-gauge__l { fill: var(--nd-muted); font-size: 10.5px; }
+.nd-line { stroke: var(--nd-c1); }

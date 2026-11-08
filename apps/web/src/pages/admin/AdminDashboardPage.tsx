@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Activity, Calculator, ClipboardList, FileText, Sparkles, Store, TrendingDown, TrendingUp, Users, Wrench } from 'lucide-react';
+import { Activity, Calculator, ClipboardList, FileText, Sparkles, Store, Users, Wrench } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { PageLoader } from '@/components/common/PageLoader';
 import { Alert } from '@/components/ui/Alert';
+import { StatCard, StatGrid } from '@/components/ui/StatCard';
+import type { StatTone } from '@/components/ui/StatCard';
+import { Tabs } from '@/components/ui/Tabs';
 import { getErrorMessage } from '@/lib/error-messages';
 import { formatNumber } from '@/lib/format';
 import { regionName } from '@/lib/regions';
@@ -29,28 +31,8 @@ const SHOP_STATUS: Record<string, string> = { ACTIVE: t('Faol'), PENDING_REVIEW:
 const rows = (record: Record<string, number>, labels: Record<string, string>) =>
   Object.entries(record).filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1]).map(([key, value]) => ({ label: labels[key] ?? key, value }));
 
-function Delta({ value }: { value: number | null | undefined }) {
-  if (value === null || value === undefined) return <em className="nd-kpi__delta nd-kpi__delta--flat">—</em>;
-  const up = value >= 0;
-  return (
-    <em className={up ? 'nd-kpi__delta nd-kpi__delta--up' : 'nd-kpi__delta nd-kpi__delta--down'}>
-      {up ? <TrendingUp size={12} aria-hidden="true" /> : <TrendingDown size={12} aria-hidden="true" />} {up ? '+' : ''}{value}%
-    </em>
-  );
-}
-
-function Kpi({ to, icon, value, label, delta, note }: { to: string; icon: ReactNode; value: number; label: string; delta?: number | null; note?: string }) {
-  return (
-    <Link to={to} className="nd-kpi">
-      <span className="nd-kpi__icon" aria-hidden="true">{icon}</span>
-      <span className="nd-kpi__body">
-        <strong>{formatNumber(value, '\u00A0')}</strong>
-        <small>{label}</small>
-        {note && <small className="nd-kpi__note">{note}</small>}
-        {delta !== undefined && <Delta value={delta} />}
-      </span>
-    </Link>
-  );
+function Kpi({ to, icon, value, label, delta, note, spark, tone }: { to: string; icon: ReactNode; value: number; label: string; delta?: number | null; note?: string; spark?: number[]; tone?: StatTone }) {
+  return <StatCard to={to} icon={icon} tone={tone} value={value} label={label} trend={delta === undefined || delta === null ? undefined : delta / 100} note={note} spark={spark} />;
 }
 
 function Card({ title, sub, value, icon, className, children, actions }: { title: string; sub?: string; value?: string | number; icon?: ReactNode; className?: string; children: ReactNode; actions?: ReactNode }) {
@@ -67,7 +49,7 @@ function Card({ title, sub, value, icon, className, children, actions }: { title
   );
 }
 
-/** Admin boshqaruv paneli (TZ U12.1): neon uslubdagi katta dashboard — KPI, kunlik grafiklar, taqsimotlar, navbatlar. */
+/** Admin boshqaruv paneli (TZ U12.1): yagona dizayn tizimidagi katta dashboard — KPI, kunlik grafiklar, taqsimotlar, navbatlar. */
 export function AdminDashboardPage() {
   const [days, setDays] = useState<(typeof PERIODS)[number]>(30);
   const [series, setSeries] = useState<SeriesKey>('users');
@@ -96,20 +78,18 @@ export function AdminDashboardPage() {
           <p>{t('Oxirgi {n} kun bo‘yicha platforma ko‘rsatkichlari', { n: days })}</p>
         </div>
         <div className="nd-head__tools">
-          <div className="nd-pills" role="group" aria-label={t('Davr')}>
-            {PERIODS.map((p) => <button key={p} type="button" className={p === days ? 'is-on' : ''} onClick={() => setDays(p)}>{p} {t('kun')}</button>)}
-          </div>
+          <Tabs variant="segmented" size="sm" label={t('Davr')} value={String(days)} onChange={(v) => setDays(Number(v) as (typeof PERIODS)[number])} items={PERIODS.map((p) => ({ value: String(p), label: `${p} ${t('kun')}` }))} />
         </div>
       </div>
 
-      <div className="nd-kpis">
-        <Kpi to="/admin/foydalanuvchilar" icon={<Users size={22} />} value={k.users.total} label={t('Foydalanuvchilar')} delta={k.users.delta} note={t('+{n} yangi', { n: formatNumber(k.users.period) })} />
-        <Kpi to="/admin/dokonlar" icon={<Store size={22} />} value={k.shops.total} label={t('Do‘konlar')} note={t('{n} faol', { n: k.shops.active })} />
-        <Kpi to="/admin/kalkulyator" icon={<Calculator size={22} />} value={k.calculations.total} label={t('Hisoblar')} delta={k.calculations.delta} note={t('+{n} yangi', { n: formatNumber(k.calculations.period) })} />
-        <Kpi to="/admin/hisobot" icon={<ClipboardList size={22} />} value={k.requests.total} label={t('So‘rovlar')} delta={k.requests.delta} note={t('+{n} yangi', { n: formatNumber(k.requests.period) })} />
-        <Kpi to="/admin/hisobot" icon={<FileText size={22} />} value={k.quotes.total} label={t('Takliflar')} delta={k.quotes.delta} note={t('+{n} yangi', { n: formatNumber(k.quotes.period) })} />
-        <Kpi to="/admin/hisobot" icon={<Wrench size={22} />} value={k.installations.total} label={t('Montajlar')} delta={k.installations.delta} note={t('+{n} yangi', { n: formatNumber(k.installations.period) })} />
-      </div>
+      <StatGrid columns={3} className="nd-kpis">
+        <Kpi to="/admin/foydalanuvchilar" icon={<Users size={22} />} value={k.users.total} tone="primary" label={t('Foydalanuvchilar')} delta={k.users.delta} spark={ds('users')} note={t('+{n} yangi', { n: formatNumber(k.users.period) })} />
+        <Kpi to="/admin/dokonlar" icon={<Store size={22} />} value={k.shops.total} tone="teal" label={t('Do‘konlar')} note={t('{n} faol', { n: k.shops.active })} />
+        <Kpi to="/admin/kalkulyator" icon={<Calculator size={22} />} value={k.calculations.total} tone="violet" label={t('Hisoblar')} delta={k.calculations.delta} spark={ds('calculations')} note={t('+{n} yangi', { n: formatNumber(k.calculations.period) })} />
+        <Kpi to="/admin/hisobot" icon={<ClipboardList size={22} />} value={k.requests.total} tone="info" label={t('So‘rovlar')} delta={k.requests.delta} spark={ds('requests')} note={t('+{n} yangi', { n: formatNumber(k.requests.period) })} />
+        <Kpi to="/admin/hisobot" icon={<FileText size={22} />} value={k.quotes.total} tone="warning" label={t('Takliflar')} delta={k.quotes.delta} spark={ds('quotes')} note={t('+{n} yangi', { n: formatNumber(k.quotes.period) })} />
+        <Kpi to="/admin/hisobot" icon={<Wrench size={22} />} value={k.installations.total} tone="success" label={t('Montajlar')} delta={k.installations.delta} spark={ds('installations')} note={t('+{n} yangi', { n: formatNumber(k.installations.period) })} />
+      </StatGrid>
 
       <div className="nd-grid">
         <Card
@@ -118,7 +98,7 @@ export function AdminDashboardPage() {
           value={seriesValue[series]}
           title={t('Kunlik faollik')}
           sub={t('Oxirgi {n} kun', { n: days })}
-          actions={<div className="nd-pills nd-pills--sm" role="group" aria-label={t('Ko‘rsatkich')}>{seriesTabs.map(([key, label]) => <button key={key} type="button" className={key === series ? 'is-on' : ''} onClick={() => setSeries(key)}>{label}</button>)}</div>}
+          actions={<Tabs variant="segmented" size="sm" label={t('Ko‘rsatkich')} value={series} onChange={setSeries} items={seriesTabs.map(([key, label]) => ({ value: key, label }))} />}
         >
           <SmoothArea values={ds(series)} labels={data.labels} aria={t('Kunlik faollik grafigi')} height={290} />
         </Card>
