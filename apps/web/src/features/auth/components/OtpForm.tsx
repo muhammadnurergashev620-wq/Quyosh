@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { Mail, RotateCw, ShieldCheck, Smartphone } from 'lucide-react';
+import { ClipboardPaste, FlaskConical, Mail, RotateCw, ShieldCheck, Smartphone } from 'lucide-react';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { getErrorMessage } from '@/lib/error-messages';
 import { ApiError } from '@/types/api';
@@ -27,6 +28,8 @@ export interface OtpFormProps {
   actionError?: unknown;
   /** Qayta yuborish taymerining boshlang‘ich qiymati (soniya); berilmasa — to‘liq kutish vaqti. */
   initialResendIn?: number;
+  /** Test (dev) rejimida server qaytargan kod: banner va «Kodni qo‘yish» tugmasi chiqadi. */
+  devCode?: string | null;
 }
 
 /** Kodni qayta yuborish 2 daqiqadan keyin mumkin (backend: OTP_RESEND_SECONDS=120 bilan mos). */
@@ -37,7 +40,7 @@ const isHourlyLimit = (error: unknown) => error instanceof ApiError && error.sta
 
 const clock = (total: number) => `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
 
-export function OtpForm({ phone, loading, error, onSubmit, onResend, delivery, onSendSms, actionError, initialResendIn }: OtpFormProps) {
+export function OtpForm({ phone, loading, error, onSubmit, onResend, delivery, onSendSms, actionError, initialResendIn, devCode }: OtpFormProps) {
   const [resendIn, setResendIn] = useState(initialResendIn ?? RESEND_COOLDOWN_SECONDS);
   const [resending, setResending] = useState(false);
   const [sendingSms, setSendingSms] = useState(false);
@@ -126,6 +129,18 @@ export function OtpForm({ phone, loading, error, onSubmit, onResend, delivery, o
           <strong>+{phone.replace('+', '')}</strong>
           <span>{t('raqamiga yuborilgan 6 xonali kodni kiriting.')}</span>
         </p>
+      )}
+
+      {devCode && (
+        <Alert
+          tone="warning"
+          icon={<FlaskConical />}
+          title={t('Test rejimi')}
+          className="gm-otp__dev"
+          action={<Button type="button" size="sm" variant="secondary" leftIcon={<ClipboardPaste />} disabled={loading} onClick={() => change(devCode)}>{t('Kodni qo‘yish')}</Button>}
+        >
+          {t('SMS yuborilmaydi. Tasdiqlash kodi:')} <strong className="gm-otp__devcode">{devCode}</strong>
+        </Alert>
       )}
 
       <OtpCodeInput value={code} onChange={change} label={t('Tasdiqlash kodi')} invalid={invalid} length={CODE_LENGTH} />

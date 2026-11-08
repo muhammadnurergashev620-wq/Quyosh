@@ -1,60 +1,81 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { BellOff, CheckCheck } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { BellOff, CheckCheck, ListChecks, X } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { dayKey, dayLabel } from '@/lib/tashkent-time';
-import { useAuthStore } from '@/store/auth.store';
-import { env } from '@/lib/env';
+import { Tabs } from '@/components/ui/Tabs';
 import { getErrorMessage } from '@/lib/error-messages';
-import { cx } from '@/lib/utils';
-import { formatRelativeTime } from '@/lib/format';
-import { useMarkAllAsRead, useMarkAsRead, useNotifications } from '../hooks/useNotifications';
-import { notificationMeta, notificationText } from '../notification-meta';
-import type { AppNotification } from '../types';
-import './NotificationList.css';
+import { toast } from '@/lib/toast';
 import { t } from '@/i18n';
+import { useMarkAllAsRead, useNotifications } from '../hooks/useNotifications';
+import { useNotificationTarget } from '../hooks/useNotificationTarget';
+import { FILTERS, groupByDate, matchesFilter } from '../notification-ui';
+import type { NotificationFilter } from '../notification-ui';
+import { notificationService } from '../services/notification.service';
+import { NotificationRow } from './NotificationRow';
+import './NotificationList.css';
 
-type Filter = 'all' | 'unread';
-
+/** «Bildirishnomalar» sahifasi: yorliqlar (Hammasi · O‘qilmagan · Takliflar · Montaj · Tizim), sana guruhlari, ommaviy belgilash. */
 export function NotificationList() {
-  const navigate = useNavigate();
-  const preferredRole = useAuthStore((state) => state.preferredRole);
-  const base = (env.appRole ?? preferredRole) === 'SHOP' ? '/dokon' : '/mijoz';
-  const admin = (env.appRole ?? preferredRole) === 'ADMIN';
+  const queryClient = useQueryClient();
   const notifications = useNotifications();
-  const markAsRead = useMarkAsRead();
-  const markAllAsRead = useMarkAllAsRead();
-  const [filter, setFilter] = useState<Filter>('all');
+  const markAll = useMarkAllAsRead();
+  const { base, admin, open, markRead } = useNotificationTarget();
+  const [filter, setFilter] = useState<NotificationFilter>('all');
+  const [selecting, setSelecting] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkPending, setBulkPending] = useState(false);
 
   const all = useMemo(() => notifications.data?.items ?? [], [notifications.data]);
   const unreadCount = all.filter((item) => item.status !== 'READ').length;
-  const visible = useMemo(() => (filter === 'unread' ? all.filter((item) => item.status !== 'READ') : all), [all, filter]);
+  const visible = useMemo(() => all.filter((item) => matchesFilter(item, filter)), [all, filter]);
+  const groups = useMemo(() => groupByDate(visible), [visible]);
+  const counts = useMemo(() => {
+    const map: Partial<Record<NotificationFilter, number>> = {};
+    for (const f of FILTERS) if (f.value !== 'all') map[f.value] = all.filter((item) => item.status !== 'READ' && matchesFilter(item, f.value)).length;
+    return map;
+  }, [all]);
 
-  const groups = useMemo(() => {
-    const result: Array<{ key: string; label: string; items: AppNotification[] }> = [];
-    for (const item of visible) {
-      const key = dayKey(item.createdAt);
-      const last = result[result.length - 1];
-      if (last?.key === key) last.items.push(item);
-      else result.push({ key, label: dayLabel(item.createdAt), items: [item] });
-    }
-    return result;
-  }, [visible]);
+  const selectableIds = visible.filter((item) => item.status !== 'READ').map((item) => item.id);
+  const allSelected = selectableIds.length > 0 && selectableIds.every((id) => selected.has(id));
 
-  function open(item: AppNotification) {
-    if (item.status !== 'READ') markAsRead.mutate(item.id);
-    const { to } = notificationMeta(item, base, admin);
-    if (to) navigate(to);
+  function toggle(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function stopSelecting() {
+    setSelecting(false);
+    setSelected(new Set());
+  }
+
+  async function markSelected() {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    setBulkPending(true);
+    const results = await Promise.allSettled(ids.map((id) => notificationService.markAsRead(id)));
+    setBulkPending(false);
+    await queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    const failed = results.filter((result) => result.status === 'rejected').length;
+    if (failed > 0) toast.error(t('{count} ta bildirishnomani belgilab bo‘lmadi', { count: failed }));
+    else toast.success(t('{count} ta bildirishnoma o‘qilgan deb belgilandi', { count: ids.length }));
+    stopSelecting();
   }
 
   if (notifications.isLoading) {
     return (
       <div className="gm-notify__skeletons" aria-busy="true">
-        {[0, 1, 2, 3].map((index) => (
-          <Skeleton key={index} className="gm-notify__skeleton" />
+        {[0, 1, 2, 3, 4].map((index) => (
+          <div key={index} className="gm-notify__skeleton">
+            <Skeleton className="gm-notify__skeleton-icon" />
+            <div><Skeleton className="gm-notify__skeleton-line" /><Skeleton className="gm-notify__skeleton-line gm-notify__skeleton-line--short" /></div>
+          </div>
         ))}
       </div>
     );
@@ -64,48 +85,61 @@ export function NotificationList() {
   return (
     <div className="gm-notify">
       <div className="gm-notify__bar">
-        <div className="gm-notify__tabs" role="tablist" aria-label={t('Filtr')}>
-          <button type="button" role="tab" aria-selected={filter === 'all'} className={cx('gm-notify__tab', filter === 'all' && 'gm-notify__tab--active')} onClick={() => setFilter('all')}>{t('Hammasi')}</button>
-          <button type="button" role="tab" aria-selected={filter === 'unread'} className={cx('gm-notify__tab', filter === 'unread' && 'gm-notify__tab--active')} onClick={() => setFilter('unread')}>{t('O‘qilmagan')}{unreadCount > 0 && <span className="gm-notify__count">{unreadCount}</span>}
-          </button>
+        <Tabs
+          label={t('Filtr')}
+          value={filter}
+          onChange={(value) => { setFilter(value); setSelected(new Set()); }}
+          items={FILTERS.map((item) => ({ value: item.value, label: item.label(), count: item.value === 'all' ? undefined : counts[item.value] || undefined }))}
+        />
+        <div className="gm-notify__actions">
+          {selecting ? (
+            <>
+              <label className="gm-notify__selectall">
+                <input type="checkbox" checked={allSelected} disabled={selectableIds.length === 0} onChange={() => setSelected(allSelected ? new Set() : new Set(selectableIds))} />
+                <span>{t('Hammasini tanlash')}</span>
+              </label>
+              <Button size="sm" leftIcon={<CheckCheck />} disabled={selected.size === 0} loading={bulkPending} onClick={() => void markSelected()}>
+                {t('O‘qilgan qilish')}{selected.size > 0 ? ` (${selected.size})` : ''}
+              </Button>
+              <Button size="sm" variant="ghost" iconOnly aria-label={t('Bekor qilish')} onClick={stopSelecting}><X /></Button>
+            </>
+          ) : (
+            <>
+              <Button size="sm" variant="secondary" leftIcon={<ListChecks />} disabled={unreadCount === 0} onClick={() => setSelecting(true)}>{t('Tanlash')}</Button>
+              <Button size="sm" variant="secondary" leftIcon={<CheckCheck />} disabled={unreadCount === 0} loading={markAll.isPending} onClick={() => markAll.mutate()}>
+                {t('Hammasini o‘qilgan deb belgilash')}
+              </Button>
+            </>
+          )}
         </div>
-        <Button size="sm" variant="secondary" aria-label={t('Hammasini o‘qilgan deb belgilash')} className="gm-notify__markall-btn" disabled={unreadCount === 0} loading={markAllAsRead.isPending} onClick={() => markAllAsRead.mutate()}>
-          <CheckCheck size={16} /> <span className="gm-notify__markall">{t('Hammasini o‘qilgan deb belgilash')}</span>
-        </Button>
       </div>
 
       {visible.length === 0 ? (
-        <EmptyState
-          icon={<BellOff size={28} />}
-          title={filter === 'unread' ? t('Hammasi o‘qilgan') : t('Bildirishnomalar yo‘q')}
-          description={filter === 'unread' ? t('Yangi bildirishnomalar shu yerda paydo bo‘ladi.') : t('So‘rov, taklif, montaj va chat xabarlari shu yerda ko‘rinadi.')}
-        />
+        <div className="gm-notify__empty">
+          <EmptyState
+            icon={<BellOff size={28} />}
+            title={filter === 'unread' ? t('Hammasi o‘qilgan') : t('Bildirishnomalar yo‘q')}
+            description={filter === 'unread' ? t('Yangi bildirishnomalar shu yerda paydo bo‘ladi.') : t('So‘rov, taklif, montaj va chat xabarlari shu yerda ko‘rinadi.')}
+          />
+        </div>
       ) : (
         groups.map((group) => (
           <section key={group.key} className="gm-notify__group" aria-label={group.label}>
             <h2 className="gm-notify__day">{group.label}</h2>
             <ul className="gm-notify__list">
-              {group.items.map((item) => {
-                const meta = notificationMeta(item, base, admin);
-                const text = notificationText(item, base);
-                const Icon = meta.icon;
-                const unread = item.status !== 'READ';
-                return (
-                  <li key={item.id}>
-                    <button type="button" className={cx('gm-notify__item', unread && 'gm-notify__item--unread')} onClick={() => open(item)}>
-                      <span className={cx('gm-notify__icon', `gm-notify__icon--${meta.tone}`)} aria-hidden="true">
-                        <Icon size={20} strokeWidth={1.9} />
-                      </span>
-                      <span className="gm-notify__body">
-                        <strong>{text.title}</strong>
-                        <span>{text.body}</span>
-                        <small>{formatRelativeTime(item.createdAt)}</small>
-                      </span>
-                      {unread && <span className="gm-notify__dot" aria-label={t('O‘qilmagan')} />}
-                    </button>
-                  </li>
-                );
-              })}
+              {group.items.map((item) => (
+                <NotificationRow
+                  key={item.id}
+                  item={item}
+                  base={base}
+                  admin={admin}
+                  onOpen={(value) => (selecting && value.status !== 'READ' ? toggle(value.id) : open(value))}
+                  onMarkRead={markRead}
+                  leading={selecting ? (
+                    <input type="checkbox" aria-label={t('Tanlash')} checked={selected.has(item.id)} disabled={item.status === 'READ'} onChange={() => toggle(item.id)} />
+                  ) : undefined}
+                />
+              ))}
             </ul>
           </section>
         ))

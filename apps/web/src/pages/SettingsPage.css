@@ -168,11 +168,3 @@
   .gm-devices__others { justify-self: stretch; justify-content: center; }
 }
 
-/* Bildirishnoma kanallari */
-.gm-notif-prefs { display: grid; gap: 12px; }
-.gm-notif-prefs__lead { margin: 0; color: var(--qs-color-text-muted, #64748b); font-size: 14px; }
-.gm-notif-prefs__table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.gm-notif-prefs__table th, .gm-notif-prefs__table td { padding: 10px 8px; border-bottom: 1px solid var(--qs-color-border, #e2e8f0); text-align: center; }
-.gm-notif-prefs__table th:first-child, .gm-notif-prefs__table td:first-child { text-align: left; }
-.gm-notif-prefs__table td small { display: block; color: var(--qs-color-text-muted, #64748b); font-size: 12px; }
-.gm-notif-prefs__table input { width: 18px; height: 18px; accent-color: var(--qs-color-primary, #2563eb); cursor: pointer; }

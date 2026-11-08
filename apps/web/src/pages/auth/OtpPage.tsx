@@ -144,11 +144,6 @@ export function OtpPage() {
   return (
     <div className="gm-auth-page gm-otp-page">
       <h1>{isRegisterFlow ? t('Ro‘yxatdan o‘tishni tasdiqlash') : t('Kirishni tasdiqlash')}</h1>
-      {devCode && (
-        <Alert tone="info" title={t('Dev rejim')}>
-          {t('Tasdiqlash kodi:')} <strong>{devCode}</strong>
-        </Alert>
-      )}
       {!isRegisterFlow && deviceLimit && (
         <div className="gm-devlimit" role="alert">
           <span className="gm-devlimit__icon" aria-hidden="true">
@@ -180,6 +175,7 @@ export function OtpPage() {
         actionError={resendError}
         initialResendIn={isRegisterFlow ? undefined : (resendIn ?? undefined)}
         delivery={isRegisterFlow ? null : delivery}
+        devCode={devCode}
         onSendSms={!isRegisterFlow && smsAvailable && delivery?.channel !== 'SMS' && loginSecret.get(pendingPhone) ? handleSendSms : undefined}
       />
     </div>

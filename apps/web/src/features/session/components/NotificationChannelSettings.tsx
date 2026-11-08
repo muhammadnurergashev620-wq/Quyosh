@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert } from '@/components/ui/Alert';
+import { Switch } from '@/components/ui/Switch';
 import { PageLoader } from '@/components/common/PageLoader';
 import { apiGet, apiPut } from '@/services/api.client';
 import { getErrorMessage } from '@/lib/error-messages';
 import { t } from '@/i18n';
+import './NotificationChannelSettings.css';
 
 type Channel = 'SMS' | 'EMAIL';
 
@@ -70,12 +72,12 @@ export function NotificationChannelSettings() {
               {(['SMS', 'EMAIL'] as const).map((c) => (
                 <td key={c}>
                   {item.allowed.includes(c) ? (
-                    <input
-                      type="checkbox"
-                      aria-label={`${TYPE_LABEL[item.type]?.() ?? item.type}: ${c === 'SMS' ? 'SMS' : 'Email'}`}
+                    <Switch
+                      hideLabel
+                      label={`${TYPE_LABEL[item.type]?.() ?? item.type}: ${c === 'SMS' ? 'SMS' : 'Email'}`}
                       checked={item.channels.includes(c)}
                       disabled={item.locked || !usable(c) || save.isPending}
-                      onChange={(e) => toggle(item.type, item.channels, c, e.target.checked)}
+                      onChange={(on) => toggle(item.type, item.channels, c, on)}
                     />
                   ) : <span aria-hidden="true">—</span>}
                 </td>

@@ -9,7 +9,7 @@ export function OfflineBanner() {
   if (online) return null;
   return (
     <div className="gm-offline" role="status" aria-live="polite">
-      <WifiOff size={16} aria-hidden="true" />
+      <WifiOff aria-hidden="true" />
       <span>{t('Internet aloqasi yo‘q. Ulanish tiklanganda ilova o‘zi davom etadi.')}</span>
     </div>
   );

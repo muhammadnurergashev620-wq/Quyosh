@@ -1,0 +1,135 @@
+/* ── Qo‘ng‘iroq + bildirishnomalar paneli ── */
+.gm-nbell { position: relative; }
+.gm-nbell .gm-aheader__bell { cursor: pointer; font: inherit; }
+.gm-nbell .gm-aheader__bell[aria-expanded='true'] { background: var(--qs-color-primary-soft); color: var(--qs-color-primary); border-color: var(--qs-color-primary-ring); }
+.gm-aheader__bell.is-shaking svg { animation: gm-bell-shake var(--qs-dur-5) var(--qs-ease-standard) 1; transform-origin: 50% 10%; }
+@keyframes gm-bell-shake {
+  0%, 100% { transform: rotate(0); }
+  15% { transform: rotate(14deg); }
+  30% { transform: rotate(-12deg); }
+  45% { transform: rotate(9deg); }
+  60% { transform: rotate(-6deg); }
+  75% { transform: rotate(3deg); }
+}
+
+.gm-npanel__scrim { display: none; }
+.gm-npanel {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + var(--qs-space-2));
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  max-height: min(640px, calc(100vh - 96px));
+  border: 1px solid var(--qs-color-border);
+  border-radius: var(--qs-radius-lg);
+  background: var(--qs-color-surface);
+  box-shadow: var(--qs-shadow-lg);
+  outline: none;
+  overflow: hidden;
+  transform-origin: top right;
+  animation: gm-npanel-in var(--qs-dur-3) var(--qs-ease-out);
+}
+@keyframes gm-npanel-in { from { opacity: 0; transform: translateY(-6px) scale(.98); } }
+
+.gm-npanel__head {
+  display: flex;
+  align-items: center;
+  gap: var(--qs-space-2);
+  padding: var(--qs-space-4) var(--qs-space-4) var(--qs-space-2);
+}
+.gm-npanel__head h2 { flex: 1; margin: 0; font-family: var(--qs-font-display); font-size: 17px; font-weight: 700; color: var(--qs-color-text); }
+.gm-npanel__grip { display: none; }
+.gm-npanel__close { display: none; }
+.gm-npanel__tabs { padding: 0 var(--qs-space-4); border-bottom: 1px solid var(--qs-color-border); }
+.gm-npanel__list { flex: 1; min-height: 160px; padding: var(--qs-space-2); overflow-y: auto; overscroll-behavior: contain; }
+.gm-npanel__group + .gm-npanel__group { margin-top: var(--qs-space-2); }
+.gm-npanel__day {
+  margin: 0;
+  padding: var(--qs-space-2) var(--qs-space-3) var(--qs-space-1);
+  color: var(--qs-color-text-muted);
+  font-family: var(--qs-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.gm-npanel__rows { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; }
+.gm-npanel__list .gm-empty-state { padding: var(--qs-space-6) var(--qs-space-3); border: 0; }
+
+.gm-npanel__skeletons { display: flex; flex-direction: column; gap: var(--qs-space-3); padding: var(--qs-space-3); }
+.gm-npanel__skeleton { display: flex; gap: var(--qs-space-3); align-items: center; }
+.gm-npanel__skeleton > div { display: flex; flex: 1; flex-direction: column; gap: 6px; }
+.gm-npanel__skeleton-icon { width: 40px; height: 40px; border-radius: 50%; flex: none; }
+.gm-npanel__skeleton-line { height: 12px; border-radius: var(--qs-radius-xs); }
+.gm-npanel__skeleton-line--short { width: 60%; }
+
+.gm-npanel__foot { border-top: 1px solid var(--qs-color-border); }
+.gm-npanel__all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--qs-space-2);
+  min-height: 48px;
+  color: var(--qs-color-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--qs-dur-2) var(--qs-ease-standard);
+}
+.gm-npanel__all:hover { background: var(--qs-color-surface-muted); }
+.gm-npanel__all:focus-visible { border-radius: 0; box-shadow: inset 0 0 0 2px var(--qs-focus-ring); }
+
+/* Mobil: pastdan chiquvchi sheet */
+@media (max-width: 639px) {
+  .gm-npanel__scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--qs-color-overlay);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    animation: gm-npanel-fade var(--qs-dur-3) var(--qs-ease-out);
+  }
+  .gm-npanel {
+    position: fixed;
+    z-index: 1001;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    max-height: 86vh;
+    border-radius: var(--qs-radius-xl) var(--qs-radius-xl) 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    animation: gm-npanel-up var(--qs-dur-3) var(--qs-ease-out);
+  }
+  .gm-npanel__head { flex-wrap: wrap; padding-top: var(--qs-space-5); }
+  .gm-npanel__grip {
+    display: block;
+    position: absolute;
+    top: var(--qs-space-2);
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    border-radius: var(--qs-radius-pill);
+    background: var(--qs-color-border-strong);
+    transform: translateX(-50%);
+  }
+  .gm-npanel__close { display: inline-flex; }
+}
+@keyframes gm-npanel-up { from { transform: translateY(100%); } }
+@keyframes gm-npanel-fade { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .gm-npanel, .gm-npanel__scrim { animation-duration: var(--qs-dur-1); }
+  .gm-aheader__bell.is-shaking svg { animation: none; }
+}
+
+/* 5 ta yorliq 400 px ichiga sig‘ishi uchun ixcham */
+.gm-npanel__tabs { padding: 0 var(--qs-space-2); }
+.gm-npanel__tabs .gm-tabs-x__list { -webkit-mask-image: none; mask-image: none; }
+.gm-npanel__tabs .gm-tabs-x__tab { flex: 1 1 auto; justify-content: center; padding: 0 var(--qs-space-2); font-size: 13px; }
+.gm-npanel__tabs .gm-tabs-x__count { min-width: 18px; }

@@ -1,0 +1,11 @@
+/* Bildirishnoma kanallari: tur × kanal jadvali, Switch bilan */
+.gm-notif-prefs { display: grid; gap: var(--qs-space-3); }
+.gm-notif-prefs__lead { margin: 0; color: var(--qs-color-text-muted); font-size: 14px; }
+.gm-notif-prefs__table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.gm-notif-prefs__table th { padding: 10px var(--qs-space-2); color: var(--qs-color-text-muted); font-size: 12.5px; font-weight: 600; text-align: center; }
+.gm-notif-prefs__table td { padding: 12px var(--qs-space-2); border-top: 1px solid var(--qs-color-border); text-align: center; vertical-align: middle; }
+.gm-notif-prefs__table th:first-child, .gm-notif-prefs__table td:first-child { text-align: left; }
+.gm-notif-prefs__table td small { display: block; margin-top: 2px; color: var(--qs-color-text-muted); font-size: 12px; }
+.gm-notif-prefs__table .gm-switch { display: inline-flex; justify-content: center; }
+.gm-notif-prefs__table tbody tr { transition: background-color var(--qs-dur-2) var(--qs-ease-standard); }
+.gm-notif-prefs__table tbody tr:hover td { background: color-mix(in srgb, var(--qs-color-primary) 4%, transparent); }

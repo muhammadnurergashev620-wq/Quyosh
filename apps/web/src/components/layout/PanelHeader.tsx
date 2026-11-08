@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, ChevronDown, Globe, LogOut, Moon, Settings, ShieldCheck, Sun, UserRound } from 'lucide-react';
+import { ChevronDown, Globe, LogOut, Moon, Settings, ShieldCheck, Sun, UserRound } from 'lucide-react';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { Logo } from '@/components/common/Logo';
 import { LogoutDialog } from '@/features/auth/components/LogoutDialog';
 import { UserAvatar } from '@/components/common/UserAvatar';
-import { useUnreadCount } from '@/features/notification/hooks/useNotifications';
+import { NotificationBell } from '@/features/notification/components/NotificationPanel';
 import { useMe } from '@/features/session/hooks/useMe';
 import { useAuthStore } from '@/store/auth.store';
 import { accountName } from '@/lib/account-name';
@@ -25,7 +25,6 @@ export function PanelHeader({ role }: { role: Role | null }) {
   const navigate = useNavigate();
   const me = useMe();
   const hasSession = useAuthStore((s) => s.hasSession);
-  const unread = useUnreadCount();
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [mode, setMode] = useState<ThemeMode>(getThemeMode);
   const current = LANGUAGES.find((item) => item.code === lang) ?? LANGUAGES[0]!;
@@ -36,7 +35,6 @@ export function PanelHeader({ role }: { role: Role | null }) {
   const panelRole: Role = role ?? env.appRole ?? 'CUSTOMER';
   const isAdmin = panelRole === 'ADMIN';
   const roleText = isAdmin ? (isSuper ? t('Superadmin') : t('Administrator')) : panelRole === 'SHOP' ? t('Do‘kon xodimi') : t('Mijoz');
-  const count = unread.data?.count ?? 0;
   const home = getNavItems(panelRole, { superAdmin: true })[0]?.to ?? '/';
   const profilePath = isAdmin ? '/admin/profil' : panelRole === 'SHOP' ? '/sozlamalar' : '/mijoz/profil';
   const guest = !hasSession;
@@ -92,10 +90,7 @@ export function PanelHeader({ role }: { role: Role | null }) {
             </span>
           ) : (
             <>
-            <Link to="/bildirishnomalar" className="gm-aheader__bell" aria-label={count > 0 ? t('Bildirishnomalar, {count} ta yangi', { count }) : t('Bildirishnomalar')}>
-              <Bell size={19} strokeWidth={2} />
-              {count > 0 && <span className="gm-aheader__badge">{count > 99 ? '99+' : count}</span>}
-            </Link>
+            <NotificationBell />
 
             <span className="gm-aheader__divider gm-aheader__divider--tall" aria-hidden="true" />
 

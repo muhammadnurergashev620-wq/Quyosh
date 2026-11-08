@@ -83,7 +83,7 @@ export function PhoneVerifyDialog({ open, onClose }: { open: boolean; onClose: (
         />
         {sent && (
           <>
-            {devCode && <Alert tone="info">{t('Sinov kodi: {code}', { code: devCode })}</Alert>}
+            {devCode && <Alert tone="warning" title={t('Test rejimi')}>{t('Sinov kodi: {code}', { code: devCode })}</Alert>}
             <OtpCodeInput value={code} onChange={setCode} label={t('Tasdiqlash kodi')} />
           </>
         )}
