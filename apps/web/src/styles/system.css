@@ -53,7 +53,9 @@ select:not(.gm-selectx__native) {
   font-size: 14px;
 }
 
-/* ── Checkbox va radio: maxsus ko‘rinish, belgi chiziq animatsiyasi bilan (160 ms) ── */
+/* ── Checkbox va radio: maxsus ko‘rinish, belgi chiziq animatsiyasi bilan (160 ms) ──
+   Checkbox — 20 px kvadrat (radius 6), radio — 20 px doira: ikkalasi bir-biridan aniq farq qiladi. */
+input[type='checkbox']:not([role='switch']):not(.gm-visually-hidden) { width: 20px; height: 20px; border-width: 1.5px; border-radius: var(--qs-radius-xs); }
 input[type='checkbox']:not([role='switch']):not(.gm-visually-hidden)::after { transition: opacity var(--qs-dur-2) var(--qs-ease-out), transform var(--qs-dur-2) var(--qs-ease-out); }
 input[type='radio'] {
   appearance: none;

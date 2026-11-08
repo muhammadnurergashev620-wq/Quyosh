@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { Check, CheckCircle2, Copy, Eye, EyeOff } from 'lucide-react';
+import { CheckCircle2, Copy, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useAuthStore } from '@/store/auth.store';
 import { t } from '@/i18n';
@@ -39,10 +39,9 @@ function CopyButton({ text, label, target, onCopied }: { text: string; label: st
   }
 
   return (
-    <button type="button" className={done ? 'gm-save__btn gm-save__btn--done' : 'gm-save__btn'} aria-label={label} onClick={() => void handleClick()}>
-      {done ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
-      <span>{done ? t('Nusxalandi') : t('Nusxa')}</span>
-    </button>
+    <Button type="button" variant="secondary" size="sm" success={done} leftIcon={<Copy />} aria-label={label} onClick={() => void handleClick()}>
+      {done ? t('Nusxalandi') : t('Nusxa')}
+    </Button>
   );
 }
 
@@ -117,15 +116,17 @@ export function NewCredentialsCard({ onContinue, badge, continueLabel }: { onCon
           >
             {shown ? credentials.password : '•'.repeat(Math.min(credentials.password.length, 14))}
           </span>
-          <button
+          <Button
             type="button"
-            className="gm-save__btn gm-save__btn--icon"
+            variant="secondary"
+            size="sm"
+            iconOnly
             aria-pressed={shown}
             aria-label={shown ? t('Parolni yashirish') : t('Parolni ko‘rsatish')}
             onClick={() => setShown((value) => !value)}
           >
-            {shown ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
-          </button>
+            {shown ? <EyeOff /> : <Eye />}
+          </Button>
           <CopyButton text={credentials.password} label={t('Parolni nusxalash')} target={passwordRef} onCopied={setAnnouncement} />
         </div>
       </div>

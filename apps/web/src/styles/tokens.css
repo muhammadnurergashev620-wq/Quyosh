@@ -213,3 +213,22 @@
   --qs-land-deep-rgb: 20 86 255;
   --qs-land-shadow-rgb: 20 30 60;
 }
+
+/* ── Auth brend paneli (doim to‘q) va Google tugmasi (Google brend qoidalari) ── */
+:root {
+  --qs-auth-blue-1: #0a1a3c;
+  --qs-auth-blue-2: #08122b;
+  --qs-auth-green-1: #062a22;
+  --qs-auth-green-2: #05171a;
+  --qs-auth-violet-1: #15123a;
+  --qs-auth-violet-2: #0a0920;
+  --qs-land-sky: #4a9bff;
+  --qs-land-mint-rgb: 52 211 153;
+  --qs-land-violet-rgb: 129 120 255;
+  --qs-land-sun-rgb: 255 176 32;
+  --qs-ink-rgb: 11 18 32;
+  --qs-google-bg: #ffffff;
+  --qs-google-bg-hover: #f8f9fa;
+  --qs-google-text: #3c4043;
+  --qs-google-border: #dadce0;
+}

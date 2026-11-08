@@ -11,25 +11,25 @@
   justify-content: space-between;
   gap: var(--qs-space-8);
   padding: var(--qs-space-8);
-  color: #fff;
+  color: var(--qs-land-white);
   overflow: hidden;
   background:
     radial-gradient(900px 500px at 110% -10%, color-mix(in srgb, var(--qs-color-primary) 55%, transparent), transparent 60%),
     radial-gradient(700px 500px at -20% 110%, color-mix(in srgb, var(--qs-color-accent) 22%, transparent), transparent 60%),
-    linear-gradient(160deg, #0a1a3c 0%, #08122b 100%);
+    linear-gradient(160deg, var(--qs-auth-blue-1) 0%, var(--qs-auth-blue-2) 100%);
 }
 
 :root[data-panel='SHOP'] .gm-auth-layout__brand {
   background:
-    radial-gradient(900px 500px at 110% -10%, rgba(52, 211, 153, 0.4), transparent 60%),
-    radial-gradient(700px 500px at -20% 110%, rgba(255, 176, 32, 0.2), transparent 60%),
-    linear-gradient(160deg, #062a22 0%, #05171a 100%);
+    radial-gradient(900px 500px at 110% -10%, rgb(var(--qs-land-mint-rgb) / 0.4), transparent 60%),
+    radial-gradient(700px 500px at -20% 110%, rgb(var(--qs-land-sun-rgb) / 0.2), transparent 60%),
+    linear-gradient(160deg, var(--qs-auth-green-1) 0%, var(--qs-auth-green-2) 100%);
 }
 
 :root[data-panel='ADMIN'] .gm-auth-layout__brand {
   background:
-    radial-gradient(900px 500px at 110% -10%, rgba(129, 120, 255, 0.45), transparent 60%),
-    linear-gradient(160deg, #15123a 0%, #0a0920 100%);
+    radial-gradient(900px 500px at 110% -10%, rgb(var(--qs-land-violet-rgb) / 0.45), transparent 60%),
+    linear-gradient(160deg, var(--qs-auth-violet-1) 0%, var(--qs-auth-violet-2) 100%);
 }
 
 .gm-auth-layout__brand::after {
@@ -37,20 +37,20 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(rgb(var(--qs-land-white-rgb) / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--qs-land-white-rgb) / 0.05) 1px, transparent 1px);
   background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse at 70% 30%, #000 0%, transparent 70%);
+  mask-image: radial-gradient(ellipse at 70% 30%, black 0%, transparent 70%);
   pointer-events: none;
 }
 
 .gm-auth-layout__brand .gm-logo,
 .gm-auth-layout__brand .gm-logo__word {
-  color: #fff;
+  color: var(--qs-land-white);
 }
 
 .gm-auth-layout__brand .gm-logo__word b {
-  color: #4a9bff;
+  color: var(--qs-land-sky);
 }
 
 
@@ -80,20 +80,20 @@
   border-radius: 999px;
   font-size: 13px;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  background: rgb(var(--qs-land-white-rgb) / 0.12);
+  color: var(--qs-land-white);
 }
 
 .gm-auth-layout__pitch h2 {
   font-size: clamp(28px, 3.2vw, 40px);
   line-height: 1.12;
   font-weight: 800;
-  color: #fff;
+  color: var(--qs-land-white);
 }
 
 .gm-auth-layout__pitch p {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgb(var(--qs-land-white-rgb) / 0.78);
 }
 
 .gm-auth-layout__pitch ul {
@@ -110,7 +110,7 @@
   align-items: center;
   gap: var(--qs-space-3);
   font-weight: 600;
-  color: #fff;
+  color: var(--qs-land-white);
 }
 
 .gm-auth-layout__point-icon {
@@ -119,7 +119,7 @@
   width: 36px;
   height: 36px;
   border-radius: 11px;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgb(var(--qs-land-white-rgb) / 0.14);
   color: var(--qs-color-accent);
 }
 
@@ -130,7 +130,7 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgb(var(--qs-land-white-rgb) / 0.65);
 }
 
 .gm-auth-layout__main {
@@ -264,7 +264,7 @@
     margin-bottom: 6px;
     border-radius: 24px;
     color: var(--qs-color-primary-contrast);
-    background: linear-gradient(135deg, var(--qs-color-primary), color-mix(in srgb, var(--qs-color-primary) 60%, #000));
+    background: linear-gradient(135deg, var(--qs-color-primary), color-mix(in srgb, var(--qs-color-primary) 60%, black));
     box-shadow: 0 14px 34px -10px color-mix(in srgb, var(--qs-color-primary) 75%, transparent), 0 0 0 6px color-mix(in srgb, var(--qs-color-primary) 10%, transparent);
     text-decoration: none;
   }
@@ -536,7 +536,7 @@
     border: 1px solid color-mix(in srgb, var(--qs-color-border) 80%, transparent);
     border-radius: 22px;
     background: var(--qs-color-surface);
-    box-shadow: 0 1px 2px rgba(11, 18, 32, 0.04), 0 18px 40px -16px rgba(11, 18, 32, 0.22);
+    box-shadow: 0 1px 2px rgb(var(--qs-ink-rgb) / 0.04), 0 18px 40px -16px rgb(var(--qs-ink-rgb) / 0.22);
   }
 
   .gm-auth-layout .gm-auth-page {
@@ -790,7 +790,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--qs-text-muted, #6b7280);
+  color: var(--qs-color-text-muted);
   font-size: 0.875rem;
 }
 .gm-google__divider::before,
@@ -798,7 +798,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--qs-border, #e5e7eb);
+  background: var(--qs-color-border);
 }
 .gm-google__button {
   display: flex;
@@ -818,25 +818,25 @@
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: var(--qs-text-muted, #6b7280);
+  color: var(--qs-color-text-muted);
 }
 .gm-google__fallback {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 46px;
+  min-height: var(--qs-btn-h-md);
   padding: 0 18px;
-  border: 1px solid var(--qs-border, #dadce0);
-  border-radius: 999px;
-  background: #fff;
-  color: #3c4043;
+  border: 1px solid var(--qs-google-border);
+  border-radius: var(--qs-radius-12);
+  background: var(--qs-google-bg);
+  color: var(--qs-google-text);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
 }
 .gm-google__fallback:hover {
-  background: #f8f9fa;
+  background: var(--qs-google-bg-hover);
 }
 /* Haqiqiy Google tugmasi ko‘rinmas holda o‘zimizning (tanlangan tilda yozilgan) tugma ustiga qo‘yiladi. */
 .gm-google__wrap {
@@ -874,7 +874,7 @@
 }
 /* So‘nggi so‘zlar yorqin tusli «yurib o‘tuvchi» nur bilan ajralib turadi. */
 .gm-auth-layout__word:nth-last-child(-n + 2) {
-  background: linear-gradient(100deg, #fff 0%, #ffd27a 35%, #ffb020 50%, #ffd27a 65%, #fff 100%);
+  background: linear-gradient(100deg, var(--qs-land-white) 0%, var(--qs-land-sun-soft) 35%, var(--qs-land-sun) 50%, var(--qs-land-sun-soft) 65%, var(--qs-land-white) 100%);
   background-size: 250% 100%;
   -webkit-background-clip: text;
   background-clip: text;

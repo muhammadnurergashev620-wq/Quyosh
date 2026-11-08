@@ -63,9 +63,9 @@ export function FirstPasswordPage() {
         <Button type="submit" loading={change.isPending} fullWidth className="gm-auth-submit">{t('Parolni saqlash')}</Button>
       </form>
       <p className="gm-auth-page__switch">
-        <button type="button" className="gm-link-button" disabled={logout.isPending} onClick={() => logout.mutate(false)}>
-          <LogOut size={14} aria-hidden="true" /> {t('Tizimdan chiqish')}
-        </button>
+        <Button type="button" variant="link" size="sm" leftIcon={<LogOut />} disabled={logout.isPending} onClick={() => logout.mutate(false)}>
+          {t('Tizimdan chiqish')}
+        </Button>
       </p>
     </div>
   );
