@@ -621,4 +621,13 @@ export const ruM7: Record<string, string> = {
   "Yangi bildirishnoma": "Новое уведомление",
   "{count} ta bildirishnomani belgilab bo‘lmadi": "Не удалось отметить уведомлений: {count}",
   "{count} ta yangi bildirishnoma": "Новых уведомлений: {count}",
+  "Bo‘lim yoki amalni qidiring…": "Найдите раздел или действие…",
+  "Ko‘proq": "Ещё",
+  "Natijalar": "Результаты",
+  "Yig‘ish": "Свернуть",
+  "Yon panelni yig‘ish": "Свернуть боковую панель",
+  "Yon panelni yoyish": "Развернуть боковую панель",
+  "ochish": "открыть",
+  "tanlash": "выбрать",
+  "yopish": "закрыть",
 };

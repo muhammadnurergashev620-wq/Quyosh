@@ -69,10 +69,10 @@
   background: transparent;
   color: var(--qs-color-text-muted);
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color var(--qs-dur-2) var(--qs-ease-standard), color var(--qs-dur-2) var(--qs-ease-standard);
 }
 .gm-aheader__theme button.is-on { background: var(--qs-color-primary-soft); color: var(--qs-color-primary); }
-.gm-aheader__theme button:focus-visible { outline: 2px solid var(--qs-color-primary); outline-offset: 1px; }
+.gm-aheader__theme button:focus-visible { outline: none; box-shadow: var(--qs-ring); }
 
 .gm-aheader__bell {
   position: relative;
@@ -96,9 +96,11 @@
   padding: 0 5px;
   border-radius: 999px;
   background: var(--qs-color-danger);
-  color: #fff;
+  color: var(--qs-color-on-dark);
   font-size: 11px;
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 2px var(--qs-color-surface);
   line-height: 20px;
   text-align: center;
   box-sizing: border-box;
@@ -118,13 +120,13 @@
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: #22c55e;
+  background: var(--qs-color-success);
   border: 2px solid var(--qs-color-surface);
 }
 .gm-aheader__who { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; line-height: 1.25; }
 .gm-aheader__who strong { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 700; color: var(--qs-color-text); }
 .gm-aheader__who small { font-size: 12px; color: var(--qs-color-text-muted); }
-.gm-aheader__chev { color: var(--qs-color-text-muted); transition: transform 0.15s ease; }
+.gm-aheader__chev { color: var(--qs-color-text-muted); transition: transform var(--qs-dur-2) var(--qs-ease-standard); }
 .gm-aheader__user[aria-expanded='true'] .gm-aheader__chev { transform: rotate(180deg); }
 
 .gm-aheader__menu { min-width: 230px; }
@@ -134,7 +136,7 @@
   height: 20px;
   border-radius: 999px;
   background: var(--qs-color-border);
-  transition: background-color 0.15s ease;
+  transition: background-color var(--qs-dur-2) var(--qs-ease-standard);
 }
 .gm-aheader__switch span {
   position: absolute;
@@ -143,12 +145,43 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  transition: transform 0.15s ease;
+  background: var(--qs-color-on-dark);
+  box-shadow: var(--qs-shadow-xs);
+  transition: transform var(--qs-dur-2) var(--qs-ease-out);
 }
 .gm-aheader__switch[data-on='true'] { background: var(--qs-color-primary); }
 .gm-aheader__switch[data-on='true'] span { transform: translateX(16px); }
+
+/* ⌘K qidiruv tugmasi */
+.gm-aheader__search {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--qs-space-2);
+  width: min(360px, 32vw);
+  height: 40px;
+  margin-left: var(--qs-space-2);
+  padding: 0 6px 0 var(--qs-space-3);
+  border: 1px solid var(--qs-color-border);
+  border-radius: var(--qs-radius-12);
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text-muted);
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: border-color var(--qs-dur-2) var(--qs-ease-standard), background-color var(--qs-dur-2) var(--qs-ease-standard);
+}
+.gm-aheader__search:hover { border-color: var(--qs-color-border-strong); background: var(--qs-color-surface); }
+.gm-aheader__search > svg { flex: none; width: 17px; height: 17px; }
+.gm-aheader__search-text { flex: 1; text-align: left; }
+.gm-aheader__search kbd {
+  padding: 2px 7px;
+  border: 1px solid var(--qs-color-border);
+  border-radius: var(--qs-radius-xs);
+  background: var(--qs-color-surface);
+  font-family: var(--qs-font-mono);
+  font-size: 11px;
+}
+.gm-aheader__menu-gap { display: inline-block; width: 16px; }
 
 /* Planshet va telefon */
 @media (max-width: 1099px) {
@@ -159,6 +192,9 @@
 
 @media (max-width: 899px) {
   .gm-aheader__card { gap: var(--qs-space-2); padding: 0 var(--qs-space-3); }
+  .gm-aheader__search { width: 40px; margin-left: auto; padding: 0; justify-content: center; border-radius: var(--qs-radius-pill); background: var(--qs-color-surface); }
+  .gm-aheader__search-text, .gm-aheader__search kbd { display: none; }
+  .gm-aheader__actions { margin-left: 0; }
   .gm-aheader__theme { display: none; }
   .gm-aheader__divider { display: none; }
   .gm-aheader__actions { gap: var(--qs-space-2); }

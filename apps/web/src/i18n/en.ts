@@ -3362,4 +3362,13 @@ export const en: Record<string, string> = {
   "Yangi bildirishnoma": "New notification",
   "{count} ta bildirishnomani belgilab bo‘lmadi": "Could not mark {count} notifications",
   "{count} ta yangi bildirishnoma": "{count} new notifications",
+  "Bo‘lim yoki amalni qidiring…": "Search for a section or action…",
+  "Ko‘proq": "More",
+  "Natijalar": "Results",
+  "Yig‘ish": "Collapse",
+  "Yon panelni yig‘ish": "Collapse sidebar",
+  "Yon panelni yoyish": "Expand sidebar",
+  "ochish": "open",
+  "tanlash": "select",
+  "yopish": "close",
 };

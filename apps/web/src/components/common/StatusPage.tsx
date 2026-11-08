@@ -1,5 +1,6 @@
+import { RotateCw } from 'lucide-react';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import type { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 import { Logo } from '@/components/common/Logo';
 import './StatusPage.css';
 
@@ -11,7 +12,8 @@ export function StatusPage({ code, icon, title, description, action, secondary, 
   icon: ReactNode;
   title: string;
   description: string;
-  action: { to: string; label: string };
+  /** `to` — ichki sahifa (router ichida); `onClick` — masalan, qayta yuklash (router tashqarisida ham ishlaydi). */
+  action: { to: string; label: string } | { onClick: () => void; label: string };
   secondary?: ReactNode;
 }) {
   // Panel ichida <main> allaqachon bor — ichma-ich <main> bo‘lmasligi uchun <section>.
@@ -27,7 +29,9 @@ export function StatusPage({ code, icon, title, description, action, secondary, 
         <p className="qs-status__code">{code}</p>
         <h1 id="qs-status-title">{title}</h1>
         <p className="qs-status__text">{description}</p>
-        <Link to={action.to} className="gm-button gm-button--primary gm-button--md qs-status__cta">{action.label}</Link>
+        {'to' in action
+          ? <ButtonLink to={action.to} className="qs-status__cta">{action.label}</ButtonLink>
+          : <Button type="button" className="qs-status__cta" leftIcon={<RotateCw />} onClick={action.onClick}>{action.label}</Button>}
         {secondary}
       </div>
     </Tag>

@@ -11,3 +11,4 @@
 @keyframes qs-status-pulse { 50% { transform: scale(1.08); opacity: 0.75; } }
 @media (prefers-reduced-motion: reduce) { .qs-status__sun { animation: none; } }
 .qs-status--inline { min-height: 60dvh; background: none; }
+.qs-status__secondary { margin-top: 2px; }

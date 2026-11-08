@@ -38,17 +38,6 @@
     display: none;
   }
 
-  .gm-mobile-nav {
-    padding-top: 4px;
-  }
-
-  .gm-mobile-nav__link {
-    min-height: 44px;
-    gap: 2px;
-    font-size: 10.5px;
-    padding: 4px 2px;
-  }
-
   .gm-empty-state {
     padding: var(--qs-space-5) var(--qs-space-4);
     gap: 6px;

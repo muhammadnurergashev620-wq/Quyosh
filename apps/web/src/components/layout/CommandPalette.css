@@ -1,0 +1,74 @@
+/* ⌘K buyruqlar oynasi */
+.gm-cmdk__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 12vh var(--qs-space-4) var(--qs-space-4);
+  background: var(--qs-color-overlay);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  animation: gm-cmdk-fade var(--qs-dur-2) var(--qs-ease-out);
+}
+.gm-cmdk {
+  display: flex;
+  flex-direction: column;
+  width: min(600px, 100%);
+  max-height: min(560px, 76vh);
+  border: 1px solid var(--qs-color-border);
+  border-radius: var(--qs-radius-xl);
+  background: var(--qs-color-surface);
+  box-shadow: var(--qs-shadow-lg);
+  overflow: hidden;
+  animation: gm-modal-in var(--qs-dur-3) var(--qs-ease-out);
+}
+.gm-cmdk__field { display: flex; align-items: center; gap: var(--qs-space-3); padding: 0 var(--qs-space-5); border-bottom: 1px solid var(--qs-color-border); }
+.gm-cmdk__field > svg { flex: none; width: 20px; height: 20px; color: var(--qs-color-text-muted); }
+.gm-cmdk__field input { flex: 1; min-width: 0; height: 58px; border: 0; background: transparent; color: var(--qs-color-text); font: inherit; font-size: 16px; outline: none; }
+.gm-cmdk__field input::placeholder { color: var(--qs-color-text-muted); }
+.gm-cmdk kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border: 1px solid var(--qs-color-border);
+  border-bottom-width: 2px;
+  border-radius: var(--qs-radius-xs);
+  background: var(--qs-color-surface-muted);
+  color: var(--qs-color-text-muted);
+  font-family: var(--qs-font-mono);
+  font-size: 11px;
+}
+.gm-cmdk__list { flex: 1; margin: 0; padding: var(--qs-space-2); overflow-y: auto; list-style: none; overscroll-behavior: contain; }
+.gm-cmdk__item {
+  display: flex;
+  align-items: center;
+  gap: var(--qs-space-3);
+  min-height: 46px;
+  padding: 0 var(--qs-space-3);
+  border-radius: var(--qs-radius-12);
+  color: var(--qs-color-text);
+  cursor: pointer;
+}
+.gm-cmdk__item.is-active { background: var(--qs-color-primary-soft); }
+.gm-cmdk__icon { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: var(--qs-radius-10); background: var(--qs-color-surface-muted); color: var(--qs-color-text-muted); }
+.gm-cmdk__item.is-active .gm-cmdk__icon { background: var(--qs-color-surface); color: var(--qs-color-primary); }
+.gm-cmdk__icon svg { width: 17px; height: 17px; }
+.gm-cmdk__label { flex: 1; min-width: 0; overflow: hidden; font-size: 14.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.gm-cmdk__hint { color: var(--qs-color-text-muted); font-family: var(--qs-font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.gm-cmdk__enter { flex: none; width: 16px; height: 16px; color: var(--qs-color-primary); }
+.gm-cmdk__empty { padding: var(--qs-space-6); color: var(--qs-color-text-muted); text-align: center; }
+.gm-cmdk__foot { display: flex; align-items: center; gap: 6px; margin: 0; padding: 10px var(--qs-space-5); border-top: 1px solid var(--qs-color-border); color: var(--qs-color-text-muted); font-size: 12px; }
+@keyframes gm-cmdk-fade { from { opacity: 0; } }
+
+@media (max-width: 639px) {
+  .gm-cmdk__overlay { padding-top: var(--qs-space-4); }
+  .gm-cmdk__foot { display: none; }
+  .gm-cmdk__hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gm-cmdk__overlay, .gm-cmdk { animation-duration: var(--qs-dur-1); }
+}

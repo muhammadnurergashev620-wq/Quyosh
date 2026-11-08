@@ -702,7 +702,7 @@ a.gm-card:hover {
   }
 }
 
-.gm-app-layout__content > div > h1:first-child {
+.gm-page-enter > div > h1:first-child {
   margin-bottom: var(--qs-space-5);
   font-size: clamp(24px, 3vw, 32px);
 }

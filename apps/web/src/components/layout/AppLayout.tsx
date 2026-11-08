@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { DeletionBanner } from '@/features/m7/DeletionBanner';
 import { PageLoader } from '@/components/common/PageLoader';
 import { PanelHeader } from './PanelHeader';
@@ -18,6 +18,7 @@ import './AppLayout.css';
 
 export function AppLayout() {
   const { role } = useCurrentRole();
+  const { pathname } = useLocation();
   useAutoReadNotifications();
   // Telefon ilovasida push yoqiladi (mijoz, do‘kon va admin).
   usePushNotifications(role === 'CUSTOMER' || role === 'SHOP' || role === 'ADMIN');
@@ -35,7 +36,10 @@ export function AppLayout() {
           {role === 'CUSTOMER' && <PhoneRequiredBanner />}
           <Suspense fallback={<PageLoader />}>
             <DeletionBanner />
-            <Outlet />
+            {/* Sahifa almashganda yumshoq paydo bo‘lish (fade + 6 px) */}
+            <div key={pathname} className="gm-page-enter">
+              <Outlet />
+            </div>
           </Suspense>
         </main>
       </div>

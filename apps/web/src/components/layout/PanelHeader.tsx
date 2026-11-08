@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, Globe, LogOut, Moon, Settings, ShieldCheck, Sun, UserRound } from 'lucide-react';
+import { Check, ChevronDown, Globe, LogOut, Moon, Search, Settings, ShieldCheck, Sun, UserRound } from 'lucide-react';
 import { Dropdown } from '@/components/ui/Dropdown';
 import { Logo } from '@/components/common/Logo';
 import { LogoutDialog } from '@/features/auth/components/LogoutDialog';
 import { UserAvatar } from '@/components/common/UserAvatar';
 import { NotificationBell } from '@/features/notification/components/NotificationPanel';
-import { useMe } from '@/features/session/hooks/useMe';
 import { useAuthStore } from '@/store/auth.store';
-import { accountName } from '@/lib/account-name';
-import { env } from '@/lib/env';
 import { PANEL_LABEL } from '@/lib/panel';
 import type { Role } from '@/types/common';
 import { getNavItems } from './nav-items';
+import { CommandPalette } from './CommandPalette';
+import { SHORTCUT_LABEL, useCommandShortcut } from './commandShortcut';
+import { usePanelIdentity } from './usePanelIdentity';
 import { getThemeMode, setThemeMode } from '@/lib/theme';
 import type { ThemeMode } from '@/lib/theme';
 import { LANGUAGES, lang, setLanguage, t } from '@/i18n';
@@ -23,20 +23,17 @@ import { Tab } from '@/components/ui/Tabs';
 /** Admin va superadmin panelining yuqori paneli: bo‘lim, foydalanuvchi va buyurtma bo‘yicha qidiruv (Ctrl+K), til, mavzu, bildirishnomalar va profil menyusi. */
 export function PanelHeader({ role }: { role: Role | null }) {
   const navigate = useNavigate();
-  const me = useMe();
   const hasSession = useAuthStore((s) => s.hasSession);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [mode, setMode] = useState<ThemeMode>(getThemeMode);
   const current = LANGUAGES.find((item) => item.code === lang) ?? LANGUAGES[0]!;
 
-  const user = me.data;
-  const isSuper = !!user?.isSuperAdmin;
-  const name = accountName(user);
-  const panelRole: Role = role ?? env.appRole ?? 'CUSTOMER';
-  const isAdmin = panelRole === 'ADMIN';
-  const roleText = isAdmin ? (isSuper ? t('Superadmin') : t('Administrator')) : panelRole === 'SHOP' ? t('Do‘kon xodimi') : t('Mijoz');
+  const { user, panelRole, isAdmin, isSuper, name, displayName, roleText, profilePath } = usePanelIdentity(role);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const openSearch = useCallback(() => setSearchOpen(true), []);
+  useCommandShortcut(openSearch);
+  const navItems = getNavItems(panelRole, { superAdmin: isSuper, permissions: user?.adminPermissions, canCreateAdmins: !!user?.canCreateAdmins });
   const home = getNavItems(panelRole, { superAdmin: true })[0]?.to ?? '/';
-  const profilePath = isAdmin ? '/admin/profil' : panelRole === 'SHOP' ? '/sozlamalar' : '/mijoz/profil';
   const guest = !hasSession;
 
   const setTheme = (next: ThemeMode) => {
@@ -56,6 +53,14 @@ export function PanelHeader({ role }: { role: Role | null }) {
         </span>
         <span className="gm-aheader__divider" aria-hidden="true" />
 
+        {!guest && (
+          <button type="button" className="gm-aheader__search" onClick={openSearch} aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
+            <Search aria-hidden="true" />
+            <span className="gm-aheader__search-text">{t('Qidirish…')}</span>
+            <kbd aria-hidden="true">{SHORTCUT_LABEL}</kbd>
+          </button>
+        )}
+
         <div className="gm-aheader__actions">
           <Dropdown
             label={`${t('Til')}: ${current.label}`}
@@ -69,7 +74,7 @@ export function PanelHeader({ role }: { role: Role | null }) {
             }
             items={LANGUAGES.map((item) => ({
               label: item.label,
-              icon: item.code === lang ? <ShieldCheck size={16} /> : <span style={{ width: 16, display: 'inline-block' }} />,
+              icon: item.code === lang ? <Check size={16} /> : <span className="gm-aheader__menu-gap" />,
               onSelect: () => setLanguage(item.code),
             }))}
           />
@@ -105,7 +110,7 @@ export function PanelHeader({ role }: { role: Role | null }) {
                     <i aria-hidden="true" />
                   </span>
                   <span className="gm-aheader__who">
-                    <strong>{name === t('Ism kiritilmagan') ? user?.phone ?? t('Menyu') : name}</strong>
+                    <strong>{displayName}</strong>
                     <small>{roleText}</small>
                   </span>
                   <ChevronDown size={16} aria-hidden="true" className="gm-aheader__chev" />
@@ -130,6 +135,7 @@ export function PanelHeader({ role }: { role: Role | null }) {
           )}
         </div>
       </div>
+      <CommandPalette open={searchOpen} onClose={() => setSearchOpen(false)} items={navItems} />
       <LogoutDialog open={logoutOpen} onClose={() => setLogoutOpen(false)} />
     </header>
   );

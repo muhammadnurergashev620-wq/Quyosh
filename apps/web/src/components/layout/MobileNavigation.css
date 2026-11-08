@@ -1,154 +1,146 @@
-.gm-mobile-nav {
-  display: none;
-}
+/* ── Mobil pastki navigatsiya: 4 ta asosiy bo‘lim + «Ko‘proq» (sheet) ── */
+.gm-mobile-nav,
+.gm-sheet-overlay,
+.gm-sheet__grab { display: none; }
 
-.gm-sheet-overlay {
-  display: none;
-}
+.gm-mobile-nav__link,
+.gm-sheet__icon { position: relative; }
 
 @media (max-width: 899px) {
+  :root { --qs-bottom-nav-h: 64px; }
+
+  /* Suzuvchi pastki panel */
   .gm-mobile-nav {
-    display: flex;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: color-mix(in srgb, var(--qs-color-surface) 92%, transparent);
-    backdrop-filter: saturate(160%) blur(14px);
-    border-top: 1px solid var(--qs-color-border);
-    padding: 6px var(--qs-space-2);
-    padding-bottom: max(6px, env(safe-area-inset-bottom));
+    right: var(--qs-space-3);
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    left: var(--qs-space-3);
     z-index: 700;
+    display: flex;
+    align-items: center;
+    padding: var(--qs-space-2);
+    border: 1px solid color-mix(in srgb, var(--qs-color-border) 70%, transparent);
+    border-radius: var(--qs-radius-xl);
+    background: color-mix(in srgb, var(--qs-color-surface) 88%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    box-shadow: var(--qs-shadow-lg);
   }
+
+  /* Markaziy asosiy amal (FAB) */
+  .gm-mobile-nav__fab {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    margin: -26px var(--qs-space-1) 0;
+    border-radius: 50%;
+    background: var(--qs-color-primary);
+    color: var(--qs-color-primary-contrast);
+    text-decoration: none;
+    box-shadow: var(--qs-shadow-glow), 0 0 0 6px var(--qs-color-bg);
+    transition: transform var(--qs-dur-2) var(--qs-ease-standard);
+  }
+  .gm-mobile-nav__fab span { display: none; }
+  .gm-mobile-nav__fab:active { transform: scale(.92); }
 
   .gm-mobile-nav__link {
-    flex: 1 1 0;
-    min-width: 0;
     display: flex;
+    flex: 1 1 0;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
-    min-height: 52px;
     justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: 54px;
+    padding: 4px 0;
+    border: 0;
+    border-radius: var(--qs-radius-md);
+    background: transparent;
+    color: var(--qs-color-text-muted);
+    font: inherit;
     font-size: 11px;
     font-weight: 700;
-    color: var(--qs-color-text-muted);
     text-decoration: none;
-    background: transparent;
-    border: none;
-    border-radius: var(--qs-radius-md);
-    padding: 6px 2px;
     cursor: pointer;
+    transition: color var(--qs-dur-2) var(--qs-ease-standard), transform var(--qs-dur-2) var(--qs-ease-standard);
   }
+  .gm-mobile-nav__link:active { transform: scale(.94); }
+  .gm-mobile-nav__link > span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  .gm-mobile-nav__link span {
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  /* Ikonka «pill» ichida: faol bo‘limda primary-soft fon */
+  .gm-mobile-nav__icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 30px;
+    border-radius: var(--qs-radius-pill);
+    transition: background-color var(--qs-dur-2) var(--qs-ease-standard);
   }
+  .gm-mobile-nav__icon svg { width: 22px; height: 22px; }
+  .gm-mobile-nav__link--active,
+  .gm-mobile-nav__link[aria-expanded='true'] { color: var(--qs-color-primary); }
+  .gm-mobile-nav__link--active .gm-mobile-nav__icon,
+  .gm-mobile-nav__link[aria-expanded='true'] .gm-mobile-nav__icon { background: var(--qs-color-primary-soft); }
+  .gm-mobile-nav__link--active .gm-mobile-nav__icon svg { stroke-width: 2.4; }
 
-  .gm-mobile-nav__link--active {
-    color: var(--qs-color-primary);
-    background: var(--qs-color-primary-soft);
-  }
-
+  /* «Ko‘proq» sheet */
   .gm-sheet-overlay {
     display: block;
     position: fixed;
     inset: 0;
     z-index: 900;
-    background: rgba(6, 12, 28, 0.55);
-    animation: gm-fade-in 0.18s ease;
+    background: var(--qs-color-overlay);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    animation: gm-fade-in var(--qs-dur-2) var(--qs-ease-out);
   }
-
   .gm-sheet {
     position: absolute;
-    left: 0;
     right: 0;
     bottom: 0;
+    left: 0;
     max-height: 82vh;
-    overflow-y: auto;
     padding: var(--qs-space-4) var(--qs-space-4) max(var(--qs-space-5), env(safe-area-inset-bottom));
-    border-radius: 24px 24px 0 0;
+    border-radius: var(--qs-radius-xl) var(--qs-radius-xl) 0 0;
     background: var(--qs-color-surface);
-    animation: gm-sheet-up 0.26s var(--qs-ease);
+    overflow-y: auto;
+    animation: gm-sheet-up var(--qs-dur-3) var(--qs-ease-out);
   }
-
-  .gm-sheet__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--qs-space-4);
-  }
-
-  .gm-sheet__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--qs-space-3);
-  }
-
+  .gm-sheet__grab { display: block; position: relative; height: 24px; margin: -8px 0 4px; cursor: grab; touch-action: none; }
+  .gm-sheet__grab::after { content: ''; position: absolute; top: 8px; left: 50%; width: 40px; height: 4px; margin-left: -20px; border-radius: var(--qs-radius-pill); background: var(--qs-color-border-strong); }
+  .gm-sheet__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--qs-space-4); }
+  .gm-sheet__header h2 { margin: 0; font-family: var(--qs-font-display); font-size: 18px; font-weight: 700; }
+  .gm-sheet__group + .gm-sheet__group { margin-top: var(--qs-space-4); }
+  .gm-sheet__heading { margin: 0 0 var(--qs-space-2); color: var(--qs-color-text-muted); font-family: var(--qs-font-mono); font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+  .gm-sheet__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--qs-space-2); }
   .gm-sheet__item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--qs-space-2);
-    padding: var(--qs-space-3) var(--qs-space-1);
+    gap: 6px;
+    padding: var(--qs-space-2) 2px;
     border-radius: var(--qs-radius-md);
     color: var(--qs-color-text);
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.25;
     text-align: center;
     text-decoration: none;
   }
+  .gm-sheet__icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: var(--qs-radius-md); background: var(--qs-color-surface-muted); color: var(--qs-color-text-muted); }
+  .gm-sheet__icon svg { width: 22px; height: 22px; }
+  .gm-sheet__item.active { color: var(--qs-color-primary); }
+  .gm-sheet__item.active .gm-sheet__icon { background: var(--qs-color-primary-soft); color: var(--qs-color-primary); }
 
-  .gm-sheet__item.active {
-    color: var(--qs-color-primary);
-  }
-
-  .gm-sheet__icon {
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 16px;
-    background: var(--qs-color-surface-muted);
-  }
-
-  .gm-sheet__item.active .gm-sheet__icon {
-    background: var(--qs-color-primary-soft);
-  }
-
-  @keyframes gm-sheet-up {
-    from {
-      transform: translateY(40px);
-      opacity: 0;
-    }
-  }
+  @keyframes gm-sheet-up { from { transform: translateY(40px); opacity: 0; } }
 }
 
-.gm-mobile-nav__link,
-.gm-sheet__icon {
-  position: relative;
+@media (prefers-reduced-motion: reduce) {
+  .gm-sheet, .gm-sheet-overlay { animation-duration: var(--qs-dur-1); }
+  .gm-mobile-nav__link:active { transform: none; }
 }
-
-/* Tutqich: pastga tortib yopish; faol bo‘lim ustida indikator chizig‘i */
-.gm-sheet__grab { display: none; }
-@media (max-width: 899px) {
-  :root { --qs-bottom-nav-h: 64px; }
-  .gm-sheet__grab { display: block; position: relative; height: 24px; margin: -8px 0 4px; cursor: grab; touch-action: none; }
-  .gm-sheet__grab::after { content: ''; position: absolute; left: 50%; top: 8px; width: 40px; height: 4px; margin-left: -20px; border-radius: 2px; background: var(--qs-color-border-strong); }
-  .gm-mobile-nav__link { position: relative; transition: color 160ms var(--qs-ease), background-color 160ms var(--qs-ease), transform 160ms var(--qs-ease); }
-  .gm-mobile-nav__link:active { transform: scale(0.94); }
-  .gm-mobile-nav__link--active::before { content: ''; position: absolute; top: -7px; left: 30%; right: 30%; height: 3px; border-radius: 0 0 3px 3px; background: var(--qs-color-primary); }
-}
-
-/* Ilova uslubidagi pastki menyu: faol bo'lim ostida aniq belgi, ikonka kattaroq */
-@media (max-width: 899px) {
-  .gm-mobile-nav { padding-top: 8px; border-radius: 22px 22px 0 0; box-shadow: 0 -10px 30px -18px rgba(10, 18, 48, 0.35); }
-  .gm-mobile-nav__link { position: relative; background: transparent; min-height: 54px; font-size: 11.5px; }
-  .gm-mobile-nav__link--active { background: transparent; color: var(--qs-color-primary); }
-  .gm-mobile-nav__link--active::before { content: ''; position: absolute; top: -9px; left: 50%; width: 26px; height: 3px; margin-left: -13px; border-radius: 0 0 4px 4px; background: var(--qs-color-primary); }
-  .gm-mobile-nav__link--active .gm-mobile-nav__icon svg { stroke-width: 2.4; }
-}
-@media (max-width: 899px) { .gm-mobile-nav__link { font-size: 10.5px; padding-inline: 0; } .gm-mobile-nav__link span:last-child { overflow: visible; text-overflow: clip; } }
+@keyframes gm-fade-in { from { opacity: 0; } }
