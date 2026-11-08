@@ -178,7 +178,7 @@ export function AdminShopDetailPage() {
             <dt>{t('Xizmatlar')}</dt><dd>{shop._count.services}</dd>
             <dt>{t('Reyting')}</dt><dd>{formatRating(shop.ratingAvg)} ({shop.ratingCount})</dd>
           </dl>
-          {shop.description && <p style={{ marginBottom: 0, whiteSpace: 'pre-line' }}>{shop.description}</p>}
+          {shop.description && <p className="qs-mb-0 qs-pre-line">{shop.description}</p>}
         </section>
         <section className="qs-card">
           <header><h2>{t('Filiallar')}</h2></header>

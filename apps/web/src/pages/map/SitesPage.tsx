@@ -29,7 +29,7 @@ export function AddressSearch({ onPick }: { onPick: (point: LngLat, label: strin
   const search = useMutation({ mutationFn: () => mapService.geocode(q.trim(), lang === 'ru' ? 'ru' : 'uz') });
   if (!config.data?.geocodingAvailable) return <p className="qs-muted qs-m-0">{t('Manzil qidiruvi hozircha mavjud emas — xaritada nuqta qo‘ying yoki «Mening joylashuvim»ni bosing.')}</p>;
   return (
-    <div className="qs-form" style={{ gap: 8 }}>
+    <div className="qs-form qs-gap-2">
       <form className="qs-toolbar" onSubmit={(e: FormEvent) => { e.preventDefault(); if (q.trim().length >= 2) search.mutate(); }}>
         <Input label={t('Manzilni qidirish')} value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('Masalan: Yunusobod 4-kvartal')} />
         <Button type="submit" variant="secondary" loading={search.isPending}><Search size={16} /></Button>
@@ -69,7 +69,7 @@ function CreateSite({ onCancel }: { onCancel: () => void }) {
         <div className="qs-map__overlay">{point ? t('Nuqta belgilandi — kerak bo‘lsa sudrab aniqlashtiring.') : t('Xaritada uyingiz joylashgan nuqtani bosing.')}</div>
       </MapView>
       <div className="qs-card qs-form">
-        <h2 style={{ margin: 0 }}>{t('Yangi obyekt')}</h2>
+        <h2 className="qs-m-0">{t('Yangi obyekt')}</h2>
         <AddressSearch onPick={(p, label) => { setPoint(p); setCenter(p); setAddress(label); }} />
         <Input label={t('Nomi')} value={title} onChange={(e) => setTitle(e.target.value)} maxLength={120} />
         <Select label={t('Obyekt turi')} value={siteType} onChange={(e) => setSiteType(e.target.value as SiteType)} options={(Object.keys(SITE_TYPE) as SiteType[]).map((value) => ({ value, label: SITE_TYPE[value] }))} />

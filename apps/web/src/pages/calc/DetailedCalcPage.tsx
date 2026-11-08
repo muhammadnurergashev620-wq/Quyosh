@@ -166,7 +166,7 @@ function AreaStep({ state, set, result }: { state: DetailedState; set: (patch: P
               <li key={area.id} className={cx(area.id === active && 'is-active')}>
                 <div>
                   <Input label={t('Nomi')} value={area.name} onChange={(e) => updateArea(area.id, { name: e.target.value })} />
-                  <div className="qs-form__row" style={{ marginTop: 8 }}>
+                  <div className="qs-form__row qs-mt-2">
                     <Select label={t('Tom shakli')} value={area.roofShape} onChange={(e) => updateArea(area.id, { roofShape: e.target.value as 'FLAT' | 'PITCHED' })} options={(['FLAT', 'PITCHED'] as const).map((v) => ({ value: v, label: ROOF_SHAPE[v] }))} />
                     {area.roofShape === 'PITCHED' && <Select label={t('Qiyalik')} value={String(area.tiltDeg)} onChange={(e) => updateArea(area.id, { tiltDeg: Number(e.target.value) })} options={[15, 30, 45].map((v) => ({ value: String(v), label: `${v}°` }))} />}
                     <Select label={t('Yo‘nalish')} value={area.azimuthDeg === null ? '' : String(area.azimuthDeg)} onChange={(e) => updateArea(area.id, { azimuthDeg: e.target.value === '' ? null : Number(e.target.value) })} options={[{ value: '', label: t('Bilmayman') }, ...AZIMUTHS.map((a) => ({ value: String(a.value), label: a.label }))]} />
@@ -381,7 +381,7 @@ export function DetailedCalcPage() {
                 </Tab>
               ))}
             </div>
-            {!result.sizingOptions.some((o) => o.key === 'MAXIMUM') && <p className="qs-muted" style={{ margin: 0, fontSize: 13 }}>{t('Maksimal variant Muvozanatlidan deyarli farq qilmaydi, shuning uchun ko‘rsatilmadi.')}</p>}
+            {!result.sizingOptions.some((o) => o.key === 'MAXIMUM') && <p className="qs-muted qs-m-0 qs-fs-13">{t('Maksimal variant Muvozanatlidan deyarli farq qilmaydi, shuning uchun ko‘rsatilmadi.')}</p>}
           </>
         )}
       </div>
@@ -444,9 +444,9 @@ export function DetailedCalcPage() {
       <StepNav step={step} maxDone={maxDone} onGo={go} />
       <div className="qs-wizard">
         <section className="qs-card">
-          <h2 style={{ marginTop: 0 }}>{step}. {STEPS[step - 1]}</h2>
+          <h2 className="qs-mt-0">{step}. {STEPS[step - 1]}</h2>
           {body}
-          <div className="qs-form__actions" style={{ marginTop: 16 }}>
+          <div className="qs-form__actions qs-mt-4">
             {step > 1 && <Button variant="ghost" onClick={() => go(step - 1)}>{t('Orqaga')}</Button>}
             {step === 6 && <Button variant="secondary" onClick={finish} disabled={!ready}>{t('O‘tkazib yuborish')}</Button>}
             {step < 6 ? <Button disabled={step === 1 && !state.point && !state.siteId} onClick={() => go(step + 1)}>{t('Keyingi')}</Button> : <Button disabled={!ready} onClick={finish}>{t('Natijani ko‘rish')}</Button>}

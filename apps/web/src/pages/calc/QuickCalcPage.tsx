@@ -208,7 +208,7 @@ export function QuickCalcPage() {
             </button>
           ))}
         </div>
-        <p className="qs-muted" style={{ fontSize: 13 }}>{t('Ro‘yxatni Batafsil hisobda tahrirlash mumkin.')}</p>
+        <p className="qs-muted qs-fs-13">{t('Ro‘yxatni Batafsil hisobda tahrirlash mumkin.')}</p>
       </Modal>
     </div>
   );

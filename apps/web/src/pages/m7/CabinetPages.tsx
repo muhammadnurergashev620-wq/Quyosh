@@ -176,7 +176,7 @@ function ProductionChart({ s }: { s: SystemDetail }) {
       </div>
       <div className="qs-prod-legend"><span><i /> {t('Prognoz')}</span><span><i className="dot" /> {t('Kiritilgan')}</span><Button variant="link" onClick={() => setTable(!table)}>{table ? t('Jadvalni yashirish') : t('Jadval ko‘rinishi')}</Button></div>
       {table && (
-        <div className="qs-table-wrap" style={{ marginTop: 10 }}>
+        <div className="qs-table-wrap qs-mt-3">
           <table className="qs-table"><thead><tr><th>{t('Oy')}</th><th className="qs-right">{t('Prognoz, kWh')}</th><th className="qs-right">{t('Haqiqiy, kWh')}</th></tr></thead>
             <tbody>{months.map((m) => <tr key={m.period}><td>{m.period}</td><td className="qs-right qs-num">{m.expected === null ? '—' : n0(m.expected)}</td><td className="qs-right qs-num">{m.actual === null ? '—' : n0(m.actual)}</td></tr>)}</tbody></table>
         </div>
@@ -217,13 +217,13 @@ export function SystemPage() {
       <section className="qs-card">
         <h2>{t('Ishlab chiqarish')}</h2>
         {x.expectedMonthlyKwh ? <ProductionChart s={x} /> : <p className="qs-muted">{t('Bu tizim uchun prognoz yo‘q — kiritilgan ko‘rsatkichlar jadvalda ko‘rinadi.')}</p>}
-        <div className="qs-form" style={{ marginTop: 16 }}>
-          <h3 style={{ margin: 0 }}>{t('Oy ko‘rsatkichini kiritish')}</h3>
+        <div className="qs-form qs-mt-4">
+          <h3 className="qs-m-0">{t('Oy ko‘rsatkichini kiritish')}</h3>
           <TabBar variant="tabs" role="tablist">
             <Tab role="tab" aria-selected={mode === 'kwh'} onClick={() => setMode('kwh')} selected={mode === 'kwh'}>{t('Ishlab chiqarilgan kWh')}</Tab>
             <Tab role="tab" aria-selected={mode === 'meter'} onClick={() => setMode('meter')} selected={mode === 'meter'}>{t('Hisoblagich ko‘rsatkichi')}</Tab>
           </TabBar>
-          <div className="qs-form__row" style={{ alignItems: 'end' }}>
+          <div className="qs-form__row qs-items-end">
             <Input label={t('Oy')} type="month" value={period} max={new Date().toISOString().slice(0, 7)} onChange={(e) => setPeriod(e.target.value)} />
             <Input label={mode === 'kwh' ? 'kWh' : t('Ko‘rsatkich')} inputMode="decimal" value={value} onChange={(e) => setValue(e.target.value.replace(/[^\d.,]/g, ''))} />
             <Button disabled={!value} loading={add.isPending} onClick={() => add.mutate()}>{t('Saqlash')}</Button>
@@ -237,8 +237,8 @@ export function SystemPage() {
           <h2>{t('Komponentlar va kafolatlar')}</h2>
           {x.components.length > 0 && <ul className="qs-list">{x.components.map((c, i) => <li key={i}>{c.title} × {c.quantity}</li>)}</ul>}
           {x.warranties.map((w) => (
-            <div key={w.id} style={{ margin: '10px 0' }}>
-              <div className="qs-page__actions" style={{ justifyContent: 'space-between' }}><strong>{w.component}</strong><small className={cx(w.expiringSoon ? 'qs-sla is-risk' : 'qs-muted')}>{w.daysLeft > 0 ? t('{n} kun qoldi · {d}', { n: w.daysLeft, d: formatDate(w.endsAt) }) : t('Tugagan')}</small></div>
+            <div key={w.id} className="qs-my-3 qs-mx-0">
+              <div className="qs-page__actions qs-justify-between"><strong>{w.component}</strong><small className={cx(w.expiringSoon ? 'qs-sla is-risk' : 'qs-muted')}>{w.daysLeft > 0 ? t('{n} kun qoldi · {d}', { n: w.daysLeft, d: formatDate(w.endsAt) }) : t('Tugagan')}</small></div>
               <div className={cx('qs-warranty-bar', w.expiringSoon && 'is-soon')}><span style={{ width: `${Math.max(0, Math.min(100, (w.daysLeft / (w.months * 30.4)) * 100))}%` }} /></div>
             </div>
           ))}
@@ -265,7 +265,7 @@ export function SystemPage() {
         <div className="qs-page__actions">
           {x.quoteId && <Button variant="secondary" onClick={() => void dealsService.quotePdf(x.quoteId!, 'uz', 0)}><Download size={15} /> {t('Taklif PDF')}</Button>}
           {x.installationId && <ButtonLink variant="secondary" to={`/mijoz/montajlar/${x.installationId}`}>{t('Montaj va chek-list')}</ButtonLink>}
-          {!x.quoteId && !x.installationId && <p className="qs-muted" style={{ margin: 0 }}>{t('Qo‘lda qo‘shilgan tizim uchun hujjatlar yo‘q.')}</p>}
+          {!x.quoteId && !x.installationId && <p className="qs-muted qs-m-0">{t('Qo‘lda qo‘shilgan tizim uchun hujjatlar yo‘q.')}</p>}
         </div>
         {x.checklist && <p className="qs-muted">{t('Chek-list: {ok} OK, {issue} muammo', { ok: x.checklist.filter((c) => c.status === 'OK').length, issue: x.checklist.filter((c) => c.status === 'ISSUE').length })}</p>}
       </section>

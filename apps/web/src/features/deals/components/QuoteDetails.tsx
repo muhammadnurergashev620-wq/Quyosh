@@ -90,13 +90,13 @@ function QuoteBody({ snap, prev }: { snap: QuoteSnap; prev?: QuoteSnap | null })
         <div><dt>{t('Amal qiladi')}</dt><dd><Diff now={snap.validUntil} before={p?.validUntil} render={(v: string) => formatDate(v)} /></dd></div>
       </dl>
       <div className="qs-grid-2">
-        <div><h3 style={{ margin: '0 0 6px', fontSize: 14 }}>{t('Narxga kiradi')}</h3><p className="qs-scope"><Diff now={snap.includedScope} before={p?.includedScope} render={(v: string) => v} /></p></div>
-        <div><h3 style={{ margin: '0 0 6px', fontSize: 14 }}>{t('Narxga kirmaydi')}</h3><p className="qs-scope"><Diff now={snap.excludedScope} before={p?.excludedScope} render={(v: string) => v} /></p></div>
+        <div><h3 className="qs-m-0 qs-mb-2 qs-fs-14">{t('Narxga kiradi')}</h3><p className="qs-scope"><Diff now={snap.includedScope} before={p?.includedScope} render={(v: string) => v} /></p></div>
+        <div><h3 className="qs-m-0 qs-mb-2 qs-fs-14">{t('Narxga kirmaydi')}</h3><p className="qs-scope"><Diff now={snap.excludedScope} before={p?.excludedScope} render={(v: string) => v} /></p></div>
       </div>
-      {snap.warrantyText && <div><h3 style={{ margin: '0 0 6px', fontSize: 14 }}>{t('Kafolat shartlari')}</h3><p className="qs-scope">{snap.warrantyText}</p></div>}
+      {snap.warrantyText && <div><h3 className="qs-m-0 qs-mb-2 qs-fs-14">{t('Kafolat shartlari')}</h3><p className="qs-scope">{snap.warrantyText}</p></div>}
       {snap.financingOptions.length > 0 && (
         <div>
-          <h3 style={{ margin: '0 0 6px', fontSize: 14 }}>{t('Moliyalashtirish')}</h3>
+          <h3 className="qs-m-0 qs-mb-2 qs-fs-14">{t('Moliyalashtirish')}</h3>
           <ul className="qs-list">
             {snap.financingOptions.map((f) => (
               <li key={f.providerName}>{f.providerName}: {t('{r}% yillik, {n} oy', { r: formatDecimal(num(f.annualRate) * 100, 2), n: f.termMonths })}{f.monthlyPayment ? ` · ${t('oyiga ≈ {s}', { s: sum(f.monthlyPayment) })}` : ''}</li>
@@ -118,7 +118,7 @@ export function QuoteWithRevisions({ quote }: { quote: QuoteView }) {
   const snap = current ? snapOf(quote) : (selected.data?.snapshotJson as unknown as QuoteSnap | undefined);
   const prev = revision > 1 ? (previous.data?.snapshotJson as unknown as QuoteSnap | undefined) : undefined;
   return (
-    <div className="qs-page" style={{ gap: 'var(--qs-space-3)' }}>
+    <div className="qs-page qs-gap-3">
       {quote.revisions.length > 0 && (
         <div className="qs-page__actions">
           <SelectMenu className="qs-select" aria-label={t('Tahrir')} value={revision} onChange={(e) => setRevision(Number(e.target.value))}>

@@ -105,7 +105,7 @@ function ShareModal({ id, open, onClose }: { id: string; open: boolean; onClose:
           {([7, 30, null] as const).map((value) => <Tab key={String(value)} onClick={() => setDays(value)} selected={days === value}>{value ? t('{n} kun', { n: value }) : t('Muddatsiz')}</Tab>)}
         </TabBar>
         {link && (
-          <div className="qs-inline-price" style={{ flexWrap: 'wrap' }}>
+          <div className="qs-inline-price qs-wrap">
             <code className="qs-break">{link}</code>
             <Button size="sm" variant="secondary" onClick={() => void navigator.clipboard.writeText(link).then(() => pushToast(t('Nusxa olindi'), 'success'))}><Copy size={14} /> {t('Nusxa')}</Button>
           </div>

@@ -188,7 +188,7 @@ function TariffsTab() {
                   <td>{formatDate(tariff.effectiveFrom)} — {tariff.effectiveUntil ? formatDate(tariff.effectiveUntil) : '∞'}</td>
                   <td><StatusBadge map={PUBLISH_STATUS} status={tariff.status} /></td>
                   <td className="qs-right">
-                    <span className="qs-page__actions" style={{ justifyContent: 'flex-end' }}>
+                    <span className="qs-page__actions qs-justify-end">
                       {tariff.status === 'DRAFT' && <Button size="sm" variant="secondary" onClick={() => setEditing(tariff)}>{t('Tahrirlash')}</Button>}
                       {tariff.status === 'DRAFT' && <Button size="sm" onClick={() => action.mutate({ id: tariff.id, kind: 'publish' })}>{t('Tasdiqlash')}</Button>}
                       {tariff.status === 'PUBLISHED' && (
@@ -241,7 +241,7 @@ function ExportRulesTab() {
           </div>
           <div className="qs-form__actions"><Button type="submit" loading={run.isPending}>{t('Qoralama qo‘shish')}</Button></div>
         </form>
-        <ul className="qs-list" style={{ marginTop: 12 }}>
+        <ul className="qs-list qs-mt-3">
           {rules.data?.map((rule) => (
             <li key={rule.id}>
               <div><strong>{COMPENSATION[rule.compensationType]}</strong><small>{regionName(rule.regionCode)} · {CUSTOMER_TYPE[rule.customerType]} · {formatDate(rule.effectiveFrom)}{rule.ratePerKwh ? ` · ${formatNumber(Number(rule.ratePerKwh))} so‘m/kWh` : ''}</small></div>
@@ -267,7 +267,7 @@ function ExportRulesTab() {
           </div>
           <div className="qs-form__actions"><Button type="submit" loading={run.isPending}>{t('Qo‘shish')}</Button></div>
         </form>
-        <ul className="qs-list" style={{ marginTop: 12 }}>
+        <ul className="qs-list qs-mt-3">
           {limits.data?.map((row) => (
             <li key={row.id}>
               <div><strong>{formatNumber(Number(row.maxKw))} kW</strong><small>{regionName(row.regionCode)} · {CUSTOMER_TYPE[row.customerType]} · {formatDate(row.effectiveFrom)}</small></div>

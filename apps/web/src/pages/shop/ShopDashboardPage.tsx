@@ -50,7 +50,7 @@ export function ShopDashboardPage() {
       <div className="qs-grid-2">
         <section className="qs-card">
           <header><h2>{t('Profil to‘liqligi')}</h2></header>
-          <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="qs-flex qs-gap-5 qs-items-center qs-wrap">
             <div className="qs-ring" style={{ ['--value' as string]: shop.completeness }} role="img" aria-label={t('Profil to‘liqligi: {n}%', { n: shop.completeness })}>
               <strong>{shop.completeness}%</strong>
             </div>

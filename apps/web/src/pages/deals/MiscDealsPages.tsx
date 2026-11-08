@@ -40,7 +40,7 @@ export function ShopReviewsPage() {
         <div className="qs-card" style={{ gridColumn: 'span 2' }}>
           <h2>{t('Taqsimot')}</h2>
           {dist.map((d) => (
-            <div key={d.n} className="qs-progress" style={{ marginBottom: 4 }}>
+            <div key={d.n} className="qs-progress qs-mb-1">
               <span className="qs-num" style={{ width: 28 }}>{d.n}★</span>
               <div className="qs-progress__bar"><span style={{ width: `${total ? (d.c / total) * 100 : 0}%`, background: 'var(--qs-color-accent)' }} /></div>
               <span className="qs-num" style={{ width: 28, textAlign: 'right' }}>{d.c}</span>
@@ -59,7 +59,7 @@ export function ShopReviewsPage() {
           {rows.map((r) => (
             <div key={r.id} className="qs-review">
               <div className="qs-page__actions"><Stars value={r.rating} /><strong>{r.user.firstName ?? t('Mijoz')}</strong><small className="qs-muted">{formatDate(r.createdAt)}</small></div>
-              {r.comment && <p style={{ margin: 0 }}>{r.comment}</p>}
+              {r.comment && <p className="qs-m-0">{r.comment}</p>}
               {r.reply ? (
                 <div className="qs-review__reply"><strong>{shop?.name}:</strong> {r.reply.body}</div>
               ) : can('reviews.reply') ? (
@@ -150,7 +150,7 @@ export function PublicShopReviews({ slug, shopName }: { slug: string; shopName: 
       {d.items.map((r) => (
         <div key={r.id} className="qs-review">
           <div className="qs-page__actions"><Stars value={r.rating} /><strong>{r.author ?? t('Mijoz')}</strong><small className="qs-muted">{formatDate(r.createdAt)}{r.systemPowerKw ? ` · ${num(r.systemPowerKw)} ${t('kVt')}` : ''}</small></div>
-          {r.comment && <p style={{ margin: 0 }}>{r.comment}</p>}
+          {r.comment && <p className="qs-m-0">{r.comment}</p>}
           {r.reply && <div className="qs-review__reply"><strong>{shopName}:</strong> {r.reply.body}</div>}
         </div>
       ))}

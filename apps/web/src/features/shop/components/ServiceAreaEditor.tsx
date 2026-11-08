@@ -64,7 +64,7 @@ export function ServiceAreaEditor({ shopId, branch, onDone }: { shopId: string; 
         {mode === 'draw' && (
           <div className="qs-map__overlay">
             <span>{points.length < 3 ? t('Kamida 3 nuqta ({n}/3)', { n: points.length }) : t('Taxminan {km} km²', { km: formatNumber(previewKm2) })}</span>
-            <span style={{ marginLeft: 'auto', display: 'inline-flex', gap: 6 }}>
+            <span className="qs-ml-auto qs-inline-flex qs-gap-2">
               <Button size="sm" variant="secondary" disabled={!points.length} onClick={() => setPoints(points.slice(0, -1))}><Undo2 size={14} /></Button>
               <Button size="sm" variant="ghost" disabled={!points.length} onClick={() => setPoints([])}>{t('Tozalash')}</Button>
             </span>

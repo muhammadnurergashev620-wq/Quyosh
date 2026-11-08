@@ -108,7 +108,7 @@ export function ShopProfilePage() {
         <div className="qs-grid-2">
           <section className="qs-card">
             <h2>{t('Do‘kon haqida')}</h2>
-            <p style={{ whiteSpace: 'pre-line', margin: 0 }}>{shop.description || t('Tavsif qo‘shilmagan.')}</p>
+            <p className="qs-pre-line qs-m-0">{shop.description || t('Tavsif qo‘shilmagan.')}</p>
           </section>
           <section className="qs-card">
             <h2>{t('Filiallar')}</h2>
@@ -158,7 +158,7 @@ export function ShopProfilePage() {
                 <strong>{p.title}</strong>
                 <small className="qs-muted">{[p.city, p.systemPowerKw ? kwLabel(Number(p.systemPowerKw)) : null, p.completedAt ? p.completedAt.slice(0, 7) : null].filter(Boolean).join(' · ')}</small>
                 {p.verifiedInstallation && <Badge tone="success"><BadgeCheck size={12} /> {t('Tasdiqlangan montaj')}</Badge>}
-                {p.description && <p style={{ margin: 0, fontSize: 13.5 }}>{p.description}</p>}
+                {p.description && <p className="qs-m-0 qs-fs-13">{p.description}</p>}
               </div>
             </article>
           ))}
@@ -184,7 +184,7 @@ export function ShopProfilePage() {
             </table>
           </div>
           {products.data.pages > 1 && (
-            <div className="qs-page__actions" style={{ justifyContent: 'center' }}>
+            <div className="qs-page__actions qs-justify-center">
               <Button size="sm" variant="ghost" disabled={page <= 1} onClick={() => setPage(page - 1)}>{t('Oldingi')}</Button>
               <span className="qs-muted">{page} / {products.data.pages}</span>
               <Button size="sm" variant="ghost" disabled={page >= products.data.pages} onClick={() => setPage(page + 1)}>{t('Keyingi')}</Button>

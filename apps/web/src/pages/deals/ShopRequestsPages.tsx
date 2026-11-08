@@ -211,7 +211,7 @@ export function ShopRequestDetailPage() {
               </dl>
             ) : (
               <>
-                <p style={{ margin: 0 }}><strong>{l.customer.firstName ?? t('Mijoz')}</strong></p>
+                <p className="qs-m-0"><strong>{l.customer.firstName ?? t('Mijoz')}</strong></p>
                 <p className="qs-lock"><Lock size={14} /> {t('Mijoz kontaktni hali ochmagan — yozishma orqali bog‘laning')}</p>
               </>
             )}

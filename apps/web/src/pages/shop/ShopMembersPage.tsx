@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Alert } from '@/components/ui/Alert';
+import { Card, List, ListItem, Meta } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -75,26 +76,25 @@ export function ShopMembersPage() {
         <div><h1>{t('Xodimlar')}</h1><p>{t('Har bir xodimga faqat kerakli bo‘limlarni oching.')}</p></div>
         <Button onClick={() => setAdding(true)}><UserPlus size={16} aria-hidden="true" /> {t('Yangi xodim qo‘shish')}</Button>
       </div>
-      <ul className="qs-list">
+      <Card padding="sm">
+      <List>
         {members.data.members.map((member) => (
-          <li key={member.id}>
-            <UserAvatar name={personName(member.user)} seed={member.user.id} src={member.user.avatarAssetId ? `/avatars/${member.user.avatarAssetId}` : null} />
-            <div>
-              <strong>{personName(member.user)}</strong>
-              <small>{[member.user.login, member.user.phone, member.user.email].filter(Boolean).join(' · ')}{member.user.mustPasswordChange ? ` · ${t('vaqtincha parol hali almashtirilmagan')}` : ''}</small>
-              {member.memberRole !== 'OWNER' && <small>{t('{n} ta ruxsat', { n: member.permissions.length })}</small>}
-            </div>
-            <Badge tone={member.memberRole === 'OWNER' ? 'primary' : 'neutral'}>{MEMBER_ROLE[member.memberRole]}</Badge>
-            {member.memberRole !== 'OWNER' && (
+          <ListItem
+            key={member.id}
+            media={<UserAvatar name={personName(member.user)} seed={member.user.id} src={member.user.avatarAssetId ? `/avatars/${member.user.avatarAssetId}` : null} />}
+            title={<>{personName(member.user)} <Badge tone={member.memberRole === 'OWNER' ? 'primary' : 'neutral'}>{MEMBER_ROLE[member.memberRole]}</Badge></>}
+            meta={<Meta parts={[member.user.login, member.user.phone, member.user.email, member.memberRole !== 'OWNER' && t('{n} ta ruxsat', { n: member.permissions.length }), member.user.mustPasswordChange && <span className="qs-text-danger">{t('vaqtincha parol hali almashtirilmagan')}</span>]} />}
+            trailing={member.memberRole !== 'OWNER' && (
               <span className="qs-page__actions">
                 <Button size="sm" variant="secondary" onClick={() => setEditing(member)}>{t('Ruxsatlar')}</Button>
-                <Button size="sm" variant="ghost" onClick={() => setResetting(member)}><KeyRound size={14} aria-hidden="true" /> {t('Parolni tiklash')}</Button>
+                <Button size="sm" variant="ghost" leftIcon={<KeyRound />} onClick={() => setResetting(member)}>{t('Parolni tiklash')}</Button>
                 <Button size="sm" variant="ghost" onClick={() => setRemoving(member)}>{t('Chiqarish')}</Button>
               </span>
             )}
-          </li>
+          />
         ))}
-      </ul>
+      </List>
+      </Card>
       <Modal open={!!editing} onClose={() => setEditing(null)} title={editing ? personName(editing.user) : ''} large>
         {editing && (
           <MemberForm initial={editing} loading={update.isPending} onCancel={() => setEditing(null)} onSubmit={({ memberRole, permissions }) => update.mutate({ memberId: editing.id, memberRole, permissions }, { onSuccess: () => setEditing(null) })} />

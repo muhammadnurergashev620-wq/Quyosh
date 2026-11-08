@@ -120,7 +120,7 @@ export function SiteDetailPage() {
           {draft && (
             <div className="qs-map__overlay" aria-live="polite">
               <span>{draft.points.length < 3 ? t('Tom burchaklarini ketma-ket bosing ({n}/3)', { n: draft.points.length }) : <>{t('Taxminiy maydon')}: <strong>{m2(preview)}</strong></>}</span>
-              <span style={{ marginLeft: 'auto', display: 'inline-flex', gap: 6 }}>
+              <span className="qs-ml-auto qs-inline-flex qs-gap-2">
                 <Button size="sm" variant="secondary" disabled={!draft.points.length} onClick={() => setDraft({ ...draft, points: draft.points.slice(0, -1) })}><Undo2 size={14} /> {t('Orqaga')}</Button>
                 <Button size="sm" variant="ghost" disabled={!draft.points.length} onClick={() => setDraft({ ...draft, points: [] })}>{t('Tozalash')}</Button>
               </span>
@@ -131,7 +131,7 @@ export function SiteDetailPage() {
         <div className="qs-card qs-form">
           {draft ? (
             <>
-              <h2 style={{ margin: 0 }}>{draft.id ? t('Maydonni tahrirlash') : t('Yangi maydon')}</h2>
+              <h2 className="qs-m-0">{draft.id ? t('Maydonni tahrirlash') : t('Yangi maydon')}</h2>
               <Input label={t('Nomi')} value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} maxLength={120} />
               <div className="qs-form__row">
                 <Select label={t('Joy turi')} value={draft.areaType} onChange={(e) => setDraft({ ...draft, areaType: e.target.value as AreaType, roofShape: e.target.value === 'ROOF' ? draft.roofShape : 'FLAT' })} options={(Object.keys(AREA_TYPE) as AreaType[]).map((value) => ({ value, label: AREA_TYPE[value] }))} />
@@ -146,7 +146,7 @@ export function SiteDetailPage() {
               {crossing && <Alert tone="warning">{t('Chiziqlar kesishib qoldi — nuqtalarni sudrab to‘g‘rilang.')}</Alert>}
               {draft.points.length >= MAX_VERTICES && <Alert tone="warning">{t('Eng ko‘pi 500 ta nuqta.')}</Alert>}
               {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}
-              <p className="qs-muted" style={{ margin: 0, fontSize: 13 }}>{t('Ko‘rsatilgan maydon taxminiy; aniq qiymat saqlanganda serverda hisoblanadi.')}</p>
+              <p className="qs-muted qs-m-0 qs-fs-13">{t('Ko‘rsatilgan maydon taxminiy; aniq qiymat saqlanganda serverda hisoblanadi.')}</p>
               <div className="qs-form__actions">
                 <Button variant="ghost" onClick={() => setDraft(null)}>{t('Bekor qilish')}</Button>
                 <Button disabled={draft.points.length < 3 || crossing || !draft.name.trim()} loading={save.isPending} onClick={() => save.mutate(draft)}>{t('Saqlash')}</Button>
@@ -154,8 +154,8 @@ export function SiteDetailPage() {
             </>
           ) : (
             <>
-              <header style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <h2 style={{ margin: 0, flex: 1 }}>{t('O‘rnatish maydonlari')}</h2>
+              <header className="qs-flex qs-items-center qs-gap-2">
+                <h2 className="qs-m-0 qs-flex-1">{t('O‘rnatish maydonlari')}</h2>
                 <Button size="sm" onClick={() => { save.reset(); setDraft(emptyDraft(data.areas.length)); }}><Plus size={16} /> {t('Maydon chizish')}</Button>
               </header>
               {!data.areas.length ? (

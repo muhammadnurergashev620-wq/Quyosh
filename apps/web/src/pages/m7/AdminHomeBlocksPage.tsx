@@ -225,8 +225,8 @@ function BlockEditor({ block, onSaved }: { block: AdminBlock; onSaved: (b: Admin
           </Tab>
         ))}
       </TabBar>
-      {lang === 'oz' && <p className="qs-muted" style={{ margin: 0 }}>{t('Kirill matni ixtiyoriy: bo‘sh maydonlar o‘zbek lotinidan avtomatik o‘giriladi.')}</p>}
-      {lang === 'en' && <p className="qs-muted" style={{ margin: 0 }}>English text is optional: empty fields are translated automatically from the built-in dictionary.</p>}
+      {lang === 'oz' && <p className="qs-muted qs-m-0">{t('Kirill matni ixtiyoriy: bo‘sh maydonlar o‘zbek lotinidan avtomatik o‘giriladi.')}</p>}
+      {lang === 'en' && <p className="qs-muted qs-m-0">English text is optional: empty fields are translated automatically from the built-in dictionary.</p>}
       <div className="qs-form">
         {FIELDS[block.type].map((spec) => (
           <FieldEditor key={`${lang}:${spec.name}`} spec={spec} value={fields[spec.name]} placeholder={lang === 'oz' ? (value.uz ?? {})[spec.name] : undefined} onChange={(v) => set(spec.name, v)} />

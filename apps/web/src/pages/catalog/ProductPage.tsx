@@ -96,7 +96,7 @@ export function ProductPage() {
             {offers.isLoading ? <PageLoader /> : !offers.data?.items.length ? (
               <EmptyState icon={<Store size={28} />} title={t('Hozircha taklif yo‘q')} description={t('Bu model hozircha do‘konlar katalogida yo‘q. Taklif so‘rovida do‘kondan shu modelni so‘rashingiz mumkin.')} />
             ) : (
-              <div className="qs-form" style={{ gap: 8 }}>
+              <div className="qs-form qs-gap-2">
                 {offers.data.items.map((offer) => {
                   const price = priceWithRate(offer.price, offer.currency, offer.priceUzs, offers.data.rate);
                   return (
@@ -104,15 +104,15 @@ export function ProductPage() {
                       <span><Link to={`/mijoz/dokonlar/${offer.shop.slug}`}><b>{offer.shop.name}</b></Link></span>
                       <strong>{price.main}</strong>
                       <small>{[offer.branch?.name, regionName(offer.branch?.regionCode)].filter(Boolean).join(' · ') || t('Barcha filiallar')}</small>
-                      <small style={{ textAlign: 'right' }}>{price.note ?? (offer.vatIncluded ? t('QQS bilan') : t('QQSsiz'))}</small>
+                      <small className="qs-text-right">{price.note ?? (offer.vatIncluded ? t('QQS bilan') : t('QQSsiz'))}</small>
                       <small><StatusBadge map={STOCK_STATUS} status={offer.stockStatus} /></small>
-                      <small style={{ textAlign: 'right' }}>{t('Yangilangan: {date}', { date: formatDate(offer.updatedAt) })}</small>
+                      <small className="qs-text-right">{t('Yangilangan: {date}', { date: formatDate(offer.updatedAt) })}</small>
                     </div>
                   );
                 })}
               </div>
             )}
-            <p className="qs-muted" style={{ marginBottom: 0, fontSize: 13 }}>{t('Yakuniy narx do‘kon taklifida tasdiqlanadi. Masofa bo‘yicha saralash xarita bilan qo‘shiladi.')}</p>
+            <p className="qs-muted qs-mb-0 qs-fs-13">{t('Yakuniy narx do‘kon taklifida tasdiqlanadi. Masofa bo‘yicha saralash xarita bilan qo‘shiladi.')}</p>
           </section>
         </div>
       </div>

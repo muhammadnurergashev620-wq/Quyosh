@@ -100,7 +100,7 @@ function NewTicket({ onDone }: { onDone: (r: { id: string; code: string; firstRe
       )}
       {!hasSession && (
         <div className="qs-card">
-          <h3 style={{ marginTop: 0 }}>{t('Telefon raqamingizni tasdiqlang')}</h3>
+          <h3 className="qs-mt-0">{t('Telefon raqamingizni tasdiqlang')}</h3>
           <div className="qs-form__row">
             <Input label={t('Telefon')} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+998 90 123 45 67" />
             <div style={{ alignSelf: 'end' }}><Button variant="secondary" loading={otp.isPending} disabled={phone.replace(/\D/g, '').length < 9} onClick={() => otp.mutate()}>{codeSent ? t('Qayta yuborish') : t('Kod yuborish')}</Button></div>
@@ -139,9 +139,9 @@ export function HelpCenterPage() {
       <section><h2>{t('Ko‘p beriladigan savollar')}</h2><div className="qs-kcards">{faq.data?.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div></section>
       <Modal open={open} onClose={() => setOpen(false)} title={done ? t('Murojaat qabul qilindi') : t('Murojaat yuborish')} wide>
         {done ? (
-          <div className="qs-page" style={{ alignItems: 'center', textAlign: 'center' }}>
+          <div className="qs-page qs-items-center qs-text-center">
             <CheckCircle2 size={44} color="var(--qs-color-success)" />
-            <h2 style={{ margin: 0 }}>{done.code}</h2>
+            <h2 className="qs-m-0">{done.code}</h2>
             <p>{t('Birinchi javob muddati: {d} (ish vaqti bo‘yicha).', { d: formatDateTime(done.firstResponseDueAt) })}</p>
             {hasSession ? <ButtonLink to={`/mijoz/murojaatlar/${done.id}`}>{t('Murojaatni ochish')}</ButtonLink> : <p className="qs-muted">{t('Javobni shu telefon raqami bilan kirib ko‘rasiz.')}</p>}
           </div>

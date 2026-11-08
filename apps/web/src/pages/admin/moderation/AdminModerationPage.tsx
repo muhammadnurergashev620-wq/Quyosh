@@ -86,7 +86,7 @@ function Complaints() {
                   <td>{c.reason}</td>
                   <td style={{ maxWidth: 380 }}>{c.details ?? '—'}</td>
                   <td>{formatDateTime(c.createdAt)}</td>
-                  <td className="qs-right">{c.status === 'OPEN' && <div className="qs-page__actions" style={{ justifyContent: 'flex-end' }}><Button size="sm" onClick={() => act.mutate({ id: c.id, s: 'RESOLVED' })}>{t('Hal qilindi')}</Button><Button size="sm" variant="ghost" onClick={() => act.mutate({ id: c.id, s: 'REJECTED' })}>{t('Rad etish')}</Button></div>}</td>
+                  <td className="qs-right">{c.status === 'OPEN' && <div className="qs-page__actions qs-justify-end"><Button size="sm" onClick={() => act.mutate({ id: c.id, s: 'RESOLVED' })}>{t('Hal qilindi')}</Button><Button size="sm" variant="ghost" onClick={() => act.mutate({ id: c.id, s: 'REJECTED' })}>{t('Rad etish')}</Button></div>}</td>
                 </tr>
               ))}
             </tbody>
@@ -115,7 +115,7 @@ function Disputes() {
                   <td><div className="qs-cell-title"><strong>{d.shop.name} · №{d.quote.request.number}</strong><small>{sum(Number(d.quote.total))} · {formatDateTime(d.updatedAt)}</small></div></td>
                   <td>{[d.user.firstName, d.user.lastName].filter(Boolean).join(' ')}<br /><small className="qs-muted">{d.user.phone}</small></td>
                   <td style={{ maxWidth: 380 }}>{d.disputeReason}</td>
-                  <td className="qs-right"><div className="qs-page__actions" style={{ justifyContent: 'flex-end' }}><Button size="sm" onClick={() => setTarget({ id: d.id, decision: 'CONFIRMED' })}>{t('Qabul qilingan deb belgilash')}</Button><Button size="sm" variant="ghost" onClick={() => setTarget({ id: d.id, decision: 'CANCELLED' })}>{t('Bekor qilish')}</Button></div></td>
+                  <td className="qs-right"><div className="qs-page__actions qs-justify-end"><Button size="sm" onClick={() => setTarget({ id: d.id, decision: 'CONFIRMED' })}>{t('Qabul qilingan deb belgilash')}</Button><Button size="sm" variant="ghost" onClick={() => setTarget({ id: d.id, decision: 'CANCELLED' })}>{t('Bekor qilish')}</Button></div></td>
                 </tr>
               ))}
             </tbody>
@@ -164,7 +164,7 @@ function Settings() {
       <header><h2>{t('Moderatsiya chegaralari')}</h2><small className="qs-muted">{t('Versiya {v}', { v: data.data.version })}</small></header>
       <div className="qs-form">
         <div className="qs-form__row">{SETTING_FIELDS.map(([k, label]) => <Input key={k} label={label} inputMode="decimal" value={val(k, r[k])} onChange={(e) => setDraft((d) => ({ ...d, [k]: e.target.value }))} />)}</div>
-        <h3 style={{ margin: 0, fontSize: 15 }}>{t('Belgilar bali')}</h3>
+        <h3 className="qs-m-0 qs-fs-15">{t('Belgilar bali')}</h3>
         <div className="qs-form__row">{Object.entries(r.scores).map(([k, v]) => <Input key={k} label={FLAG_TEXT[k] ?? k} inputMode="numeric" value={val(`score:${k}`, v)} onChange={(e) => setDraft((d) => ({ ...d, [`score:${k}`]: e.target.value }))} />)}</div>
         <div className="qs-form__actions"><Button disabled={!Object.keys(draft).length} loading={save.isPending} onClick={() => save.mutate()}>{t('Yangi versiyani saqlash')}</Button></div>
         {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}

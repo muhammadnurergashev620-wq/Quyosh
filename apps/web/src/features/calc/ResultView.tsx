@@ -176,7 +176,7 @@ export function ResultView({ result, actions, cta, shared }: { result: EstimateR
           <p className="qs-muted qs-m-0">{t('Belgilar — invertor yoki akkumulyator almashtirish yillari. CO₂ tejalishi: {t} t.', { t: formatDecimal((result.lifetime.co2Kg / 1000), 1) })}</p>
           <details>
             <summary>{t('Kengaytirilgan ko‘rsatkichlar')}</summary>
-            <dl className="qs-dl" style={{ marginTop: 8 }}>
+            <dl className="qs-dl qs-mt-2">
               <dt title={t('Kelajakdagi foydaning bugungi qiymati')}>NPV</dt><dd>{sum(result.lifetime.npv)}</dd>
               <dt title={t('Ichki daromadlilik darajasi')}>IRR</dt><dd>{result.lifetime.irr === null ? t('hisoblanmadi') : `${formatPercent(result.lifetime.irr, 1)}`}</dd>
               <dt title={t('1 kWh energiyaning o‘rtacha tannarxi')}>LCOE</dt><dd>{result.lifetime.lcoe === null ? '—' : `${formatNumber(result.lifetime.lcoe)} ${t('so‘m/kWh')}`}</dd>

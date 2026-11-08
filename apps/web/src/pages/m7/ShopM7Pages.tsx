@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, BadgeCheck, Copy, Download, Image as ImageIcon, Monitor, Plus, Smartphone, Trash2, X } from 'lucide-react';
+import { AlertTriangle, BadgeCheck, Copy, Download, Image as ImageIcon, Monitor, Plus, Smartphone, Eye, Hourglass, Inbox, Send, ShieldCheck, Target, Timer, Trash2, X } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { Button, buttonClass } from '@/components/ui/Button';
+import { StatCard, StatGrid } from '@/components/ui/StatCard';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
@@ -38,15 +39,15 @@ export function ShopKpis({ shopId }: { shopId: string }) {
   const k = d.data.kpis;
   return (
     <>
-      <div className="qs-kpi-grid">
-        <Link className="qs-kpi" to="/dokon/analitika"><small>{t('Ko‘rishlar (30 kun)')}</small><strong>{k.views}</strong></Link>
-        <Link className="qs-kpi" to="/dokon/sorovlar"><small>{t('Yangi so‘rovlar')}</small><strong>{k.newRequests}</strong></Link>
-        <Link className="qs-kpi" to="/dokon/sorovlar"><small>{t('Javob kutayotganlar')}</small><strong>{k.waiting}</strong></Link>
-        <Link className="qs-kpi" to="/dokon/takliflar"><small>{t('Yuborilgan takliflar')}</small><strong>{k.quotesSent}</strong></Link>
-        <div className="qs-kpi"><small>{t('Tanlanish foizi')}</small><strong>{share(k.selectionRate)}</strong></div>
-        <div className="qs-kpi"><small>{t('Javob vaqti (median)')}</small><strong>{minutes(k.medianResponseMinutes)}</strong></div>
-        <Link className="qs-kpi" to="/dokon/montajlar"><small>{t('Muammosiz qabul qilingan')}</small><strong>{share(k.cleanAcceptanceShare)}</strong></Link>
-      </div>
+      <StatGrid columns={4}>
+        <StatCard variant="compact" icon={<Eye />} label={t('Ko‘rishlar (30 kun)')} value={k.views} to="/dokon/analitika" />
+        <StatCard variant="compact" icon={<Inbox />} tone="info" label={t('Yangi so‘rovlar')} value={k.newRequests} to="/dokon/sorovlar" />
+        <StatCard variant="compact" icon={<Hourglass />} tone="warning" label={t('Javob kutayotganlar')} value={k.waiting} to="/dokon/sorovlar" />
+        <StatCard variant="compact" icon={<Send />} label={t('Yuborilgan takliflar')} value={k.quotesSent} to="/dokon/takliflar" />
+        <StatCard variant="compact" icon={<Target />} tone="success" label={t('Tanlanish foizi')} value={share(k.selectionRate)} />
+        <StatCard variant="compact" icon={<Timer />} label={t('Javob vaqti (median)')} value={minutes(k.medianResponseMinutes)} />
+        <StatCard variant="compact" icon={<ShieldCheck />} tone="success" label={t('Muammosiz qabul qilingan')} value={share(k.cleanAcceptanceShare)} to="/dokon/montajlar" />
+      </StatGrid>
       {d.data.replyToday.length > 0 && (
         <section className="qs-card">
           <header><h2>{t('Bugun javob bering')}</h2><Link to="/dokon/sorovlar">{t('Hammasi')}</Link></header>

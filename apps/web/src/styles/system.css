@@ -167,3 +167,24 @@ a:focus-visible, button:focus-visible, [role='button']:focus-visible, [tabindex]
 .qs-text-muted { color: var(--qs-color-text-muted) !important; }
 .qs-fs-13 { font-size: 13px !important; }
 .qs-w-full { width: 100% !important; }
+.qs-mt-0 { margin-top: 0 !important; }
+.qs-mt-1 { margin-top: var(--qs-space-1) !important; }
+.qs-mt-6 { margin-top: var(--qs-space-6) !important; }
+.qs-mb-1 { margin-bottom: var(--qs-space-1) !important; }
+.qs-mb-2 { margin-bottom: var(--qs-space-2) !important; }
+.qs-my-3 { margin-top: var(--qs-space-3) !important; margin-bottom: var(--qs-space-3) !important; }
+.qs-p-4 { padding: var(--qs-space-4) !important; }
+.qs-gap-5 { gap: var(--qs-space-5) !important; }
+.qs-grid { display: grid !important; }
+.qs-flex { display: flex !important; }
+.qs-wrap { flex-wrap: wrap !important; }
+.qs-flex-1 { flex: 1 !important; }
+.qs-items-end { align-items: end !important; }
+.qs-self-center { align-self: center !important; }
+.qs-max-w-none { max-width: none !important; }
+.qs-pre-line { white-space: pre-line !important; }
+.qs-break { overflow-wrap: anywhere !important; }
+.qs-fs-14 { font-size: 14px !important; }
+.qs-fs-15 { font-size: 15px !important; }
+.qs-text-success { color: var(--qs-color-success) !important; }
+.qs-text-danger { color: var(--qs-color-danger) !important; }

@@ -245,7 +245,7 @@ export function CustomerQuotePage() {
       </div>
       {expired && <Alert tone="warning">{t('Taklif muddati o‘tgan.')} <Link to={`/mijoz/sorovlar/${q.requestId}`}>{t('Do‘kondan yangilashni so‘rash')}</Link></Alert>}
       <div className="qs-card">
-        <div className="qs-page__actions" style={{ justifyContent: 'space-between', marginBottom: 12 }}>
+        <div className="qs-page__actions qs-justify-between qs-mb-3">
           <span className="qs-quote-card__total">{sum(num(q.total))}</span>
           {q.pricePerKw && <span className="qs-muted">{t('1 kVt: {s}', { s: sumShort(q.pricePerKw) })}</span>}
         </div>

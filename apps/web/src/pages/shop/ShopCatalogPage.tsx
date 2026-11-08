@@ -319,7 +319,7 @@ export function ShopCatalogPage() {
                     </div>
                   </td>
                   <td>
-                    <div style={{ display: 'grid', gap: 8 }}>
+                    <div className="qs-grid qs-gap-2">
                       {product.offers.map((offer) => <OfferCell key={offer.id} shopId={shopId} product={product} offer={offer} writable={offersWritable} />)}
                       {!product.offers.length && <span className="qs-muted">{t('Narx yo‘q — mijozlarga «Narx so‘rov orqali»')}</span>}
                       {offersWritable && <Button size="sm" variant="ghost" onClick={() => setOfferFor(product)}><Plus size={14} /> {t('Narx')}</Button>}
@@ -343,7 +343,7 @@ export function ShopCatalogPage() {
         </div>
       )}
       {(products.data?.pages ?? 1) > 1 && (
-        <div className="qs-page__actions" style={{ justifyContent: 'center' }}>
+        <div className="qs-page__actions qs-justify-center">
           <Button size="sm" variant="ghost" disabled={page <= 1} onClick={() => setPage(page - 1)}>{t('Oldingi')}</Button>
           <span className="qs-muted">{page} / {products.data?.pages}</span>
           <Button size="sm" variant="ghost" disabled={page >= (products.data?.pages ?? 1)} onClick={() => setPage(page + 1)}>{t('Keyingi')}</Button>

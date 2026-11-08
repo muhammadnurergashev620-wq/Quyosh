@@ -139,11 +139,11 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
   return (
     <Modal open={open} onClose={close} title={done ? t('So‘rov yuborildi') : t('Taklif so‘rash')} wide footer={footer}>
       {done ? (
-        <div className="qs-page" style={{ alignItems: 'center', textAlign: 'center', gap: 12 }}>
+        <div className="qs-page qs-items-center qs-text-center qs-gap-3">
           <CheckCircle2 size={48} color="var(--qs-color-success)" />
-          <h2 style={{ margin: 0 }}>{t('So‘rov №{n}', { n: done.number })}</h2>
-          <p className="qs-muted" style={{ margin: 0 }}>{t('{n} ta do‘konga yuborildi.', { n: done.shopCount })}</p>
-          <p style={{ margin: 0 }}>{t('Do‘konlar odatda 24 soat ichida javob beradi; javob kelsa SMS va bildirishnoma orqali xabar beramiz.')}</p>
+          <h2 className="qs-m-0">{t('So‘rov №{n}', { n: done.number })}</h2>
+          <p className="qs-muted qs-m-0">{t('{n} ta do‘konga yuborildi.', { n: done.shopCount })}</p>
+          <p className="qs-m-0">{t('Do‘konlar odatda 24 soat ichida javob beradi; javob kelsa SMS va bildirishnoma orqali xabar beramiz.')}</p>
         </div>
       ) : (
         <div className="qs-form">
@@ -164,7 +164,7 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
 
           {step === 0 && (
             <>
-              <h3 style={{ margin: 0 }}>{t('Saqlangan hisob yoki obyektni tanlang')}</h3>
+              <h3 className="qs-m-0">{t('Saqlangan hisob yoki obyektni tanlang')}</h3>
               {!calcs.data?.length && !sites.data?.length ? (
                 <Alert tone="info">{t('Avval tez hisob qiling — so‘rovga hisob natijasi qo‘shiladi.')} <Link to="/mijoz/kalkulyator">{t('Kalkulyatorga o‘tish')}</Link></Alert>
               ) : (
@@ -206,7 +206,7 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
 
           {step === 2 && (
             <>
-              <div className="qs-page__actions" style={{ justifyContent: 'space-between' }}>
+              <div className="qs-page__actions qs-justify-between">
                 <strong>{t('Tanlangan: {n} / {max}', { n: shopIds.length, max })}</strong>
                 <input className="qs-input-sm" style={{ minWidth: 220 }} placeholder={t('Do‘kon nomi')} aria-label={t('Qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} />
               </div>
@@ -241,9 +241,9 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
                 <div><dt>{t('Do‘konlar')}</dt><dd>{picked.map((s) => s.name).join(', ') || t('{n} ta', { n: shopIds.length })}</dd></div>
               </dl>
               <Alert tone="info" title={t('Do‘konlar nimani ko‘radi')}>
-                <p style={{ margin: 0 }}>{t('Kontakt ochilmaguncha: tuman, tizim parametrlari, hisob xulosasi va ismingiz.')}</p>
-                <p className="qs-lock" style={{ margin: '6px 0 0' }}><EyeOff size={14} /> {t('Telefon, aniq manzil va tom chizmasi ko‘rinmaydi.')}</p>
-                <p className="qs-lock" style={{ margin: '4px 0 0' }}><Lock size={14} /> {t('Kontaktni o‘zingiz ochasiz — yoki o‘lchovni tasdiqlaganingizda / taklifni tanlaganingizda.')}</p>
+                <p className="qs-m-0">{t('Kontakt ochilmaguncha: tuman, tizim parametrlari, hisob xulosasi va ismingiz.')}</p>
+                <p className="qs-lock qs-m-0 qs-mt-2"><EyeOff size={14} /> {t('Telefon, aniq manzil va tom chizmasi ko‘rinmaydi.')}</p>
+                <p className="qs-lock qs-m-0 qs-mt-1"><Lock size={14} /> {t('Kontaktni o‘zingiz ochasiz — yoki o‘lchovni tasdiqlaganingizda / taklifni tanlaganingizda.')}</p>
               </Alert>
               {create.isError && <Alert tone="danger">{getErrorMessage(create.error)}</Alert>}
             </>

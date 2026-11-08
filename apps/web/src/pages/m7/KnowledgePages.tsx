@@ -186,7 +186,7 @@ export function ArticlePage() {
               <ButtonLink to={cta.to} onClick={() => track({ eventType: 'cta_click', entityId: art.id, properties: { cta: art.ctaType } })}>{cta.button} <ArrowRight size={16} /></ButtonLink>
             </div>
           )}
-          <div className="qs-page__actions" style={{ marginTop: 20 }}>
+          <div className="qs-page__actions qs-mt-5">
             {voted === null ? (
               <>
                 <span>{t('Bu material yordam berdimi?')}</span>
@@ -196,7 +196,7 @@ export function ArticlePage() {
             ) : voted ? <span>{t('Rahmat!')}</span> : <span>{t('Rahmat. Savolingiz qolgan bo‘lsa —')} <Link to="/mijoz/yordam">{t('yordam markaziga yozing')}</Link>.</span>}
           </div>
           {art.related.length > 0 && (
-            <section style={{ marginTop: 28 }}>
+            <section className="qs-mt-6">
               <h2>{t('Tegishli materiallar')}</h2>
               <div className="qs-kcards">{art.related.map((r) => <ArticleCardView key={r.id} a={r} />)}</div>
             </section>

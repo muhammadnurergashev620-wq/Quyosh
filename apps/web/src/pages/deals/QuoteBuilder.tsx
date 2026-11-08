@@ -210,7 +210,7 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
               {catalog.data?.exchangeRate && <small className="qs-muted">{t('MB kursi: 1 USD = {r} so‘m ({d})', { r: formatDecimal(num(catalog.data.exchangeRate.rateToUzs), 2), d: formatDate(catalog.data.exchangeRate.rateDate) })}</small>}
             </div>
             {editable && (
-              <div className="qs-chips" style={{ marginBottom: 12 }}>
+              <div className="qs-chips qs-mb-3">
                 {catalog.data?.products.slice(0, 8).map((p) => (
                   <Chip key={p.shopProductId} onClick={() => setLines((all) => [...all, { key: key(), itemType: 'EQUIPMENT', productModelId: p.model.id, title: `${p.model.brand} ${p.model.model}`, quantity: '1', unitPrice: p.priceUzs ? String(p.priceUzs) : '', category: p.model.category.slug }])}>
                     <Plus size={13} /> {p.model.brand} {p.model.model}{p.priceUzs ? ` · ${sumShort(p.priceUzs)}` : ''}{p.offer?.currency === 'USD' ? ' (USD→UZS)' : ''}
@@ -232,7 +232,7 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
                   <input className="qs-input-sm" aria-label={t('Nomi')} disabled={!editable} value={l.title} maxLength={300} onChange={(e) => setLine(l.key, { title: e.target.value })} />
                   <input className="qs-input-sm" aria-label={t('Miqdor')} inputMode="decimal" disabled={!editable} value={l.quantity} onChange={(e) => setLine(l.key, { quantity: e.target.value.replace(/[^\d.,]/g, '') })} />
                   <input className="qs-input-sm" aria-label={t('Birlik narxi')} inputMode="numeric" disabled={!editable} value={l.unitPrice} onChange={(e) => setLine(l.key, { unitPrice: e.target.value.replace(/[^\d.,]/g, '') })} />
-                  <span className="qs-num" style={{ textAlign: 'right' }}>{sumShort(parse(l.quantity) * parse(l.unitPrice))}</span>
+                  <span className="qs-num qs-text-right">{sumShort(parse(l.quantity) * parse(l.unitPrice))}</span>
                   <Button variant="ghost" size="sm" aria-label={t('O‘chirish')} disabled={!editable} onClick={() => setLines((all) => all.filter((x) => x.key !== l.key))}><Trash2 size={15} /></Button>
                 </div>
               ))}
@@ -274,7 +274,7 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
         <aside className="qs-builder__summary">
           <div className="qs-card">
             <h2>{t('Xulosa')}</h2>
-            <div className="qs-sums" style={{ maxWidth: 'none' }}>
+            <div className="qs-sums qs-max-w-none">
               <div><span>{t('Uskuna')}</span><span>{sum(preview.equipment)}</span></div>
               <div><span>{t('Montaj')}</span><span>{sum(preview.installation)}</span></div>
               {preview.delivery > 0 && <div><span>{t('Yetkazish')}</span><span>{sum(preview.delivery)}</span></div>}
@@ -284,9 +284,9 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
               <div className="is-total"><span>{t('Jami')}</span><span>{sum(Math.round(preview.total))}</span></div>
               {preview.perKw && <div><span>{t('1 kVt narxi')}</span><span>{sumShort(preview.perKw)}</span></div>}
             </div>
-            {calcCost && <p className="qs-muted" style={{ margin: '10px 0 0' }}>{t('Mijoz kutgan narx diapazoni: {a}–{b}', { a: sumShort(calcCost * 0.9), b: sumShort(calcCost * 1.1) })}{lead.calculation?.systemPowerKw ? ` (${kw(lead.calculation.systemPowerKw)})` : ''}</p>}
+            {calcCost && <p className="qs-muted qs-m-0 qs-mt-3">{t('Mijoz kutgan narx diapazoni: {a}–{b}', { a: sumShort(calcCost * 0.9), b: sumShort(calcCost * 1.1) })}{lead.calculation?.systemPowerKw ? ` (${kw(lead.calculation.systemPowerKw)})` : ''}</p>}
             {panel && inverter && (
-              <p style={{ margin: '10px 0 0' }}>
+              <p className="qs-m-0 qs-mt-3">
                 {t('Moslik')}: {compat.isLoading ? '…' : <Badge tone={compat.data?.status === 'OK' ? 'success' : compat.data?.status === 'ERROR' ? 'danger' : compat.data?.status === 'WARNING' ? 'warning' : 'neutral'}>{compat.data?.status === 'OK' ? t('Mos') : compat.data?.status === 'ERROR' ? t('Mos emas') : compat.data?.status === 'WARNING' ? t('Diqqat') : t('Ma’lumot yetarli emas')}</Badge>}
                 <small className="qs-muted"> · {t('{s} ta ketma-ket × {p} qator', { s: Math.ceil(panelsCount / strings), p: strings })}</small>
               </p>
@@ -297,7 +297,7 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
               {missing.length > 0 && <Alert tone="warning" title={t('Yuborish uchun to‘ldiring')}>{missing.join(', ')}</Alert>}
               {error && <Alert tone="danger">{getErrorMessage(error)}</Alert>}
               {saved && <Alert tone="success">{saved}</Alert>}
-              <div className="qs-form__actions" style={{ marginTop: 10 }}>
+              <div className="qs-form__actions qs-mt-3">
                 {status === 'DRAFT' && <Button variant="secondary" loading={saveDraft.isPending} disabled={!lines.length} onClick={() => saveDraft.mutate()}>{canSend ? t('Qoralamani saqlash') : t('Menejerga yuborish uchun saqlash')}</Button>}
                 {status === 'DRAFT' && canSend && <Button loading={send.isPending} disabled={missing.length > 0} onClick={() => send.mutate()}>{t('Yuborish')}</Button>}
                 {sent && canSend && <Button disabled={missing.length > 0} onClick={() => setReviseOpen(true)}>{t('Yangi tahrir yuborish')}</Button>}

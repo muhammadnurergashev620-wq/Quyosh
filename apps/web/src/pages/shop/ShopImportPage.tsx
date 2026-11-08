@@ -101,8 +101,8 @@ export function ShopImportPage() {
           </header>
           <p className="qs-stat-line">
             <span>{t('Jami')}: <b>{formatNumber(summary.rowCount)}</b></span>
-            <span style={{ color: 'var(--qs-color-success)' }}>{t('To‘g‘ri')}: <b>{formatNumber(summary.validCount)}</b></span>
-            <span style={{ color: 'var(--qs-color-danger)' }}>{t('Xato')}: <b>{formatNumber(summary.errorCount)}</b></span>
+            <span className="qs-text-success">{t('To‘g‘ri')}: <b>{formatNumber(summary.validCount)}</b></span>
+            <span className="qs-text-danger">{t('Xato')}: <b>{formatNumber(summary.errorCount)}</b></span>
           </p>
           {summary.errors.length > 0 && (
             <>
@@ -122,9 +122,9 @@ export function ShopImportPage() {
             </>
           )}
           {summary.preview.length > 0 && (
-            <details style={{ marginTop: 12 }}>
+            <details className="qs-mt-3">
               <summary>{t('To‘g‘ri qatorlar (dastlabki 20 ta)')}</summary>
-              <ul className="qs-list" style={{ marginTop: 8 }}>
+              <ul className="qs-list qs-mt-2">
                 {summary.preview.map((row) => (
                   <li key={row.row}><div><strong>{row.label}</strong><small>{t('{row}-qator', { row: row.row })} · {STOCK_STATUS[row.stockStatus].label}</small></div><span className="qs-num">{formatNumber(Number(row.price))} {row.currency === 'USD' ? '$' : t('so‘m')}</span></li>
                 ))}

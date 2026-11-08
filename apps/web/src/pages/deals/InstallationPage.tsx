@@ -157,14 +157,14 @@ function Checklist({ view, onDone }: { view: InstallationView; onDone: () => voi
       </div>
       {!complete && (
         <Alert tone="info">
-          {missingLocal.length > 0 && <p style={{ margin: 0 }}>{t('To‘ldirilmagan majburiy bandlar: {n}', { n: missingLocal.length })}</p>}
-          {localErrors.map((e) => <p key={e} style={{ margin: 0 }}>{e}</p>)}
+          {missingLocal.length > 0 && <p className="qs-m-0">{t('To‘ldirilmagan majburiy bandlar: {n}', { n: missingLocal.length })}</p>}
+          {localErrors.map((e) => <p key={e} className="qs-m-0">{e}</p>)}
         </Alert>
       )}
       {evaluation && !evaluation.complete && complete && <small className="qs-muted">{t('Saqlanmoqda…')}</small>}
       {error && <Alert tone="danger">{error}</Alert>}
       {(confirm.isError || fix.isError) && <Alert tone="danger">{getErrorMessage(confirm.error ?? fix.error)}</Alert>}
-      <div className="qs-form__actions" style={{ marginTop: 12 }}>
+      <div className="qs-form__actions qs-mt-3">
         {hasIssues ? (
           <>
             <Button variant="ghost" onClick={() => setDisputeOpen(true)}>{t('E’tiroz bildirish')}</Button>
@@ -200,7 +200,7 @@ function ReviewForm({ view, onDone }: { view: InstallationView; onDone: () => vo
       {preview ? (
         <div className="qs-review">
           <Stars value={rating} />
-          {comment.trim() && <p style={{ margin: 0, whiteSpace: 'pre-line' }}>{comment.trim()}</p>}
+          {comment.trim() && <p className="qs-m-0 qs-pre-line">{comment.trim()}</p>}
           <small className="qs-muted">{t('Sharh ostida ismingiz va tizim quvvati ko‘rsatiladi.')}</small>
           <div className="qs-form__actions"><Button variant="ghost" onClick={() => setPreview(false)}>{t('Tahrirlash')}</Button><Button loading={create.isPending} onClick={() => create.mutate()}>{t('Yuborish')}</Button></div>
         </div>
@@ -231,12 +231,12 @@ function ShopActions({ view }: { view: InstallationView }) {
     <div className="qs-card">
       <h2>{t('Montaj amallari')}</h2>
       {canSchedule && (
-        <div className="qs-form__row" style={{ alignItems: 'end' }}>
+        <div className="qs-form__row qs-items-end">
           <Input label={t('Montaj sanasi')} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           <Button variant="secondary" disabled={!date} loading={act.isPending} onClick={() => act.mutate({ action: 'SCHEDULE', scheduledDate: date })}>{view.status === 'INSTALLATION_SCHEDULED' ? t('Sanani o‘zgartirish') : t('Sanani belgilash')}</Button>
         </div>
       )}
-      <div className="qs-form__actions" style={{ marginTop: 12 }}>
+      <div className="qs-form__actions qs-mt-3">
         {canSchedule && <Button variant="ghost" onClick={() => setCancelOpen(true)}>{t('Bekor qilish')}</Button>}
         {view.status === 'INSTALLATION_SCHEDULED' && <Button loading={act.isPending} onClick={() => act.mutate({ action: 'MARK_INSTALLED' })}>{t('Montaj bajarildi')}</Button>}
       </div>
@@ -278,7 +278,7 @@ export function InstallationPage() {
       </div>
       {customer && v.status === 'INSTALLED' && <Alert tone="warning" title={t('Do‘kon montaj bajarilganini bildirdi')}>{t('Tekshirib, chek-list orqali qabul qiling. Muammo bo‘lsa — yozing yoki e’tiroz bildiring.')}</Alert>}
       {celebrate && (
-        <div className="qs-card" style={{ textAlign: 'center' }}>
+        <div className="qs-card qs-text-center">
           <PartyPopper size={44} color="var(--qs-color-accent)" />
           <h2>{t('Tabriklaymiz! Tizimingiz qabul qilindi')}</h2>
           <p className="qs-muted">{t('O‘rnatilgan tizim kartasi yaratildi — kafolat muddatlari va ishlab chiqarishni shu yerda kuzatasiz.')}</p>
@@ -286,7 +286,7 @@ export function InstallationPage() {
       )}
       <div className="qs-grid-2" style={{ alignItems: 'start' }}>
         <div className="qs-card"><h2>{t('Holat')}</h2><Timeline view={v} /></div>
-        <div className="qs-page" style={{ gap: 'var(--qs-space-4)' }}>
+        <div className="qs-page qs-gap-4">
           {!customer && <ShopActions view={v} />}
           {!customer && v.customer && (
             <div className="qs-card">
@@ -297,7 +297,7 @@ export function InstallationPage() {
           <div className="qs-card">
             <h2>{t('Kafolat')}</h2>
             <dl className="qs-dl"><div><dt>{t('Uskuna')}</dt><dd>{months(v.quote.warrantyEquipmentMonths)}</dd></div><div><dt>{t('Montaj')}</dt><dd>{months(v.quote.warrantyInstallationMonths)}</dd></div></dl>
-            {v.installedSystem && <p className="qs-muted" style={{ marginBottom: 0 }}>{t('O‘rnatilgan tizim: {p}, {d}', { p: kw(num(v.installedSystem.systemPowerKw)), d: formatDate(v.installedSystem.installedAt) })}</p>}
+            {v.installedSystem && <p className="qs-muted qs-mb-0">{t('O‘rnatilgan tizim: {p}, {d}', { p: kw(num(v.installedSystem.systemPowerKw)), d: formatDate(v.installedSystem.installedAt) })}</p>}
           </div>
           {customer && ['AGREED', 'SITE_VISIT_SCHEDULED', 'INSTALLATION_SCHEDULED'].includes(v.status) && <Button variant="ghost" onClick={() => setCancelOpen(true)}>{t('Montajni bekor qilish')}</Button>}
         </div>
@@ -320,7 +320,7 @@ export function InstallationPage() {
           <h2>{t('Sharh')}</h2>
           <div className="qs-review">
             <Stars value={v.review.rating} />
-            {v.review.comment && <p style={{ margin: 0 }}>{v.review.comment}</p>}
+            {v.review.comment && <p className="qs-m-0">{v.review.comment}</p>}
             {customer && v.review.moderationStatus === 'PENDING' && <small className="qs-muted">{t('Sharhingiz tekshiruvdan keyin chiqadi')}</small>}
             {v.review.reply && <div className="qs-review__reply"><strong>{v.shop.name}:</strong> {v.review.reply.body}</div>}
           </div>

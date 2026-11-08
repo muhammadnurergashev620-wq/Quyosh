@@ -102,16 +102,16 @@ function ModelReview({ model, onClose }: { model: AdminModel; onClose: () => voi
             {model.status !== 'REJECTED' && <Button variant="danger" disabled={reason.trim().length < 3} loading={save.isPending && save.variables === 'REJECTED'} onClick={() => save.mutate('REJECTED')}>{t('Rad etish')}</Button>}
             {model.status !== 'APPROVED' && <Button loading={save.isPending && save.variables === 'APPROVED'} onClick={() => save.mutate('APPROVED')}>{t('Tasdiqlash')}</Button>}
           </div>
-          <section className="qs-card" style={{ padding: 14 }}>
+          <section className="qs-card qs-p-4">
             <strong>{t('Dublikatni birlashtirish')}</strong>
-            <p className="qs-muted" style={{ margin: '4px 0 8px' }}>{t('Bu model asosiy modelga qo‘shiladi; do‘kon mahsulotlari va narxlari ko‘chiriladi, eski havola yangisiga yo‘naltiriladi.')}</p>
+            <p className="qs-muted qs-m-0 qs-mt-1 qs-mb-2">{t('Bu model asosiy modelga qo‘shiladi; do‘kon mahsulotlari va narxlari ko‘chiriladi, eski havola yangisiga yo‘naltiriladi.')}</p>
             <Input label={t('Asosiy modelni qidirish')} value={mergeQuery} onChange={(e) => { setMergeQuery(e.target.value); setMergeTarget(null); }} />
-            <ul className="qs-search-results" style={{ marginTop: 8 }}>
+            <ul className="qs-search-results qs-mt-2">
               {candidates.data?.items.filter((item) => item.id !== model.id).map((item) => (
                 <li key={item.id}><Tab onClick={() => setMergeTarget(item)} selected={mergeTarget?.id === item.id}><span><strong>{item.brand} {item.model}</strong><small>{i18nText(item.category.nameI18n)}</small></span></Tab></li>
               ))}
             </ul>
-            <div className="qs-form__actions" style={{ marginTop: 8 }}>
+            <div className="qs-form__actions qs-mt-2">
               <Button variant="secondary" disabled={!mergeTarget} loading={merge.isPending} onClick={() => merge.mutate(undefined)}>{t('Birlashtirish')}</Button>
             </div>
           </section>
@@ -169,7 +169,7 @@ function ModelsTab() {
         </div>
       )}
       {list.data.pages > 1 && (
-        <div className="qs-page__actions" style={{ justifyContent: 'center' }}>
+        <div className="qs-page__actions qs-justify-center">
           <Button size="sm" variant="ghost" disabled={page <= 1} onClick={() => setPage(page - 1)}>{t('Oldingi')}</Button>
           <span className="qs-muted">{page} / {list.data.pages}</span>
           <Button size="sm" variant="ghost" disabled={page >= list.data.pages} onClick={() => setPage(page + 1)}>{t('Keyingi')}</Button>
@@ -274,7 +274,7 @@ function RatesTab() {
             {latest.stale && <Badge tone="warning">{t('Kurs eskirgan')}</Badge>}
           </p>
         ) : <Alert tone="warning">{t('Kurs hali olinmagan')}</Alert>}
-        <p className="qs-muted" style={{ marginBottom: 0 }}>{t('Har kuni 09:30 (Toshkent) avtomatik yangilanadi; muvaffaqiyatsiz bo‘lsa oxirgi kurs ishlatiladi.')}</p>
+        <p className="qs-muted qs-mb-0">{t('Har kuni 09:30 (Toshkent) avtomatik yangilanadi; muvaffaqiyatsiz bo‘lsa oxirgi kurs ishlatiladi.')}</p>
       </section>
       <div className="qs-table-wrap">
         <table className="qs-table">

@@ -129,7 +129,7 @@
 .gm-stat-grid--2 { --cols: 2; }
 .gm-stat-grid--3 { --cols: 3; }
 @media (max-width: 1099px) { .gm-stat-grid--4, .gm-stat-grid--3 { --cols: 2; } }
-@media (max-width: 520px) { .gm-stat-grid { --cols: 1; } }
+@media (max-width: 520px) { .gm-stat-grid { --cols: 1; } .gm-stat-grid--4 { --cols: 2; } }
 
 .gm-stat {
   position: relative;
