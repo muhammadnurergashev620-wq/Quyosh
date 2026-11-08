@@ -1,7 +1,7 @@
 .gm-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(6, 12, 28, 0.55);
+  background: var(--qs-color-overlay);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;

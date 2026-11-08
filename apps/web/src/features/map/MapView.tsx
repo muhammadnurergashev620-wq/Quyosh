@@ -116,14 +116,3 @@ export function MapView({ center, zoom, satellite = false, onStyleReady, onLocat
     </div>
   );
 }
-
-/** Xarita instansiyasini tashqariga olish uchun: MapView onStyleReady orqali saqlanadi. */
-export function useMapHandle() {
-  const [map, setMap] = useState<MapLibreMap | null>(null);
-  const [styleVersion, setStyleVersion] = useState(0);
-  const onStyleReady = (instance: MapLibreMap | null) => {
-    setMap(instance);
-    if (instance) setStyleVersion((value) => value + 1);
-  };
-  return { map, styleVersion, onStyleReady };
-}

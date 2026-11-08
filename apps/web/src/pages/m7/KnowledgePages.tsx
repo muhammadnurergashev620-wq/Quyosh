@@ -8,7 +8,8 @@ import { Button, ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
 import { m7Service } from '@/features/m7/m7.service';
-import { headingsOf, Markdown } from '@/features/m7/Markdown';
+import { Markdown } from '@/features/m7/Markdown';
+import { headingsOf } from '@/features/m7/Markdown.helpers';
 import { tr } from '@/features/m7/i18n-text';
 import { useSeo } from '@/features/m7/seo';
 import { track } from '@/features/m7/track';
@@ -22,8 +23,8 @@ import '@/features/m7/m7.css';
 import '@/features/calc/calc.css';
 import { safeExternalUrl } from '@/lib/return-to';
 import { Tab, TabBar } from '@/components/ui/Tabs';
+import { TYPE_LABEL } from './KnowledgePages.helpers';
 
-export const TYPE_LABEL: Record<ArticleType, string> = { GUIDE: t('Qo‘llanma'), ARTICLE: t('Maqola'), FAQ: 'FAQ', VIDEO: t('Video'), GLOSSARY: t('Atama') };
 const CTA: Record<Exclude<CtaType, 'NONE'>, { title: string; text: string; to: string; button: string }> = {
   CALCULATOR: { title: t('Tizimingizni hisoblang'), text: t('Manzil va sarfingiz bo‘yicha quvvat, narx va tejash — 1–2 daqiqada.'), to: '/mijoz/kalkulyator', button: t('Kalkulyator') },
   OUTAGE: { title: t('Elektr o‘chganda nima ishlaydi'), text: t('Muhim jihozlar uchun zaxira soatini hisoblang.'), to: '/mijoz/uzilish', button: t('Hisoblash') },

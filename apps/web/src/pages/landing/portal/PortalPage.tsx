@@ -22,7 +22,8 @@ import {
 import { LogoLink } from '@/components/common/Logo';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
-import { Column, FAQ_PREVIEW } from '@/features/public/FaqSection';
+import { Column } from '@/features/public/FaqSection';
+import { FAQ_PREVIEW } from '@/features/public/FaqSection.helpers';
 import { DEFAULT_ORDER, fill, items, list, localize, str, useHomeData, type BlockFields, type BlockType, type Item, type Testimonial } from '@/features/site/home-content';
 import { env } from '@/lib/env';
 import { formatNumber } from '@/lib/format';

@@ -16,6 +16,7 @@ import './calc.css';
 import { safeExternalUrl } from '@/lib/return-to';
 import { InfoTip } from '@/components/ui/InfoTip';
 import { Tab, TabBar } from '@/components/ui/Tabs';
+import { headline } from './ResultView.helpers';
 
 const INSIGHT_ICON: Record<Insight['type'], ReactNode> = {
   BEST_SAVING_MONTH: <TrendingDown size={20} />,
@@ -24,12 +25,6 @@ const INSIGHT_ICON: Record<Insight['type'], ReactNode> = {
   BATTERY_CRITICAL_MONTH: <BatteryCharging size={20} />,
   SUMMER_SURPLUS: <Zap size={20} />,
 };
-
-/** Bir jumlalik xulosa (U8.1). */
-export function headline(result: EstimateResult): string {
-  const share = Math.round(Math.min(1, result.generation.annual / Math.max(result.load.annual, 1)) * 100);
-  return t('Sizga {kw} tizim mos — u yillik elektringizning taxminan {p} % ini qoplaydi', { kw: kw(result.systemPowerKw), p: share });
-}
 
 export function Kpis({ result, pending, compact }: { result: EstimateResult; pending?: boolean; compact?: boolean }) {
   const s = result.scenarios;

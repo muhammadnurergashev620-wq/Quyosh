@@ -39,10 +39,10 @@
 
 .gm-logo__word b {
   font-weight: 800;
-  color: #1373f5;
+  color: var(--qs-brand-blue);
 }
 :root[data-theme='dark'] .gm-logo__word b,
-.gm-logo--on-dark .gm-logo__word b { color: #4a9bff; }
-.gm-logo--on-dark { color: #fff; }
+.gm-logo--on-dark .gm-logo__word b { color: var(--qs-land-sky); }
+.gm-logo--on-dark { color: var(--qs-land-white); }
 .gm-logo__svg { display: block; color: currentColor; }
 .gm-logo__word b { color: var(--qs-color-accent); }

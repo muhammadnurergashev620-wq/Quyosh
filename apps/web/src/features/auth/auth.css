@@ -518,7 +518,7 @@
 
 /* Kod qayerga yuborilgani: aniq xabar kartasi (email yoki SMS) */
 .gm-auth-delivery { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid color-mix(in srgb, var(--qs-color-success) 30%, var(--qs-color-border)); border-radius: 16px; background: color-mix(in srgb, var(--qs-color-success-bg) 60%, var(--qs-color-surface)); text-align: left; }
-.gm-auth-delivery__icon { display: grid; flex: none; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--qs-color-success); color: #fff; }
+.gm-auth-delivery__icon { display: grid; flex: none; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--qs-color-success); color: var(--qs-color-on-dark); }
 .gm-auth-delivery p { display: grid; gap: 2px; margin: 0; min-width: 0; }
 .gm-auth-delivery strong { font-size: 0.98rem; font-weight: 800; }
 .gm-auth-delivery span { font-weight: 700; overflow-wrap: anywhere; }

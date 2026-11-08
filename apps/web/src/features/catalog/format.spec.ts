@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { keySpecs, priceWithRate, specValue } from './format';
 import { useCompare } from './compare-store';
-import { openNow } from '@/pages/catalog/ShopProfilePage';
+import { openNow } from '@/pages/catalog/ShopProfilePage.helpers';
 
 describe('specValue', () => {
   it('formats with units and converts DoD fraction to percent', () => {

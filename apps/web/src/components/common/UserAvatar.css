@@ -34,8 +34,8 @@
 .gm-chat-avatar--admin {
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, #4338ca, #6366f1);
-  color: #fff;
+  background: linear-gradient(135deg, var(--qs-color-violet), color-mix(in srgb, var(--qs-color-violet) 72%, white));
+  color: var(--qs-color-on-dark);
 }
 .gm-chat-avatar--photo { overflow: hidden; background: var(--qs-color-surface-muted, var(--qs-color-primary-soft)); }
 .gm-chat-avatar--photo img { width: 100%; height: 100%; object-fit: cover; display: block; }

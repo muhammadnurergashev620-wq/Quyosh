@@ -44,7 +44,7 @@
 .qs-portal .gm-marquee__row li svg { color: var(--qs-land-gold); }
 .qs-portal .gm-marquee__row li span { -webkit-text-stroke-color: rgb(var(--qs-land-text-rgb) / 0.85); }
 .qs-portal .gm-statement__label { color: var(--qs-land-sun-soft); }
-.qs-portal .gm-statement__word { color: color-mix(in srgb, var(--qs-land-white) calc(14% + var(--on) * 86%), transparent); }
+.qs-portal .gm-statement__word { color: color-mix(in srgb, var(--qs-land-white) calc(42% + var(--on) * 58%), transparent); }
 
 
 .qs-portal__how, .qs-portal__trust, .qs-portal__faq { max-width: 1200px; margin: 0 auto; padding: 72px 24px; }
@@ -132,7 +132,7 @@
 }
 .gm-statement__word {
   --on: 0;
-  color: color-mix(in srgb, var(--qs-color-text) calc(14% + var(--on) * 86%), transparent);
+  color: color-mix(in srgb, var(--qs-color-text) calc(42% + var(--on) * 58%), transparent);
   transition: color 0.15s linear;
 }
 

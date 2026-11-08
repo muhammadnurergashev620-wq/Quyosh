@@ -9,7 +9,7 @@ body { letter-spacing: -0.003em; }
 /* ——— Yuqori panel ——— */
 .gm-header {
   border-bottom: 0;
-  box-shadow: 0 1px 0 var(--qs-color-border), 0 12px 30px -22px rgba(18, 28, 70, 0.35);
+  box-shadow: 0 1px 0 var(--qs-color-border), 0 12px 30px -22px rgb(var(--qs-land-shadow-rgb) / 0.35);
   background: color-mix(in srgb, var(--qs-color-surface) 80%, transparent);
   backdrop-filter: saturate(180%) blur(18px);
 }
@@ -141,11 +141,8 @@ body { letter-spacing: -0.003em; }
 .gm-stat::before { display: none; }
 .gm-stat__value { font-size: clamp(20px, 2.1vw, 26px); }
 
-/* Faol menyu va sarlavha belgisi: panel rangida to‘q va aniq (kulrang emas) */
-.gm-sidebar__link--active, .gm-sidebar__link--active:hover { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast, #fff); }
-.gm-sidebar__link--active svg { color: inherit; }
-.gm-sidebar__link--active::before { display: none; }
-.gm-header__panel { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast, #fff); }
+/* Sarlavha panel belgisi: panel rangida (faol menyu uslubi — Sidebar.css: primary-soft + 3 px chiziq) */
+.gm-header__panel { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); }
 
 /* To‘lov usullari: buyurtma kartasida doim 2 ustun, 4 ta variant 2×2 */
 :root .gm-ocard .gm-paym,

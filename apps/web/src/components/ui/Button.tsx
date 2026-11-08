@@ -6,11 +6,12 @@ import { Check } from 'lucide-react';
 import { cx } from '@/lib/utils';
 import { Spinner } from './Spinner';
 import './Button.css';
+import { buttonClass } from './Button.helpers';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'soft' | 'ghost' | 'danger' | 'danger-soft' | 'accent' | 'link';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
-interface ButtonLookProps {
+export interface ButtonLookProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
   fullWidth?: boolean;
@@ -24,11 +25,6 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, Bu
   loading?: boolean;
   /** `true` bo‘lsa 1,5 s davomida ✓ va success fon (masalan, «Nusxa olindi»). */
   success?: boolean;
-}
-
-/** Barcha tugma ko‘rinishlari uchun yagona klass yig‘uvchi (Button, ButtonLink, ButtonAnchor). */
-export function buttonClass({ variant = 'primary', size = 'md', fullWidth, iconOnly }: ButtonLookProps, ...extra: Array<string | false | null | undefined>) {
-  return cx('gm-button', `gm-button--${variant}`, `gm-button--${size}`, fullWidth && 'gm-button--full', iconOnly && 'gm-button--icon', ...extra);
 }
 
 function Content({ leftIcon, rightIcon, children }: { leftIcon?: ReactNode; rightIcon?: ReactNode; children?: ReactNode }) {

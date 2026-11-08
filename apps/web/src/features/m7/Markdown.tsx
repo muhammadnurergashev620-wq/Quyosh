@@ -2,13 +2,13 @@ import { Fragment } from 'react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { isSafeInternalPath } from '@/lib/return-to';
+import { slugify } from './Markdown.helpers';
 
 /**
  * Bilimlar markazi uchun kichik, xavfsiz Markdown renderer: HTML qabul qilinmaydi (matn React orqali),
  * havolalar faqat http(s) yoki ichki yo‘llar. Qo‘llab-quvvatlanadi: ##/### sarlavhalar, paragraf, ro‘yxatlar,
  * jadval, **qalin**, *kursiv*, `kod`, [havola](url).
  */
-const slugify = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '');
 
 function inline(text: string, key = 0): ReactNode[] {
   const out: ReactNode[] = [];
@@ -32,10 +32,6 @@ function inline(text: string, key = 0): ReactNode[] {
   }
   if (last < text.length) out.push(text.slice(last));
   return out;
-}
-
-export function headingsOf(md: string) {
-  return md.split('\n').filter((l) => /^#{2,3}\s/.test(l)).map((l) => ({ level: l.startsWith('###') ? 3 : 2, text: l.replace(/^#+\s*/, ''), id: slugify(l.replace(/^#+\s*/, '')) }));
 }
 
 export function Markdown({ source }: { source: string }) {

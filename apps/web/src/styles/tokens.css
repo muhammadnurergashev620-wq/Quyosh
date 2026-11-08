@@ -244,3 +244,7 @@
 /* ── Pushti (bildirishnoma toifasi) va kod bloki ikkilamchi matni ── */
 :root { --qs-color-pink: #d6338a; --qs-color-pink-bg: #fbe3ef; --qs-code-muted: #6b7fa8; }
 :root[data-theme='dark'] { --qs-color-pink: #ff8cc6; --qs-color-pink-bg: #3b1a2d; }
+
+/* ── Tooltip (InfoTip) va brend ko‘k rangi (logotip) ── */
+:root { --qs-tooltip-bg: #111827; --qs-tooltip-text: #f9fafb; --qs-brand-blue: #1373f5; }
+:root[data-theme='dark'] { --qs-tooltip-bg: #f3f4f6; --qs-tooltip-text: #111827; }

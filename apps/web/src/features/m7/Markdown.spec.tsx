@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { headingsOf, Markdown } from './Markdown';
+import { Markdown } from './Markdown';
+import { headingsOf } from './Markdown.helpers';
 
 const md = (s: string) => render(<MemoryRouter><Markdown source={s} /></MemoryRouter>).container;
 

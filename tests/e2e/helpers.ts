@@ -27,7 +27,7 @@ export async function loginWithPassword(page: Page, baseUrl: string, login: stri
 
 /** OTP sahifasidagi dev-rejim kodini o‘qib kiritadi (OTP_DEV_ECHO=true, faqat test/staging). */
 export async function enterScreenOtp(page: Page) {
-  const code = (await page.locator('.gm-otp-page strong').first().textContent())?.trim() ?? '';
+  const code = (await page.locator('.gm-otp__devcode').first().textContent())?.trim() ?? '';
   expect(code).toMatch(/^\d{4,8}$/);
   await page.locator('.gm-otp-page input').first().click();
   await page.keyboard.type(code);

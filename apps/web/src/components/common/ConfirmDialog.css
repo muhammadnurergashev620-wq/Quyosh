@@ -23,8 +23,8 @@
 }
 .gm-modal--confirm .gm-modal__footer .gm-button--secondary { background: var(--qs-color-surface-muted); color: var(--qs-color-text); }
 .gm-modal--confirm .gm-modal__footer .gm-button--secondary:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-text) 10%, var(--qs-color-surface-muted)); }
-.gm-modal--confirm .gm-modal__footer .gm-button--danger { background: color-mix(in srgb, var(--qs-color-danger) 88%, #2a0606); color: #fff; box-shadow: 0 10px 20px -12px var(--qs-color-danger); }
-.gm-modal--confirm .gm-modal__footer .gm-button--danger:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-danger) 78%, #2a0606); color: #fff; filter: none; transform: translateY(-1px); }
+.gm-modal--confirm .gm-modal__footer .gm-button--danger { background: color-mix(in srgb, var(--qs-color-danger) 88%, black); color: var(--qs-color-on-dark); box-shadow: 0 10px 20px -12px var(--qs-color-danger); }
+.gm-modal--confirm .gm-modal__footer .gm-button--danger:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-danger) 78%, black); color: var(--qs-color-on-dark); filter: none; transform: translateY(-1px); }
 .gm-modal--confirm .gm-modal__footer .gm-button--primary { box-shadow: 0 10px 20px -12px var(--qs-color-primary); }
 .gm-modal--confirm .gm-modal__footer .gm-button:focus-visible { outline: 2px solid var(--qs-focus-ring); outline-offset: 3px; }
 @media (max-width: 520px) {

@@ -3,8 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle2, LifeBuoy, Paperclip, Send, Star } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Badge, type BadgeTone } from '@/components/ui/Badge';
-import { Button, ButtonLink, buttonClass } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Button, ButtonLink } from '@/components/ui/Button';
+import { buttonClass } from '@/components/ui/Button.helpers';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/Textarea';
@@ -14,7 +15,6 @@ import { calcService } from '@/features/calc/calc.service';
 import { dealsService } from '@/features/deals/deals.service';
 import { m7Service, uploadMedia } from '@/features/m7/m7.service';
 import { tr } from '@/features/m7/i18n-text';
-import type { TicketStatus } from '@/features/m7/types';
 import { useMe } from '@/features/session/hooks/useMe';
 import { useAuthStore } from '@/store/auth.store';
 import { getErrorMessage } from '@/lib/error-messages';
@@ -28,15 +28,7 @@ import '@/features/m7/m7.css';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { SelectMenu } from '@/components/ui/SelectMenu';
 import { Tab } from '@/components/ui/Tabs';
-
-export const CATEGORY_LABEL: Record<string, string> = {
-  ACCOUNT: t('Akkaunt va kirish'), CALCULATOR: t('Kalkulyator'), REQUEST_QUOTE: t('So‘rov va takliflar'), INSTALLATION: t('Montaj'),
-  SHOP: t('Do‘kon kabineti'), TECHNICAL: t('Texnik xato'), SECURITY: t('Xavfsizlik'), OTHER: t('Boshqa'),
-};
-export const TICKET_STATUS: Record<TicketStatus, { label: string; tone: BadgeTone }> = {
-  OPEN: { label: t('Ochiq'), tone: 'primary' }, IN_PROGRESS: { label: t('Ko‘rib chiqilmoqda'), tone: 'primary' }, WAITING_USER: { label: t('Javobingiz kutilmoqda'), tone: 'warning' },
-  RESOLVED: { label: t('Hal qilindi'), tone: 'success' }, CLOSED: { label: t('Yopilgan'), tone: 'neutral' },
-};
+import { CATEGORY_LABEL, TICKET_STATUS } from './SupportPages.helpers';
 
 /** U7.7: murojaat yaratish — mavzu yozilganda FAQ tavsiyalari (300 ms), bog‘liq obyekt, 5 tagacha fayl; guest — OTP. */
 function NewTicket({ onDone }: { onDone: (r: { id: string; code: string; firstResponseDueAt: string }) => void }) {
