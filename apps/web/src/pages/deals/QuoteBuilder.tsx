@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Download, LayoutTemplate, Plus, Search, Trash2 } from 'lucide-react';
@@ -247,7 +248,7 @@ function BuilderForm({ lead, quote, shopId, canSend, canWithdraw, onClose, onSav
                 <Input label={t('Chegirma')} suffix={t('so‘m')} inputMode="numeric" disabled={!editable} value={f.discountAmount} onChange={(e) => set({ discountAmount: e.target.value.replace(/[^\d]/g, '') })} />
                 <Input label={t('QQS stavkasi')} suffix="%" inputMode="decimal" disabled={!editable} value={f.vatRate} onChange={(e) => set({ vatRate: e.target.value.replace(/[^\d.,]/g, '') })} />
               </div>
-              <label className="qs-check"><input type="checkbox" disabled={!editable} checked={f.vatIncluded} onChange={(e) => set({ vatIncluded: e.target.checked })} /> {t('Narxlarda QQS bor (aks holda qo‘shiladi)')}</label>
+              <Checkbox inline label={t('Narxlarda QQS bor (aks holda qo‘shiladi)')} disabled={!editable} checked={f.vatIncluded} onChange={(e) => set({ vatIncluded: e.target.checked })} />
               <div className="qs-form__row">
                 <Input label={t('Kafolat: uskuna')} suffix={t('oy')} inputMode="numeric" required disabled={!editable} value={f.warrantyEquipmentMonths} onChange={(e) => set({ warrantyEquipmentMonths: e.target.value.replace(/\D/g, '') })} />
                 <Input label={t('Kafolat: montaj')} suffix={t('oy')} inputMode="numeric" required disabled={!editable} value={f.warrantyInstallationMonths} onChange={(e) => set({ warrantyInstallationMonths: e.target.value.replace(/\D/g, '') })} />

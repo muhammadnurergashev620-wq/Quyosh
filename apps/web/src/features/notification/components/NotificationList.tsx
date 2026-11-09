@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -93,10 +94,7 @@ export function NotificationList() {
         <div className="gm-notify__actions">
           {selecting ? (
             <>
-              <label className="gm-notify__selectall">
-                <input type="checkbox" checked={allSelected} disabled={selectableIds.length === 0} onChange={() => setSelected(allSelected ? new Set() : new Set(selectableIds))} />
-                <span>{t('Hammasini tanlash')}</span>
-              </label>
+              <Checkbox inline labelClassName="gm-notify__selectall" label={<span>{t('Hammasini tanlash')}</span>} checked={allSelected} disabled={selectableIds.length === 0} onChange={() => setSelected(allSelected ? new Set() : new Set(selectableIds))} />
               <Button size="sm" leftIcon={<CheckCheck />} disabled={selected.size === 0} loading={bulkPending} onClick={() => void markSelected()}>
                 {t('O‘qilgan qilish')}{selected.size > 0 ? ` (${selected.size})` : ''}
               </Button>
@@ -135,7 +133,7 @@ export function NotificationList() {
                   onOpen={(value) => (selecting && value.status !== 'READ' ? toggle(value.id) : open(value))}
                   onMarkRead={markRead}
                   leading={selecting ? (
-                    <input type="checkbox" aria-label={t('Tanlash')} checked={selected.has(item.id)} disabled={item.status === 'READ'} onChange={() => toggle(item.id)} />
+                    <Checkbox hideLabel label={t('Tanlash')} checked={selected.has(item.id)} disabled={item.status === 'READ'} onChange={() => toggle(item.id)} />
                   ) : undefined}
                 />
               ))}

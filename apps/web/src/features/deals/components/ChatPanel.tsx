@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -227,7 +228,7 @@ export function ChatPanel({ rsId, side, visits, context, canWrite = true, canAsk
           </div>
           {side === 'SHOP' && (
             <div className="qs-page__actions">
-              {canAsk && <label className="qs-check"><input type="checkbox" checked={asClarification} onChange={(e) => setAsClarification(e.target.checked)} /> {t('Savol sifatida (javob kutiladi)')}</label>}
+              {canAsk && <Checkbox inline label={t('Savol sifatida (javob kutiladi)')} checked={asClarification} onChange={(e) => setAsClarification(e.target.checked)} />}
               <Button size="sm" variant="secondary" onClick={() => setProposeOpen(true)}><CalendarClock size={15} /> {t('O‘lchov vaqtini taklif qilish')}</Button>
             </div>
           )}

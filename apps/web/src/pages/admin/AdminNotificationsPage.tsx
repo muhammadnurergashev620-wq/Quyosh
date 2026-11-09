@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Bell, CalendarDays, Check, CheckCheck, ChevronLeft, ChevronRight, Eye, Mail, MailOpen, MoreHorizontal, RotateCcw, Search, Settings, ShieldAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -235,10 +236,7 @@ export function AdminNotificationsPage() {
         </div>
 
         <div className="gm-ul__bulk">
-          <label className="gm-ul__check">
-            <input type="checkbox" checked={allSelected} onChange={() => setSelected(allSelected ? new Set() : new Set(items.map((item) => item.id)))} disabled={items.length === 0} />
-            <span>{selected.size > 0 ? t('Tanlandi: {count}', { count: selected.size }) : t('Barchasini tanlash')}</span>
-          </label>
+          <Checkbox inline labelClassName="gm-ul__check" label={<span>{selected.size > 0 ? t('Tanlandi: {count}', { count: selected.size }) : t('Barchasini tanlash')}</span>} checked={allSelected} onChange={() => setSelected(allSelected ? new Set() : new Set(items.map((item) => item.id)))} disabled={items.length === 0} />
           <Button size="sm" variant="secondary" loading={markRead.isPending} disabled={unreadSelected.length === 0} onClick={() => markRead.mutate(unreadSelected, { onSuccess: (result) => { pushToast(t('{count} ta bildirishnoma o‘qilgan deb belgilandi', { count: result.count }), 'success'); setSelected(new Set()); } })}>
             <Check size={15} aria-hidden="true" /> {t('Tanlanganlarni o‘qilgan deb belgilash')}
           </Button>
@@ -272,7 +270,7 @@ export function AdminNotificationsPage() {
                   return (
                     <tr key={item.id} className={cx(openId === item.id && 'is-open', selected.has(item.id) && 'is-selected', !item.read && 'gm-ntf__unread')} onClick={() => setOpenId(item.id)}>
                       <td className="gm-ul__c-check" onClick={(event) => event.stopPropagation()}>
-                        <input type="checkbox" checked={selected.has(item.id)} onChange={() => toggle(item.id)} aria-label={t('{title} ni tanlash', { title: notificationTitle(item) })} />
+                        <Checkbox hideLabel label={t('{title} ni tanlash', { title: notificationTitle(item) })} checked={selected.has(item.id)} onChange={() => toggle(item.id)} />
                       </td>
                       <td className="gm-ul__c-num">{(page - 1) * pageSize + index + 1}</td>
                       <td>

@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useState } from "react";
 import { Check, CheckCircle2, Copy, RefreshCw } from "lucide-react";
 import { Alert } from "@/components/ui/Alert";
@@ -232,17 +233,10 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
         <section className="gm-newadm__sec" aria-labelledby="gm-newadm-s3">
           <h3 id="gm-newadm-s3" className="gm-newadm__sec-title">{t('Huquqlar')}</h3>
           {superAdminActor && (
-            <label className="gm-newadm__super">
-              <input
-                type="checkbox"
-                checked={isSuperAdmin}
-                onChange={(event) => setIsSuperAdmin(event.target.checked)}
-              />
-              <span>
+            <Checkbox inline labelClassName="gm-newadm__super" label={<span>
                 <strong>{t('Superadmin huquqi')}</strong>
                 <small>{t('Boshqa adminlarni yaratish va boshqarish mumkin bo‘ladi. Odatda kerak emas.')}</small>
-              </span>
-            </label>
+              </span>} checked={isSuperAdmin} onChange={(event) => setIsSuperAdmin(event.target.checked)} />
           )}
           {!isSuperAdmin && (
             <PermissionPicker
@@ -254,17 +248,10 @@ export function CreateAdminDialog({ onClose, scope }: { onClose: () => void; sco
           )}
           {superAdminActor && !isSuperAdmin && (
             <>
-              <label className="gm-newadm__super">
-                <input
-                  type="checkbox"
-                  checked={canCreateAdmins}
-                  onChange={(event) => setCanCreateAdmins(event.target.checked)}
-                />
-                <span>
+              <Checkbox inline labelClassName="gm-newadm__super" label={<span>
                   <strong>{t('Yangi adminlar yarata oladi')}</strong>
                   <small>{t('Bu admin o‘zi yaratgan adminlarni boshqaradi. Qaysi huquqlarni bera olishini quyida o‘zingiz belgilaysiz.')}</small>
-                </span>
-              </label>
+                </span>} checked={canCreateAdmins} onChange={(event) => setCanCreateAdmins(event.target.checked)} />
               {canCreateAdmins && (
                 <PermissionPicker
                   value={grantablePermissions}

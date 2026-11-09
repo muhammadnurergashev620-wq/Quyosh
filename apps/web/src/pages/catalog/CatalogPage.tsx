@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
@@ -110,7 +111,7 @@ export function CatalogPage() {
               <input aria-label={t('gacha')} placeholder={t('gacha')} inputMode="numeric" defaultValue={filters.maxPrice ?? ''} onBlur={(e) => set('maxNarx', e.target.value.replace(/\D/g, '') || undefined)} />
             </div>
           </div>
-          <label className="qs-check"><input type="checkbox" checked={filters.stock === 'IN_STOCK'} onChange={(e) => set('mavjud', e.target.checked ? '1' : undefined)} /> {t('Faqat mavjudlari')}</label>
+          <Checkbox inline label={t('Faqat mavjudlari')} checked={filters.stock === 'IN_STOCK'} onChange={(e) => set('mavjud', e.target.checked ? '1' : undefined)} />
           {[...params.keys()].some((key) => key !== 'saralash') && <Button size="sm" variant="ghost" onClick={() => setParams(new URLSearchParams(), { replace: true })}>{t('Filtrlarni tozalash')}</Button>}
         </aside>
         <section>

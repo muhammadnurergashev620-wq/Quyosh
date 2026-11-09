@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useId, useRef, useState } from 'react';
 import { CheckCircle2, Copy, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -131,10 +132,7 @@ export function NewCredentialsCard({ onContinue, badge, continueLabel }: { onCon
         </div>
       </div>
 
-      <label className="gm-save__confirm" htmlFor={checkId}>
-        <input id={checkId} type="checkbox" required checked={saved} onChange={(event) => setSaved(event.target.checked)} />
-        <span>{t('Login va parolni saqlab oldim')}</span>
-      </label>
+      <Checkbox inline labelClassName="gm-save__confirm" label={<span>{t('Login va parolni saqlab oldim')}</span>} id={checkId} required checked={saved} onChange={(event) => setSaved(event.target.checked)} />
 
       <Button fullWidth className="gm-save__cta" disabled={!saved} onClick={onContinue}>
         {continueLabel ?? t('Kirishga o‘tish')}

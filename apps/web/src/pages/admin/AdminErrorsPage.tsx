@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AlertOctagon, AlertTriangle, Bug, CalendarDays, Check, ChevronLeft, ChevronRight, Download, Eye, MoreHorizontal, RefreshCw, RotateCcw, Search, Server, Smartphone, Users, WifiOff } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -291,10 +292,7 @@ export function AdminErrorsPage() {
         </div>
 
         <div className="gm-ul__bulk">
-          <label className="gm-ul__check">
-            <input type="checkbox" checked={allSelected} onChange={() => setSelected(allSelected ? new Set() : new Set(items.map((item) => item.fingerprint)))} disabled={items.length === 0} />
-            <span>{selected.size > 0 ? t('Tanlandi: {count}', { count: selected.size }) : t('Barchasini tanlash')}</span>
-          </label>
+          <Checkbox inline labelClassName="gm-ul__check" label={<span>{selected.size > 0 ? t('Tanlandi: {count}', { count: selected.size }) : t('Barchasini tanlash')}</span>} checked={allSelected} onChange={() => setSelected(allSelected ? new Set() : new Set(items.map((item) => item.fingerprint)))} disabled={items.length === 0} />
           <Button size="sm" variant="secondary" disabled={selected.size === 0} loading={resolve.isPending} onClick={() => void resolveSelected(true)}><Check size={15} aria-hidden="true" /> {t('Hal qilindi deb belgilash')}</Button>
           <Button size="sm" variant="ghost" disabled={selected.size === 0} onClick={() => void resolveSelected(false)}><RotateCcw size={15} aria-hidden="true" /> {t('Qayta ochish')}</Button>
         </div>
@@ -327,7 +325,7 @@ export function AdminErrorsPage() {
                   return (
                     <tr key={row.fingerprint} className={cx(openFp === row.fingerprint && 'is-open', selected.has(row.fingerprint) && 'is-selected')} onClick={() => setOpenFp(row.fingerprint)}>
                       <td className="gm-ul__c-check" onClick={(event) => event.stopPropagation()}>
-                        <input type="checkbox" checked={selected.has(row.fingerprint)} onChange={() => toggle(row.fingerprint)} aria-label={t('{name} ni tanlash', { name: statusName(row.status, row.kind) })} />
+                        <Checkbox hideLabel label={t('{name} ni tanlash', { name: statusName(row.status, row.kind) })} checked={selected.has(row.fingerprint)} onChange={() => toggle(row.fingerprint)} />
                       </td>
                       <td className="gm-ul__c-num">{(page - 1) * pageSize + index + 1}</td>
                       <td><span className={cx('gm-errs2__sev', severe ? 'is-err' : 'is-warn')}>{severe ? <AlertOctagon size={13} /> : <AlertTriangle size={13} />} {severe ? t('Jiddiy') : t('Ogohlantirish')}</span></td>

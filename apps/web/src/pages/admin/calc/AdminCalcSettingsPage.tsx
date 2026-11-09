@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
@@ -161,8 +162,8 @@ function FinancingTab() {
             <Input label={t('Oylik to‘lov (xizmat), so‘m')} inputMode="numeric" value={form.monthlyFee} onChange={(e) => setForm({ ...form, monthlyFee: e.target.value })} />
           </div>
           <div className="qs-form__row">
-            <label className="qs-check"><input type="checkbox" checked={form.household} onChange={(e) => setForm({ ...form, household: e.target.checked })} /> {t('Maishiy')}</label>
-            <label className="qs-check"><input type="checkbox" checked={form.legal} onChange={(e) => setForm({ ...form, legal: e.target.checked })} /> {t('Yuridik')}</label>
+            <Checkbox inline label={t('Maishiy')} checked={form.household} onChange={(e) => setForm({ ...form, household: e.target.checked })} />
+            <Checkbox inline label={t('Yuridik')} checked={form.legal} onChange={(e) => setForm({ ...form, legal: e.target.checked })} />
             <Input label={t('Boshlanishi')} type="date" value={form.effectiveFrom} onChange={(e) => setForm({ ...form, effectiveFrom: e.target.value })} />
           </div>
           <Input label={t('Rasmiy manba')} type="url" value={form.sourceUrl} onChange={(e) => setForm({ ...form, sourceUrl: e.target.value })} hint={t('Tasdiqlash uchun majburiy')} />

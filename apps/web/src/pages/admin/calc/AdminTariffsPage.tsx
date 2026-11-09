@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
@@ -86,7 +87,7 @@ function TariffForm({ initial, onDone }: { initial?: Tariff; onDone: () => void 
         <Input label={t('Oylik qat’iy to‘lov, so‘m')} inputMode="numeric" value={fixed} onChange={(e) => setFixed(e.target.value.replace(/\D/g, ''))} />
       </div>
       <Input label={t('Rasmiy manba (havola)')} type="url" value={sourceUrl} onChange={(e) => setSourceUrl(e.target.value)} placeholder="https://" hint={t('Tasdiqlash uchun majburiy (TZ: tarifni o‘zboshimchalik bilan kiritib bo‘lmaydi)')} />
-      <label className="qs-check"><input type="checkbox" checked={tou} onChange={(e) => setTou(e.target.checked)} /> {t('Kun/tun tarifi')}</label>
+      <Checkbox inline label={t('Kun/tun tarifi')} checked={tou} onChange={(e) => setTou(e.target.checked)} />
       {tou && (
         <div className="qs-form__row">
           <Input label={t('Tun boshlanishi (soat)')} inputMode="numeric" value={night.start} onChange={(e) => setNight({ ...night, start: e.target.value.replace(/\D/g, '').slice(0, 2) })} />

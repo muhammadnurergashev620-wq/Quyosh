@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
@@ -303,14 +304,14 @@ export function ShopCatalogPage() {
           <table className="qs-table">
             <thead>
               <tr>
-                {writable && <th><input type="checkbox" aria-label={t('Hammasini tanlash')} checked={items.every((item) => selected.has(item.id))} onChange={(e) => setSelected(e.target.checked ? new Set(items.map((item) => item.id)) : new Set())} /></th>}
+                {writable && <th><Checkbox hideLabel label={t('Hammasini tanlash')} checked={items.every((item) => selected.has(item.id))} onChange={(e) => setSelected(e.target.checked ? new Set(items.map((item) => item.id)) : new Set())} /></th>}
                 <th>{t('Model')}</th><th>{t('Narxlar (filiallar bo‘yicha)')}</th><th>{t('Holat')}</th><th>{t('Yangilangan')}</th>{writable && <th />}
               </tr>
             </thead>
             <tbody>
               {items.map((product) => (
                 <tr key={product.id}>
-                  {writable && <td><input type="checkbox" aria-label={`${product.productModel.brand} ${product.productModel.model}`} checked={selected.has(product.id)} onChange={() => toggle(product.id)} /></td>}
+                  {writable && <td><Checkbox hideLabel label={`${product.productModel.brand} ${product.productModel.model}`} checked={selected.has(product.id)} onChange={() => toggle(product.id)} /></td>}
                   <td>
                     <div className="qs-cell-title">
                       <strong>{product.productModel.brand} {product.productModel.model}</strong>

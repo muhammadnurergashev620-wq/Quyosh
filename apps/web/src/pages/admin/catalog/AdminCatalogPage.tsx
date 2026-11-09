@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
@@ -220,7 +221,7 @@ function CategoryForm({ initial, categories, onDone }: { initial?: Category; cat
         <Input label={t('Tartib')} inputMode="numeric" value={sortOrder} onChange={(e) => setSortOrder(e.target.value.replace(/[^\d-]/g, ''))} />
       </div>
       <Textarea label={t('Atributlar sxemasi (JSON)')} value={schema} onChange={(e) => setSchema(e.target.value)} rows={8} className="qs-mono" error={schemaError || undefined} hint='[{"key":"nominalPowerW","type":"number","unit":"W","label":{"uz":"Quvvat"},"filter":"range"}]' />
-      <label className="qs-check"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} /> {t('Faol')}</label>
+      <Checkbox inline label={t('Faol')} checked={active} onChange={(e) => setActive(e.target.checked)} />
       <div className="qs-form__actions"><Button type="submit" loading={save.isPending}>{t('Saqlash')}</Button></div>
     </form>
   );

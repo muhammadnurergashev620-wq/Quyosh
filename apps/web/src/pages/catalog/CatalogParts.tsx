@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { Link, useNavigate } from 'react-router-dom';
 import { BatteryCharging, Cable, Grid3x3, Package, X, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -23,17 +24,17 @@ export function ProductCard({ item }: { item: CatalogItem }) {
   return (
     <Link to={`/mijoz/mahsulotlar/${item.slug}`} className="qs-pcard">
       <div className="qs-pcard__media"><CategoryGlyph slug={item.category.slug} /></div>
-      <label className="qs-pcard__compare" onClick={(e) => e.stopPropagation()}>
-        <input
-          type="checkbox"
+      <span className="qs-pcard__compare" onClick={(e) => e.stopPropagation()}>
+        <Checkbox
+          inline
+          label={t('Solishtirish')}
           checked={inCompare}
           onChange={() => {
             if (!compare.toggle({ id: item.id, slug: item.slug, label: `${item.brand} ${item.model}` })) pushToast(t('Bir vaqtda 4 tagacha mahsulot solishtiriladi'), 'info');
           }}
           onClick={(e) => e.stopPropagation()}
         />
-        {t('Solishtirish')}
-      </label>
+      </span>
       <div className="qs-pcard__body">
         <span className="qs-pcard__brand">{item.brand}</span>
         <span className="qs-pcard__name">{item.model}</span>

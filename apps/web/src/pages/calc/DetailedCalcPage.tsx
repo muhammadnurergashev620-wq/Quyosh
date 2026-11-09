@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -243,7 +244,7 @@ function AppliancesEditor({ rows, onChange }: { rows: ApplianceRow[]; onChange: 
             <label>{t('Soni')}<input className="qs-input-sm" inputMode="numeric" value={row.count} onChange={(e) => update(index, { count: Math.max(1, Number(e.target.value.replace(/\D/g, '')) || 1) })} /></label>
             <label>{t('Quvvat, Vt')}<input className="qs-input-sm" inputMode="numeric" value={row.powerW} onChange={(e) => update(index, { powerW: Math.max(1, Number(e.target.value.replace(/\D/g, '')) || 1) })} /></label>
             <label>{t('Soat/kun')}<input className="qs-input-sm" inputMode="decimal" value={row.hoursPerDay} onChange={(e) => update(index, { hoursPerDay: Math.min(24, Number(e.target.value.replace(',', '.')) || 0) })} /></label>
-            <label className="qs-check" title={t('Uzilishda ham ishlashi kerak')}><input type="checkbox" checked={!!row.isCritical} onChange={(e) => update(index, { isCritical: e.target.checked })} /> {t('Uzilishda')}</label>
+            <Checkbox inline title={t('Uzilishda ham ishlashi kerak')} label={t('Uzilishda')} checked={!!row.isCritical} onChange={(e) => update(index, { isCritical: e.target.checked })} />
             <Button size="sm" variant="ghost" aria-label={t('O‘chirish')} onClick={() => onChange(rows.filter((_, i) => i !== index))}><Trash2 size={14} /></Button>
           </div>
         ))}

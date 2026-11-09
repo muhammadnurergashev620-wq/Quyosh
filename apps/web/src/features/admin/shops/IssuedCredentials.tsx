@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
@@ -32,7 +33,7 @@ export function IssuedCredentials({ title, login, password, onClose, extra }: { 
         <Button variant="secondary" onClick={() => copy('password')}>{copied === 'password' ? <Check size={15} /> : <Copy size={15} />} {t('Nusxa olish')}</Button>
         <Button variant="ghost" onClick={() => copy('both')}>{copied === 'both' ? <Check size={15} /> : <Copy size={15} />} {t('Login va parolni nusxalash')}</Button>
       </div>
-      <label className="qs-check"><input type="checkbox" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} /> {t('Parolni nusxa oldim va egasiga yetkazaman')}</label>
+      <Checkbox inline label={t('Parolni nusxa oldim va egasiga yetkazaman')} checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} />
       <div className="qs-form__actions">
         <Button disabled={!confirmed} onClick={onClose}>{t('Yopish')}</Button>
       </div>

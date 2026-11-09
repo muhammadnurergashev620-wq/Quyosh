@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -300,7 +301,7 @@ export function CompareQuotesPage() {
     <div className="qs-page">
       <div className="qs-page__head">
         <div><h1>{t('Takliflarni solishtirish')}</h1><p><Link to={`/mijoz/sorovlar/${id}`}>{t('So‘rov №{n}', { n: data.data.request.number })}</Link> · {t('O‘zini oqlash muddati sizning hisobingiz bo‘yicha, taklif narxi bilan qayta hisoblangan.')}</p></div>
-        <label className="qs-check"><input type="checkbox" checked={diffOnly} onChange={(e) => setDiffOnly(e.target.checked)} /> {t('Faqat farqlarni ko‘rsatish')}</label>
+        <Checkbox inline label={t('Faqat farqlarni ko‘rsatish')} checked={diffOnly} onChange={(e) => setDiffOnly(e.target.checked)} />
       </div>
       {quotes.length < 2 && <Alert tone="info">{t('Solishtirish uchun kamida 2 ta taklif kerak.')}</Alert>}
       <div className="qs-compare">

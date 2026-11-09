@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -196,9 +197,9 @@ export function RequestWizard({ open, onClose, preset }: { open: boolean; onClos
               </TabBar>
               <Input label={t('Kerakli quvvat')} suffix={t('kVt')} inputMode="decimal" value={capacity} onChange={(e) => setCapacity(e.target.value.replace(/[^\d.,]/g, ''))} hint={basis?.powerKw ? t('Hisobdan olindi') : undefined} />
               <div className="qs-chips">
-                <label className="qs-check"><input type="checkbox" checked={battery} onChange={(e) => setBattery(e.target.checked)} /> {t('Akkumulyator kerak')}</label>
-                <label className="qs-check"><input type="checkbox" checked={installation} onChange={(e) => setInstallation(e.target.checked)} /> {t('Montaj kerak')}</label>
-                <label className="qs-check"><input type="checkbox" checked={financing} onChange={(e) => setFinancing(e.target.checked)} /> {t('Kredit/bo‘lib to‘lash qiziqtiradi')}</label>
+                <Checkbox inline label={t('Akkumulyator kerak')} checked={battery} onChange={(e) => setBattery(e.target.checked)} />
+                <Checkbox inline label={t('Montaj kerak')} checked={installation} onChange={(e) => setInstallation(e.target.checked)} />
+                <Checkbox inline label={t('Kredit/bo‘lib to‘lash qiziqtiradi')} checked={financing} onChange={(e) => setFinancing(e.target.checked)} />
               </div>
               <Textarea label={t('Izoh (ixtiyoriy)')} value={notes} maxLength={2000} onChange={(e) => setNotes(e.target.value)} hint={t('{n} / 2000', { n: notes.length })} />
             </>

@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -283,10 +284,7 @@ export function AdminUsersPage() {
         </div>
 
         <div className="gm-ul__bulk">
-          <label className="gm-ul__check">
-            <input type="checkbox" checked={allSelected} onChange={() => setSelected(allSelected ? new Set() : new Set(selectable.map((user) => user.id)))} disabled={selectable.length === 0} />
-            <span>{selected.size > 0 ? t('Tanlandi: {count}', { count: selected.size }) : t('Barchasini tanlash')}</span>
-          </label>
+          <Checkbox inline labelClassName="gm-ul__check" label={<span>{selected.size > 0 ? t('Tanlandi: {count}', { count: selected.size }) : t('Barchasini tanlash')}</span>} checked={allSelected} onChange={() => setSelected(allSelected ? new Set() : new Set(selectable.map((user) => user.id)))} disabled={selectable.length === 0} />
           <Dropdown
             triggerClassName="gm-ul__menu-btn"
             label={t('Ommaviy amal')}
@@ -334,7 +332,7 @@ export function AdminUsersPage() {
                   return (
                     <tr key={user.id} className={cx(drawer?.id === user.id && 'is-open', selected.has(user.id) && 'is-selected')} onClick={() => setDrawer(user)}>
                       <td className="gm-ul__c-check" onClick={(event) => event.stopPropagation()}>
-                        <input type="checkbox" checked={selected.has(user.id)} disabled={locked} onChange={() => toggle(user.id)} aria-label={t('{name} ni tanlash', { name })} />
+                        <Checkbox hideLabel label={t('{name} ni tanlash', { name })} checked={selected.has(user.id)} disabled={locked} onChange={() => toggle(user.id)} />
                       </td>
                       <td className="gm-ul__c-num">{(page - 1) * PAGE_SIZE + index + 1}</td>
                       <td>

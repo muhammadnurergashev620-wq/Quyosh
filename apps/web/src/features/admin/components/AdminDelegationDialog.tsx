@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useState } from 'react';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
@@ -34,13 +35,10 @@ export function AdminDelegationDialog({ admin, onClose }: { admin: AdminAccount;
           <strong>{name}</strong>{' '}{t('· ID {accountNumber}', { accountNumber: admin.accountNumber })}
         </p>
         {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}
-        <label className="gm-newadm__super">
-          <input type="checkbox" checked={enabled} onChange={(event) => setEnabled(event.target.checked)} disabled={save.isPending} />
-          <span>
+        <Checkbox inline labelClassName="gm-newadm__super" label={<span>
             <strong>{t('Yangi adminlar yarata oladi')}</strong>
             <small>{t('Bu admin o‘zi yaratgan adminlarni boshqaradi. Superadmin va shu vakolatni bera olmaydi.')}</small>
-          </span>
-        </label>
+          </span>} checked={enabled} onChange={(event) => setEnabled(event.target.checked)} disabled={save.isPending} />
         {enabled && <PermissionPicker value={grantable} onChange={setGrantable} disabled={save.isPending} title={t('Yangi adminlarga bera oladigan huquqlar')} />}
         {invalid && <Alert tone="warning">{t('Kamida bitta berilishi mumkin bo‘lgan huquq tanlang.')}</Alert>}
       </div>

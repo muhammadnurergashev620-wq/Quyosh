@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -359,10 +360,7 @@ export function AdminAdminsPage() {
         <div className="gm-ul__bulk">
           {isSuper && (
             <>
-              <label className="gm-ul__check">
-                <input type="checkbox" checked={allSelected} onChange={() => setSelected(allSelected ? new Set() : new Set(selectable.map((admin) => admin.id)))} disabled={selectable.length === 0} />
-                <span>{selected.size > 0 ? t('Tanlandi: {count}', { count: selected.size }) : t('Barchasini tanlash ({count})', { count: selectable.length })}</span>
-              </label>
+              <Checkbox inline labelClassName="gm-ul__check" label={<span>{selected.size > 0 ? t('Tanlandi: {count}', { count: selected.size }) : t('Barchasini tanlash ({count})', { count: selectable.length })}</span>} checked={allSelected} onChange={() => setSelected(allSelected ? new Set() : new Set(selectable.map((admin) => admin.id)))} disabled={selectable.length === 0} />
               <Dropdown
                 triggerClassName="gm-ul__menu-btn"
                 label={t('Ommaviy amallar')}
@@ -415,7 +413,7 @@ export function AdminAdminsPage() {
                     <tr key={admin.id} className={cx(drawerId === admin.id && 'is-open', selected.has(admin.id) && 'is-selected')} onClick={() => setDrawerId(admin.id)}>
                       {isSuper && (
                         <td className="gm-ul__c-check" onClick={(event) => event.stopPropagation()}>
-                          <input type="checkbox" checked={selected.has(admin.id)} disabled={!canSelect} onChange={() => toggle(admin.id)} aria-label={t('{name} ni tanlash', { name })} />
+                          <Checkbox hideLabel label={t('{name} ni tanlash', { name })} checked={selected.has(admin.id)} disabled={!canSelect} onChange={() => toggle(admin.id)} />
                         </td>
                       )}
                       <td className="gm-ul__c-num">{(page - 1) * pageSize + index + 1}</td>

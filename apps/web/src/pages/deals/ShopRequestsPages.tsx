@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useCallback, useState } from 'react';
 import type { DragEvent } from 'react';
@@ -102,7 +103,7 @@ export function ShopRequestsPage({ quotedOnly = false }: { quotedOnly?: boolean 
       <div className="qs-page__head">
         <div><h1>{quotedOnly ? t('Takliflar') : t('So‘rovlar')}</h1><p>{t('Tez javob reytingingizni oshiradi: o‘rtacha javob vaqti profilingizda ko‘rinadi.')}</p></div>
         <div className="qs-page__actions">
-          <label className="qs-check"><input type="checkbox" checked={mine} onChange={(e) => setMine(e.target.checked)} /> {t('Faqat menga tayinlangan')}</label>
+          <Checkbox inline label={t('Faqat menga tayinlangan')} checked={mine} onChange={(e) => setMine(e.target.checked)} />
           <TabBar variant="tabs" role="tablist" aria-label={t('Ko‘rinish')}>
             <Tab role="tab" aria-selected={view === 'list'} onClick={() => setParams({})} selected={view === 'list'}><List size={15} /> {t('Ro‘yxat')}</Tab>
             <Tab role="tab" aria-selected={view === 'pipeline'} onClick={() => setParams({ korinish: 'pipeline' })} selected={view === 'pipeline'}><Kanban size={15} /> {t('Pipeline')}</Tab>

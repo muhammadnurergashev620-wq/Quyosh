@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -114,7 +115,7 @@ function ProjectForm({ shopId, project, installations, onClose }: { shopId: stri
           </label>
         </div>
         {upload.isPending && <small className="qs-muted">{t('Yuklanmoqda…')}</small>}
-        <label className="qs-check"><input type="checkbox" checked={f.published} onChange={(e) => setF({ ...f, published: e.target.checked })} /> {t('Profilda ko‘rsatish')}</label>
+        <Checkbox inline label={t('Profilda ko‘rsatish')} checked={f.published} onChange={(e) => setF({ ...f, published: e.target.checked })} />
         {(save.isError || upload.isError) && <Alert tone="danger">{getErrorMessage(save.error ?? upload.error)}</Alert>}
       </div>
     </Modal>
@@ -197,7 +198,7 @@ export function WidgetPage() {
           <Input label={t('Sarlavha')} value={theme.title} maxLength={80} onChange={(e) => setTheme({ ...theme, title: e.target.value })} />
           <label className="gm-field__label" htmlFor="wlang">{t('Til')}</label>
           <SelectMenu id="wlang" className="qs-select" value={theme.lang} onChange={(e) => setTheme({ ...theme, lang: e.target.value as 'uz' | 'oz' | 'ru' | 'en' })}><option value="uz">O‘zbekcha</option><option value="oz">Ўзбекча</option><option value="ru">Русский</option><option value="en">English</option></SelectMenu>
-          <label className="qs-check"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} /> {t('Vidjet faol')}</label>
+          <Checkbox inline label={t('Vidjet faol')} checked={active} onChange={(e) => setActive(e.target.checked)} />
           {save.isError && <Alert tone="danger">{getErrorMessage(save.error)}</Alert>}
           {save.isSuccess && <Alert tone="success">{t('Saqlandi')}</Alert>}
           <div className="qs-form__actions"><Button loading={save.isPending} onClick={() => save.mutate()}>{t('Saqlash')}</Button></div>
@@ -253,7 +254,7 @@ export function AnalyticsPage() {
           <input className="qs-input-sm" type="date" aria-label={t('Dan')} value={from} max={to} onChange={(e) => setFrom(e.target.value)} />
           <input className="qs-input-sm" type="date" aria-label={t('Gacha')} value={to} max={today} onChange={(e) => setTo(e.target.value)} />
           <Button variant="secondary" onClick={() => void m7Service.shopAnalyticsCsv(shopId, `${from}T00:00:00+05:00`, `${to}T23:59:59+05:00`)}><Download size={15} /> CSV</Button>
-          <label className="qs-check"><input type="checkbox" checked={tables} onChange={(e) => setTables(e.target.checked)} /> {t('Jadval ko‘rinishi')}</label>
+          <Checkbox inline label={t('Jadval ko‘rinishi')} checked={tables} onChange={(e) => setTables(e.target.checked)} />
         </div>
       </div>
       {a.isError && <Alert tone="danger">{getErrorMessage(a.error)}</Alert>}

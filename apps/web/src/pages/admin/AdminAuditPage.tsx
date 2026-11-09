@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Activity, BookOpen, Bot, Calculator, CalendarDays, ChevronLeft, ChevronRight, Download, Eye, FileCheck2, Filter, LogIn, MessageSquare, MoreHorizontal, Package, RotateCcw, ScrollText, Search, Settings, Shield, ShieldAlert, Store, UserCog, UserRound, Users } from 'lucide-react';
@@ -274,8 +275,8 @@ export function AdminAuditPage() {
                   <span>{t('Bajaruvchi ID (raqam)')}</span>
                   <input value={actorId} inputMode="numeric" onChange={(event) => setActorId(event.target.value.replace(/\D/g, ''))} placeholder={t('Masalan, 578')} aria-invalid={!!actorId && !actorValid} />
                 </label>
-                <label className="gm-ord2__check"><input type="checkbox" checked={securityOnly} onChange={(event) => setSecurityOnly(event.target.checked)} /> {t('Faqat xavfsizlik hodisalari')}</label>
-                <label className="gm-ord2__check"><input type="checkbox" checked={technical} onChange={(event) => setTechnical(event.target.checked)} /> {t('Texnik yozuvlarni ham ko‘rsatish (sessiya yangilanishi)')}</label>
+                <Checkbox inline labelClassName="gm-ord2__check" label={t('Faqat xavfsizlik hodisalari')} checked={securityOnly} onChange={(event) => setSecurityOnly(event.target.checked)} />
+                <Checkbox inline labelClassName="gm-ord2__check" label={t('Texnik yozuvlarni ham ko‘rsatish (sessiya yangilanishi)')} checked={technical} onChange={(event) => setTechnical(event.target.checked)} />
               </div>
             )}
           </div>

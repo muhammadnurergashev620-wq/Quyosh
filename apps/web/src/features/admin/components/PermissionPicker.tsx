@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ADMIN_PERMISSION_OPTIONS } from "../permissions";
 import { t } from '@/i18n';
 
@@ -59,17 +60,10 @@ export function PermissionPicker({
               {options.filter(
                 (option) => option.group === group,
               ).map((option) => (
-                <label key={option.value} className="gm-perm__item">
-                  <input
-                    type="checkbox"
-                    checked={value.includes(option.value)}
-                    onChange={() => toggle(option.value)}
-                  />
-                  <span>
+                <Checkbox key={option.value} inline labelClassName="gm-perm__item" label={<span>
                     <strong>{option.label}</strong>
                     <small>{option.hint}</small>
-                  </span>
-                </label>
+                  </span>} checked={value.includes(option.value)} onChange={() => toggle(option.value)} />
               ))}
             </div>
           </div>

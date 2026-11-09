@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Button } from '@/components/ui/Button';
@@ -30,10 +31,7 @@ function OpeningHoursEditor({ value, onChange }: { value: OpeningHours; onChange
         return (
           <div key={key} className="qs-hours__row">
             <strong>{label}</strong>
-            <label className="qs-check">
-              <input type="checkbox" checked={!!range} onChange={(e) => set(key, e.target.checked ? ['09:00', '18:00'] : null)} />
-              {range ? t('Ochiq') : t('Dam olish')}
-            </label>
+            <Checkbox inline label={range ? t('Ochiq') : t('Dam olish')} checked={!!range} onChange={(e) => set(key, e.target.checked ? ['09:00', '18:00'] : null)} />
             {range && (
               <span className="qs-hours__times">
                 <input type="time" aria-label={t('{day} ochilish', { day: label })} value={range[0]} onChange={(e) => set(key, [e.target.value, range[1]])} />
@@ -88,9 +86,7 @@ export function BranchForm({ initial, loading, onSubmit, onCancel, submitLabel }
         <span className="gm-field__label">{t('Ish vaqti')}</span>
         <OpeningHoursEditor value={hours} onChange={setHours} />
       </div>
-      <label className="qs-check">
-        <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} /> {t('Filial faol')}
-      </label>
+      <Checkbox inline label={t('Filial faol')} checked={active} onChange={(e) => setActive(e.target.checked)} />
       {error && <p role="alert" className="gm-field__error">{error}</p>}
       <div className="qs-form__actions">
         {onCancel && <Button type="button" variant="ghost" onClick={onCancel}>{t('Bekor qilish')}</Button>}

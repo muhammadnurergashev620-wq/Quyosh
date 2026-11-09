@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
@@ -67,7 +68,7 @@ function ServiceForm({ initial, branches, loading, onSubmit, onCancel }: { initi
         <Input label={t('Montaj kafolati (oy)')} inputMode="numeric" value={warranty} onChange={(e) => setWarranty(e.target.value.replace(/\D/g, '').slice(0, 3))} />
       </div>
       <Textarea label={t('Tavsif')} value={description} onChange={(e) => setDescription(e.target.value)} rows={3} maxLength={2000} hint={t('Nimalar kiradi: kabel, konstruksiya, ishga tushirish…')} />
-      <label className="qs-check"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} /> {t('Xizmat faol')}</label>
+      <Checkbox inline label={t('Xizmat faol')} checked={active} onChange={(e) => setActive(e.target.checked)} />
       {error && <Alert tone="danger">{error}</Alert>}
       <div className="qs-form__actions">
         <Button type="button" variant="ghost" onClick={onCancel}>{t('Bekor qilish')}</Button>

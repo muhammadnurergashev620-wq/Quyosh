@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -44,7 +45,7 @@ export function CalculationsPage() {
             <tbody>
               {list.data.map((row) => (
                 <tr key={row.id}>
-                  <td><input type="checkbox" aria-label={t('Solishtirishga')} checked={selected.includes(row.id)} onChange={() => toggle(row.id)} /></td>
+                  <td><Checkbox hideLabel label={t('Solishtirishga')} checked={selected.includes(row.id)} onChange={() => toggle(row.id)} /></td>
                   <td>
                     <div className="qs-cell-title">
                       <Link to={`/mijoz/natija/${row.id}`}><strong>{row.title || (row.site?.title ?? t('Hisob'))}</strong></Link>

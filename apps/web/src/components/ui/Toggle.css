@@ -67,3 +67,8 @@
   outline: 2px solid var(--qs-focus-ring);
   outline-offset: 2px;
 }
+
+/* Inline va yorliqsiz (jadval) checkbox */
+.gm-toggle--inline { display: inline-flex; align-items: center; gap: var(--qs-space-2); }
+.gm-toggle--bare { gap: 0; }
+.gm-toggle--inline input[type='checkbox'] { margin-top: 0; }

@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -159,7 +160,7 @@ export function AdminTicketPage() {
                 </SelectMenu>
               )}
               <Textarea label={internal ? t('Ichki izoh (foydalanuvchiga ko‘rinmaydi)') : t('Javob')} value={text} maxLength={8000} onChange={(e) => setText(e.target.value)} />
-              <label className="qs-check"><input type="checkbox" checked={internal} onChange={(e) => setInternal(e.target.checked)} /> {t('Ichki izoh')}</label>
+              <Checkbox inline label={t('Ichki izoh')} checked={internal} onChange={(e) => setInternal(e.target.checked)} />
               <div className="qs-form__actions">
                 {!internal && <Button variant="secondary" disabled={!text.trim()} loading={reply.isPending} onClick={() => reply.mutate('RESOLVED')}>{t('Javob va hal qilindi')}</Button>}
                 <Button disabled={!text.trim()} loading={reply.isPending} onClick={() => reply.mutate(undefined)}>{internal ? t('Izohni saqlash') : t('Javob berish')}</Button>
