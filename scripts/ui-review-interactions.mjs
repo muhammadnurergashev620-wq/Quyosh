@@ -104,7 +104,7 @@ async function main() {
     const order = [];
     let visibleFocus = true;
     for (let i = 0; i < 9; i++) {
-      await page.keyboard.press('Tab'); order.push(await activeInfo(page));
+      await page.keyboard.press('Tab'); await page.waitForTimeout(300); order.push(await activeInfo(page));
       const ok = await page.evaluate(() => { const a = document.activeElement; if (!a || a === document.body) return true; const s = getComputedStyle(a); const w = a.closest('.gm-field__control, .gm-phone, .gm-field') ; return s.boxShadow !== 'none' || s.outlineStyle !== 'none' || (w && getComputedStyle(w).boxShadow !== 'none'); });
       if (!ok) visibleFocus = false;
     }

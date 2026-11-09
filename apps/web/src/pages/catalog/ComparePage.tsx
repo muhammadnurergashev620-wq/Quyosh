@@ -26,6 +26,7 @@ export function ComparePage() {
   if (ids.length < 2) {
     return (
       <div className="qs-page">
+        <div className="qs-page__head"><div><h1>{t('Solishtirish')}</h1></div></div>
         <EmptyState icon={<Scale size={30} />} title={t('Solishtirish uchun kamida 2 ta mahsulot tanlang')} action={<ButtonLink to="/mijoz/mahsulotlar">{t('Katalogga o‘tish')}</ButtonLink>} />
       </div>
     );

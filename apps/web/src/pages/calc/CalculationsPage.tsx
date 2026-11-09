@@ -36,7 +36,7 @@ export function CalculationsPage() {
         </div>
       </div>
       {!list.data?.length ? (
-        <EmptyState icon={<BarChart3 size={30} />} title={t('Hali hisob saqlanmagan')} action={<ButtonLink to="/mijoz/kalkulyator">{t('Hisoblash')}</ButtonLink>} />
+        <EmptyState icon={<BarChart3 size={30} />} title={t('Hali hisob saqlanmagan')} description={t('Kalkulyatorda hisob qilib «Saqlash»ni bosing — natija shu yerda saqlanadi va keyin solishtirish mumkin.')} action={<ButtonLink to="/mijoz/kalkulyator">{t('Hisoblash')}</ButtonLink>} />
       ) : (
         <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
@@ -88,6 +88,7 @@ export function CompareCalculationsPage() {
   if (ids.length < 2) {
     return (
       <div className="qs-page">
+        <div className="qs-page__head"><div><h1>{t('Hisoblarni solishtirish')}</h1></div></div>
         <EmptyState
           icon={<BarChart3 size={28} />}
           title={t('Solishtirish uchun kamida 2 ta hisob tanlang')}

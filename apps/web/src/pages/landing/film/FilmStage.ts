@@ -349,7 +349,8 @@ export function createFilmStage(mount: HTMLElement, labels: FilmLabels, options:
     flowGeo.attributes.position!.needsUpdate = true;
 
     // 04: tejash kartasi.
-    (savingCard.material as THREE.MeshBasicMaterial).opacity = window4(SCENES[3]!, SCENES[3]! + 0.04, SCENES[4]! - 0.04, SCENES[4]!, p);
+    // Bob chegarasidan oldin to‘liq so‘nadi — 05-bob matni bilan ustma-ust tushmasin.
+    (savingCard.material as THREE.MeshBasicMaterial).opacity = window4(SCENES[3]!, SCENES[3]! + 0.04, SCENES[4]! - 0.05, SCENES[4]! - 0.015, p);
     // 05: xarita.
     const mapOn = window4(SCENES[4]!, SCENES[4]! + 0.05, SCENES[5]!, SCENES[5]! + 0.03, p);
     (grid.material as THREE.Material).opacity = 0.6 * mapOn;

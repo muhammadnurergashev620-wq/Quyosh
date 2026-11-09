@@ -186,7 +186,6 @@ export function AdminErrorsPage() {
   return (
     <div className="gm-ul gm-errs2">
       <header className="gm-ul__head gm-adm2__head">
-        <span className="gm-adm2__logo"><AlertOctagon size={26} aria-hidden="true" /></span>
         <div>
           <h1>{t('Xatolar')}</h1>
           <p>{t('Server, veb sayt va mobil ilovadagi xatolar: kim, qachon va nima qilganda.')}</p>

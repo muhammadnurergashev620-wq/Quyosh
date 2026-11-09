@@ -36,6 +36,8 @@ export function MapView({ center, zoom, satellite = false, onStyleReady, onLocat
   const config = useMapConfig();
   const pushToast = useAppStore((s) => s.pushToast);
   const [sat, setSat] = useState(satellite);
+  /** Xaritada hozir qo‘llangan uslub (yo‘ldosh yoki oddiy) — bir xil uslub qayta o‘rnatilmaydi (MapLibre «Style is not done loading»). */
+  const appliedSat = useRef<boolean | null>(null);
 
   useEffect(() => {
     if (!container.current || mapRef.current || config.isLoading) return;
@@ -54,6 +56,7 @@ export function MapView({ center, zoom, satellite = false, onStyleReady, onLocat
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
     map.touchZoomRotate.disableRotation();
     map.on('style.load', () => readyRef.current?.(map));
+    appliedSat.current = sat && !!config.data?.satelliteAvailable;
     mapRef.current = map;
     return () => {
       // Avval handle’ni tozalaymiz: o‘chirilgan xaritaga qatlam qo‘shishga urinish bo‘lmasin.
@@ -68,7 +71,10 @@ export function MapView({ center, zoom, satellite = false, onStyleReady, onLocat
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !config.data) return;
-    map.setStyle(styleFor(config.data, sat && config.data.satelliteAvailable));
+    const next = sat && config.data.satelliteAvailable;
+    if (appliedSat.current === next) return;
+    appliedSat.current = next;
+    map.setStyle(styleFor(config.data, next));
   }, [sat, config.data]);
 
   useEffect(() => {

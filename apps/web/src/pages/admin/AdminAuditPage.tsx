@@ -186,7 +186,6 @@ export function AdminAuditPage() {
   return (
     <div className="gm-ul gm-aud">
       <header className="gm-ul__head gm-adm2__head">
-        <span className="gm-adm2__logo"><ScrollText size={26} aria-hidden="true" /></span>
         <div>
           <h1>{t('Audit jurnali')}</h1>
           <p>{t('Tizimda kim, qachon va nima qilgani: har bir muhim amal, uning sababi va o‘zgarishlari bilan.')}</p>

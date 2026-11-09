@@ -641,4 +641,7 @@ export const ruM7: Record<string, string> = {
   "ming": "тыс.",
   "mln": "млн",
   "{price} / kVt": "{price} / кВт",
+  "Foydalanuvchi profili": "Профиль пользователя",
+  "Kalkulyatorda hisob qilib «Saqlash»ni bosing — natija shu yerda saqlanadi va keyin solishtirish mumkin.": "Сделайте расчёт в калькуляторе и нажмите «Сохранить» — результат появится здесь, и его можно будет сравнить.",
+  "So‘rovlarga o‘tish": "Перейти к заявкам",
 };

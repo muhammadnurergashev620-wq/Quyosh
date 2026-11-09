@@ -281,7 +281,6 @@ export function AdminAdminsPage() {
   return (
     <div className="gm-ul gm-adm2">
       <header className="gm-ul__head gm-adm2__head">
-        <span className="gm-adm2__logo"><ShieldCheck size={26} aria-hidden="true" /></span>
         <div>
           <h1>{t('Adminlar')}</h1>
           <p>{isSuper ? t('Yangi adminlar yarating, ularning huquqlari va akkauntlarini boshqaring.') : t('Siz yaratgan adminlar. Ularga faqat superadmin ruxsat bergan huquqlarni bera olasiz.')}</p>

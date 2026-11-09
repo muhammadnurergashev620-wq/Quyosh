@@ -252,7 +252,9 @@ a:focus-visible, button:focus-visible, [role='button']:focus-visible, [tabindex]
   :root .gm-aheader .gm-aheader__brand,
   :root .qs-kpi-cta,
   :root .gm-ul__menu-btn,
-  :root th button { position: relative; }
+  :root th button,
+  :root .gm-infotip > button,
+  :root .gm-avedit__btn { position: relative; }
   :root .gm-button--sm::after,
   :root .gm-tab-btn::after,
   :root .gm-tabs-x__tab::after,
@@ -271,7 +273,9 @@ a:focus-visible, button:focus-visible, [role='button']:focus-visible, [tabindex]
   :root .gm-aheader .gm-aheader__brand::after,
   :root .qs-kpi-cta::after,
   :root .gm-ul__menu-btn::after,
-  :root th button::after {
+  :root th button::after,
+  :root .gm-infotip > button::after,
+  :root .gm-avedit__btn::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -297,4 +301,32 @@ a:focus-visible, button:focus-visible, [role='button']:focus-visible, [tabindex]
   :root .gm-ul__search input,
   :root .qs-inline-price input { min-height: var(--qs-touch-min); }
   :root .gm-ul__search { height: auto; min-height: var(--qs-touch-min); }
+  :root .gm-size-picker__item { min-height: var(--qs-touch-min); }
+  :root input.qs-swatch { width: var(--qs-touch-min); height: var(--qs-touch-min); }
+}
+
+/* ── Yagona H1 (UI-013): sahifa sarlavhalarining barcha shakllari bitta tokenga bog‘langan ── */
+:root :is(.gm-page-head, .qs-page__head, .gm-page-header, .qs-result__head, .gm-ul__head, .gm-psub__head, .gm-pmenu-page) h1 {
+  margin: 0;
+  font-family: var(--qs-font-display);
+  font-size: var(--qs-h1-size);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* Sozlamalar menyusi, siyosatlar formasi: boshqa sahifalar kabi chapdan (UI-028) */
+:root .gm-pmenu-page { margin-inline: 0; }
+:root .gm-pmenu-page > .gm-page-header { text-align: left; }
+@media (min-width: 641px) {
+  :root .gm-app-layout__content .gm-page-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--qs-space-3) var(--qs-space-4);
+    text-align: left;
+  }
+  :root .gm-app-layout__content .gm-page-header > div { align-items: flex-start; width: auto; }
+  :root .gm-app-layout__content .gm-page-lead { margin-inline: 0; }
 }

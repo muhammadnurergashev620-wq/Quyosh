@@ -155,7 +155,6 @@ export function AdminNotificationsPage() {
   return (
     <div className="gm-ul gm-ntf">
       <header className="gm-ul__head gm-adm2__head">
-        <span className="gm-adm2__logo"><Bell size={26} aria-hidden="true" /></span>
         <div>
           <h1>{t('Bildirishnomalar')}</h1>
           <p>{t('Tizim, do‘konlar, so‘rovlar va xavfsizlik bo‘yicha yangiliklar')}</p>

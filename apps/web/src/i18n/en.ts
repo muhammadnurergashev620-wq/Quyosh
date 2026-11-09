@@ -3382,4 +3382,7 @@ export const en: Record<string, string> = {
   "ming": "k",
   "mln": "M",
   "{price} / kVt": "{price} / kW",
+  "Foydalanuvchi profili": "User profile",
+  "Kalkulyatorda hisob qilib «Saqlash»ni bosing — natija shu yerda saqlanadi va keyin solishtirish mumkin.": "Run a calculation and press «Save» — the result is stored here and can be compared later.",
+  "So‘rovlarga o‘tish": "Go to requests",
 };

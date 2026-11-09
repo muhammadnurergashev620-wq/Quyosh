@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { Check, Copy, KeyRound, Ban, CheckCircle2, Snowflake, Trash2, ArrowLeft, CalendarClock, Mail, Phone, Smartphone, Store } from 'lucide-react';
@@ -81,7 +82,8 @@ export function AdminUserProfilePage() {
       <Link to={isAdminAccount ? '/admin/adminlar' : '/admin/foydalanuvchilar'} className="gm-uprofile__back">
         <ArrowLeft size={16} />{' '}{isAdminAccount ? t('Adminlar') : t('Foydalanuvchilar')}</Link>
       {user.isLoading && <PageLoader variant="list" />}
-      {user.isError && <Alert tone="danger">{getErrorMessage(user.error)}</Alert>}
+      {!data && <div className="qs-page__head"><div><h1>{t('Foydalanuvchi profili')}</h1></div></div>}
+      {user.isError && <ErrorState error={user.error} onRetry={() => void user.refetch()} />}
       {number === null && <EmptyState title={t('Foydalanuvchi topilmadi')} description={t('Havola noto‘g‘ri: foydalanuvchi ID raqami bo‘lishi kerak.')} action={<ButtonLink to="/admin/foydalanuvchilar" variant="secondary">{t('Foydalanuvchilar ro‘yxati')}</ButtonLink>} />}
       {data && isAdminAccount && (
         <AdminAccountProfile data={data} viewerId={me.data?.id} viewerIsSuper={!!me.data?.isSuperAdmin} viewerNumber={me.data?.accountNumber} onDelete={() => setAction('DELETE')} />

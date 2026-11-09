@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Activity, ArrowDown, ArrowUp, Bell, Boxes, Cpu, Database, GitCommit, HardDrive, MemoryStick, RefreshCw, Rocket, Route, Server, ShieldCheck, Siren, Tag, Timer, TriangleAlert, Workflow } from 'lucide-react';
+import { Activity, ArrowDown, ArrowUp, Bell, Cpu, Database, GitCommit, HardDrive, MemoryStick, RefreshCw, Rocket, Route, Server, ShieldCheck, Siren, Tag, Timer, TriangleAlert, Workflow } from 'lucide-react';
 import { PageLoader } from '@/components/common/PageLoader';
 import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
@@ -122,9 +122,6 @@ export function AdminDevOpsPage() {
   return (
     <div className="gm-devops">
       <header className="gm-devops__head">
-        <span className="gm-devops__logo">
-          <Boxes size={26} aria-hidden="true" />
-        </span>
         <div className="gm-devops__title">
           <h1>DevOps</h1>
           <p>{t('Server monitoring va tizim holati')}</p>

@@ -41,12 +41,15 @@ export function ShopKpis({ shopId }: { shopId: string }) {
   const k = d.data.kpis;
   return (
     <>
+      {/* TZ: 4 ta asosiy KPI — yuqorida; qo‘shimcha ko‘rsatkichlar — ixcham qatorda */}
       <StatGrid columns={4}>
+        <StatCard icon={<Inbox />} tone="info" label={t('Yangi so‘rovlar')} value={k.newRequests} to="/dokon/sorovlar" />
+        <StatCard icon={<Hourglass />} tone="warning" label={t('Javob kutayotganlar')} value={k.waiting} to="/dokon/sorovlar" />
+        <StatCard icon={<Send />} label={t('Yuborilgan takliflar')} value={k.quotesSent} to="/dokon/takliflar" />
+        <StatCard icon={<Target />} tone="success" label={t('Tanlanish foizi')} value={share(k.selectionRate)} />
+      </StatGrid>
+      <StatGrid columns={3}>
         <StatCard variant="compact" icon={<Eye />} label={t('Ko‘rishlar (30 kun)')} value={k.views} to="/dokon/analitika" />
-        <StatCard variant="compact" icon={<Inbox />} tone="info" label={t('Yangi so‘rovlar')} value={k.newRequests} to="/dokon/sorovlar" />
-        <StatCard variant="compact" icon={<Hourglass />} tone="warning" label={t('Javob kutayotganlar')} value={k.waiting} to="/dokon/sorovlar" />
-        <StatCard variant="compact" icon={<Send />} label={t('Yuborilgan takliflar')} value={k.quotesSent} to="/dokon/takliflar" />
-        <StatCard variant="compact" icon={<Target />} tone="success" label={t('Tanlanish foizi')} value={share(k.selectionRate)} />
         <StatCard variant="compact" icon={<Timer />} label={t('Javob vaqti (median)')} value={minutes(k.medianResponseMinutes)} />
         <StatCard variant="compact" icon={<ShieldCheck />} tone="success" label={t('Muammosiz qabul qilingan')} value={share(k.cleanAcceptanceShare)} to="/dokon/montajlar" />
       </StatGrid>

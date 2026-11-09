@@ -156,19 +156,7 @@ body { letter-spacing: -0.003em; }
 /* Karta ichidagi bo‘sh holat: ixcham (ulkan bo‘sh quti bo‘lmasin) */
 :root .gm-pcard .gm-empty-state { min-height: 0; padding: 22px 16px; gap: 4px; }
 
-/* Matn maydonlari: fokusda bitta tekis chiziq — tashqi halqa/soya va ikkinchi kontur yo‘q */
-.gm-field__control.gm-field__control:focus,
-.gm-field__control.gm-field__control:focus-visible {
-  outline: none;
-  box-shadow: none;
-  border-color: var(--qs-color-primary);
-}
-.gm-field__control.gm-field__control--error:focus,
-.gm-field__control.gm-field__control--error:focus-visible {
-  outline: none;
-  box-shadow: none;
-  border-color: var(--qs-color-danger);
-}
+/* Matn maydonlari fokusi: yagona halqa (styles/system.css) — klaviaturada aniq ko‘rinadi (UI-036) */
 
 /* Matn maydonining pastki o‘ng burchagidagi o‘lcham tutqichi (chiziqchalar) olib tashlandi */
 textarea,

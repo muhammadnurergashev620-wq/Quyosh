@@ -357,7 +357,7 @@ function InstallationsList({ side, shopId }: { side: 'CUSTOMER' | 'SHOP'; shopId
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Montajlar')}</h1><p>{side === 'SHOP' ? t('Tanlangan takliflaringiz bo‘yicha montajlar.') : t('Tanlangan do‘konlar bilan montaj jarayoni.')}</p></div></div>
       {!list.data?.length ? (
-        <EmptyState icon={<Wrench size={30} />} title={t('Hali montaj yo‘q')} description={side === 'SHOP' ? t('Mijoz taklifingizni tanlaganda montaj shu yerda paydo bo‘ladi.') : t('Taklifni tanlaganingizdan keyin montaj shu yerda kuzatiladi.')} />
+        <EmptyState icon={<Wrench size={30} />} title={t('Hali montaj yo‘q')} description={side === 'SHOP' ? t('Mijoz taklifingizni tanlaganda montaj shu yerda paydo bo‘ladi.') : t('Taklifni tanlaganingizdan keyin montaj shu yerda kuzatiladi.')} action={side === 'SHOP' ? <ButtonLink to="/dokon/sorovlar" variant="secondary">{t('So‘rovlarga o‘tish')}</ButtonLink> : <ButtonLink to="/mijoz/sorovlar" variant="secondary">{t('So‘rovlarga o‘tish')}</ButtonLink>} />
       ) : (
         <div className="qs-req-list">
           {list.data.map((row) => (
