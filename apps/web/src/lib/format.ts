@@ -164,3 +164,13 @@ export function groupAmount(value: string): string {
   const digits = value.replace(/\D/g, '').replace(/^0+(?=\d)/, '');
   return digits ? formatNumber(Number(digits)) : '';
 }
+
+/**
+ * Server matnini ko‘rsatishdan oldin tozalaydi (faqat ko‘rinish): ichidagi ISO sana-vaqtni mahalliy formatga,
+ * ajratilmagan katta summalarni («20917756 so‘m») guruhlangan ko‘rinishga keltiradi. Eski yozuvlar uchun himoya.
+ */
+export function humanizeServerText(text: string): string {
+  return text
+    .replace(/\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?/g, (iso) => formatDateTime(iso))
+    .replace(/\b(\d{5,})(\s*so[‘'’ʻ]m)/g, (_, num: string, unit: string) => `${formatNumber(Number(num))}${unit}`);
+}

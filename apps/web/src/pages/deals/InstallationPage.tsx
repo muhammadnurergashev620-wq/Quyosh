@@ -20,7 +20,7 @@ import { INSTALLATION_STATUS, months, num, TIMELINE } from '@/features/deals/lab
 import type { ChecklistAnswer, ChecklistTemplateItem, InstallationStatus, InstallationView } from '@/features/deals/types';
 import { getErrorMessage } from '@/lib/error-messages';
 import { cx } from '@/lib/utils';
-import { formatDate, formatDateTime } from '@/lib/format';
+import { formatDate, formatDateTime, humanizeServerText } from '@/lib/format';
 import { contentText, t } from '@/i18n';
 import '@/features/shop/shop.css';
 import '@/features/deals/deals.css';
@@ -45,7 +45,7 @@ function Timeline({ view }: { view: InstallationView }) {
             <i aria-hidden />
             <div>
               <strong>{step.label}</strong>
-              {event && <small>{formatDateTime(event.at)} · {event.side === 'SHOP' ? t('do‘kon') : event.side === 'CUSTOMER' ? t('siz') : event.side === 'ADMIN' ? t('admin') : t('tizim')}{event.note ? ` · ${event.note}` : ''}</small>}
+              {event && <small>{formatDateTime(event.at)} · {event.side === 'SHOP' ? t('do‘kon') : event.side === 'CUSTOMER' ? t('siz') : event.side === 'ADMIN' ? t('admin') : t('tizim')}{event.note ? ` · ${humanizeServerText(event.note)}` : ''}</small>}
               {step.status === 'INSTALLATION_SCHEDULED' && view.scheduledDate && !event?.note && <small> · {formatDate(view.scheduledDate)}</small>}
             </div>
           </li>

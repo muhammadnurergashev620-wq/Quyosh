@@ -7,7 +7,7 @@ import { Spinner } from '@/components/ui/Spinner';
 import { apiGet } from '@/services/api.client';
 import { getErrorMessage } from '@/lib/error-messages';
 import { cx } from '@/lib/utils';
-import { formatDateTime, formatTime } from '@/lib/format';
+import { formatDateTime, formatTime, humanizeServerText } from '@/lib/format';
 import { t } from '@/i18n';
 import { dealsService } from '../deals.service';
 import type { Attachment, ChatMessage, Side, SiteVisit } from '../types';
@@ -180,7 +180,7 @@ export function ChatPanel({ rsId, side, visits, context, canWrite = true, canAsk
             );
           }
           const m = item.msg;
-          if (m.senderSide === 'SYSTEM') return <div key={m.id} className="qs-msg--system">{SYSTEM_ICON[m.systemKind ?? ''] ?? <Info size={13} />} {m.body} · {formatTime(m.createdAt)}</div>;
+          if (m.senderSide === 'SYSTEM') return <div key={m.id} className="qs-msg--system">{SYSTEM_ICON[m.systemKind ?? ''] ?? <Info size={13} />} {humanizeServerText(m.body)} · {formatTime(m.createdAt)}</div>;
           return (
             <div key={m.id} className={cx('qs-msg', m.mine && 'is-mine')}>
               {m.systemKind === 'FIX_REQUEST' && <strong><AlertTriangle size={13} /> {t('Tuzatish so‘raldi')}</strong>}

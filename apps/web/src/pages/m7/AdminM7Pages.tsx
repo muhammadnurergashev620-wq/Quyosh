@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Eye, FileText, Plus, Save } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
-import { Badge } from '@/components/ui/Badge';
+import { Badge, type BadgeTone } from '@/components/ui/Badge';
 import { Button, ButtonAnchor } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -29,6 +29,13 @@ import '@/features/m7/m7.css';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { SelectMenu } from '@/components/ui/SelectMenu';
 import { Tab, TabBar } from '@/components/ui/Tabs';
+
+/** Murojaat ustuvorligi: inglizcha enum o‘rniga yorliq va rang (ikonka Badge tone’dan). */
+const PRIORITY: Record<string, { label: string; tone: BadgeTone }> = {
+  URGENT: { label: t('Shoshilinch'), tone: 'danger' },
+  HIGH: { label: t('Yuqori'), tone: 'warning' },
+  NORMAL: { label: t('Oddiy'), tone: 'neutral' },
+};
 
 const QUEUE_LABEL: Record<string, string> = {
   models: t('ProductModel takliflari'), reviews: t('Moderatsiyadagi sharhlar'),
@@ -98,7 +105,7 @@ export function AdminSupportPage() {
                   <td className="qs-mono">{x.code}</td>
                   <td>{x.subject}</td>
                   <td>{CATEGORY_LABEL[x.category] ?? x.category}</td>
-                  <td><Badge tone={x.priority === 'URGENT' ? 'danger' : x.priority === 'HIGH' ? 'warning' : 'neutral'}>{x.priority}</Badge></td>
+                  <td><StatusBadge map={PRIORITY} status={x.priority} /></td>
                   <td><StatusBadge map={TICKET_STATUS} status={x.status} /></td>
                   <td><span className={cx('qs-sla', slaClass(x.sla))}>{x.sla === 'MET' ? t('Javob berilgan') : x.minutesLeft !== null && x.minutesLeft !== undefined ? (x.minutesLeft < 0 ? t('{d} kechikdi', { d: dur(-x.minutesLeft) }) : t('{d} qoldi', { d: dur(x.minutesLeft) })) : '—'}</span></td>
                 </tr>
@@ -132,7 +139,7 @@ export function AdminTicketPage() {
       <div className="qs-page__head">
         <div><h1>{x.code} · {x.subject}</h1><p>{CATEGORY_LABEL[x.category] ?? x.category} · {formatDateTime(x.createdAt)}</p></div>
         <div className="qs-page__actions">
-          <SelectMenu className="qs-select" aria-label={t('Ustuvorlik')} value={x.priority} onChange={(e) => update.mutate({ priority: e.target.value })}>{['URGENT', 'HIGH', 'NORMAL'].map((p) => <option key={p}>{p}</option>)}</SelectMenu>
+          <SelectMenu className="qs-select" aria-label={t('Ustuvorlik')} value={x.priority} onChange={(e) => update.mutate({ priority: e.target.value })}>{Object.entries(PRIORITY).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</SelectMenu>
           <SelectMenu className="qs-select" aria-label={t('Holat')} value={x.status} onChange={(e) => update.mutate({ status: e.target.value })}>{Object.entries(TICKET_STATUS).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}</SelectMenu>
           <Button variant="secondary" onClick={() => update.mutate(x.assigneeId ? { unassign: true } : { assigneeId: me.data?.id })}>{x.assigneeId ? (x.assigneeId === me.data?.id ? t('Menga tayinlangan · olib tashlash') : t('Tayinlashni olib tashlash')) : t('O‘zimga olish')}</Button>
         </div>
