@@ -76,10 +76,10 @@ a.qs-kpi:hover { border-color: var(--qs-color-primary); }
 .qs-hbars { display: grid; gap: 8px; }
 .qs-hbar { display: grid; grid-template-columns: 170px minmax(0, 1fr) 70px; gap: 10px; align-items: center; font-size: 13.5px; }
 .qs-hbar > div { height: 14px; border-radius: 0 4px 4px 0; background: var(--qs-color-surface-muted); overflow: hidden; }
-.qs-hbar > div span { display: block; height: 100%; border-radius: 0 4px 4px 0; background: var(--qs-chart-load); }
+.qs-hbar > div span { display: block; height: 100%; border-radius: 0 4px 4px 0; background: var(--qs-color-primary); }
 .qs-hbar > strong { text-align: right; font-variant-numeric: tabular-nums; }
 .qs-vbars { display: flex; gap: 2px; align-items: flex-end; height: 140px; padding-top: 6px; border-bottom: 1px solid var(--qs-color-border); }
-.qs-vbars span { flex: 1; min-width: 2px; border-radius: 3px 3px 0 0; background: var(--qs-chart-load); }
+.qs-vbars span { flex: 1; min-width: 2px; border-radius: 3px 3px 0 0; background: color-mix(in srgb, var(--qs-color-primary) 75%, var(--qs-color-surface)); }
 .qs-vbars span:hover { background: var(--qs-color-primary); }
 
 /* Vidjet konfiguratori */

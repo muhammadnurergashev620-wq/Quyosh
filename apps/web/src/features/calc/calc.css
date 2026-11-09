@@ -73,3 +73,9 @@
 .qs-list > li.is-active { border-color: var(--qs-color-primary); box-shadow: inset 0 0 0 1px var(--qs-color-primary); }
 .qs-kpi-label { display: inline-flex; align-items: center; gap: 4px; }
 .qs-kpi-note { font-size: 15px; }
+
+/* Mobil «Natija» paneli suzuvchi pastki navigatsiya ustida turadi va formani yopmaydi (UI-022) */
+@media (max-width: 1023px) {
+  .qs-wizard { padding-bottom: calc(var(--qs-touch-min) + var(--qs-space-6)); }
+  .qs-wizard__aside { right: var(--qs-space-3); bottom: calc(var(--qs-bottom-nav-h, 64px) + var(--qs-space-5) + env(safe-area-inset-bottom, 0px)); left: var(--qs-space-3); border: 1px solid var(--qs-color-border); border-radius: var(--qs-radius-lg); box-shadow: var(--qs-shadow-md); }
+}

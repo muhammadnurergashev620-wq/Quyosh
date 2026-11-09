@@ -290,9 +290,8 @@ export function ShopCatalogPage() {
         <Input label={t('Qidirish')} value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder={t('Brend yoki model')} />
         <div className="qs-chips" role="group" aria-label={t('Holat')}>
           {(['', 'ACTIVE', 'DRAFT', 'ARCHIVED'] as const).map((value) => (
-            <Chip key={value || 'all'} onClick={() => { setStatus(value); setPage(1); }} selected={status === value}>
+            <Chip key={value || 'all'} onClick={() => { setStatus(value); setPage(1); }} selected={status === value} count={value ? counts[value] : undefined}>
               {value ? PRODUCT_STATUS[value].label : t('Hammasi')}
-              {value && counts[value] !== undefined && <span>{counts[value]}</span>}
             </Chip>
           ))}
         </div>

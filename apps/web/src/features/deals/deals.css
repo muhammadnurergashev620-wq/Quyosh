@@ -156,3 +156,7 @@
 .qs-builder__summary { position: sticky; top: calc(var(--qs-header-height) + 12px); display: grid; gap: var(--qs-space-4); }
 @media (max-width: 1100px) { .qs-builder { grid-template-columns: minmax(0, 1fr); } .qs-builder__summary { position: static; } }
 @media (max-width: 900px) { .qs-chat { min-height: 420px; max-height: calc(100dvh - 250px); } }
+
+/* Chat konteksti (surface-muted fon): havolalar to‘qroq primary bilan ≥ 4,5:1; «Orqaga» 44 px teginish maydoni */
+.qs-chat__context a:not(.gm-button) { color: var(--qs-color-primary-active); }
+@media (max-width: 899px) { .qs-chat__context a.qs-hide-desktop { display: inline-grid; place-items: center; min-width: var(--qs-touch-min); min-height: var(--qs-touch-min); } }

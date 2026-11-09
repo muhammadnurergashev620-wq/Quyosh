@@ -254,3 +254,7 @@
 
 /* Teginish maydoni minimumi: interfeys 90% masshtabda (html font-size 90%, px → rem), shuning uchun haqiqiy 44 px = 44 / 0,9 */
 :root { --qs-touch-min: calc(44px / 0.9); --qs-field-h-touch: calc(46px / 0.9); }
+
+/* Danger fondagi matn: yorug‘da oq, to‘q mavzuda (danger och) — to‘q */
+:root { --qs-color-danger-contrast: #ffffff; }
+:root[data-theme='dark'] { --qs-color-danger-contrast: #2a0a0e; }

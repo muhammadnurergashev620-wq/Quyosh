@@ -115,7 +115,7 @@ export function ShopRequestsPage({ quotedOnly = false }: { quotedOnly?: boolean 
             {TABS.map((tb) => <Tab key={tb.key} role="tab" aria-selected={tab === tb.key} onClick={() => setTab(tb.key)} selected={tab === tb.key}>{tb.label}</Tab>)}
           </TabBar>
           {!items.length ? (
-            <EmptyState icon={<ClipboardList size={30} />} title={t('So‘rov yo‘q')} description={t('Xizmat hududingizni va katalogni to‘ldiring — mijozlar sizni xaritada va qidiruvda topadi.')} />
+            <EmptyState icon={<ClipboardList size={30} />} title={quotedOnly ? t('Taklif yo‘q') : t('So‘rov yo‘q')} description={quotedOnly ? t('Yuborgan takliflaringiz shu yerda ko‘rinadi. Yangi so‘rovlarga «So‘rovlar» bo‘limida javob bering.') : t('Xizmat hududingizni va katalogni to‘ldiring — mijozlar sizni xaritada va qidiruvda topadi.')} />
           ) : (
             <div className="qs-req-list">{items.map((row) => <LeadCard key={row.id} row={row} onOpen={() => open(row.id)} />)}</div>
           )}

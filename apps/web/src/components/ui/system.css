@@ -350,3 +350,12 @@ button.gm-stepper__btn { cursor: pointer; }
 
 .gm-card-x--dark :is(h1, h2, h3, strong), .gm-card-x--gradient :is(h1, h2, h3, strong) { color: inherit; }
 .gm-card-x .gm-empty-state { border: 0; background: none; box-shadow: none; }
+
+/* Chip hisoblagichi */
+.gm-chip__count { display: inline-grid; place-items: center; min-width: 20px; height: 20px; margin-left: 2px; padding: 0 6px; border-radius: var(--qs-radius-pill); background: var(--qs-color-surface-muted); color: var(--qs-color-text-muted); font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.gm-chip.is-on .gm-chip__count { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); }
+
+/* StatCard qiymati yonidagi o‘zgarish (em.is-up/is-down) — kichik badge, katta kursiv emas (UI-030) */
+.gm-stat__value em { display: inline-flex; align-items: center; margin-left: var(--qs-space-2); padding: 2px 8px; border-radius: var(--qs-radius-pill); font-family: var(--qs-font-sans); font-size: 12px; font-style: normal; font-weight: 700; vertical-align: middle; }
+.gm-stat__value em.is-up { background: var(--qs-color-success-bg); color: var(--qs-color-success); }
+.gm-stat__value em.is-down { background: var(--qs-color-danger-bg); color: var(--qs-color-danger); }

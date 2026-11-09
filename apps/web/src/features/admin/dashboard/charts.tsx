@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { formatNumber } from '@/lib/format';
+import { formatDecimal, formatNumber } from '@/lib/format';
+import { t } from '@/i18n';
 import './charts.css';
 
 /** Neon dashboard grafiklari (SVG, kutubxonasiz): hover tooltip, gradientlar, ruxsat etilgan o‘qlar. Hamma grafik `role="img"` va aria-label bilan. */
@@ -10,7 +11,8 @@ const nice = (max: number): number => {
   const f = max / pow;
   return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * pow;
 };
-const compact = (value: number): string => (value >= 1_000_000 ? `${+(value / 1_000_000).toFixed(1)}M` : value >= 10_000 ? `${Math.round(value / 1000)}k` : value >= 1000 ? `${+(value / 1000).toFixed(1)}k` : String(Math.round(value)));
+/** O‘q yorliqlari: «1,5 ming», «25 mln» — vergulli kasr, mahalliy qisqartma. */
+const compact = (value: number): string => (value >= 1_000_000 ? `${formatDecimal(value / 1_000_000, 1)} ${t('mln')}` : value >= 10_000 ? `${formatNumber(Math.round(value / 1000))} ${t('ming')}` : value >= 1000 ? `${formatDecimal(value / 1000, 1)} ${t('ming')}` : String(Math.round(value)));
 
 /** Monoton kubik egri chiziq (Fritsch–Carlson): grafik «sakramaydi» va qiymatdan oshib ketmaydi. */
 function smoothPath(points: Array<[number, number]>): string {

@@ -3376,4 +3376,10 @@ export const en: Record<string, string> = {
   "Internet aloqasini tekshirib, qayta urinib ko‘ring. Muammo takrorlansa, birozdan keyin qayta kiring yoki yordam markaziga yozing.": "Check your internet connection and try again. If the problem persists, come back later or contact the help center.",
   "Oddiy": "Normal",
   "Shoshilinch": "Urgent",
+  "Risk belgilari sababi faqat adminga ko‘rinadi.": "Risk flag reasons are visible to admins only.",
+  "Taklif yo‘q": "No offers",
+  "Yuborgan takliflaringiz shu yerda ko‘rinadi. Yangi so‘rovlarga «So‘rovlar» bo‘limida javob bering.": "Your sent offers appear here. Reply to new requests in the «Requests» section.",
+  "ming": "k",
+  "mln": "M",
+  "{price} / kVt": "{price} / kW",
 };

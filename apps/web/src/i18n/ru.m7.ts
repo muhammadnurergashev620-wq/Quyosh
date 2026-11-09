@@ -635,4 +635,10 @@ export const ruM7: Record<string, string> = {
   "Internet aloqasini tekshirib, qayta urinib ko‘ring. Muammo takrorlansa, birozdan keyin qayta kiring yoki yordam markaziga yozing.": "Проверьте подключение к интернету и попробуйте снова. Если ошибка повторяется, зайдите позже или напишите в центр поддержки.",
   "Oddiy": "Обычный",
   "Shoshilinch": "Срочный",
+  "Risk belgilari sababi faqat adminga ko‘rinadi.": "Причины пометок риска видны только администратору.",
+  "Taklif yo‘q": "Предложений нет",
+  "Yuborgan takliflaringiz shu yerda ko‘rinadi. Yangi so‘rovlarga «So‘rovlar» bo‘limida javob bering.": "Здесь появятся ваши отправленные предложения. Отвечайте на новые заявки в разделе «Заявки».",
+  "ming": "тыс.",
+  "mln": "млн",
+  "{price} / kVt": "{price} / кВт",
 };

@@ -121,3 +121,12 @@
 .qs-tabs button:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); }
 .qs-input-sm { height: 34px; padding: 0 8px; border: 1px solid var(--qs-color-border); border-radius: 8px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-size: 14px; font-variant-numeric: tabular-nums; }
 .qs-input-sm:focus { outline: none; border-color: var(--qs-color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--qs-focus-ring) 30%, transparent); }
+
+/* Mobil stepper: hamma qadam chiziq sifatida ko‘rinadi, nom faqat joriy qadamda (UI-021) */
+@media (max-width: 639px) {
+  .qs-steps { overflow: visible; gap: 4px; }
+  .qs-steps li { flex: 1 1 0; min-width: 0; }
+  .qs-steps li.is-current { flex: 4 1 0; }
+  .qs-steps li:not(.is-current) button { font-size: 0; }
+  .qs-steps li.is-current button { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}

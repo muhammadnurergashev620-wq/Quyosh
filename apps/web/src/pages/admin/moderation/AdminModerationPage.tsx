@@ -178,7 +178,7 @@ export function AdminModerationPage() {
   const [tab, setTab] = useState<Tab>('reviews');
   return (
     <div className="qs-page">
-      <div className="qs-page__head"><div><h1>{t('Sharhlar va shikoyatlar')}</h1><p>{t('Risk belgilari sababi faqat adminga ko‘rinadi (TZ 13.4).')}</p></div></div>
+      <div className="qs-page__head"><div><h1>{t('Sharhlar va shikoyatlar')}</h1><p>{t('Risk belgilari sababi faqat adminga ko‘rinadi.')}</p></div></div>
       <TabBar variant="tabs" role="tablist">
         {([['reviews', t('Sharhlar')], ['complaints', t('Shikoyatlar')], ['disputes', t('Montaj e’tirozlari')], ['settings', t('Sozlamalar')]] as Array<[Tab, string]>).map(([k, label]) => <Tab key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)} selected={tab === k}>{label}</Tab>)}
       </TabBar>

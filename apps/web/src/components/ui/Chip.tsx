@@ -8,12 +8,13 @@ import './system.css';
  * Chip (U5): filtr, teg va xizmat belgilari uchun yagona komponent. Balandlik 32, radius 999.
  * `selected` — primary-soft fon + ✓; `onRemove` — × tugmasi bilan olib tashlanadigan chip.
  */
-export function Chip({ selected = false, onRemove, icon, children, className, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { selected?: boolean; onRemove?: () => void; icon?: ReactNode }) {
+export function Chip({ selected = false, onRemove, icon, count, children, className, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { selected?: boolean; onRemove?: () => void; icon?: ReactNode; /** Filtr natijalari soni — yorliqdan ajratilgan badge. */ count?: number | null }) {
   const interactive = !!rest.onClick;
   const body = (
     <>
       {selected && interactive ? <Check className="gm-chip__check" aria-hidden="true" /> : icon && <span className="gm-chip__icon" aria-hidden="true">{icon}</span>}
       <span>{children}</span>
+      {count !== undefined && count !== null && <span className="gm-chip__count">{count}</span>}
     </>
   );
   if (!interactive && !onRemove) return <span className={cx('gm-chip', 'is-static', selected && 'is-on', className)}>{body}</span>;

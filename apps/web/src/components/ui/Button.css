@@ -96,7 +96,7 @@
 
 .gm-button--danger {
   background: var(--qs-color-danger);
-  color: var(--qs-color-on-dark);
+  color: var(--qs-color-danger-contrast);
   box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--qs-color-danger) 70%, transparent);
 }
 .gm-button--danger:hover:not(:disabled) { background: color-mix(in srgb, var(--qs-color-danger) 88%, var(--qs-color-ink)); }

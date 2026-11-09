@@ -142,9 +142,8 @@ export function AdminShopsPage() {
         <Input label={t('Qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('Nom, STIR yoki telefon')} />
           <div className="qs-chips" role="group" aria-label={t('Holat')}>
             {statuses.map((status) => (
-              <Chip key={status ?? 'all'} onClick={() => setFilters({ ...filters, status, page: 1 })} selected={filters.status === status}>
+              <Chip key={status ?? 'all'} onClick={() => setFilters({ ...filters, status, page: 1 })} selected={filters.status === status} count={status ? counts[status] ?? 0 : undefined}>
                 {status ? SHOP_STATUS[status].label : t('Hammasi')}
-                {status && <span>{counts[status] ?? 0}</span>}
               </Chip>
             ))}
           </div>

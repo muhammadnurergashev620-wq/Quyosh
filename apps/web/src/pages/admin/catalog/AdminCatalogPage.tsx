@@ -141,8 +141,8 @@ function ModelsTab() {
         <Input label={t('Qidirish')} value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('Brend yoki model')} />
         <div className="qs-chips">
           {(['PENDING', 'APPROVED', 'REJECTED', 'MERGED', undefined] as const).map((value) => (
-            <Chip key={value ?? 'all'} onClick={() => { setStatus(value); setPage(1); }} selected={status === value}>
-              {value ? MODEL_STATUS[value].label : t('Hammasi')}{value && <span>{list.data.counts[value] ?? 0}</span>}
+            <Chip key={value ?? 'all'} onClick={() => { setStatus(value); setPage(1); }} selected={status === value} count={value ? list.data.counts[value] ?? 0 : undefined}>
+              {value ? MODEL_STATUS[value].label : t('Hammasi')}
             </Chip>
           ))}
         </div>

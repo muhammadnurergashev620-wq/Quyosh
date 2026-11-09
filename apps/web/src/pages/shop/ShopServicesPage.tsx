@@ -18,7 +18,7 @@ import { useShopBranches, useShopMutation, useShopServices } from '@/features/sh
 import { shopService } from '@/features/shop/shop.service';
 import { PRICING_MODEL, SERVICE_TYPE } from '@/features/shop/labels';
 import type { Currency, PricingModel, ServiceInput, ServiceType, ShopService } from '@/features/shop/types';
-import { formatMoney } from '@/lib/format';
+import { formatMoney, formatSum } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 
@@ -79,9 +79,9 @@ function ServiceForm({ initial, branches, loading, onSubmit, onCancel }: { initi
 
 const priceText = (service: ShopService) => {
   if (service.pricingModel === 'QUOTE_REQUIRED' || !service.price) return PRICING_MODEL.QUOTE_REQUIRED;
-  const money = formatMoney(service.price, service.currency);
+  const money = service.currency === 'UZS' ? formatSum(service.price) : formatMoney(service.price, service.currency);
   if (service.pricingModel === 'FROM') return t('{price} dan', { price: money });
-  if (service.pricingModel === 'PER_KW') return t('{price} / kW', { price: money });
+  if (service.pricingModel === 'PER_KW') return t('{price} / kVt', { price: money });
   if (service.pricingModel === 'PER_UNIT') return t('{price} / dona', { price: money });
   return money;
 };

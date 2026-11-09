@@ -869,8 +869,8 @@
   opacity: 0;
   transform: translateY(0.6em) scale(0.96);
   filter: blur(6px);
-  animation: gm-word-rise 0.7s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
-  animation-delay: calc(0.15s + var(--i, 0) * 0.09s);
+  animation: gm-word-rise var(--qs-dur-4) var(--qs-ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * 0.04s);
 }
 /* So‘nggi so‘zlar yorqin tusli «yurib o‘tuvchi» nur bilan ajralib turadi. */
 .gm-auth-layout__word:nth-last-child(-n + 2) {
@@ -879,29 +879,29 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: gm-word-rise 0.7s cubic-bezier(0.2, 0.9, 0.3, 1) forwards, gm-word-shine 4.5s ease-in-out 1.4s infinite;
-  animation-delay: calc(0.15s + var(--i, 0) * 0.09s), 1.4s;
+  animation: gm-word-rise var(--qs-dur-4) var(--qs-ease-out) forwards, gm-word-shine 4.5s ease-in-out 1.4s infinite;
+  animation-delay: calc(var(--i, 0) * 0.04s), 1.4s;
 }
 .gm-auth-layout__pitch > p,
 .gm-auth-layout__pitch > ul > li,
 .gm-auth-layout__eyebrow {
   opacity: 0;
   transform: translateY(12px);
-  animation: gm-fade-up 0.6s ease forwards;
+  animation: gm-fade-up var(--qs-dur-3) var(--qs-ease-out) forwards;
 }
 .gm-auth-layout__eyebrow { animation-delay: 0s; }
-.gm-auth-layout__pitch > p { animation-delay: 0.7s; }
-.gm-auth-layout__pitch > ul > li:nth-child(1) { animation-delay: 0.9s; }
-.gm-auth-layout__pitch > ul > li:nth-child(2) { animation-delay: 1.05s; }
-.gm-auth-layout__pitch > ul > li:nth-child(3) { animation-delay: 1.2s; }
+.gm-auth-layout__pitch > p { animation-delay: 0.2s; }
+.gm-auth-layout__pitch > ul > li:nth-child(1) { animation-delay: 0.26s; }
+.gm-auth-layout__pitch > ul > li:nth-child(2) { animation-delay: 0.32s; }
+.gm-auth-layout__pitch > ul > li:nth-child(3) { animation-delay: 0.38s; }
 .gm-auth-hero__mark { animation: gm-mark-float 4.5s ease-in-out infinite; }
 .gm-auth-hero__name,
-.gm-auth-hero__tagline { opacity: 0; animation: gm-fade-up 0.7s ease 0.2s forwards; }
-.gm-auth-hero__tagline { animation-delay: 0.45s; }
-.gm-auth-tiles li { opacity: 0; animation: gm-fade-up 0.6s ease forwards; }
-.gm-auth-tiles li:nth-child(1) { animation-delay: 0.6s; }
-.gm-auth-tiles li:nth-child(2) { animation-delay: 0.75s; }
-.gm-auth-tiles li:nth-child(3) { animation-delay: 0.9s; }
+.gm-auth-hero__tagline { opacity: 0; animation: gm-fade-up var(--qs-dur-3) var(--qs-ease-out) 0.08s forwards; }
+.gm-auth-hero__tagline { animation-delay: 0.16s; }
+.gm-auth-tiles li { opacity: 0; animation: gm-fade-up var(--qs-dur-3) var(--qs-ease-out) forwards; }
+.gm-auth-tiles li:nth-child(1) { animation-delay: 0.22s; }
+.gm-auth-tiles li:nth-child(2) { animation-delay: 0.28s; }
+.gm-auth-tiles li:nth-child(3) { animation-delay: 0.34s; }
 @keyframes gm-word-rise { to { opacity: 1; transform: none; filter: none; } }
 @keyframes gm-word-shine { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
 @keyframes gm-fade-up { to { opacity: 1; transform: none; } }
