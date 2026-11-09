@@ -2,7 +2,7 @@ import { Button, ButtonLink } from '@/components/ui/Button';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import maplibregl from 'maplibre-gl';
+import { getMapLibre } from '@/features/map/maplibre-loader';
 import type { Marker } from 'maplibre-gl';
 import { MapPin, Star, X } from 'lucide-react';
 import { Alert } from '@/components/ui/Alert';
@@ -80,7 +80,7 @@ export function MapPage() {
           else map.easeTo({ center: [item.lon, item.lat], zoom: 14 });
         };
       }
-      markers.current.push(new maplibregl.Marker({ element: el }).setLngLat([item.lon, item.lat]).addTo(map));
+      markers.current.push(new (getMapLibre().Marker)({ element: el }).setLngLat([item.lon, item.lat]).addTo(map));
     }
   }, [map, data]);
 

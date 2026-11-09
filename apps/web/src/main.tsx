@@ -58,7 +58,8 @@ async function boot() {
     </StrictMode>,
   );
   // Mobil jadvallar: ustun sarlavhalari kataklarga yorliq sifatida (≤ 640 px da karta ko‘rinishi)
-  void import('@/lib/responsive-tables').then(({ startResponsiveTables }) => startResponsiveTables(rootElement));
+  // Faqat panellarda (bosh saytda jadval yo‘q)
+  if (import.meta.env.VITE_APP_ROLE) void import('@/lib/responsive-tables').then(({ startResponsiveTables }) => startResponsiveTables(rootElement));
 }
 
 void boot();

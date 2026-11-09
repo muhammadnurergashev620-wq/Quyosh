@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import maplibregl from 'maplibre-gl';
+import { loadMapLibre } from './maplibre-loader';
 import type { Map as MapLibreMap } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Layers, LocateFixed } from 'lucide-react';
@@ -42,26 +42,35 @@ export function MapView({ center, zoom, satellite = false, onStyleReady, onLocat
   useEffect(() => {
     if (!container.current || mapRef.current || config.isLoading) return;
     const esri = config.data?.provider === 'ESRI';
-    const map = new maplibregl.Map({
-      container: container.current,
-      style: styleFor(config.data, sat && !!config.data?.satelliteAvailable),
-      center: center ?? [69.2401, 41.2995],
-      zoom: zoom ?? (center ? 15 : 10),
-      maxBounds: [[UZ_BOUNDS[0][0] - 8, UZ_BOUNDS[0][1] - 6], [UZ_BOUNDS[1][0] + 8, UZ_BOUNDS[1][1] + 6]],
-      attributionControl: false,
-      dragRotate: false,
-      pitchWithRotate: false,
+    let cancelled = false;
+    let created: MapLibreMap | null = null;
+    // Kutubxona dinamik yuklanadi — sahifa xaritani kutmasdan chiziladi.
+    void loadMapLibre().then((maplibregl) => {
+      if (cancelled || !container.current) return;
+      const map = new maplibregl.Map({
+        container: container.current,
+        style: styleFor(config.data, sat && !!config.data?.satelliteAvailable),
+        center: center ?? [69.2401, 41.2995],
+        zoom: zoom ?? (center ? 15 : 10),
+        maxBounds: [[UZ_BOUNDS[0][0] - 8, UZ_BOUNDS[0][1] - 6], [UZ_BOUNDS[1][0] + 8, UZ_BOUNDS[1][1] + 6]],
+        attributionControl: false,
+        dragRotate: false,
+        pitchWithRotate: false,
+      });
+      map.addControl(new maplibregl.AttributionControl({ compact: false, customAttribution: esri ? 'Powered by <a href="https://www.esri.com" target="_blank" rel="noreferrer">Esri</a>' : undefined }), 'bottom-right');
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+      map.touchZoomRotate.disableRotation();
+      map.on('style.load', () => readyRef.current?.(map));
+      appliedSat.current = sat && !!config.data?.satelliteAvailable;
+      mapRef.current = map;
+      created = map;
     });
-    map.addControl(new maplibregl.AttributionControl({ compact: false, customAttribution: esri ? 'Powered by <a href="https://www.esri.com" target="_blank" rel="noreferrer">Esri</a>' : undefined }), 'bottom-right');
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
-    map.touchZoomRotate.disableRotation();
-    map.on('style.load', () => readyRef.current?.(map));
-    appliedSat.current = sat && !!config.data?.satelliteAvailable;
-    mapRef.current = map;
     return () => {
+      cancelled = true;
+      if (!created) return;
       // Avval handle’ni tozalaymiz: o‘chirilgan xaritaga qatlam qo‘shishga urinish bo‘lmasin.
       readyRef.current?.(null);
-      map.remove();
+      created.remove();
       mapRef.current = null;
     };
     // Xarita bir marta yaratiladi; markaz o‘zgarishi alohida effektda.

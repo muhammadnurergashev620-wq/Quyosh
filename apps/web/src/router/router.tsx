@@ -12,17 +12,18 @@ import { PublicCustomerRoute } from './PublicCustomerRoute';
 import { env } from '@/lib/env';
 import type { ReactNode } from 'react';
 import type { Role } from '@/types/common';
-import { RoleSelectPage } from '@/pages/RoleSelectPage';
 import { LoginPage } from '@/pages/auth/LoginPage';
-import { RegisterPage } from '@/pages/auth/RegisterPage';
-import { OtpPage } from '@/pages/auth/OtpPage';
-import { SettingsPage } from '@/pages/SettingsPage';
-import { CustomerProfilePage } from '@/pages/customer/CustomerProfilePage';
-import { NotificationsPage } from '@/pages/notifications/NotificationsPage';
-import { TermsPage } from '@/pages/legal/TermsPage';
 import { SuspendedBanner } from '@/features/shop/components/SuspendedBanner';
 import { LegacyInstallationRedirect, PanelRoot } from './redirects';
 
+// Birinchi ekranda kerak bo‘lmagan sahifalar alohida bo‘lakda (Lighthouse: ishlatilmagan JS)
+const RoleSelectPage = lazy(() => import('@/pages/RoleSelectPage').then((m) => ({ default: m.RoleSelectPage })));
+const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage').then((m) => ({ default: m.RegisterPage })));
+const OtpPage = lazy(() => import('@/pages/auth/OtpPage').then((m) => ({ default: m.OtpPage })));
+const SettingsPage = lazy(() => import('@/pages/SettingsPage').then((m) => ({ default: m.SettingsPage })));
+const CustomerProfilePage = lazy(() => import('@/pages/customer/CustomerProfilePage').then((m) => ({ default: m.CustomerProfilePage })));
+const NotificationsPage = lazy(() => import('@/pages/notifications/NotificationsPage').then((m) => ({ default: m.NotificationsPage })));
+const TermsPage = lazy(() => import('@/pages/legal/TermsPage').then((m) => ({ default: m.TermsPage })));
 const AdminHome = lazy(() => import('@/pages/admin/AdminHome').then((m) => ({ default: m.AdminHome })));
 const AdminUsersPage = lazy(() => import('@/pages/admin/AdminUsersPage').then((m) => ({ default: m.AdminUsersPage })));
 const AdminAdminsPage = lazy(() => import('@/pages/admin/AdminAdminsPage').then((m) => ({ default: m.AdminAdminsPage })));

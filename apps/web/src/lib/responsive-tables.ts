@@ -24,6 +24,7 @@ export function startResponsiveTables(root: HTMLElement = document.body) {
   let scheduled = false;
   const run = () => { scheduled = false; root.querySelectorAll<HTMLTableElement>(SELECTOR).forEach(label); };
   const schedule = () => { if (!scheduled) { scheduled = true; requestAnimationFrame(run); } };
-  new MutationObserver(schedule).observe(root, { childList: true, subtree: true, characterData: true });
+  // Faqat element qo‘shilishi/olib tashlanishi kuzatiladi (matn o‘zgarishi emas) — animatsiyali sahifalarda ortiqcha ish yo‘q.
+  new MutationObserver((records) => { if (records.some((r) => r.addedNodes.length)) schedule(); }).observe(root, { childList: true, subtree: true });
   schedule();
 }

@@ -109,6 +109,21 @@ export default defineConfig(({ mode }) => {
         transformIndexHtml: { order: 'pre', handler: (html: string) => html.replaceAll('__DEFAULT_THEME__', role === 'ADMIN' ? 'dark' : 'light') },
       },
       {
+        // App bo‘lagi (va uning CSS’i) index.js bilan parallel yuklansin: aks holda index.js bajarilgach yuklana boshlaydi (FCP/LCP).
+        name: 'quyosh-preload-app',
+        apply: 'build',
+        transformIndexHtml: {
+          order: 'post',
+          handler: (html: string, ctx) => {
+            const app = Object.values(ctx.bundle ?? {}).find((chunk) => chunk.type === 'chunk' && chunk.moduleIds.some((id) => /\/src\/App\.tsx$/.test(id)));
+            if (!role || !app || app.type !== 'chunk') return html; // bosh saytda App’ni oldindan yuklash TBT’ni oshiradi
+            const css = [...(app.viteMetadata?.importedCss ?? [])];
+            const tags = [`<link rel="modulepreload" crossorigin href="/${app.fileName}">`, ...css.map((file) => `<link rel="preload" as="style" crossorigin href="/${file}">`)];
+            return html.replace('</head>', `    ${tags.join('\n    ')}\n  </head>`);
+          },
+        },
+      },
+      {
         // Faqat production build: dev serverda HMR uchun CSP qo‘yilmaydi.
         name: 'quyosh-csp',
         apply: 'build',

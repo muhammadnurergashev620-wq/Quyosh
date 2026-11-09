@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
-import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent, MapLayerTouchEvent, Marker } from 'maplibre-gl';
+import { getMapLibre } from './maplibre-loader';
+import type { GeoJSONSource, Map as MapLibreMap, MapLayerMouseEvent, MapLayerTouchEvent, MapMouseEvent, MapTouchEvent, Marker } from 'maplibre-gl';
 import { closeRing, type LngLat } from './geometry';
 
 const EDIT = 'qs-edit';
@@ -56,7 +56,7 @@ export function usePolygonEditor(map: MapLibreMap | null, styleVersion: number, 
     let moved = false;
     const canvas = map.getCanvasContainer();
 
-    const onClick = (event: maplibregl.MapMouseEvent) => {
+    const onClick = (event: MapMouseEvent) => {
       if (!activeRef.current || moved) {
         moved = false;
         return;
@@ -76,7 +76,7 @@ export function usePolygonEditor(map: MapLibreMap | null, styleVersion: number, 
       canvas.style.cursor = 'grabbing';
       map.dragPan.disable();
     };
-    const move = (event: maplibregl.MapMouseEvent | maplibregl.MapTouchEvent) => {
+    const move = (event: MapMouseEvent | MapTouchEvent) => {
       if (dragging === null) return;
       moved = true;
       const next = [...pointsRef.current];
@@ -139,7 +139,7 @@ export function usePointPicker(map: MapLibreMap | null, point: LngLat | null, on
 
   useEffect(() => {
     if (!map) return;
-    const onClick = (event: maplibregl.MapMouseEvent) => activeRef.current && changeRef.current([event.lngLat.lng, event.lngLat.lat]);
+    const onClick = (event: MapMouseEvent) => activeRef.current && changeRef.current([event.lngLat.lng, event.lngLat.lat]);
     map.on('click', onClick);
     return () => {
       map.off('click', onClick);
@@ -154,7 +154,7 @@ export function usePointPicker(map: MapLibreMap | null, point: LngLat | null, on
       return;
     }
     if (!markerRef.current) {
-      const marker = new maplibregl.Marker({ color, draggable: true }).setLngLat(point).addTo(map);
+      const marker = new (getMapLibre().Marker)({ color, draggable: true }).setLngLat(point).addTo(map);
       marker.on('dragend', () => {
         const { lng, lat } = marker.getLngLat();
         changeRef.current([lng, lat]);
