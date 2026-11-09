@@ -180,8 +180,10 @@ function inspect({ mobile, lang }) {
       const inline = getComputedStyle(el).display === 'inline' && el.parentElement && /\S/.test([...el.parentElement.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent).join(''));
       if (inline || el.closest('.maplibregl-ctrl, .maplibregl-map') || el.type === 'checkbox' || el.type === 'radio') continue;
       // ::after bilan kengaytirilgan teginish maydoni (gm-button--sm) hisobga olinadi
-      const pad = getComputedStyle(el, '::after').content !== 'none' && getComputedStyle(el, '::after').position === 'absolute' ? 12 : 0;
-      if (full.width < 44 - 0.5 || full.height + pad < 44 - 0.5) out.small.push(`${label(el)} «${text(el)}» ${Math.round(full.width)}×${Math.round(full.height)}`);
+      // ::after bilan kengaytirilgan teginish maydoni hisobga olinadi
+      const after = getComputedStyle(el, '::after');
+      const ext = after.content !== 'none' && after.position === 'absolute' ? { w: parseFloat(after.width) || 0, h: parseFloat(after.height) || 0 } : { w: 0, h: 0 };
+      if (Math.max(full.width, ext.w) < 44 - 0.5 || Math.max(full.height, ext.h) < 44 - 0.5) out.small.push(`${label(el)} «${text(el)}» ${Math.round(full.width)}×${Math.round(full.height)}`);
     }
   }
 

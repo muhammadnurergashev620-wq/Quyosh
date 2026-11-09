@@ -251,3 +251,6 @@
 
 /* Logotipdagi «.uz» yorug‘ fonda (22 px qalin — yirik matn, ≥ 3:1) */
 :root { --qs-brand-gold-ink: #b7700b; }
+
+/* Teginish maydoni minimumi: interfeys 90% masshtabda (html font-size 90%, px → rem), shuning uchun haqiqiy 44 px = 44 / 0,9 */
+:root { --qs-touch-min: calc(44px / 0.9); --qs-field-h-touch: calc(46px / 0.9); }

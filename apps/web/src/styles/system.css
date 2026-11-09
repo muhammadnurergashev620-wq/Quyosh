@@ -231,3 +231,70 @@ a:focus-visible, button:focus-visible, [role='button']:focus-visible, [tabindex]
   table.qs-table:not(.qs-compare) td:first-child::before { display: none; }
   table.qs-table:not(.qs-compare) tbody tr:hover td { background: none; }
 }
+
+/* ── Mobil teginish maydoni ≥ 44 px (WCAG 2.5.5): ko‘rinish o‘lchami o‘zgarmaydi, ::after bilan kengaytiriladi ── */
+@media (max-width: 768px), (pointer: coarse) {
+  :root .gm-button--sm,
+  :root .gm-tab-btn,
+  :root .gm-tabs-x__tab,
+  :root .gm-chip__main,
+  :root .gm-chip__remove,
+  :root .gm-field__reveal,
+  :root .gm-psub__back,
+  :root .qs-map__tool,
+  :root .gm-ul__more,
+  :root .gm-pager__btn,
+  :root .gm-nrow__action,
+  :root .qs-card > header a:not(.gm-button),
+  :root .qs-steps button,
+  :root .qs-checklist a,
+  :root .gm-button--link,
+  :root .gm-aheader .gm-aheader__brand,
+  :root .qs-kpi-cta,
+  :root .gm-ul__menu-btn,
+  :root th button { position: relative; }
+  :root .gm-button--sm::after,
+  :root .gm-tab-btn::after,
+  :root .gm-tabs-x__tab::after,
+  :root .gm-chip__main::after,
+  :root .gm-chip__remove::after,
+  :root .gm-field__reveal::after,
+  :root .gm-psub__back::after,
+  :root .qs-map__tool::after,
+  :root .gm-ul__more::after,
+  :root .gm-pager__btn::after,
+  :root .gm-nrow__action::after,
+  :root .qs-card > header a:not(.gm-button)::after,
+  :root .qs-steps button::after,
+  :root .qs-checklist a::after,
+  :root .gm-button--link::after,
+  :root .gm-aheader .gm-aheader__brand::after,
+  :root .qs-kpi-cta::after,
+  :root .gm-ul__menu-btn::after,
+  :root th button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--qs-touch-min));
+    height: max(100%, var(--qs-touch-min));
+    transform: translate(-50%, -50%);
+  }
+  /* Header boshqaruvlari va forma maydonlari — haqiqiy 44–46 px */
+  :root { --qs-btn-h-md: var(--qs-touch-min); }
+  :root .gm-button.gm-button--md:not(.gm-button--icon) { min-height: var(--qs-touch-min); }
+  :root .gm-ul__acts button,
+  :root .gm-ul__pager button { min-width: var(--qs-touch-min); min-height: var(--qs-touch-min); }
+  :root .gm-aheader .gm-aheader__bell,
+  :root .gm-aheader .gm-aheader__search,
+  :root .gm-icon-button { width: var(--qs-touch-min); height: var(--qs-touch-min); }
+  :root .gm-aheader .gm-dropdown__trigger.gm-aheader__pill,
+  :root .gm-aheader .gm-dropdown__trigger.gm-aheader__user { min-height: var(--qs-touch-min); }
+  :root .gm-aheader .gm-aheader__brand { min-height: var(--qs-touch-min); align-items: center; }
+  :root .gm-field__control:not(textarea),
+  :root .qs-input-sm,
+  :root .gm-selectx__trigger,
+  :root .gm-ul__search input,
+  :root .qs-inline-price input { min-height: var(--qs-touch-min); }
+  :root .gm-ul__search { height: auto; min-height: var(--qs-touch-min); }
+}
