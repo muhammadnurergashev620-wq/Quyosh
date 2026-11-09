@@ -74,3 +74,7 @@
 .qs-open { font-weight: 700; font-size: 13px; }
 .qs-open.is-open { color: var(--qs-color-success); }
 .qs-open.is-closed { color: var(--qs-color-danger); }
+
+/* Xususiyatlar jadvali (nom — qiymat): mobilda skroll emas, matn qatorga o‘tadi (uzun ruscha nomlar) */
+:root .qs-card > table.qs-specs { display: table; width: 100%; overflow: visible; white-space: normal; table-layout: fixed; }
+:root .qs-specs th, :root .qs-specs td { overflow-wrap: anywhere; }
