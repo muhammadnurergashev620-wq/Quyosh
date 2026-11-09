@@ -188,3 +188,46 @@ a:focus-visible, button:focus-visible, [role='button']:focus-visible, [tabindex]
 .qs-fs-15 { font-size: 15px !important; }
 .qs-text-success { color: var(--qs-color-success) !important; }
 .qs-text-danger { color: var(--qs-color-danger) !important; }
+
+/* ── Mobil jadval → kartalar (≤ 640 px): data-label lib/responsive-tables.ts dan; solishtirish jadvallari skrollda qoladi ── */
+@media (max-width: 639px) {
+  .qs-table-wrap:has(> table.qs-table:not(.qs-compare)) { overflow: visible; border: 0; background: none; box-shadow: none; }
+  table.qs-table:not(.qs-compare) { display: block; width: 100%; min-width: 0; border: 0; }
+  table.qs-table:not(.qs-compare) thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  table.qs-table:not(.qs-compare) tbody { display: flex; flex-direction: column; gap: var(--qs-space-3); }
+  table.qs-table:not(.qs-compare) tr {
+    display: flex;
+    flex-direction: column;
+    padding: var(--qs-space-3) var(--qs-space-4);
+    border: 1px solid var(--qs-color-border);
+    border-radius: var(--qs-radius-12);
+    background: var(--qs-color-surface);
+    box-shadow: var(--qs-shadow-xs);
+  }
+  table.qs-table:not(.qs-compare) td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--qs-space-3);
+    min-width: 0;
+    padding: 6px 0;
+    border-top: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+  table.qs-table:not(.qs-compare) td + td { border-top: 1px dashed color-mix(in srgb, var(--qs-color-border) 70%, transparent); }
+  table.qs-table:not(.qs-compare) td::before {
+    content: attr(data-label);
+    flex: none;
+    max-width: 45%;
+    color: var(--qs-color-text-muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: left;
+  }
+  table.qs-table:not(.qs-compare) td:not([data-label])::before,
+  table.qs-table:not(.qs-compare) td[data-label='']::before { display: none; }
+  table.qs-table:not(.qs-compare) td:first-child { justify-content: flex-start; text-align: left; font-weight: 600; }
+  table.qs-table:not(.qs-compare) td:first-child::before { display: none; }
+  table.qs-table:not(.qs-compare) tbody tr:hover td { background: none; }
+}
