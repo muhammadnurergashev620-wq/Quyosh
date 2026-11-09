@@ -299,11 +299,11 @@ export function ShopCatalogPage() {
       {!items.length ? (
         <EmptyState icon={<Search size={30} />} title={t('Mahsulot topilmadi')} description={t('Katalogdan model qo‘shing yoki narxlar ro‘yxatini import qiling.')} action={writable && <Button onClick={() => setAdding(true)}>{t('Mahsulot qo‘shish')}</Button>} />
       ) : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead>
               <tr>
-                {writable && <th aria-label={t('Tanlash')}><input type="checkbox" checked={items.every((item) => selected.has(item.id))} onChange={(e) => setSelected(e.target.checked ? new Set(items.map((item) => item.id)) : new Set())} /></th>}
+                {writable && <th><input type="checkbox" aria-label={t('Hammasini tanlash')} checked={items.every((item) => selected.has(item.id))} onChange={(e) => setSelected(e.target.checked ? new Set(items.map((item) => item.id)) : new Set())} /></th>}
                 <th>{t('Model')}</th><th>{t('Narxlar (filiallar bo‘yicha)')}</th><th>{t('Holat')}</th><th>{t('Yangilangan')}</th>{writable && <th />}
               </tr>
             </thead>

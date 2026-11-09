@@ -88,7 +88,7 @@ export function AdminSupportPage() {
         <input className="qs-input-sm" placeholder={t('Mavzu yoki SUP-raqam')} aria-label={t('Qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
       {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<FileText size={28} />} title={t('Murojaat yo‘q')} /> : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Raqam')}</th><th>{t('Mavzu')}</th><th>{t('Kategoriya')}</th><th>{t('Ustuvorlik')}</th><th>{t('Holat')}</th><th>{t('Birinchi javob')}</th></tr></thead>
             <tbody>
@@ -186,7 +186,7 @@ export function AdminContentPage() {
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Bilimlar markazi')}</h1><p>{t('{n} ta material', { n: list.data?.length ?? 0 })}</p></div><div className="qs-page__actions"><Button onClick={() => navigate('/admin/kontent/yangi')}><Plus size={16} /> {t('Yangi material')}</Button></div></div>
       {list.isLoading ? <PageLoader /> : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Sarlavha')}</th><th>{t('Tur')}</th><th>{t('Kategoriya')}</th><th>{t('Tarjima')}</th><th>{t('Holat')}</th><th className="qs-right">{t('Foydali')}</th></tr></thead>
             <tbody>
@@ -310,7 +310,7 @@ export function AdminReportsPage() {
           <div className="qs-hbars">
             {f.data?.steps.map((s) => <div key={s.step} className="qs-hbar"><span>{LABEL[s.step] ?? s.step}</span><div><span style={{ width: `${(s.count / max) * 100}%` }} /></div><strong>{s.count}{s.conversion !== null ? <small className="qs-muted"> · {s.conversion}%</small> : null}</strong></div>)}
           </div>
-          <div className="qs-table-wrap qs-mt-4">
+          <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap qs-mt-4">
             <table className="qs-table"><thead><tr><th>{t('Bosqich')}</th><th className="qs-right">{t('Soni')}</th><th className="qs-right">{t('Oldingidan konversiya')}</th></tr></thead>
               <tbody>{f.data?.steps.map((s) => <tr key={s.step}><td>{LABEL[s.step] ?? s.step}</td><td className="qs-right qs-num">{s.count}</td><td className="qs-right qs-num">{s.conversion === null ? '—' : `${s.conversion} %`}</td></tr>)}</tbody></table>
           </div>

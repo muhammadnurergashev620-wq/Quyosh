@@ -118,7 +118,7 @@ function FinancingTab() {
   return (
     <>
       <div className="qs-page__actions"><Button onClick={() => open('new')}><Plus size={16} /> {t('Mahsulot qo‘shish')}</Button></div>
-      <div className="qs-table-wrap">
+      <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
         <table className="qs-table">
           <thead><tr><th>{t('Provayder')}</th><th>{t('Stavka')}</th><th>{t('Muddat')}</th><th>{t('Boshlang‘ich to‘lov')}</th><th>{t('Holat')}</th><th /></tr></thead>
           <tbody>
@@ -185,7 +185,7 @@ function RegionalYieldTab() {
   return (
     <>
       <Alert tone="info">{t('DEFAULT usuli: PVGIS va NASA POWER ikkalasi ham mavjud bo‘lmaganda ishlatiladi (kWh/kWp/oy, yo‘qotishlarsiz). Natijada «viloyat o‘rtachasi» belgisi chiqadi.')}</Alert>
-      <div className="qs-table-wrap">
+      <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
         <table className="qs-table">
           <thead><tr><th>{t('Hudud')}</th>{MONTHS.map((m) => <th key={m} className="qs-right">{t(m)}</th>)}<th className="qs-right">{t('Yil')}</th><th /></tr></thead>
           <tbody>
@@ -216,7 +216,7 @@ function SolarTab() {
   return (
     <>
       <Alert tone="info">{t('Kesh: koordinata 0,05° to‘rga, qiyalik va yo‘nalish 5° qadamga yaxlitlanadi; 180 kun amal qiladi.')}</Alert>
-      <div className="qs-table-wrap">
+      <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
         <table className="qs-table">
           <thead><tr><th>{t('Manba')}</th><th>{t('Katak')}</th><th>{t('Qiyalik / yo‘nalish')}</th><th className="qs-right">{t('kWh/kWp/yil')}</th><th>{t('Olingan')}</th><th>{t('Holat')}</th></tr></thead>
           <tbody>

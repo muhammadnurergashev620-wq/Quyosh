@@ -151,7 +151,7 @@ export function AdminShopsPage() {
       {!list.data.items.length ? (
         <EmptyState icon={<Store size={30} />} title={t('Do‘kon topilmadi')} />
       ) : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Do‘kon')}</th><th>{t('Egasi')}</th><th>{t('Holat')}</th><th className="qs-right">{t('Filial / mahsulot')}</th><th>{t('Yaratilgan')}</th></tr></thead>
             <tbody>

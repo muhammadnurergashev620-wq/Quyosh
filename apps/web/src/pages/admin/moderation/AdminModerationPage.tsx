@@ -40,7 +40,7 @@ function Reviews() {
     <>
       <TabBar variant="tabs">{(['PENDING', 'PUBLISHED', 'HIDDEN'] as const).map((s) => <Tab key={s} onClick={() => setStatus(s)} selected={status === s}>{s === 'PENDING' ? t('Tekshiruvda') : s === 'PUBLISHED' ? t('E’lon qilingan') : t('Yashirilgan')}</Tab>)}</TabBar>
       {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ro‘yxat bo‘sh')} /> : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Sharh')}</th><th>{t('Do‘kon')}</th><th>{t('Muallif')}</th><th>{t('Risk')}</th><th /></tr></thead>
             <tbody>
@@ -76,7 +76,7 @@ function Complaints() {
     <>
       <TabBar variant="tabs">{(['OPEN', 'RESOLVED', 'REJECTED'] as const).map((s) => <Tab key={s} onClick={() => setStatus(s)} selected={status === s}>{s === 'OPEN' ? t('Ochiq') : s === 'RESOLVED' ? t('Hal qilingan') : t('Rad etilgan')}</Tab>)}</TabBar>
       {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ro‘yxat bo‘sh')} /> : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Obyekt')}</th><th>{t('Sabab')}</th><th>{t('Tafsilot')}</th><th>{t('Sana')}</th><th /></tr></thead>
             <tbody>
@@ -106,7 +106,7 @@ function Disputes() {
   return (
     <>
       {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ochiq e’tiroz yo‘q')} /> : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Montaj')}</th><th>{t('Mijoz')}</th><th>{t('Sabab')}</th><th /></tr></thead>
             <tbody>

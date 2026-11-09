@@ -176,7 +176,7 @@ function ProductionChart({ s }: { s: SystemDetail }) {
       </div>
       <div className="qs-prod-legend"><span><i /> {t('Prognoz')}</span><span><i className="dot" /> {t('Kiritilgan')}</span><Button variant="link" onClick={() => setTable(!table)}>{table ? t('Jadvalni yashirish') : t('Jadval ko‘rinishi')}</Button></div>
       {table && (
-        <div className="qs-table-wrap qs-mt-3">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap qs-mt-3">
           <table className="qs-table"><thead><tr><th>{t('Oy')}</th><th className="qs-right">{t('Prognoz, kWh')}</th><th className="qs-right">{t('Haqiqiy, kWh')}</th></tr></thead>
             <tbody>{months.map((m) => <tr key={m.period}><td>{m.period}</td><td className="qs-right qs-num">{m.expected === null ? '—' : n0(m.expected)}</td><td className="qs-right qs-num">{m.actual === null ? '—' : n0(m.actual)}</td></tr>)}</tbody></table>
         </div>

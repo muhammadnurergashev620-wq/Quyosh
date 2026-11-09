@@ -56,7 +56,7 @@ function QuoteBody({ snap, prev }: { snap: QuoteSnap; prev?: QuoteSnap | null })
   const pItem = (i: number) => p?.items[i];
   return (
     <div className="qs-page qs-gap-4">
-      <div className="qs-table-wrap">
+      <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
         <table className="qs-table qs-quote-lines">
           <thead><tr><th>{t('Mahsulot / xizmat')}</th><th>{t('Miqdor')}</th><th>{t('Birlik narxi')}</th><th>{t('Jami')}</th></tr></thead>
           <tbody>

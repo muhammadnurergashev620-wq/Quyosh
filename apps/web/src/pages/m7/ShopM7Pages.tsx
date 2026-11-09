@@ -265,7 +265,7 @@ export function AnalyticsPage() {
           <section className="qs-card">
             <h2>{t('So‘rovlar kunlar bo‘yicha')}</h2>
             {!x.daily.length ? <p className="qs-muted">{t('Bu davrda ma’lumot yo‘q')}</p> : tables ? (
-              <div className="qs-table-wrap"><table className="qs-table"><thead><tr><th>{t('Kun')}</th><th className="qs-right">{t('Ko‘rishlar')}</th><th className="qs-right">{t('So‘rovlar')}</th><th className="qs-right">{t('Javob vaqti')}</th></tr></thead><tbody>{x.daily.map((d) => <tr key={d.day}><td>{d.day}</td><td className="qs-right qs-num">{d.views}</td><td className="qs-right qs-num">{d.requests}</td><td className="qs-right qs-num">{minutes(d.medianResponseMinutes === null ? null : Math.round(d.medianResponseMinutes))}</td></tr>)}</tbody></table></div>
+              <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap"><table className="qs-table"><thead><tr><th>{t('Kun')}</th><th className="qs-right">{t('Ko‘rishlar')}</th><th className="qs-right">{t('So‘rovlar')}</th><th className="qs-right">{t('Javob vaqti')}</th></tr></thead><tbody>{x.daily.map((d) => <tr key={d.day}><td>{d.day}</td><td className="qs-right qs-num">{d.views}</td><td className="qs-right qs-num">{d.requests}</td><td className="qs-right qs-num">{minutes(d.medianResponseMinutes === null ? null : Math.round(d.medianResponseMinutes))}</td></tr>)}</tbody></table></div>
             ) : (
               <div className="qs-vbars" role="img" aria-label={t('So‘rovlar kunlar bo‘yicha')}>{days.map((d) => <span key={d.day} title={`${d.day}: ${d.requests} ${t('so‘rov')}, ${d.views} ${t('ko‘rish')}`} style={{ height: d.requests ? `${(d.requests / maxDaily) * 100}%` : '1px' }} />)}</div>
             )}

@@ -147,7 +147,7 @@ function ModelsTab() {
         </div>
       </div>
       {!list.data.items.length ? <EmptyState icon={<Package size={30} />} title={status === 'PENDING' ? t('Tekshiruv navbati bo‘sh') : t('Model topilmadi')} /> : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Model')}</th><th>{t('Kategoriya')}</th><th>{t('Asosiy xususiyat')}</th><th>{t('Taklif qilgan')}</th><th>{t('Holat')}</th><th>{t('Sana')}</th></tr></thead>
             <tbody>
@@ -276,7 +276,7 @@ function RatesTab() {
         ) : <Alert tone="warning">{t('Kurs hali olinmagan')}</Alert>}
         <p className="qs-muted qs-mb-0">{t('Har kuni 09:30 (Toshkent) avtomatik yangilanadi; muvaffaqiyatsiz bo‘lsa oxirgi kurs ishlatiladi.')}</p>
       </section>
-      <div className="qs-table-wrap">
+      <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
         <table className="qs-table">
           <thead><tr><th>{t('Sana')}</th><th className="qs-right">{t('Kurs')}</th><th>{t('Olingan vaqt')}</th></tr></thead>
           <tbody>

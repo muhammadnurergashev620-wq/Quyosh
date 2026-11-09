@@ -39,7 +39,7 @@ export function CalculationsPage() {
       {!list.data?.length ? (
         <EmptyState icon={<BarChart3 size={30} />} title={t('Hali hisob saqlanmagan')} action={<ButtonLink to="/mijoz/kalkulyator">{t('Hisoblash')}</ButtonLink>} />
       ) : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th /><th>{t('Hisob')}</th><th>{t('Tizim')}</th><th className="qs-right">{t('Oylik tejash')}</th><th className="qs-right">{t('Narx')}</th><th className="qs-right">{t('Qoplanish')}</th><th /></tr></thead>
             <tbody>
@@ -103,7 +103,7 @@ export function CompareCalculationsPage() {
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Hisoblarni solishtirish')}</h1></div></div>
-      <div className="qs-table-wrap">
+      <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
         <table className="qs-table qs-compare">
           <thead><tr><th />{compare.data.map((row) => <th key={row.id}><Link to={`/mijoz/natija/${row.id}`}>{row.title || formatDate(row.createdAt)}</Link></th>)}</tr></thead>
           <tbody>

@@ -3371,4 +3371,6 @@ export const en: Record<string, string> = {
   "ochish": "open",
   "tanlash": "select",
   "yopish": "close",
+  "Faylni tanlash": "Choose file",
+  "Xulosalar": "Insights",
 };

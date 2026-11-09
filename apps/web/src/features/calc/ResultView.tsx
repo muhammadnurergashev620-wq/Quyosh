@@ -119,7 +119,7 @@ export function ResultView({ result, actions, cta, shared }: { result: EstimateR
       )}
 
       {result.insights.length > 0 && (
-        <div className="qs-insights">
+        <div className="qs-insights" tabIndex={0} role="region" aria-label={t('Xulosalar')}>
           {result.insights.map((item) => (
             <article key={item.type} className="qs-insight">
               <span aria-hidden="true">{INSIGHT_ICON[item.type]}</span>

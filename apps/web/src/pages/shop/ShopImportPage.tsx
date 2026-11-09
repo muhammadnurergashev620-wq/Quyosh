@@ -88,7 +88,7 @@ export function ShopImportPage() {
           <strong>{upload.isPending ? t('Tekshirilmoqda…') : t('Faylni shu yerga tashlang yoki tanlang')}</strong>
           <span>{t('Ustunlar: brand, model, price, currency, vat_included, stock_status, quantity, branch, valid_from, valid_until, description')}</span>
         </div>
-        <input ref={inputRef} type="file" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="gm-visually-hidden" onChange={(e) => { pick(e.target.files?.[0]); e.target.value = ''; }} />
+        <input ref={inputRef} type="file" aria-label={t('Faylni tanlash')} accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="gm-visually-hidden" onChange={(e) => { pick(e.target.files?.[0]); e.target.value = ''; }} />
         {localError && <Alert tone="danger">{localError}</Alert>}
         {upload.isError && <Alert tone="danger">{getErrorMessage(upload.error)}</Alert>}
       </section>
@@ -106,7 +106,7 @@ export function ShopImportPage() {
           </p>
           {summary.errors.length > 0 && (
             <>
-              <div className="qs-table-wrap" style={{ maxHeight: 320, overflowY: 'auto' }}>
+              <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap" style={{ maxHeight: 320, overflowY: 'auto' }}>
                 <table className="qs-table">
                   <thead><tr><th>{t('Qator')}</th><th>{t('Ustun')}</th><th>{t('Sabab')}</th></tr></thead>
                   <tbody>

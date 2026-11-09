@@ -124,7 +124,7 @@ export function ShopProfilePage() {
       {tab === 'overview' && <PublicShopReviews slug={shop.slug} shopName={shop.name} />}
 
       {tab === 'services' && (!shop.services.length ? <EmptyState title={t('Xizmatlar ko‘rsatilmagan')} /> : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Xizmat')}</th><th>{t('Narx')}</th><th>{t('Kafolat')}</th></tr></thead>
             <tbody>
@@ -157,7 +157,7 @@ export function ShopProfilePage() {
       ))}
       {tab === 'products' && (products.isLoading ? <PageLoader /> : !products.data?.items.length ? <EmptyState title={t('Mahsulot qo‘shilmagan')} /> : (
         <>
-          <div className="qs-table-wrap">
+          <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
             <table className="qs-table">
               <thead><tr><th>{t('Model')}</th><th>{t('Narx')}</th><th>{t('Mavjudlik')}</th></tr></thead>
               <tbody>

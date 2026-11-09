@@ -40,7 +40,7 @@ export function ComparePage() {
         <div><h1>{t('Solishtirish')}</h1><p>{t('★ — eng yaxshi qiymat; rangli katak — farqli qiymat.')}</p></div>
         <label className="qs-check"><input type="checkbox" checked={onlyDiff} onChange={(e) => setOnlyDiff(e.target.checked)} /> {t('Faqat farqlarni ko‘rsatish')}</label>
       </div>
-      <div className="qs-table-wrap">
+      <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
         <table className="qs-table qs-compare">
           <thead>
             <tr>

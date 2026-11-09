@@ -111,7 +111,7 @@ export function ShopServicesPage() {
       {!services.data?.length ? (
         <EmptyState icon={<Wrench size={32} />} title={t('Hali xizmat yo‘q')} description={t('Masalan: «Montaj — har kW uchun 1 200 000 so‘m».')} action={writable && <Button onClick={() => setEditing('new')}>{t('Xizmat qo‘shish')}</Button>} />
       ) : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Xizmat')}</th><th>{t('Narx')}</th><th>{t('Filial')}</th><th>{t('Kafolat')}</th><th>{t('Holat')}</th>{writable && <th />}</tr></thead>
             <tbody>

@@ -95,7 +95,7 @@ export function MonthlyBars({ title, tip, series, unit, format }: { title: strin
                   return <path key={s.name} className={cx('qs-chart__bar', `is-${s.color}`, hover !== null && hover !== m && 'is-dim')} d={roundedTop(x0 + i * (barW + 2), top, barW, h)} />;
                 })}
                 <text className="qs-chart__x" x={PAD.left + slot * m + slot / 2} y={H - 8} textAnchor="middle">{monthShort(m + 1)}</text>
-                <rect x={PAD.left + slot * m} y={PAD.top} width={slot} height={H - PAD.top - PAD.bottom} fill="transparent" onMouseEnter={() => setHover(m)} onFocus={() => setHover(m)} tabIndex={0} aria-label={`${monthShort(m + 1)}: ${series.map((s) => `${s.name} ${format(s.values[m] ?? 0)}`).join(', ')}`} />
+                <rect x={PAD.left + slot * m} y={PAD.top} width={slot} height={H - PAD.top - PAD.bottom} fill="transparent" onMouseEnter={() => setHover(m)} onFocus={() => setHover(m)} tabIndex={0} role="img" aria-label={`${monthShort(m + 1)}: ${series.map((s) => `${s.name} ${format(s.values[m] ?? 0)}`).join(', ')}`} />
               </g>
             );
           })}

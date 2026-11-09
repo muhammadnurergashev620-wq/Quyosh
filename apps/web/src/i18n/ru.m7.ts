@@ -630,4 +630,6 @@ export const ruM7: Record<string, string> = {
   "ochish": "открыть",
   "tanlash": "выбрать",
   "yopish": "закрыть",
+  "Faylni tanlash": "Выбрать файл",
+  "Xulosalar": "Выводы",
 };

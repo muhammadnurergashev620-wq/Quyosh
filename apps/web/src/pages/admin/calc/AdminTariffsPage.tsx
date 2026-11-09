@@ -92,7 +92,7 @@ function TariffForm({ initial, onDone }: { initial?: Tariff; onDone: () => void 
           <Input label={t('Tun tugashi (soat)')} inputMode="numeric" value={night.end} onChange={(e) => setNight({ ...night, end: e.target.value.replace(/\D/g, '').slice(0, 2) })} />
         </div>
       )}
-      <div className="qs-table-wrap">
+      <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
         <table className="qs-table">
           <thead><tr><th>{t('Oylar (bo‘sh — butun yil)')}</th>{tou && <th>{t('Davr')}</th>}<th>{t('dan, kWh')}</th><th>{t('gacha, kWh')}</th><th>{t('Stavka, so‘m/kWh')}</th><th /></tr></thead>
           <tbody>
@@ -167,7 +167,7 @@ function TariffsTab() {
       </div>
       <Alert tone="info">{t('Tasdiqlangan tarif o‘zgartirilmaydi — eski hisoblar shu versiya bilan o‘qiladi. O‘zgarish uchun nusxa oling, yangi sana qo‘ying va eski tarifga tugash sanasini belgilang.')}</Alert>
       {!list.data.length ? <EmptyState title={t('Tarif yo‘q')} description={t('Tarif bo‘lmasa kalkulyator moliyaviy natijani hisoblamaydi («Tarif ma’lumoti yo‘q»).')} /> : (
-        <div className="qs-table-wrap">
+        <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Tarif')}</th><th>{t('Pog‘onalar')}</th><th>{t('Amal qiladi')}</th><th>{t('Holat')}</th><th /></tr></thead>
             <tbody>
