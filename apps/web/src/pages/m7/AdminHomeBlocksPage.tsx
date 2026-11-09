@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowDown, ArrowUp, Eye, EyeOff, History, Plus, Save, Send, Trash2, Undo2 } from 'lucide-react';
@@ -135,7 +136,7 @@ export function AdminHomeBlocksPage() {
   };
 
   if (list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   const drafts = blocks.filter((b) => b.draft).length;
 
   return (
@@ -284,7 +285,7 @@ function VersionsModal({ block, onClose, onRestored }: { block: AdminBlock; onCl
   const restore = useMutation({ mutationFn: (versionId: string) => api.restore(block.id, versionId), onSuccess: onRestored });
   return (
     <Modal open title={t('Versiyalar: {name}', { name: BLOCK_LABEL[block.type]() })} onClose={onClose}>
-      {list.isLoading ? <PageLoader /> : !list.data?.length ? (
+      {list.isLoading ? <PageLoader variant="list" /> : !list.data?.length ? (
         <p className="qs-muted">{t('Hali admin tomonidan nashr qilingan versiya yo‘q (v1 — standart matn).')}</p>
       ) : (
         <div className="qs-ticket-thread">

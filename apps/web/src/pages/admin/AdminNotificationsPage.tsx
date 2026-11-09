@@ -246,7 +246,7 @@ export function AdminNotificationsPage() {
           {data?.truncated && <small className="gm-ul__hint">{t('Eng so‘nggi 3000 ta bildirishnoma hisobga olingan.')}</small>}
         </div>
 
-        {list.isLoading && <PageLoader label={t('Bildirishnomalar yuklanmoqda…')} />}
+        {list.isLoading && <PageLoader variant="list" label={t('Bildirishnomalar yuklanmoqda…')} />}
         {list.isError && <Alert tone="danger">{getErrorMessage(list.error)}</Alert>}
         {data && items.length === 0 && <EmptyState icon={<Bell size={26} />} title={t('Bildirishnoma topilmadi')} description={dirty ? t('Filtrlarni o‘zgartirib ko‘ring.') : undefined} />}
 

@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -182,7 +183,7 @@ function AddProductModal({ shopId, open, onClose }: { shopId: string; open: bool
         <div className="qs-form">
           <Input label={t('Brend yoki model')} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Longi Hi-MO 6" autoFocus />
           {debounced.length >= 2 && (
-            results.isLoading ? <PageLoader /> : (
+            results.isLoading ? <PageLoader variant="list" /> : (
               <ul className="qs-search-results">
                 {results.data?.map((model) => (
                   <li key={model.id}>
@@ -270,7 +271,7 @@ export function ShopCatalogPage() {
   const toggle = (id: string) => setSelected((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next; });
 
   if (!shopId || products.isLoading) return <PageLoader />;
-  if (products.isError) return <Alert tone="danger">{getErrorMessage(products.error)}</Alert>;
+  if (products.isError) return <ErrorState error={products.error} onRetry={() => void products.refetch()} />;
   const counts = products.data?.counts ?? {};
   const ids = [...selected];
 

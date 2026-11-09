@@ -1,10 +1,31 @@
-.gm-page-loader {
+.gm-page-loader--inline {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--qs-space-3);
-  padding: var(--qs-space-8) var(--qs-space-6);
+  padding: var(--qs-space-6) var(--qs-space-4);
   color: var(--qs-color-text-muted);
   font-size: 14px;
   font-weight: 500;
 }
+
+/* Sahifa skeletoni: sarlavha + 3 karta + blok */
+.gm-page-loader--skeleton { display: flex; flex-direction: column; gap: var(--qs-space-5); width: 100%; }
+.gm-page-loader__head { display: flex; flex-direction: column; gap: var(--qs-space-2); }
+.gm-page-loader__title { width: min(320px, 70%); height: 30px; border-radius: var(--qs-radius-sm); }
+.gm-page-loader__lead { width: min(460px, 90%); height: 14px; border-radius: var(--qs-radius-xs); }
+.gm-page-loader__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--qs-space-4); }
+.gm-page-loader__card { height: 112px; border-radius: var(--qs-radius-card); }
+.gm-page-loader__block { height: 240px; border-radius: var(--qs-radius-card); }
+@media (max-width: 639px) {
+  .gm-page-loader__grid { grid-template-columns: 1fr; }
+  .gm-page-loader__card { height: 88px; }
+}
+
+/* Ro‘yxat skeletoni */
+.gm-page-loader--list { display: flex; flex-direction: column; gap: var(--qs-space-4); padding: var(--qs-space-4) 0; }
+.gm-page-loader__row { display: flex; align-items: center; gap: var(--qs-space-3); }
+.gm-page-loader__row > div { display: flex; flex: 1; flex-direction: column; gap: var(--qs-space-2); }
+.gm-page-loader__avatar { flex: none; width: 40px; height: 40px; border-radius: var(--qs-radius-12); }
+.gm-page-loader__line { height: 12px; border-radius: var(--qs-radius-xs); }
+.gm-page-loader__line--short { width: 55%; }

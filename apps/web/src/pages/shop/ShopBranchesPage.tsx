@@ -1,6 +1,6 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { MapPin, Plus } from 'lucide-react';
-import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -14,7 +14,6 @@ import { BranchForm } from '@/features/shop/components/BranchForm';
 import { ServiceAreaEditor } from '@/features/shop/components/ServiceAreaEditor';
 import { WEEKDAYS } from '@/features/shop/labels';
 import type { Branch, BranchInput } from '@/features/shop/types';
-import { getErrorMessage } from '@/lib/error-messages';
 import { regionName } from '@/lib/regions';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
@@ -40,7 +39,7 @@ export function ShopBranchesPage() {
   const writable = can('branches.write');
 
   if (branches.isLoading) return <PageLoader />;
-  if (branches.isError) return <Alert tone="danger">{getErrorMessage(branches.error)}</Alert>;
+  if (branches.isError) return <ErrorState error={branches.error} onRetry={() => void branches.refetch()} />;
 
   return (
     <div className="qs-page">

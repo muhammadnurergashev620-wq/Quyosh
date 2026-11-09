@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -91,7 +92,7 @@ export function SitesPage() {
   const [creating, setCreating] = useState(false);
   const sites = useQuery({ queryKey: ['sites'], queryFn: mapService.sites });
   if (sites.isLoading) return <PageLoader />;
-  if (sites.isError) return <Alert tone="danger">{getErrorMessage(sites.error)}</Alert>;
+  if (sites.isError) return <ErrorState error={sites.error} onRetry={() => void sites.refetch()} />;
   return (
     <div className="qs-page">
       <div className="qs-page__head">

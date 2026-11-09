@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert } from '@/components/ui/Alert';
 import { Switch } from '@/components/ui/Switch';
@@ -49,7 +50,7 @@ export function NotificationChannelSettings() {
     onSuccess: (data) => queryClient.setQueryData(KEY, data),
   });
   if (prefs.isLoading) return <PageLoader />;
-  if (prefs.isError || !prefs.data) return <Alert tone="danger">{getErrorMessage(prefs.error)}</Alert>;
+  if (prefs.isError || !prefs.data) return <ErrorState error={prefs.error} onRetry={() => void prefs.refetch()} />;
   const { contacts, items } = prefs.data;
   const usable = (c: Channel) => (c === 'SMS' ? contacts.phone : contacts.email);
   const toggle = (type: string, channels: Channel[], c: Channel, on: boolean) => save.mutate({ type, channels: on ? [...channels, c] : channels.filter((x) => x !== c) });

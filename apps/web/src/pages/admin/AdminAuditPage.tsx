@@ -296,7 +296,7 @@ export function AdminAuditPage() {
           })}
         </div>
 
-        {logs.isLoading && <PageLoader label={t('Audit yozuvlari yuklanmoqda…')} />}
+        {logs.isLoading && <PageLoader variant="list" label={t('Audit yozuvlari yuklanmoqda…')} />}
         {logs.isError && <Alert tone="danger">{getErrorMessage(logs.error)}</Alert>}
         {data && items.length === 0 && <EmptyState icon={<Activity size={26} />} title={t('Yozuvlar topilmadi')} description={dirty ? t('Filtrlarni o‘zgartirib ko‘ring.') : undefined} />}
 

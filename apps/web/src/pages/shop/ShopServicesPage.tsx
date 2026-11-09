@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Plus, Wrench } from 'lucide-react';
@@ -17,7 +18,6 @@ import { useShopBranches, useShopMutation, useShopServices } from '@/features/sh
 import { shopService } from '@/features/shop/shop.service';
 import { PRICING_MODEL, SERVICE_TYPE } from '@/features/shop/labels';
 import type { Currency, PricingModel, ServiceInput, ServiceType, ShopService } from '@/features/shop/types';
-import { getErrorMessage } from '@/lib/error-messages';
 import { formatMoney } from '@/lib/format';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
@@ -100,7 +100,7 @@ export function ShopServicesPage() {
   const branchName = (id: string | null) => branches.data?.find((branch) => branch.id === id)?.name ?? t('Barcha filiallar');
 
   if (services.isLoading) return <PageLoader />;
-  if (services.isError) return <Alert tone="danger">{getErrorMessage(services.error)}</Alert>;
+  if (services.isError) return <ErrorState error={services.error} onRetry={() => void services.refetch()} />;
 
   return (
     <div className="qs-page">

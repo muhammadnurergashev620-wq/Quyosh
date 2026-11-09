@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Alert } from '@/components/ui/Alert';
@@ -19,7 +20,6 @@ import { KeyRound, UserPlus } from 'lucide-react';
 import { PermissionPicker } from '@/features/shop/components/PermissionPicker';
 import { DEFAULT_PERMISSIONS, MEMBER_ROLE, personName } from '@/features/shop/labels';
 import type { ShopMember } from '@/features/shop/types';
-import { getErrorMessage } from '@/lib/error-messages';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
 
@@ -68,7 +68,7 @@ export function ShopMembersPage() {
 
   if (!isOwner) return <Alert tone="info">{t('Xodimlarni faqat do‘kon egasi boshqaradi.')}</Alert>;
   if (members.isLoading) return <PageLoader />;
-  if (members.isError || !members.data) return <Alert tone="danger">{getErrorMessage(members.error)}</Alert>;
+  if (members.isError || !members.data) return <ErrorState error={members.error} onRetry={() => void members.refetch()} />;
 
   return (
     <div className="qs-page">

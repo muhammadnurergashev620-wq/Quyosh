@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useCallback, useState } from 'react';
 import type { DragEvent } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -92,7 +93,7 @@ export function ShopRequestsPage({ quotedOnly = false }: { quotedOnly?: boolean 
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['shop-requests', shopId] }),
   });
   if (!shopId || list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   const items = list.data?.items ?? [];
   const open = (id: string) => navigate(`/dokon/sorovlar/${id}`);
   const canMove = can('requests.assign');
@@ -176,7 +177,7 @@ export function ShopRequestDetailPage() {
   const addNote = useMutation({ mutationFn: () => dealsService.addNote(shopId!, rsId, note.trim()), onSuccess: () => { setNote(''); refresh(); } });
   const decline = useMutation({ mutationFn: () => dealsService.decline(shopId!, rsId, [preset, declineNote.trim()].filter(Boolean).join(': ')), onSuccess: () => { setDeclineOpen(false); refresh(); } });
   if (!shopId || lead.isLoading) return <PageLoader />;
-  if (lead.isError || !lead.data) return <Alert tone="danger">{getErrorMessage(lead.error)}</Alert>;
+  if (lead.isError || !lead.data) return <ErrorState error={lead.error} onRetry={() => void lead.refetch()} />;
   const l = lead.data;
   const r = l.request;
   const openForQuote = r.status === 'OPEN' && ['SENT', 'VIEWED', 'CLARIFICATION_REQUESTED', 'QUOTED'].includes(l.status);

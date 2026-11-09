@@ -80,7 +80,7 @@ export function AdminUserProfilePage() {
     <div className="gm-uprofile">
       <Link to={isAdminAccount ? '/admin/adminlar' : '/admin/foydalanuvchilar'} className="gm-uprofile__back">
         <ArrowLeft size={16} />{' '}{isAdminAccount ? t('Adminlar') : t('Foydalanuvchilar')}</Link>
-      {user.isLoading && <PageLoader />}
+      {user.isLoading && <PageLoader variant="list" />}
       {user.isError && <Alert tone="danger">{getErrorMessage(user.error)}</Alert>}
       {number === null && <EmptyState title={t('Foydalanuvchi topilmadi')} description={t('Havola noto‘g‘ri: foydalanuvchi ID raqami bo‘lishi kerak.')} action={<ButtonLink to="/admin/foydalanuvchilar" variant="secondary">{t('Foydalanuvchilar ro‘yxati')}</ButtonLink>} />}
       {data && isAdminAccount && (

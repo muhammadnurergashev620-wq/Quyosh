@@ -1,8 +1,8 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, FileText, Store } from 'lucide-react';
-import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
@@ -12,7 +12,6 @@ import { i18nText, priceWithRate, SPEC_META, specValue } from '@/features/catalo
 import { SPEC_KEYS, type SpecKey } from '@/features/catalog/types';
 import { mediaService } from '@/features/media/services/media.service';
 import { STOCK_STATUS } from '@/features/shop/labels';
-import { getErrorMessage } from '@/lib/error-messages';
 import { REGIONS, regionName } from '@/lib/regions';
 import { formatDate } from '@/lib/format';
 import { useAppStore } from '@/store/app.store';
@@ -42,7 +41,7 @@ export function ProductPage() {
   }, [model.data, offers.data]);
 
   if (model.isLoading) return <PageLoader />;
-  if (model.isError || !model.data) return <Alert tone="danger">{getErrorMessage(model.error)}</Alert>;
+  if (model.isError || !model.data) return <ErrorState error={model.error} onRetry={() => void model.refetch()} />;
   if (model.data.redirectSlug) return <Navigate to={`/mijoz/mahsulotlar/${model.data.redirectSlug}`} replace />;
   const data = model.data;
   const schemaKeys = (data.category.attributeSchemaJson ?? []).map((attr) => attr.key).filter((key): key is SpecKey => (SPEC_KEYS as readonly string[]).includes(key));
@@ -93,7 +92,7 @@ export function ProductPage() {
                 <option value="updated">{t('Yangilangan sana bo‘yicha')}</option>
               </SelectMenu>
             </div>
-            {offers.isLoading ? <PageLoader /> : !offers.data?.items.length ? (
+            {offers.isLoading ? <PageLoader variant="list" /> : !offers.data?.items.length ? (
               <EmptyState icon={<Store size={28} />} title={t('Hozircha taklif yo‘q')} description={t('Bu model hozircha do‘konlar katalogida yo‘q. Taklif so‘rovida do‘kondan shu modelni so‘rashingiz mumkin.')} />
             ) : (
               <div className="qs-form qs-gap-2">

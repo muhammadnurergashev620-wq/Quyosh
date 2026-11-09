@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Globe, Lock, LogOut, Monitor, Smartphone, Tablet } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -26,7 +27,7 @@ export function DeviceList() {
   const [busyId, setBusyId] = useState<string | null>(null);
 
   if (sessions.isLoading) return <PageLoader label={t('Qurilmalar yuklanmoqda…')} />;
-  if (sessions.isError) return <Alert tone="danger">{getErrorMessage(sessions.error)}</Alert>;
+  if (sessions.isError) return <ErrorState error={sessions.error} onRetry={() => void sessions.refetch()} />;
 
   const items = sessions.data ?? [];
   const others = items.filter((item) => !item.isCurrent);

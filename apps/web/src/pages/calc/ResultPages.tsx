@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -43,7 +44,7 @@ export function UnsavedResultPage() {
   const save = useMutation({ mutationFn: () => calcService.save(input!), onSuccess: (saved) => { void calcService.deleteDraft(); navigate(`/mijoz/natija/${saved.id}`, { replace: true }); }, onError: (error) => pushToast(getErrorMessage(error), 'error') });
   if (!input) return <Navigate to="/mijoz/kalkulyator/batafsil" replace />;
   if (query.isLoading) return <PageLoader />;
-  if (query.isError || !query.data) return <Alert tone="danger">{getErrorMessage(query.error)}</Alert>;
+  if (query.isError || !query.data) return <ErrorState error={query.error} onRetry={() => void query.refetch()} />;
   const requireLogin = () => { rememberReturnTo('/mijoz/kalkulyator/batafsil?qadam=6'); navigate('/login'); };
   return (
     <ResultView
@@ -131,7 +132,7 @@ export function SavedResultPage() {
   const saved = useQuery({ queryKey: ['calculations', id], queryFn: () => calcService.get(id) });
   const recalc = useMutation({ mutationFn: () => calcService.recalculate(id), onSuccess: (created) => { void queryClient.invalidateQueries({ queryKey: ['calculations'] }); pushToast(t('Yangi hisob yaratildi; eskisi o‘zgarmadi'), 'success'); navigate(`/mijoz/natija/${created.id}`); } });
   if (saved.isLoading) return <PageLoader />;
-  if (saved.isError || !saved.data) return <Alert tone="danger">{getErrorMessage(saved.error)}</Alert>;
+  if (saved.isError || !saved.data) return <ErrorState error={saved.error} onRetry={() => void saved.refetch()} />;
   const views = saved.data.shares.reduce((sum, s) => sum + s.viewCount, 0);
   return (
     <>
@@ -156,7 +157,7 @@ export function SharedResultPage() {
   const { token = '' } = useParams();
   const shared = useQuery({ queryKey: ['shared', token], queryFn: () => calcService.shared(token), retry: false });
   if (shared.isLoading) return <PageLoader />;
-  if (shared.isError || !shared.data) return <Alert tone="danger">{getErrorMessage(shared.error)}</Alert>;
+  if (shared.isError || !shared.data) return <ErrorState error={shared.error} onRetry={() => void shared.refetch()} />;
   return (
     <>
       <Alert tone="info" title={t('Bu ulashilgan hisob')}>{t('O‘z uyingiz uchun hisoblang — 3 daqiqa.')} <Link to="/mijoz/kalkulyator">{t('O‘z hisobingizni qiling')}</Link></Alert>

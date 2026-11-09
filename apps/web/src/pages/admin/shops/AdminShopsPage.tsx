@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -124,7 +125,7 @@ export function AdminShopsPage() {
   const list = useQuery({ queryKey: ['admin', 'shops', filters], queryFn: () => adminShopsService.list(filters), placeholderData: keepPreviousData });
 
   if (list.isLoading) return <PageLoader />;
-  if (list.isError || !list.data) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError || !list.data) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   const counts = list.data.counts;
   const statuses: Array<ShopStatus | undefined> = [undefined, 'ACTIVE', 'SUSPENDED'];
 

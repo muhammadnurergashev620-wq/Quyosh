@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -126,7 +127,7 @@ export function PortfolioPage() {
   const [remove, setRemove] = useState<Project | null>(null);
   const del = useMutation({ mutationFn: (id: string) => m7Service.deleteProject(shopId!, id), onSuccess: () => { setRemove(null); void queryClient.invalidateQueries({ queryKey: ['projects', shopId] }); } });
   if (!shopId || list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Portfolio')}</h1><p>{t('Bajarilgan loyihalar profilingizda ko‘rinadi. Platformadagi montajga bog‘langanlari «Tasdiqlangan montaj» belgisini oladi.')}</p></div>{can('portfolio.write') && <div className="qs-page__actions"><Button onClick={() => setEdit('new')}><Plus size={16} /> {t('Loyiha qo‘shish')}</Button></div>}</div>
@@ -176,7 +177,7 @@ export function WidgetPage() {
     onSuccess: (d) => { queryClient.setQueryData(['widget', shopId], d); setRev((r) => r + 1); },
   });
   if (!shopId || cfg.isLoading) return <PageLoader />;
-  if (cfg.isError || !cfg.data) return <Alert tone="danger">{getErrorMessage(cfg.error)}</Alert>;
+  if (cfg.isError || !cfg.data) return <ErrorState error={cfg.error} onRetry={() => void cfg.refetch()} />;
   const c = cfg.data;
   return (
     <div className="qs-page">
@@ -253,7 +254,7 @@ export function AnalyticsPage() {
         </div>
       </div>
       {a.isError && <Alert tone="danger">{getErrorMessage(a.error)}</Alert>}
-      {a.isLoading || !x ? <PageLoader /> : (
+      {a.isLoading || !x ? <PageLoader variant="list" /> : (
         <>
           <div className="qs-kpi-grid">
             <div className="qs-kpi"><small>{t('Ko‘rishlar')}</small><strong>{x.totals.views}</strong></div>

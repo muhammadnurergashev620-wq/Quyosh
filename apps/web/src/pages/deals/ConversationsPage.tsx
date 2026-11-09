@@ -1,16 +1,15 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { ButtonLink } from '@/components/ui/Button';
 import { useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
-import { Alert } from '@/components/ui/Alert';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
 import { kw, SYSTEM_TYPE, sum } from '@/features/calc/labels';
 import { ChatPanel } from '@/features/deals/components/ChatPanel';
 import { dealsService } from '@/features/deals/deals.service';
 import { num, QUOTE_STATUS, SHOP_REPLY_STATUS } from '@/features/deals/labels';
-import { getErrorMessage } from '@/lib/error-messages';
 import { cx } from '@/lib/utils';
 import { formatRelativeTime } from '@/lib/format';
 import { t } from '@/i18n';
@@ -29,7 +28,7 @@ export function CustomerConversationsPage() {
     void queryClient.invalidateQueries({ queryKey: ['conversation', rsId] });
   }, [queryClient, rsId]);
   if (list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   const conv = active.data?.side === 'CUSTOMER' ? active.data : null;
   return (
     <div className="qs-page">
@@ -66,7 +65,7 @@ export function CustomerConversationsPage() {
                   </>
                 }
               />
-            ) : active.isError ? <Alert tone="danger">{getErrorMessage(active.error)}</Alert> : <PageLoader />
+            ) : active.isError ? <ErrorState error={active.error} onRetry={() => void active.refetch()} /> : <PageLoader variant="list" />
           ) : (
             <div className="qs-card qs-hide-mobile"><p className="qs-muted">{t('Chap tomondan suhbatni tanlang.')}</p></div>
           )}

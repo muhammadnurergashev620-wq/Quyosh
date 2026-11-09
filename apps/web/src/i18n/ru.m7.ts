@@ -632,4 +632,5 @@ export const ruM7: Record<string, string> = {
   "yopish": "закрыть",
   "Faylni tanlash": "Выбрать файл",
   "Xulosalar": "Выводы",
+  "Internet aloqasini tekshirib, qayta urinib ko‘ring. Muammo takrorlansa, birozdan keyin qayta kiring yoki yordam markaziga yozing.": "Проверьте подключение к интернету и попробуйте снова. Если ошибка повторяется, зайдите позже или напишите в центр поддержки.",
 };

@@ -230,7 +230,7 @@ export function AdminErrorsPage() {
             <h2>{t('Xatolar dinamikasi')}</h2>
             <span className="gm-errs2__legend"><i className="is-err" />{t('Jiddiy')} <i className="is-warn" />{t('Ogohlantirish')}</span>
           </header>
-          {o ? <DynamicsChart series={o.series} /> : <PageLoader />}
+          {o ? <DynamicsChart series={o.series} /> : <PageLoader variant="list" />}
         </section>
         <section className="gm-ul__panel gm-errs2__cats">
           <h2>{t('Xatolik kategoriyalari')}</h2>
@@ -300,7 +300,7 @@ export function AdminErrorsPage() {
           <Button size="sm" variant="ghost" disabled={selected.size === 0} onClick={() => void resolveSelected(false)}><RotateCcw size={15} aria-hidden="true" /> {t('Qayta ochish')}</Button>
         </div>
 
-        {groups.isLoading && <PageLoader label={t('Xatolar yuklanmoqda…')} />}
+        {groups.isLoading && <PageLoader variant="list" label={t('Xatolar yuklanmoqda…')} />}
         {groups.isError && <Alert tone="danger">{getErrorMessage(groups.error)}</Alert>}
         {data && items.length === 0 && <EmptyState icon={<Check size={26} />} title={t('Xato topilmadi')} description={dirty ? t('Filtrlarni o‘zgartirib ko‘ring.') : t('Tanlangan davrda xato qayd etilmagan.')} />}
 

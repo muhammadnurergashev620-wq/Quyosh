@@ -328,7 +328,7 @@ function TemplatesModal({ shopId, hasLines, current, onApply, onClose }: { shopI
   return (
     <Modal open large title={t('Taklif shablonlari')} onClose={onClose}>
       <div className="qs-form">
-        {list.isLoading ? <PageLoader /> : !list.data?.length ? (
+        {list.isLoading ? <PageLoader variant="list" /> : !list.data?.length ? (
           <p className="qs-muted">{t('Hali shablon yo‘q. Tez-tez yuboradigan to‘plamingizni (panel, invertor, montaj, kafolat shartlari) shablon qilib saqlang.')}</p>
         ) : (
           list.data.map((tpl) => (

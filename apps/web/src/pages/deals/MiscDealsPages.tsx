@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -27,7 +28,7 @@ export function ShopReviewsPage() {
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const reply = useMutation({ mutationFn: (id: string) => dealsService.replyReview(shopId!, id, drafts[id]!.trim()), onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['shop-reviews', shopId] }) });
   if (!shopId || list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   const rows = (list.data ?? []).filter((r) => filter === 'all' || !r.reply);
   const total = list.data?.length ?? 0;
   const dist = [5, 4, 3, 2, 1].map((n) => ({ n, c: (list.data ?? []).filter((r) => r.rating === n).length }));
@@ -83,7 +84,7 @@ export function FavoritesPage() {
   const list = useQuery({ queryKey: ['favorites'], queryFn: dealsService.favorites });
   const remove = useMutation({ mutationFn: (target: { shopId?: string; productModelId?: string }) => dealsService.removeFavorite(target), onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['favorites'] }) });
   if (list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   const shops = (list.data ?? []).filter((f) => f.shop);
   const products = (list.data ?? []).filter((f) => f.productModel);
   return (

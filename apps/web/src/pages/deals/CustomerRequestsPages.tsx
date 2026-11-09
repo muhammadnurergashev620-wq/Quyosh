@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -36,7 +37,7 @@ export function CustomerRequestsPage() {
   const list = useQuery({ queryKey: ['quote-requests'], queryFn: dealsService.myRequests, refetchInterval: 30_000 });
   const preset = { calculationId: params.get('hisob') ?? undefined, shopId: params.get('dokon') ?? undefined };
   if (list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   return (
     <div className="qs-page">
       <div className="qs-page__head">
@@ -114,7 +115,7 @@ export function CustomerRequestDetailPage() {
   const revealM = useMutation({ mutationFn: (shopId: string) => dealsService.revealContact(id, shopId), onSuccess: () => { setReveal(null); refresh(); } });
   const closeM = useMutation({ mutationFn: () => dealsService.closeRequest(id), onSuccess: () => { setClosing(false); refresh(); void queryClient.invalidateQueries({ queryKey: ['quote-requests'] }); } });
   if (request.isLoading) return <PageLoader />;
-  if (request.isError || !request.data) return <Alert tone="danger">{getErrorMessage(request.error)}</Alert>;
+  if (request.isError || !request.data) return <ErrorState error={request.error} onRetry={() => void request.refetch()} />;
   const r = request.data;
   const quotes = r.shops.filter((s) => s.quote);
   return (
@@ -227,7 +228,7 @@ export function CustomerQuotePage() {
   });
   const reject = useMutation({ mutationFn: () => dealsService.rejectQuote(id, reason.trim() || undefined), onSuccess: () => { setRejecting(false); void quote.refetch(); } });
   if (quote.isLoading) return <PageLoader />;
-  if (quote.isError || !quote.data) return <Alert tone="danger">{getErrorMessage(quote.error)}</Alert>;
+  if (quote.isError || !quote.data) return <ErrorState error={quote.error} onRetry={() => void quote.refetch()} />;
   const q = quote.data;
   const open = ['SENT', 'VIEWED'].includes(q.status) && q.request.status === 'OPEN';
   const expired = q.status === 'EXPIRED';
@@ -293,7 +294,7 @@ export function CompareQuotesPage() {
   const data = useQuery({ queryKey: ['quote-compare', id], queryFn: () => dealsService.compare(id) });
   const [diffOnly, setDiffOnly] = useState(() => window.matchMedia?.('(max-width: 720px)').matches ?? false);
   if (data.isLoading) return <PageLoader />;
-  if (data.isError || !data.data) return <Alert tone="danger">{getErrorMessage(data.error)}</Alert>;
+  if (data.isError || !data.data) return <ErrorState error={data.error} onRetry={() => void data.refetch()} />;
   const quotes = data.data.quotes;
   return (
     <div className="qs-page">

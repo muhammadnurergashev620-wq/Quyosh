@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -133,7 +134,7 @@ function ModelsTab() {
   }, [q]);
   const list = useQuery({ queryKey: ['admin', 'catalog', 'models', status, query, page], queryFn: () => catalogService.adminModels({ status, q: query || undefined, page }), placeholderData: keepPreviousData });
   if (list.isLoading) return <PageLoader />;
-  if (list.isError || !list.data) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError || !list.data) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   return (
     <>
       <div className="qs-toolbar">
@@ -230,7 +231,7 @@ function CategoriesTab() {
   const [editing, setEditing] = useState<Category | 'new' | null>(null);
   const remove = useCatalogMutation((id: string) => catalogService.deleteCategory(id), t('Kategoriya o‘chirildi'));
   if (list.isLoading) return <PageLoader />;
-  if (list.isError || !list.data) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError || !list.data) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   const flat = list.data.flatMap((category) => [category, ...category.children.map((child) => ({ ...child, depth: 1 }))]) as Array<Category & { depth?: number }>;
   return (
     <>
@@ -258,7 +259,7 @@ function RatesTab() {
   const rates = useQuery({ queryKey: ['admin', 'catalog', 'rates'], queryFn: catalogService.adminRates });
   const refresh = useCatalogMutation(() => catalogService.refreshRate(), t('Kurs yangilandi'));
   if (rates.isLoading) return <PageLoader />;
-  if (rates.isError || !rates.data) return <Alert tone="danger">{getErrorMessage(rates.error)}</Alert>;
+  if (rates.isError || !rates.data) return <ErrorState error={rates.error} onRetry={() => void rates.refetch()} />;
   const latest = rates.data.latest;
   return (
     <>

@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -21,7 +22,7 @@ const ICONS: Partial<Record<PolicyType, LucideIcon>> = { TERMS: FileText, PRIVAC
 function PolicyBody({ id, fallback }: { id: string; fallback?: string }) {
   const detail = usePolicy(id);
   if (detail.isLoading) return <PageLoader />;
-  if (detail.isError) return <Alert tone="danger">{getErrorMessage(detail.error)}</Alert>;
+  if (detail.isError) return <ErrorState error={detail.error} onRetry={() => void detail.refetch()} />;
   return <div className="gm-terms__prose">{renderContent(detail.data?.content ?? fallback ?? 'Matn mavjud emas.')}</div>;
 }
 
@@ -54,7 +55,7 @@ export function TermsPage() {
           {items.length > 0 && <span className="gm-terms__count">{items.length}{' '}{t('ta hujjat')}</span>}
         </section>
 
-        {policies.isLoading && <PageLoader label={t('Hujjatlar yuklanmoqda…')} />}
+        {policies.isLoading && <PageLoader variant="list" label={t('Hujjatlar yuklanmoqda…')} />}
         {policies.isError && <Alert tone="danger">{getErrorMessage(policies.error)}</Alert>}
         {!policies.isLoading && !policies.isError && items.length === 0 && <EmptyState title={t('Hozircha hujjatlar e’lon qilinmagan')} />}
 

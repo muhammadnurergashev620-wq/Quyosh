@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { ButtonLink } from '@/components/ui/Button';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -9,7 +10,6 @@ import { PageLoader } from '@/components/common/PageLoader';
 import { catalogService } from '@/features/catalog/catalog.service';
 import { useCompare } from '@/features/catalog/compare-store';
 import { SPEC_META, specValue } from '@/features/catalog/format';
-import { getErrorMessage } from '@/lib/error-messages';
 import { cx } from '@/lib/utils';
 import { t } from '@/i18n';
 import '@/features/shop/shop.css';
@@ -31,7 +31,7 @@ export function ComparePage() {
     );
   }
   if (result.isLoading) return <PageLoader />;
-  if (result.isError || !result.data) return <Alert tone="danger">{getErrorMessage(result.error)}</Alert>;
+  if (result.isError || !result.data) return <ErrorState error={result.error} onRetry={() => void result.refetch()} />;
   const rows = result.data.rows.filter((row) => !onlyDiff || row.differs);
 
   return (

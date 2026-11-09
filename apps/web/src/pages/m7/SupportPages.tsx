@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -146,7 +147,7 @@ export function HelpCenterPage() {
 export function TicketsPage() {
   const list = useQuery({ queryKey: ['tickets'], queryFn: m7Service.tickets });
   if (list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Murojaatlar')}</h1></div><div className="qs-page__actions"><ButtonLink to="/mijoz/yordam">{t('Yangi murojaat')}</ButtonLink></div></div>
@@ -175,7 +176,7 @@ export function TicketPage() {
   const reopen = useMutation({ mutationFn: () => m7Service.reopenTicket(id), onSuccess: set });
   const rate = useMutation({ mutationFn: (s: number) => m7Service.rateTicket(id, s), onSuccess: () => void ticket.refetch() });
   if (ticket.isLoading) return <PageLoader />;
-  if (ticket.isError || !ticket.data) return <Alert tone="danger">{getErrorMessage(ticket.error)}</Alert>;
+  if (ticket.isError || !ticket.data) return <ErrorState error={ticket.error} onRetry={() => void ticket.refetch()} />;
   const x = ticket.data;
   const closed = x.status === 'CLOSED';
   return (

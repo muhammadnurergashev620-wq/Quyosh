@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Activity, BadgeCheck, Check, Clock, KeyRound, LogIn, LogOut, Mail, MonitorSmartphone, Phone, Settings, ShieldCheck, UserPlus, UserRound, X } from 'lucide-react';
@@ -6,7 +7,6 @@ import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { accountName } from '@/lib/account-name';
-import { getErrorMessage } from '@/lib/error-messages';
 import { cx } from '@/lib/utils';
 import { formatDate, formatDateTime, formatNumber, formatRelativeTime } from '@/lib/format';
 import { DeviceList } from '@/features/auth/components/DeviceList';
@@ -44,7 +44,7 @@ export function AdminProfilePage() {
   const [logoutOpen, setLogoutOpen] = useState(false);
 
   if (profile.isLoading) return <PageLoader label={t('Profil yuklanmoqda…')} />;
-  if (profile.isError || !profile.data) return <Alert tone="danger">{getErrorMessage(profile.error)}</Alert>;
+  if (profile.isError || !profile.data) return <ErrorState error={profile.error} onRetry={() => void profile.refetch()} />;
 
   const { user, stats, activity } = profile.data;
   const name = accountName(user);

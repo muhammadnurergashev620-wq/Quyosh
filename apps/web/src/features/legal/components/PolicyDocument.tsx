@@ -1,7 +1,6 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { EmptyState } from '@/components/common/EmptyState';
 import { PageLoader } from '@/components/common/PageLoader';
-import { Alert } from '@/components/ui/Alert';
-import { getErrorMessage } from '@/lib/error-messages';
 import { formatDate } from '@/lib/format';
 import { usePolicies, usePolicy } from '../hooks/useLegal';
 import { renderContent } from '../render-content';
@@ -12,7 +11,7 @@ import { t } from '@/i18n';
 function Body({ id, fallback }: { id: string; fallback?: string }) {
   const detail = usePolicy(id);
   if (detail.isLoading) return <PageLoader />;
-  if (detail.isError) return <Alert tone="danger">{getErrorMessage(detail.error)}</Alert>;
+  if (detail.isError) return <ErrorState error={detail.error} onRetry={() => void detail.refetch()} />;
   return <div className="gm-policydoc__prose">{renderContent(detail.data?.content ?? fallback ?? '')}</div>;
 }
 
@@ -20,7 +19,7 @@ function Body({ id, fallback }: { id: string; fallback?: string }) {
 export function PolicyDocument({ type }: { type: PolicyType }) {
   const policies = usePolicies();
   if (policies.isLoading) return <PageLoader label={t('Hujjatlar yuklanmoqda…')} />;
-  if (policies.isError) return <Alert tone="danger">{getErrorMessage(policies.error)}</Alert>;
+  if (policies.isError) return <ErrorState error={policies.error} onRetry={() => void policies.refetch()} />;
   const policy = (policies.data ?? []).find((item) => item.type === type && item.status === 'PUBLISHED');
   if (!policy) return <EmptyState title={t('Hozircha hujjatlar e’lon qilinmagan')} />;
   return (

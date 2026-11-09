@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -87,7 +88,7 @@ export function AdminSupportPage() {
         <SelectMenu className="qs-select" aria-label={t('Mas’ul')} value={assignee} onChange={(e) => setAssignee(e.target.value)}><option value="">{t('Hammasi')}</option><option value="mine">{t('Menga')}</option><option value="unassigned">{t('Tayinlanmagan')}</option></SelectMenu>
         <input className="qs-input-sm" placeholder={t('Mavzu yoki SUP-raqam')} aria-label={t('Qidirish')} value={search} onChange={(e) => setSearch(e.target.value)} />
       </div>
-      {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<FileText size={28} />} title={t('Murojaat yo‘q')} /> : (
+      {list.isLoading ? <PageLoader variant="list" /> : !list.data?.length ? <EmptyState icon={<FileText size={28} />} title={t('Murojaat yo‘q')} /> : (
         <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Raqam')}</th><th>{t('Mavzu')}</th><th>{t('Kategoriya')}</th><th>{t('Ustuvorlik')}</th><th>{t('Holat')}</th><th>{t('Birinchi javob')}</th></tr></thead>
@@ -122,7 +123,7 @@ export function AdminTicketPage() {
   const reply = useMutation({ mutationFn: (status?: string) => m7Service.adminReply(id, { body: text.trim(), internal, status }), onSuccess: (d) => { set(d); setText(''); } });
   const update = useMutation({ mutationFn: (body: Record<string, unknown>) => m7Service.adminUpdateTicket(id, body), onSuccess: set });
   if (tk.isLoading) return <PageLoader />;
-  if (tk.isError || !tk.data) return <Alert tone="danger">{getErrorMessage(tk.error)}</Alert>;
+  if (tk.isError || !tk.data) return <ErrorState error={tk.error} onRetry={() => void tk.refetch()} />;
   const x = tk.data;
   const relatedLink = x.relatedType === 'Shop' ? `/admin/dokonlar/${x.relatedId}` : null;
   return (
@@ -185,7 +186,7 @@ export function AdminContentPage() {
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Bilimlar markazi')}</h1><p>{t('{n} ta material', { n: list.data?.length ?? 0 })}</p></div><div className="qs-page__actions"><Button onClick={() => navigate('/admin/kontent/yangi')}><Plus size={16} /> {t('Yangi material')}</Button></div></div>
-      {list.isLoading ? <PageLoader /> : (
+      {list.isLoading ? <PageLoader variant="list" /> : (
         <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Sarlavha')}</th><th>{t('Tur')}</th><th>{t('Kategoriya')}</th><th>{t('Tarjima')}</th><th>{t('Holat')}</th><th className="qs-right">{t('Foydali')}</th></tr></thead>
@@ -305,7 +306,7 @@ export function AdminReportsPage() {
         </div>
       </div>
       {f.isError && <Alert tone="danger">{getErrorMessage(f.error)}</Alert>}
-      {f.isLoading ? <PageLoader /> : (
+      {f.isLoading ? <PageLoader variant="list" /> : (
         <section className="qs-card">
           <div className="qs-hbars">
             {f.data?.steps.map((s) => <div key={s.step} className="qs-hbar"><span>{LABEL[s.step] ?? s.step}</span><div><span style={{ width: `${(s.count / max) * 100}%` }} /></div><strong>{s.count}{s.conversion !== null ? <small className="qs-muted"> · {s.conversion}%</small> : null}</strong></div>)}

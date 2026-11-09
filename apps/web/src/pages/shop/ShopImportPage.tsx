@@ -150,7 +150,7 @@ export function ShopImportPage() {
 
       <section className="qs-card">
         <header><h2>{t('Oxirgi importlar')}</h2></header>
-        {history.isLoading ? <PageLoader /> : !history.data?.length ? <p className="qs-muted">{t('Hali import qilinmagan.')}</p> : (
+        {history.isLoading ? <PageLoader variant="list" /> : !history.data?.length ? <p className="qs-muted">{t('Hali import qilinmagan.')}</p> : (
           <ul className="qs-list">
             {history.data.map((job) => (
               <li key={job.id}>

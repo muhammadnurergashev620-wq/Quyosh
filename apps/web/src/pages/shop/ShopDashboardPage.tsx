@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { ButtonLink } from '@/components/ui/Button';
 import { Link } from 'react-router-dom';
 import { CheckCircle2, Circle } from 'lucide-react';
@@ -8,7 +9,6 @@ import { useManagedShop } from '@/features/shop/hooks';
 import { SHOP_STATUS } from '@/features/shop/labels';
 import { ShopSwitcher } from '@/features/shop/components/ShopSwitcher';
 import type { ManagedShop } from '@/features/shop/types';
-import { getErrorMessage } from '@/lib/error-messages';
 import { formatNumber, formatRating } from '@/lib/format';
 import { t } from '@/i18n';
 import { ShopKpis } from '@/pages/m7/ShopM7Pages';
@@ -28,7 +28,7 @@ export function ShopDashboardPage() {
   const managed = useManagedShop(current?.id ?? null);
   if (isLoading || managed.isLoading) return <PageLoader />;
   if (!current) return <Alert tone="info" title={t('Do‘kon topilmadi')}>{t('Hisobingiz hali do‘konga biriktirilmagan. Administratorga murojaat qiling.')}</Alert>;
-  if (managed.isError || !managed.data) return <Alert tone="danger">{getErrorMessage(managed.error)}</Alert>;
+  if (managed.isError || !managed.data) return <ErrorState error={managed.error} onRetry={() => void managed.refetch()} />;
   const shop = managed.data;
   const isOwner = shop.membership.memberRole === 'OWNER';
 

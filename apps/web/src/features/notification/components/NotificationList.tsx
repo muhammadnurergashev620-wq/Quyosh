@@ -1,12 +1,11 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { BellOff, CheckCheck, ListChecks, X } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
-import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Tabs } from '@/components/ui/Tabs';
-import { getErrorMessage } from '@/lib/error-messages';
 import { toast } from '@/lib/toast';
 import { t } from '@/i18n';
 import { useMarkAllAsRead, useNotifications } from '../hooks/useNotifications';
@@ -80,7 +79,7 @@ export function NotificationList() {
       </div>
     );
   }
-  if (notifications.isError) return <Alert tone="danger">{getErrorMessage(notifications.error)}</Alert>;
+  if (notifications.isError) return <ErrorState error={notifications.error} onRetry={() => void notifications.refetch()} />;
 
   return (
     <div className="gm-notify">

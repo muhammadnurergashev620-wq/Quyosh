@@ -64,7 +64,7 @@ export function AdminPoliciesPage() {
       <section className="gm-detail-section">
         <h2>{t('Mavjud versiyalar')}</h2>
         {publish.isError && <Alert tone="danger">{getErrorMessage(publish.error)}</Alert>}
-        {policies.isLoading && <PageLoader />}
+        {policies.isLoading && <PageLoader variant="list" />}
         {policies.isError && <Alert tone="danger">{getErrorMessage(policies.error)}</Alert>}
         {policies.data && policies.data.length === 0 && <EmptyState title={t('Siyosatlar yo‘q')} />}
         <div className="gm-list">

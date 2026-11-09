@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -136,7 +137,7 @@ function TariffsTab() {
   });
 
   if (list.isLoading) return <PageLoader />;
-  if (list.isError || !list.data) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError || !list.data) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   return (
     <>
       <Modal

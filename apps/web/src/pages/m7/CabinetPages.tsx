@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -33,7 +34,7 @@ export function CustomerDashboardPage() {
   const me = useMe();
   const d = useQuery({ queryKey: ['customer-dashboard'], queryFn: m7Service.customerDashboard });
   if (d.isLoading) return <PageLoader />;
-  if (d.isError || !d.data) return <Alert tone="danger">{getErrorMessage(d.error)}</Alert>;
+  if (d.isError || !d.data) return <ErrorState error={d.error} onRetry={() => void d.refetch()} />;
   const x = d.data;
   const hour = new Date().getHours();
   const hello = hour < 11 ? t('Xayrli tong') : hour < 18 ? t('Xayrli kun') : t('Xayrli kech');
@@ -128,7 +129,7 @@ export function SystemsPage() {
   const [open, setOpen] = useState(false);
   const list = useQuery({ queryKey: ['systems'], queryFn: m7Service.systems });
   if (list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('O‘rnatilgan tizimlar')}</h1><p>{t('Ishlab chiqarish, kafolatlar va xizmat eslatmalari.')}</p></div><div className="qs-page__actions"><Button variant="secondary" onClick={() => setOpen(true)}><Plus size={16} /> {t('Tizim qo‘shish')}</Button></div></div>
@@ -200,7 +201,7 @@ export function SystemPage() {
   });
   const rem = useMutation({ mutationFn: ({ rid, action }: { rid: string; action: 'DONE' | 'SNOOZE' | 'DISABLE' | 'ENABLE' }) => m7Service.reminder(id, rid, action), onSuccess: () => void s.refetch() });
   if (s.isLoading) return <PageLoader />;
-  if (s.isError || !s.data) return <Alert tone="danger">{getErrorMessage(s.error)}</Alert>;
+  if (s.isError || !s.data) return <ErrorState error={s.error} onRetry={() => void s.refetch()} />;
   const x = s.data;
   const lastAlert = [...x.readings].reverse().find((r) => r.alert);
   return (

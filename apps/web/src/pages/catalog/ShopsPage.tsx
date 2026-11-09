@@ -1,8 +1,8 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { BadgeCheck, MapPin, Star, Store } from 'lucide-react';
-import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -10,7 +10,6 @@ import { PageLoader } from '@/components/common/PageLoader';
 import { publicShopsService, type PublicShopCard } from '@/features/catalog/public-shops.service';
 import { SERVICE_TYPE } from '@/features/shop/labels';
 import type { ServiceType } from '@/features/shop/types';
-import { getErrorMessage } from '@/lib/error-messages';
 import { REGIONS, regionName } from '@/lib/regions';
 import { t } from '@/i18n';
 import { CERT_TYPE } from '@/pages/m7/cert-labels';
@@ -91,7 +90,7 @@ export function ShopsPage() {
           <Chip key={type} onClick={() => setService(type)} selected={service === type}>{SERVICE_TYPE[type]}</Chip>
         ))}
       </div>
-      {list.isLoading ? <PageLoader /> : list.isError ? <Alert tone="danger">{getErrorMessage(list.error)}</Alert> : !shops.length ? (
+      {list.isLoading ? <PageLoader variant="list" /> : list.isError ? <ErrorState error={list.error} onRetry={() => void list.refetch()} /> : !shops.length ? (
         <EmptyState icon={<Store size={30} />} title={t('Do‘kon topilmadi')} />
       ) : (
         <div className="qs-shops">{shops.map((shop) => <ShopCard key={shop.id} shop={shop} />)}</div>

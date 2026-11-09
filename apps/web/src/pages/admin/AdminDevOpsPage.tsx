@@ -149,7 +149,7 @@ export function AdminDevOpsPage() {
         </div>
       </header>
 
-      {devops.isLoading && <PageLoader label={t('Tizim holati yuklanmoqda…')} />}
+      {devops.isLoading && <PageLoader variant="list" label={t('Tizim holati yuklanmoqda…')} />}
       {devops.isError && <Alert tone="danger">{getErrorMessage(devops.error)}</Alert>}
 
       {data && (

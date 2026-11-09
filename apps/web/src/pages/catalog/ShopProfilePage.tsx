@@ -1,8 +1,8 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { BadgeCheck, MapPin, Phone, Star } from 'lucide-react';
-import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { Button, ButtonAnchor, ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -10,7 +10,6 @@ import { PageLoader } from '@/components/common/PageLoader';
 import { publicShopsService, type PublicShopProfile } from '@/features/catalog/public-shops.service';
 import { i18nText, keySpecs, sum } from '@/features/catalog/format';
 import { PRICING_MODEL, SERVICE_TYPE, STOCK_STATUS, WEEKDAYS } from '@/features/shop/labels';
-import { getErrorMessage } from '@/lib/error-messages';
 import { regionName } from '@/lib/regions';
 import { cx } from '@/lib/utils';
 import { formatNumber, formatRating } from '@/lib/format';
@@ -55,7 +54,7 @@ export function ShopProfilePage() {
   useEffect(() => { if (profile.data) track({ eventType: 'shop_view', shopId: profile.data.id }, `shop-${profile.data.id}`); }, [profile.data]);
 
   if (profile.isLoading) return <PageLoader />;
-  if (profile.isError || !profile.data) return <Alert tone="danger">{getErrorMessage(profile.error)}</Alert>;
+  if (profile.isError || !profile.data) return <ErrorState error={profile.error} onRetry={() => void profile.refetch()} />;
   const shop = profile.data;
   const open = shop.branches.map((branch) => openNow(branch.openingHoursJson)).find((value) => value !== null) ?? null;
 
@@ -140,7 +139,7 @@ export function ShopProfilePage() {
         </div>
       ))}
 
-      {tab === 'portfolio' && (projects.isLoading ? <PageLoader /> : !projects.data?.length ? <EmptyState title={t('Loyihalar qo‘shilmagan')} /> : (
+      {tab === 'portfolio' && (projects.isLoading ? <PageLoader variant="list" /> : !projects.data?.length ? <EmptyState title={t('Loyihalar qo‘shilmagan')} /> : (
         <div className="qs-projects">
           {projects.data.map((p) => (
             <article key={p.id} className="qs-project">
@@ -155,7 +154,7 @@ export function ShopProfilePage() {
           ))}
         </div>
       ))}
-      {tab === 'products' && (products.isLoading ? <PageLoader /> : !products.data?.items.length ? <EmptyState title={t('Mahsulot qo‘shilmagan')} /> : (
+      {tab === 'products' && (products.isLoading ? <PageLoader variant="list" /> : !products.data?.items.length ? <EmptyState title={t('Mahsulot qo‘shilmagan')} /> : (
         <>
           <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
             <table className="qs-table">

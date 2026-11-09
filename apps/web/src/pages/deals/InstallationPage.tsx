@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -260,7 +261,7 @@ export function InstallationPage() {
   const [reason, setReason] = useState('');
   const cancel = useMutation({ mutationFn: () => dealsService.updateInstallation(id, { action: 'CANCEL', reason: reason.trim() }), onSuccess: () => { setCancelOpen(false); void view.refetch(); } });
   if (view.isLoading) return <PageLoader />;
-  if (view.isError || !view.data) return <Alert tone="danger">{getErrorMessage(view.error)}</Alert>;
+  if (view.isError || !view.data) return <ErrorState error={view.error} onRetry={() => void view.refetch()} />;
   const v = view.data;
   const customer = v.side === 'CUSTOMER';
   const chatLink = v.requestShopId ? (customer ? `/mijoz/chat/${v.requestShopId}` : `/dokon/sorovlar/${v.requestShopId}`) : null;
@@ -350,7 +351,7 @@ export function ShopInstallationsPage() {
 function InstallationsList({ side, shopId }: { side: 'CUSTOMER' | 'SHOP'; shopId: string | null }) {
   const list = useQuery({ queryKey: ['installations', side, shopId], queryFn: () => (side === 'SHOP' && shopId ? dealsService.shopInstallations(shopId) : dealsService.installations()) });
   if (list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   const base = side === 'SHOP' ? '/dokon/montajlar' : '/mijoz/montajlar';
   return (
     <div className="qs-page">

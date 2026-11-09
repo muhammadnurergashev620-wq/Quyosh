@@ -1,8 +1,8 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { BarChart3, Plus } from 'lucide-react';
-import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -10,7 +10,6 @@ import { PageLoader } from '@/components/common/PageLoader';
 import { calcService } from '@/features/calc/calc.service';
 import { kw, kwh, LIMITING, sumShort, SYSTEM_TYPE, years } from '@/features/calc/labels';
 import type { SavedCalculationRow } from '@/features/calc/types';
-import { getErrorMessage } from '@/lib/error-messages';
 import { cx } from '@/lib/utils';
 import { formatDate } from '@/lib/format';
 import { t } from '@/i18n';
@@ -26,7 +25,7 @@ export function CalculationsPage() {
   const archive = useMutation({ mutationFn: (id: string) => calcService.archive(id), onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['calculations'] }) });
   const toggle = (id: string) => setSelected((current) => (current.includes(id) ? current.filter((x) => x !== id) : current.length < 3 ? [...current, id] : current));
   if (list.isLoading) return <PageLoader />;
-  if (list.isError) return <Alert tone="danger">{getErrorMessage(list.error)}</Alert>;
+  if (list.isError) return <ErrorState error={list.error} onRetry={() => void list.refetch()} />;
   return (
     <div className="qs-page">
       <div className="qs-page__head">
@@ -99,7 +98,7 @@ export function CompareCalculationsPage() {
     );
   }
   if (compare.isLoading) return <PageLoader />;
-  if (compare.isError || !compare.data) return <Alert tone="danger">{getErrorMessage(compare.error)}</Alert>;
+  if (compare.isError || !compare.data) return <ErrorState error={compare.error} onRetry={() => void compare.refetch()} />;
   return (
     <div className="qs-page">
       <div className="qs-page__head"><div><h1>{t('Hisoblarni solishtirish')}</h1></div></div>

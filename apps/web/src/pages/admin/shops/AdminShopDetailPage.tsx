@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -107,7 +108,7 @@ export function AdminShopDetailPage() {
   });
 
   if (detail.isLoading) return <PageLoader />;
-  if (detail.isError || !detail.data) return <Alert tone="danger">{getErrorMessage(detail.error)}</Alert>;
+  if (detail.isError || !detail.data) return <ErrorState error={detail.error} onRetry={() => void detail.refetch()} />;
   const shop = detail.data;
   const owner = shop.members.find((member) => member.memberRole === 'OWNER');
 

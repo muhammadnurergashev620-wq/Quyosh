@@ -1,12 +1,11 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { Activity, Calculator, ClipboardList, FileText, Sparkles, Store, Users, Wrench } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { PageLoader } from '@/components/common/PageLoader';
-import { Alert } from '@/components/ui/Alert';
 import { StatCard, StatGrid } from '@/components/ui/StatCard';
 import type { StatTone } from '@/components/ui/StatCard';
 import { Tabs } from '@/components/ui/Tabs';
-import { getErrorMessage } from '@/lib/error-messages';
 import { formatNumber } from '@/lib/format';
 import { regionName } from '@/lib/regions';
 import { useDashboardOverview } from '@/features/admin/dashboard/useOverview';
@@ -57,7 +56,7 @@ export function AdminDashboardPage() {
   const data = query.data;
 
   if (query.isLoading) return <PageLoader />;
-  if (query.isError || !data) return <Alert tone="danger">{getErrorMessage(query.error)}</Alert>;
+  if (query.isError || !data) return <ErrorState error={query.error} onRetry={() => void query.refetch()} />;
   if (!data) return <PageLoader />;
 
   const k = data.kpis;

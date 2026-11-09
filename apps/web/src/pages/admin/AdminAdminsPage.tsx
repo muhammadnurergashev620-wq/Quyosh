@@ -383,7 +383,7 @@ export function AdminAdminsPage() {
           </span>
         </div>
 
-        {admins.isLoading && <PageLoader label={t('Adminlar yuklanmoqda…')} />}
+        {admins.isLoading && <PageLoader variant="list" label={t('Adminlar yuklanmoqda…')} />}
         {admins.isError && <Alert tone="danger">{getErrorMessage(admins.error)}</Alert>}
         {setSuper.isError && <Alert tone="danger">{getErrorMessage(setSuper.error)}</Alert>}
         {setTwoFactor.isError && <Alert tone="danger">{getErrorMessage(setTwoFactor.error)}</Alert>}

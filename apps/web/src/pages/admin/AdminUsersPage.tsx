@@ -303,7 +303,7 @@ export function AdminUsersPage() {
           {selected.size === 0 && <small className="gm-ul__hint">{t('Ommaviy amal uchun avval foydalanuvchilarni belgilang.')}</small>}
         </div>
 
-        {users.isLoading && <PageLoader label={t('Foydalanuvchilar yuklanmoqda…')} />}
+        {users.isLoading && <PageLoader variant="list" label={t('Foydalanuvchilar yuklanmoqda…')} />}
         {users.isError && <Alert tone="danger">{getErrorMessage(users.error)}</Alert>}
         {data && items.length === 0 && <EmptyState icon={<Search size={28} />} title={t('Foydalanuvchi topilmadi')} description={t('Qidiruv yoki filtrni o‘zgartirib ko‘ring.')} />}
 

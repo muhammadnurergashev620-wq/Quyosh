@@ -3373,4 +3373,5 @@ export const en: Record<string, string> = {
   "yopish": "close",
   "Faylni tanlash": "Choose file",
   "Xulosalar": "Insights",
+  "Internet aloqasini tekshirib, qayta urinib ko‘ring. Muammo takrorlansa, birozdan keyin qayta kiring yoki yordam markaziga yozing.": "Check your internet connection and try again. If the problem persists, come back later or contact the help center.",
 };

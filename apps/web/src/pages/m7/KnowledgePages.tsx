@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -70,7 +71,7 @@ export function KnowledgeHomePage() {
       {q ? (
         <section>
           <h2>{t('«{q}» bo‘yicha natijalar', { q })}</h2>
-          {list.isLoading ? <PageLoader /> : !list.data?.items.length ? <EmptyState icon={<Search size={28} />} title={t('Hech narsa topilmadi')} description={t('Boshqa so‘z bilan qidiring yoki yordam markaziga yozing.')} action={<ButtonLink to="/mijoz/yordam">{t('Yordam markazi')}</ButtonLink>} /> : <div className="qs-kcards">{list.data.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div>}
+          {list.isLoading ? <PageLoader variant="list" /> : !list.data?.items.length ? <EmptyState icon={<Search size={28} />} title={t('Hech narsa topilmadi')} description={t('Boshqa so‘z bilan qidiring yoki yordam markaziga yozing.')} action={<ButtonLink to="/mijoz/yordam">{t('Yordam markazi')}</ButtonLink>} /> : <div className="qs-kcards">{list.data.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div>}
         </section>
       ) : (
         <>
@@ -85,7 +86,7 @@ export function KnowledgeHomePage() {
           )}
           <section>
             <h2>{t('Yangi materiallar')}</h2>
-            {list.isLoading ? <PageLoader /> : <div className="qs-kcards">{list.data?.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div>}
+            {list.isLoading ? <PageLoader variant="list" /> : <div className="qs-kcards">{list.data?.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div>}
           </section>
         </>
       )}
@@ -110,7 +111,7 @@ export function KnowledgeCategoryPage() {
       <p><Link to="/mijoz/bilim">← {t('Bilimlar markazi')}</Link></p>
       <div className="qs-page__head"><div><h1>{cat ? tr(cat.nameI18n) : t('Bilimlar markazi')}</h1></div></div>
       {glossaryMode ? (
-        glossary.isLoading ? <PageLoader /> : (
+        glossary.isLoading ? <PageLoader variant="list" /> : (
           <dl className="qs-glossary qs-card">
             {sortedGlossary.map((g) => (
               <div key={g.id} id={g.slug}>
@@ -125,7 +126,7 @@ export function KnowledgeCategoryPage() {
           <TabBar variant="tabs" role="tablist">
             {(['', 'GUIDE', 'ARTICLE', 'FAQ', 'VIDEO'] as Array<ArticleType | ''>).map((tp) => <Tab key={tp || 'all'} role="tab" aria-selected={type === tp} onClick={() => setType(tp)} selected={type === tp}>{tp ? TYPE_LABEL[tp] : t('Barchasi')}</Tab>)}
           </TabBar>
-          {list.isLoading ? <PageLoader /> : !list.data?.items.length ? <EmptyState icon={<BookOpen size={28} />} title={t('Material yo‘q')} /> : <div className="qs-kcards">{list.data.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div>}
+          {list.isLoading ? <PageLoader variant="list" /> : !list.data?.items.length ? <EmptyState icon={<BookOpen size={28} />} title={t('Material yo‘q')} /> : <div className="qs-kcards">{list.data.items.map((a) => <ArticleCardView key={a.id} a={a} />)}</div>}
         </>
       )}
     </div>
@@ -156,7 +157,7 @@ export function ArticlePage() {
     : undefined;
   useSeo(a.data ? { title: tr(a.data.seoTitleI18n) || tr(a.data.titleI18n), description: tr(a.data.seoDescriptionI18n) || tr(a.data.summaryI18n), path: `/mijoz/bilim/${category}/${slug}`, jsonLd } : null);
   if (a.isLoading) return <PageLoader />;
-  if (a.isError || !a.data) return <Alert tone="danger">{getErrorMessage(a.error)}</Alert>;
+  if (a.isError || !a.data) return <ErrorState error={a.error} onRetry={() => void a.refetch()} />;
   const art = a.data;
   const toc = headingsOf(body);
   const cta = art.ctaType !== 'NONE' ? CTA[art.ctaType] : null;

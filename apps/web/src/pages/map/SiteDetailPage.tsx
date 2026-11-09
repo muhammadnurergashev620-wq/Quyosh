@@ -1,3 +1,4 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -94,7 +95,7 @@ export function SiteDetailPage() {
   usePolygonEditor(map, styleVersion, draft?.points ?? [], (points) => setDraft((current) => (current ? { ...current, points: points.slice(0, MAX_VERTICES) } : current)), !!draft);
 
   if (site.isLoading) return <PageLoader />;
-  if (site.isError || !site.data) return <Alert tone="danger">{getErrorMessage(site.error)}</Alert>;
+  if (site.isError || !site.data) return <ErrorState error={site.error} onRetry={() => void site.refetch()} />;
   const data = site.data;
   const preview = draft ? ringAreaM2(draft.points) : 0;
   const crossing = draft ? selfIntersects(draft.points) : false;

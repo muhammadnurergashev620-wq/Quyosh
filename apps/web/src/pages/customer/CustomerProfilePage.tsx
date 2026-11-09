@@ -1,12 +1,11 @@
+import { ErrorState } from '@/components/ui/ErrorState';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BadgeCheck, Clock, KeyRound, LogOut, Mail, Phone, Settings } from 'lucide-react';
 import { PageLoader } from '@/components/common/PageLoader';
-import { Alert } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { accountName } from '@/lib/account-name';
-import { getErrorMessage } from '@/lib/error-messages';
 import { formatDate } from '@/lib/format';
 import { LogoutDialog } from '@/features/auth/components/LogoutDialog';
 import { AvatarEditor } from '@/features/profile/AvatarEditor';
@@ -33,7 +32,7 @@ export function CustomerProfilePage() {
   const [logoutOpen, setLogoutOpen] = useState(false);
 
   if (me.isLoading) return <PageLoader label={t('Profil yuklanmoqda…')} />;
-  if (me.isError || !me.data) return <Alert tone="danger">{getErrorMessage(me.error)}</Alert>;
+  if (me.isError || !me.data) return <ErrorState error={me.error} onRetry={() => void me.refetch()} />;
 
   const user = me.data;
   const name = accountName(user);

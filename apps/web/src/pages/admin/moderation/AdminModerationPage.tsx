@@ -39,7 +39,7 @@ function Reviews() {
   return (
     <>
       <TabBar variant="tabs">{(['PENDING', 'PUBLISHED', 'HIDDEN'] as const).map((s) => <Tab key={s} onClick={() => setStatus(s)} selected={status === s}>{s === 'PENDING' ? t('Tekshiruvda') : s === 'PUBLISHED' ? t('E’lon qilingan') : t('Yashirilgan')}</Tab>)}</TabBar>
-      {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ro‘yxat bo‘sh')} /> : (
+      {list.isLoading ? <PageLoader variant="list" /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ro‘yxat bo‘sh')} /> : (
         <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Sharh')}</th><th>{t('Do‘kon')}</th><th>{t('Muallif')}</th><th>{t('Risk')}</th><th /></tr></thead>
@@ -75,7 +75,7 @@ function Complaints() {
   return (
     <>
       <TabBar variant="tabs">{(['OPEN', 'RESOLVED', 'REJECTED'] as const).map((s) => <Tab key={s} onClick={() => setStatus(s)} selected={status === s}>{s === 'OPEN' ? t('Ochiq') : s === 'RESOLVED' ? t('Hal qilingan') : t('Rad etilgan')}</Tab>)}</TabBar>
-      {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ro‘yxat bo‘sh')} /> : (
+      {list.isLoading ? <PageLoader variant="list" /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ro‘yxat bo‘sh')} /> : (
         <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Obyekt')}</th><th>{t('Sabab')}</th><th>{t('Tafsilot')}</th><th>{t('Sana')}</th><th /></tr></thead>
@@ -105,7 +105,7 @@ function Disputes() {
   const act = useMutation({ mutationFn: () => adminDealsService.resolveDispute(target!.id, target!.decision, note.trim()), onSuccess: () => { setTarget(null); setNote(''); void queryClient.invalidateQueries({ queryKey: ['admin-disputes'] }); } });
   return (
     <>
-      {list.isLoading ? <PageLoader /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ochiq e’tiroz yo‘q')} /> : (
+      {list.isLoading ? <PageLoader variant="list" /> : !list.data?.length ? <EmptyState icon={<ShieldAlert size={30} />} title={t('Ochiq e’tiroz yo‘q')} /> : (
         <div tabIndex={0} role="region" aria-label={t('Jadval')} className="qs-table-wrap">
           <table className="qs-table">
             <thead><tr><th>{t('Montaj')}</th><th>{t('Mijoz')}</th><th>{t('Sabab')}</th><th /></tr></thead>
