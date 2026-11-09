@@ -55,7 +55,7 @@ export function PanelHeader({ role }: { role: Role | null }) {
         <span className="gm-aheader__divider" aria-hidden="true" />
 
         {!guest && (
-          <button type="button" className="gm-aheader__search" onClick={openSearch} aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
+          <button type="button" className="gm-aheader__search" onClick={openSearch} aria-label={t('Qidirish')} aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
             <Search aria-hidden="true" />
             <span className="gm-aheader__search-text">{t('Qidirish…')}</span>
             <kbd aria-hidden="true">{SHORTCUT_LABEL}</kbd>

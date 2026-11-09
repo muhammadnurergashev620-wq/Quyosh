@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { createContext, useContext, useLayoutEffect, useRef, useState } from 'react';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { cx } from '@/lib/utils';
 import './system.css';
@@ -111,16 +111,24 @@ export function TabBar({ variant = 'tabs', children, className, role = 'tablist'
     <div className={cx('gm-tabs-x', `gm-tabs-x--${variant}`, fullWidth && 'gm-tabs-x--full', className)}>
       <div ref={listRef} className="gm-tabs-x__list gm-tabs-x__list--auto" role={role} onKeyDown={onKey} {...rest}>
         {indicator && <span className="gm-tabs-x__indicator" aria-hidden="true" style={{ '--x': `${indicator.x}px`, '--w': `${indicator.w}px` } as React.CSSProperties} />}
-        {children}
+        <TabBarRole.Provider value={role}>{children}</TabBarRole.Provider>
       </div>
     </div>
   );
 }
 
-/** TabBar ichidagi tab yoki segment tugmasi (yoki tanlov tugmasi): `selected` — faol. */
+/** TabBar roli (tablist / radiogroup / group) — ichidagi `Tab` mos ARIA rolini o‘zi oladi. */
+const TabBarRole = createContext<string | null>(null);
+
+/** TabBar ichidagi tab yoki segment tugmasi (yoki tanlov tugmasi): `selected` — faol. ARIA (role, aria-selected/checked/pressed) TabBar roliga qarab avtomatik. */
 export function Tab({ selected = false, className, children, ...rest }: React.ButtonHTMLAttributes<HTMLButtonElement> & { selected?: boolean }) {
+  const parent = useContext(TabBarRole);
+  const aria: Record<string, unknown> =
+    parent === 'tablist' ? { role: 'tab', 'aria-selected': selected, tabIndex: selected ? 0 : -1 }
+      : parent === 'radiogroup' ? { role: 'radio', 'aria-checked': selected }
+        : parent ? { 'aria-pressed': selected } : {};
   return (
-    <button type="button" className={cx('gm-tab-btn', selected && 'is-on', className)} {...rest}>
+    <button type="button" className={cx('gm-tab-btn', selected && 'is-on', className)} {...aria} {...rest}>
       {children}
     </button>
   );
