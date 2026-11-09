@@ -30,4 +30,3 @@ docs/ui/after/
 docs/ui-review/shots/
 docs/ui-review/results*.json
 .ui-review-tokens.json
-tests/visual/__screenshots__/

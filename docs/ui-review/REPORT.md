@@ -1,6 +1,6 @@
 # UI ko‘rigi — yakuniy hisobot
 
-Branch: `ui/review` (asos: `ui/perfect`). Faqat UI qatlami o‘zgardi: API, biznes logika va backend fayllariga tegilmadi.
+Branch: `ui/review` (asos: `ui/perfect`), keyin `main` ga birlashtirildi. Faqat UI qatlami o‘zgardi: API, biznes logika va backend fayllariga tegilmadi.
 Har bir tuzatish guruhi alohida commit; har commitdan oldin `typecheck`, `lint`, `test`, `build` o‘tdi.
 Topilmalarning to‘liq ro‘yxati va holatlari: [FINDINGS.md](FINDINGS.md).
 
@@ -8,12 +8,12 @@ Topilmalarning to‘liq ro‘yxati va holatlari: [FINDINGS.md](FINDINGS.md).
 
 | | Soni |
 |---|---:|
-| Jami topilmalar | **36** (ko‘rikda 35 + tuzatish jarayonida 1 ta: UI-036) |
-| ✅ Tuzatildi | **34** |
-| ⏸ Sizning qaroringiz kerak (logika) | 1 — UI-004 |
+| Jami topilmalar | **38** (ko‘rikda 35 + keyin topilgan 3 ta: UI-036, UI-037, UI-038) |
+| ✅ Tuzatildi | **36** |
+| ✔ Qaror bilan yopildi | 1 — UI-004 (xabarlar o‘zbekcha qoladi) |
 | ❌ UI qatlamidan tashqarida | 1 — UI-032 (backend) |
 
-Jiddiylik bo‘yicha: kritik 2/2, yuqori 10/11 (UI-004 ⏸), o‘rta 15/15, past 7/8 (UI-032 ❌) tuzatildi.
+Jiddiylik bo‘yicha: kritik 2/2, yuqori 11/12 (UI-004 — qaror), o‘rta 16/16, past 7/8 (UI-032 ❌) tuzatildi.
 
 ## Avtomatik ko‘rik: oldin → keyin
 
@@ -72,20 +72,19 @@ Rasmlarda ko‘rinmaydigan, lekin muhim tuzatishlar:
 | Sahifa | Performance | Talab | Accessibility | Talab |
 |---|---:|---:|---:|---:|
 | Bosh sayt | **92** (oldin 69–82) | ≥ 85 ✅ | 100 | ≥ 95 ✅ |
-| Mijoz — kirish | **84** (oldin 81) | ≥ 80 ✅ | 100 | ✅ |
-| Do‘kon — kirish | **81** (oldin 75) | ≥ 80 ✅ | 100 | ✅ |
-| Admin — kirish | **85** (oldin 71) | ≥ 80 ✅ | 100 | ✅ |
-| Mijoz — kalkulyator | **64–67** (oldin 50) | ≥ 80 ❌ | 100 | ✅ |
+| Mijoz — kirish | **87** (oldin 81) | ≥ 80 ✅ | 100 | ✅ |
+| Do‘kon — kirish | **88** (oldin 75) | ≥ 80 ✅ | 100 | ✅ |
+| Admin — kirish | **88** (oldin 71) | ≥ 80 ✅ | 100 | ✅ |
+| Mijoz — do‘konlar | **84** | ≥ 80 ✅ | 100 | ✅ |
+| Mijoz — kalkulyator | **71** (oldin 50) | ≥ 80 ⚠️ | 100 | ✅ |
 
-Nima qilindi (`767059d`):
-- og‘ir sahifalar alohida bo‘lakka chiqarildi (Sozlamalar, Profil, Bildirishnomalar, Shartlar, Register, OTP);
-- panellarda App bo‘lagi `modulepreload` bilan yuklanadi;
-- MapLibre dinamik yuklanadi (~1 MB sahifa chizilishidan oldin yuklanmaydi);
-- mobil jadval moduli bosh saytdan olib tashlandi (u 837 ms uzun vazifa berardi).
+Nima qilindi:
+- **UI-038, `732dc3a`.** Ish muhitida `NODE_ENV=development` bo‘lsa, Vite build React’ning development versiyasini chiqarardi (`index` 334 KB). Endi `build` skripti doim `NODE_ENV=production` beradi: `index` 149 KB.
+- **`767059d`.** Og‘ir sahifalar alohida bo‘lakda, panellarda App bo‘lagi oldindan yuklanadi, MapLibre dinamik yuklanadi, mobil jadval moduli bosh saytda ishlamaydi.
 
-Kalkulyator hali 80 ga yetmadi. LCP elementi ketma-ket zanjirni kutadi: `index` → `App` → sahifa bo‘lagi. Xaritaning ishga tushishi esa ~450 ms TBT beradi. Keyingi qadam:
-- joriy marshrut bo‘lagini oldindan yuklash;
-- xaritani ko‘rinish maydoniga kirganda ishga tushirish (`IntersectionObserver`).
+Kalkulyatorda qolgan TBT (~560 ms) — birinchi ekrandagi interaktiv xaritaning (WebGL) ishga tushishi. Kechiktirish va oldindan yuklash sinab ko‘rildi, foyda bermadi. 80 ga chiqarishning yagona yo‘li — xarita o‘rniga avval statik rasm ko‘rsatib, xaritani bosilganda yuklash. Bu UX’ni yomonlashtiradi (nuqtani darhol qo‘yib bo‘lmaydi), shuning uchun interaktiv xarita qoldirildi.
+
+Mijoz panelida SEO 63 — panel sahifalari `robots.txt` orqali indekslashdan ataylab yopilgan (to‘g‘ri).
 
 ## Himoya: vizual regressiya
 
@@ -94,20 +93,15 @@ Kalkulyator hali 80 ga yetmadi. LCP elementi ketma-ket zanjirni kutadi: `index` 
 - animatsiyalar o‘chiriladi, o‘zgaruvchan joylar niqoblanadi (vaqt, xarita, grafik, film), 2% gacha farqqa ruxsat;
 - solishtirish rejimida **100/100** o‘tdi, keyingi o‘zgarishlardan keyin ham qayta o‘tdi.
 
-Baseline lokal stend ma’lumotiga bog‘liq. U `.gitignore`da va `npm run test:visual -- --update-snapshots` bilan yaratiladi.
+Baseline `tests/visual/__screenshots__/` da, git’ga qo‘shilgan. U lokal stend ma’lumotiga bog‘liq: dizayn ataylab o‘zgarganda `npm run test:visual -- --update-snapshots` bilan yangilanadi.
 
-## Qolgan masalalar va sizdan kutilayotgan qarorlar
+## Qarorlar va qolgan masalalar
 
-1. **UI-004 (⏸, logika).** Chat tizim xabarlari va bildirishnomalar server tomonida faqat o‘zbekcha matn sifatida saqlanadi. Shuning uchun ru/oz sahifada o‘zbekcha qoladi. Taklif: server xabarni kalit + parametrlar bilan saqlasin, UI uni `t()` bilan tarjima qilsin — bu backend o‘zgarishi.
-2. **UI-032 (❌, backend).** Vidjet ko‘rinishidagi `postMessage` origin ogohlantirishi. U server yaratadigan sahifadan (`src/modules/shop-content/widget-frame.ts`) chiqadi.
-3. **Kalkulyator performance 64–67** (talab ≥ 80) — yuqoridagi keyingi qadamni bajarishga ruxsat berasizmi?
-4. **Ko‘rilmagan 2 sahifa:**
-   - «Obyekt tafsiloti» — test bazasida obyekt yo‘q;
-   - «Takliflarni solishtirish» — kamida 2 taklif kerak.
-
-   Demo ma’lumot qo‘shilsa, ko‘rikka kiritaman.
-5. **Vizual baseline’ni repoga qo‘shish** (100 PNG, ~20 MB) yoki lokal qoldirish — qaysi biri?
-6. **Kalkulyator sozlamalari yozuvidagi «(TZ 11)»** — bu UI matni emas, bazadagi ma’lumot (seed).
+1. **UI-004** — qaror: tizim xabarlari va bildirishnomalar o‘zbekcha qoladi. Yopildi.
+2. **UI-032 (❌, backend)** — vidjet ko‘rinishidagi `postMessage` origin ogohlantirishi. U server yaratadigan sahifadan (`src/modules/shop-content/widget-frame.ts`) chiqadi.
+3. **Kalkulyator performance 71** — yuqoridagi sabab bilan interaktiv xarita qoldirildi.
+4. **Ilgari ko‘rilmagan 2 sahifa** («Obyekt tafsiloti», «Takliflarni solishtirish») demo ma’lumot bilan ko‘rildi. Lokal bazaga mijoz uchun «Demo — Yunusobod uyi» obyekti ilovaning API’si orqali qo‘shildi. Topilgan bitta a11y xato (UI-037) tuzatildi.
+5. **Kalkulyator sozlamalari yozuvidagi «(TZ 11)»** — bu bazadagi ma’lumot (seed), UI matni emas.
 
 ## Qanday takrorlash mumkin
 

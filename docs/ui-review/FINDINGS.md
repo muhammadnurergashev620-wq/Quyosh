@@ -10,7 +10,7 @@ Stend: bosh sayt 5180, mijoz 5183, do‘kon 5184, admin 5185, API 3100 (hujjatda
 - Avtomatik: console error/warning, 4xx/5xx, axe-core (WCAG 2.1 A/AA), gorizontal skroll, kesilgan matn, ustma-ust elementlar, 44 px dan kichik teginish maydoni, «undefined / null / NaN / ISO sana», tarjima qilinmagan matn.
 - Interaktiv (`scripts/ui-review-interactions.mjs`): modal focus-trap va Esc, mobil modal = sheet, bildirishnoma paneli, ⌘K, toast turlari, tugma holatlari, Tab tartibi, reduced-motion, WebGL’siz bosh sayt, film 8 bob.
 - Har bir sahifaning skrinshotlari ko‘z bilan ko‘rib chiqildi (yorug‘/qorong‘i, 360–1440, oz/ru, bo‘sh/yuklanish/xato).
-- Ko‘rilmagan: «Obyekt tafsiloti» (test bazasida obyekt yo‘q) va «Takliflarni solishtirish» (kamida 2 taklif kerak).
+- «Obyekt tafsiloti» va «Takliflarni solishtirish» keyinroq demo ma’lumot bilan ko‘rildi (UI-037).
 
 Skrinshotlar: `docs/ui-review/shots/<panel>/<sahifa>/<o‘lcham>-<mavzu>-<til>[-holat].png` (gitignore’da). Xom natijalar: `docs/ui-review/results.json`.
 
@@ -21,7 +21,7 @@ Skrinshotlar: `docs/ui-review/shots/<panel>/<sahifa>/<o‘lcham>-<mavzu>-<til>[-
 | UI-001 | Hammasi / mobil header | 360–768, ikkala mavzu | E | kritik | Mobil headerdagi qidiruv tugmasi (⌘K) matni yashirilganda nomsiz qoladi — ekran o‘quvchi uchun nomi yo‘q (axe button-name). | `shots/customer/mijoz_bosh/390-light-uz.png` | PanelHeader: qidiruv tugmasiga aria-label=«Qidirish» berish. | ✅ 64b0ce0 |
 | UI-002 | Admin / Sharhlar (TabBar) | hammasi | E | kritik | role=tablist ichida role=tab’siz tugmalar (axe aria-required-children). | `shots/admin/admin_sharhlar/1440-light-uz.png` | TabBar komponenti farzand tugmalarga role=tab va aria-selected beradi. | ✅ 64b0ce0 |
 | UI-003 | Hammasi / ro‘yxat va tafsilot sahifalari | API 500, 390 va 1440 | B | yuqori | Xato holatida sahifa o‘rniga faqat qizil Alert «Server kutilmagan javob qaytardi (500).» — sarlavha yo‘q, «Qayta urinish» tugmasi yo‘q, nima qilish kerakligi aytilmagan (ErrorState ishlatilmagan). | `shots/customer/mijoz_sorovlar/1440-light-uz-error.png` | Umumiy QueryError (ErrorState: ikonka + «nima bo‘ldi» + «nima qilish kerak» + «Qayta urinish» → refetch); 52 joydagi `if (q.isError) return <Alert tone="danger">` naqshini almashtirish. | ✅ 52e4ce5 |
-| UI-004 | Mijoz / Chat (tizim xabarlari) | hammasi, ayniqsa ru/oz | C | yuqori | Tizim xabarlari server tomonida faqat o‘zbekcha matn sifatida saqlanadi: ru/oz sahifada «O‘lchov tasdiqlandi — mijoz kontakti ochildi» o‘zbekcha qoladi. Eski yozuvlarda xom ISO sana («2026-11-02T05:00:00.000Z») va formatlanmagan summa («20917756 so‘m») ham bor (server kodi hozir formatlaydi, faqat eski ma’lumot). | `shots/customer/mijoz_chat_rsId/390-light-ru.png` | ⏸ Logika: server tizim xabarini kalit + parametrlar (systemKind + data) bilan saqlashi, UI esa t() orqali tarjima qilishi kerak — backend o‘zgarishi. | ⏸ logika — sizning qaroringiz kerak |
+| UI-004 | Mijoz / Chat (tizim xabarlari) | hammasi, ayniqsa ru/oz | C | yuqori | Tizim xabarlari server tomonida faqat o‘zbekcha matn sifatida saqlanadi: ru/oz sahifada «O‘lchov tasdiqlandi — mijoz kontakti ochildi» o‘zbekcha qoladi. Eski yozuvlarda xom ISO sana («2026-11-02T05:00:00.000Z») va formatlanmagan summa («20917756 so‘m») ham bor (server kodi hozir formatlaydi, faqat eski ma’lumot). | `shots/customer/mijoz_chat_rsId/390-light-ru.png` | ⏸ Logika: server tizim xabarini kalit + parametrlar (systemKind + data) bilan saqlashi, UI esa t() orqali tarjima qilishi kerak — backend o‘zgarishi. | ✔ qaror: o‘zbekcha qoladi (buyurtmachi qarori, yopildi) |
 | UI-005 | Mijoz, do‘kon / montaj tarixi va chat | hammasi | C | yuqori | Montaj holat tarixi va chat tizim xabarlarida xom ISO sana («2026-11-02T05:00:00.000Z») va formatlanmagan summa ko‘rinadi (eski yozuvlar; server hozir formatlaydi). | `shots/customer/mijoz_montajlar_id/360-dark-uz.png` | UI: ko‘rsatishdan oldin matndagi ISO sanalarni formatDateTime ga, uzun raqam+«so‘m»ni formatSum ga almashtiruvchi umumiy helper (faqat ko‘rinish). | ✅ a9e5e5c |
 | UI-006 | Admin / Yordam navbati | hammasi | C | yuqori | Ustuvorlik inglizcha enum sifatida ko‘rinadi: badge va tanlovda «HIGH», «URGENT», «NORMAL». | `shots/admin/admin_yordam_id/390-light-uz.png` | PRIORITY lug‘ati (Shoshilinch / Yuqori / Oddiy) + StatusBadge. | ✅ a9e5e5c |
 | UI-007 | Mijoz / Hisoblarim (va boshqa jadvallar) | 360–390 | D | yuqori | Jadval mobilda kartaga aylanmaydi: ustunlar kesiladi, ichki gorizontal skroll; ro‘yxatni o‘qish qiyin. | `shots/customer/mijoz_hisoblar/360-dark-uz.png` | qs-table: ≤640 px da qatorlar karta ko‘rinishida (data-label bilan) — umumiy CSS + jadvallarga data-label. | ✅ af36ded |
@@ -55,6 +55,8 @@ Skrinshotlar: `docs/ui-review/shots/<panel>/<sahifa>/<o‘lcham>-<mavzu>-<til>[-
 | UI-035 | Admin / Sharhlar, Kalkulyator | hammasi | C | past | UI matnida ichki hujjat havolalari: «(TZ 13.4)», «(TZ 11)». | `shots/admin/admin_sharhlar/390-light-uz.png` | Havolani matndan olib tashlash. | ✅ b193c88 (UI matni); «(TZ 11)» — kalkulyator sozlamalari yozuvidagi ma’lumot (seed), UI emas |
 
 | UI-036 | Hammasi / forma maydonlari | hammasi, klaviatura | E | yuqori | Matn maydonlari fokusida halqa yo‘q (premium.css eski qoidasi box-shadow: none) — klaviatura bilan ishlaganda focus deyarli ko‘rinmaydi. (Tuzatish jarayonida topildi.) | `shots/_interactions/` | Eski qoidani olib tashlash — yagona focus halqasi (system.css). | ✅ 283dafe |
+| UI-037 | Mijoz / Takliflarni solishtirish | 360–390, uz/oz/ru | E | o‘rta | Gorizontal skroll bo‘ladigan solishtirish jadvali klaviaturadan fokuslanmaydi (axe scrollable-region-focusable). (Demo ma’lumot qo‘shilgach ko‘rikda topildi.) | `shots/customer/mijoz_sorovlar_id_solishtirish/390-light-uz.png` | O‘ramga tabIndex=0, role=region va aria-label. | ✅ 9ff7615 |
+| UI-038 | Hammasi / production build | build muhiti | G | yuqori | Muhitda NODE_ENV=development bo‘lsa Vite build React’ning development versiyasini chiqaradi (index 334 KB, sekin va og‘ir). Lighthouse o‘lchovlarida topildi. | — | apps/web `build` skripti: NODE_ENV=production vite build. | ✅ 732dc3a |
 Turlar: A — vizual izchillik, B — holatlar, C — matn, D — moslashuvchanlik, E — accessibility, F — harakat, G — panelga xos.
 
 ## Tekshirildi — muammo topilmadi
@@ -80,13 +82,13 @@ Turlar: A — vizual izchillik, B — holatlar, C — matn, D — moslashuvchanl
 
 ## Statistika
 
-Jami: **36 ta topilma** (ko‘rikda 35 + tuzatish jarayonida topilgan UI-036).
+Jami: **38 ta topilma** (ko‘rikda 35 + tuzatish va 3-qadamda topilgan UI-036, UI-037, UI-038).
 
 | Jiddiylik | Soni |
 |---|---:|
 | kritik | 2 |
-| yuqori | 11 |
-| o‘rta | 15 |
+| yuqori | 12 |
+| o‘rta | 16 |
 | past | 8 |
 
 | Tur | Soni |
@@ -95,14 +97,14 @@ Jami: **36 ta topilma** (ko‘rikda 35 + tuzatish jarayonida topilgan UI-036).
 | B — holatlar | 5 |
 | C — matn | 7 |
 | D — moslashuvchanlik | 4 |
-| E — accessibility | 9 |
+| E — accessibility | 10 |
 | F — harakat | 2 |
-| G — panelga xos | 1 |
+| G — panelga xos | 2 |
 
-## Logika — sizning qaroringiz kerak
+## Logika bo‘yicha qaror
 
-- **UI-004** — Tizim xabarlari server tomonida faqat o‘zbekcha matn sifatida saqlanadi: ru/oz sahifada «O‘lchov tasdiqlandi — mijoz kontakti ochildi» o‘zbekcha qoladi. Eski yozuvlarda xom ISO sana («2026-11-02T05:00:00.000Z») va formatlanmagan summa («20917756 so‘m») ham bor (server kodi hozir formatlaydi, faqat eski ma’lumot). Taklif: Logika: server tizim xabarini kalit + parametrlar (systemKind + data) bilan saqlashi, UI esa t() orqali tarjima qilishi kerak — backend o‘zgarishi.
+- **UI-004** — buyurtmachi qarori: tizim xabarlari va bildirishnomalar server tomonida o‘zbekcha qoladi (ru/oz sahifada ham). Yopildi.
 
 ## Yakuniy holat
 
-✅ 34 tuzatildi · ⏸ 1 (UI-004 — logika, qaror kerak) · ❌ 1 (UI-032 — backend). Batafsil: [REPORT.md](REPORT.md).
+✅ 36 tuzatildi · ✔ 1 qaror bilan yopildi (UI-004 — xabarlar o‘zbekcha qoladi) · ❌ 1 (UI-032 — backend). Batafsil: [REPORT.md](REPORT.md).
