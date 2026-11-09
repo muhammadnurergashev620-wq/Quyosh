@@ -221,6 +221,8 @@ async function discover(browser, panel, routes) {
     const [fromRoute, pattern, clickSel, fallback] = rule;
     const from = fromRoute.includes(':') ? found[fromRoute] : fromRoute;
     if (!from) { if (fallback) found[route] = fallback; continue; }
+    // Taqqoslash tugmasi havola emas (navigate) — so‘rov sahifasidan hosil qilinadi
+    if (route.endsWith('/solishtirish') && fromRoute.includes(':')) { found[route] = `${from}/solishtirish`; continue; }
     const hrefs = await visit(from, pattern);
     const hit = hrefs.find((h) => h && pattern.test(h.split(/[?#]/)[0]));
     if (hit) { found[route] = hit.split('#')[0]; continue; }

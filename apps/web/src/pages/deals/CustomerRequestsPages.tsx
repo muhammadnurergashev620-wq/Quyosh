@@ -304,7 +304,7 @@ export function CompareQuotesPage() {
         <Checkbox inline label={t('Faqat farqlarni ko‘rsatish')} checked={diffOnly} onChange={(e) => setDiffOnly(e.target.checked)} />
       </div>
       {quotes.length < 2 && <Alert tone="info">{t('Solishtirish uchun kamida 2 ta taklif kerak.')}</Alert>}
-      <div className="qs-compare">
+      <div className="qs-compare" tabIndex={0} role="region" aria-label={t('Takliflarni solishtirish')}>
         <table>
           <thead>
             <tr>
