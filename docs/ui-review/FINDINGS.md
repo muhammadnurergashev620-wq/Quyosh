@@ -80,12 +80,12 @@ Turlar: A — vizual izchillik, B — holatlar, C — matn, D — moslashuvchanl
 
 ## Statistika
 
-Jami: **35 ta topilma**.
+Jami: **36 ta topilma** (ko‘rikda 35 + tuzatish jarayonida topilgan UI-036).
 
 | Jiddiylik | Soni |
 |---|---:|
 | kritik | 2 |
-| yuqori | 10 |
+| yuqori | 11 |
 | o‘rta | 15 |
 | past | 8 |
 
@@ -95,10 +95,14 @@ Jami: **35 ta topilma**.
 | B — holatlar | 5 |
 | C — matn | 7 |
 | D — moslashuvchanlik | 4 |
-| E — accessibility | 8 |
+| E — accessibility | 9 |
 | F — harakat | 2 |
 | G — panelga xos | 1 |
 
 ## Logika — sizning qaroringiz kerak
 
 - **UI-004** — Tizim xabarlari server tomonida faqat o‘zbekcha matn sifatida saqlanadi: ru/oz sahifada «O‘lchov tasdiqlandi — mijoz kontakti ochildi» o‘zbekcha qoladi. Eski yozuvlarda xom ISO sana («2026-11-02T05:00:00.000Z») va formatlanmagan summa («20917756 so‘m») ham bor (server kodi hozir formatlaydi, faqat eski ma’lumot). Taklif: Logika: server tizim xabarini kalit + parametrlar (systemKind + data) bilan saqlashi, UI esa t() orqali tarjima qilishi kerak — backend o‘zgarishi.
+
+## Yakuniy holat
+
+✅ 34 tuzatildi · ⏸ 1 (UI-004 — logika, qaror kerak) · ❌ 1 (UI-032 — backend). Batafsil: [REPORT.md](REPORT.md).
