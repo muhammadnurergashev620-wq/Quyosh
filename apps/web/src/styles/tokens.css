@@ -14,7 +14,7 @@
 
   --qs-color-primary: #2563eb;
   --qs-color-primary-hover: #1d4fd1;
-  --qs-color-primary-soft: #e0ebff;
+  --qs-color-primary-soft: #ebf2ff; /* primary matni ustida ≥ 4,5:1 */
   --qs-color-primary-contrast: #ffffff;
   --qs-focus-ring: #2563eb;
   --qs-color-accent: #f0b84b;
@@ -24,7 +24,7 @@
   --qs-chart-grid: #e2e8f0;
   --qs-color-accent-contrast: #271b06;
 
-  --qs-color-danger: #d94352;
+  --qs-color-danger: #c62f3f; /* oq va danger-bg ustida ≥ 4,5:1 */
   --qs-color-danger-bg: #fdecef;
   --qs-color-success: #087b57;
   --qs-color-success-bg: #e4f7ef;
@@ -118,8 +118,8 @@
   --qs-ring: 0 0 0 2px var(--qs-color-bg), 0 0 0 4px var(--qs-focus-ring);
 }
 
-:root[data-panel='SHOP'] { --qs-color-primary:#059669; --qs-color-primary-hover:#047857; --qs-color-primary-soft:#d9f4e8; --qs-color-info-bg:#d9f4e8; --qs-focus-ring:#059669; }
-:root[data-panel='ADMIN'] { --qs-color-primary:#1e3a8a; --qs-color-primary-hover:#172e6e; --qs-color-primary-soft:#dde6fa; --qs-color-info-bg:#dde6fa; --qs-focus-ring:#1e3a8a; }
+:root[data-panel='SHOP'] { --qs-color-primary:#047857; --qs-color-primary-hover:#065f46; --qs-color-primary-soft:#dcf5ea; --qs-color-info-bg:#dcf5ea; --qs-focus-ring:#047857; } /* oq ustida 5,5:1, soft ustida ≥ 4,5:1 */
+:root[data-panel='ADMIN'] { --qs-color-primary:#1e3a8a; --qs-color-primary-hover:#172e6e; --qs-color-primary-soft:#e6edfb; --qs-color-info-bg:#dde6fa; --qs-focus-ring:#1e3a8a; }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
@@ -248,3 +248,6 @@
 /* ── Tooltip (InfoTip) va brend ko‘k rangi (logotip) ── */
 :root { --qs-tooltip-bg: #111827; --qs-tooltip-text: #f9fafb; --qs-brand-blue: #1373f5; }
 :root[data-theme='dark'] { --qs-tooltip-bg: #f3f4f6; --qs-tooltip-text: #111827; }
+
+/* Logotipdagi «.uz» yorug‘ fonda (22 px qalin — yirik matn, ≥ 3:1) */
+:root { --qs-brand-gold-ink: #b7700b; }

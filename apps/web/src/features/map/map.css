@@ -3,7 +3,7 @@
 .qs-map__canvas { position: absolute; inset: 0; }
 .qs-map__tools { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 .qs-map__tool { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border: 1px solid var(--qs-color-border); border-radius: 10px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-size: 13px; font-weight: 700; box-shadow: var(--qs-shadow-sm); cursor: pointer; }
-.qs-map__tool.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: var(--qs-color-on-dark); }
+.qs-map__tool.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: var(--qs-color-primary-contrast); }
 @media (max-width: 560px) { .qs-map__tool span { display: none; } }
 .qs-map .maplibregl-ctrl-attrib { font-size: 11px; }
 .qs-map__overlay { position: absolute; left: 10px; right: 10px; bottom: 34px; z-index: 2; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--qs-color-surface) 94%, transparent); box-shadow: var(--qs-shadow-md); font-size: 13.5px; }
@@ -11,7 +11,7 @@
 .qs-map__card { position: absolute; top: 56px; left: 10px; z-index: 3; width: min(320px, calc(100% - 20px)); padding: 14px; border-radius: 14px; background: var(--qs-color-surface); box-shadow: var(--qs-shadow-lg); display: grid; gap: 8px; }
 .qs-map__card header { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
 
-.qs-cluster { display: grid; place-items: center; border-radius: 50%; background: var(--qs-color-primary); color: var(--qs-color-on-dark); font-weight: 800; font-size: 13px; border: 3px solid color-mix(in srgb, var(--qs-color-on-dark) 80%, transparent); box-shadow: 0 6px 16px -6px rgb(var(--qs-black-rgb) / .4); cursor: pointer; }
+.qs-cluster { display: grid; place-items: center; border-radius: 50%; background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); font-weight: 800; font-size: 13px; border: 3px solid color-mix(in srgb, var(--qs-color-on-dark) 80%, transparent); box-shadow: 0 6px 16px -6px rgb(var(--qs-black-rgb) / .4); cursor: pointer; }
 .qs-pin { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50% 50% 50% 4px; transform: rotate(-45deg); background: var(--qs-color-accent); border: 3px solid var(--qs-color-on-dark); box-shadow: 0 6px 16px -6px rgb(var(--qs-black-rgb) / .5); cursor: pointer; }
 .qs-pin span { transform: rotate(45deg); color: var(--qs-color-accent-contrast); font-weight: 800; font-size: 13px; }
 .qs-mappage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--qs-space-4); align-items: start; }

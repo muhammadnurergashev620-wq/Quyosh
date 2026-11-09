@@ -33,7 +33,7 @@
 
 .gm-aprof__tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 4px; border: 1px solid var(--qs-color-border); border-radius: 14px; background: var(--qs-color-surface); width: fit-content; max-width: 100%; overflow-x: auto; }
 .gm-aprof__tabs button { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 16px; border: none; border-radius: 10px; background: transparent; color: var(--qs-color-text-muted); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.gm-aprof__tabs button.is-on { background: var(--qs-color-primary); color: var(--qs-color-on-dark); }
+.gm-aprof__tabs button.is-on { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); }
 .gm-aprof__tabs button:focus-visible { outline: 2px solid var(--qs-color-primary); outline-offset: 2px; }
 
 .gm-aprof__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--qs-space-4); align-items: start; }

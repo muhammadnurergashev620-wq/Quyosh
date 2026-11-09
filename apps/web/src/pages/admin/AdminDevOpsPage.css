@@ -3,7 +3,7 @@
 .gm-devops { display: flex; flex-direction: column; gap: var(--qs-space-4); }
 
 .gm-devops__head { display: flex; align-items: center; gap: var(--qs-space-4); flex-wrap: wrap; }
-.gm-devops__logo { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--qs-color-primary); color: var(--qs-color-on-dark); flex-shrink: 0; box-shadow: 0 10px 22px -10px var(--qs-color-primary); }
+.gm-devops__logo { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); flex-shrink: 0; box-shadow: 0 10px 22px -10px var(--qs-color-primary); }
 .gm-devops__title h1 { margin: 0; font-size: 26px; line-height: 1.15; }
 .gm-devops__title p { margin: 2px 0 0; font-size: 13px; color: var(--qs-color-text-muted); }
 .gm-devops__tools { margin-left: auto; display: flex; align-items: center; gap: var(--qs-space-3); flex-wrap: wrap; }
@@ -13,7 +13,7 @@
 .gm-devops__status.is-bad i { background: var(--qs-color-danger); box-shadow: 0 0 0 4px color-mix(in srgb, var(--qs-color-danger) 20%, transparent); }
 .gm-devops__tabs { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--qs-color-border); border-radius: 999px; background: var(--qs-color-surface); }
 .gm-devops__tabs button { min-height: 34px; padding: 0 14px; border: none; border-radius: 999px; background: transparent; color: var(--qs-color-text-muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.gm-devops__tabs button.is-on { background: var(--qs-color-primary); color: var(--qs-color-on-dark); }
+.gm-devops__tabs button.is-on { background: var(--qs-color-primary); color: var(--qs-color-primary-contrast); }
 .gm-devops__tabs button:focus-visible { outline: 2px solid var(--qs-color-primary); outline-offset: 2px; }
 
 .gm-devops-issues { margin: 0; padding-left: 18px; }
@@ -52,7 +52,7 @@
 .gm-dbackup { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; margin-bottom: 6px; border-radius: 12px; border: 1px solid; }
 .gm-dbackup div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .gm-dbackup strong { font-size: 13px; }
-.gm-dbackup span { font-size: 12px; opacity: 0.85; overflow-wrap: anywhere; }
+.gm-dbackup span { font-size: 12px; overflow-wrap: anywhere; }
 .gm-dbackup svg { flex-shrink: 0; margin-top: 1px; }
 .gm-dbackup.is-ok { background: var(--qs-color-success-bg); border-color: color-mix(in srgb, var(--qs-color-success) 35%, transparent); color: var(--qs-color-success); }
 .gm-dbackup.is-warn { background: var(--qs-color-warning-bg); border-color: color-mix(in srgb, var(--qs-color-warning) 35%, transparent); color: var(--qs-color-warning); }

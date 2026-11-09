@@ -46,3 +46,4 @@
 .gm-logo--on-dark { color: var(--qs-land-white); }
 .gm-logo__svg { display: block; color: currentColor; }
 .gm-logo__word b { color: var(--qs-color-accent); }
+:root:not([data-theme='dark']) .gm-logo:not(.gm-logo--on-dark) .gm-logo__word b { color: var(--qs-brand-gold-ink); }

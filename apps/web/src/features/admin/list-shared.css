@@ -43,7 +43,7 @@
 .gm-aud__tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 12px; }
 .gm-aud__tabs button { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 14px; border: 1px solid var(--qs-color-border); border-radius: 10px; background: var(--qs-color-surface); color: var(--qs-color-text-muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .gm-aud__tabs button span { padding: 1px 7px; border-radius: 999px; background: var(--qs-color-surface-muted); font-size: 11.5px; }
-.gm-aud__tabs button.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: var(--qs-color-on-dark); }
+.gm-aud__tabs button.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: var(--qs-color-primary-contrast); }
 .gm-aud__tabs button.is-on span { background: rgb(var(--qs-white-rgb) / 0.22); }
 
 /* Sarlavha + qisqa matn ustuni */

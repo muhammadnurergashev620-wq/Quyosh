@@ -37,7 +37,7 @@
 .gm-errs2__codes { display: flex; flex-wrap: wrap; gap: 6px; }
 .gm-errs2__codes button { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--qs-color-border); border-radius: 999px; background: var(--qs-color-surface); color: var(--qs-color-text); font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; }
 .gm-errs2__codes button span { color: var(--qs-color-text-muted); font-size: 11px; }
-.gm-errs2__codes button.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: var(--qs-color-on-dark); }
+.gm-errs2__codes button.is-on { background: var(--qs-color-primary); border-color: var(--qs-color-primary); color: var(--qs-color-primary-contrast); }
 .gm-errs2__codes button.is-on span { color: rgb(var(--qs-white-rgb) / 0.85); }
 .gm-errs2__sev { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .gm-errs2__sev.is-err { background: var(--qs-color-danger-bg); color: var(--qs-color-danger); }
