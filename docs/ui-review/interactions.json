@@ -32,7 +32,7 @@
  {
   "id": "tab-order-login",
   "ok": false,
-  "detail": "a[Quyosh — bosh sahifa] Quyosh.uz → button UZ → button[Yorug‘ mavzu. Almashtirish uchun bosing]  → input  → input  → button[Parolni ko‘rsatish]  → button Kirish → button Google orqali davom etish → a Ro‘yxatdan o‘tish → body Quyosh.uz\nMijoz paneli\nTomingi"
+  "detail": "a[Quyosh — bosh sahifa] Quyosh.uz → button UZ → button[Yorug‘ mavzu. Almashtirish uchun bosing]  → input  → input  → button[Parolni ko‘rsatish]  → button Kirish → button Google orqali davom etish → a Ro‘yxatdan o‘tish"
  },
  {
   "id": "reduced-motion",
@@ -41,8 +41,8 @@
  },
  {
   "id": "film-chapters",
-  "ok": false,
-  "detail": "ko‘rilgan boblar: 01Tong"
+  "ok": true,
+  "detail": "ko‘rilgan boblar: 01Tong | 02Panel to‘ri | 03Energiya | 04Tejash | 05Xarita | 06Takliflar | 07Montaj | 08Quyosh.uz"
  },
  {
   "id": "no-webgl",

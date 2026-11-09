@@ -24,7 +24,10 @@
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:push": "prisma db push",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "ui:review": "node scripts/ui-review.mjs",
+    "ui:review:interactions": "node scripts/ui-review-interactions.mjs",
+    "test:visual": "playwright test -c playwright.visual.config.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
