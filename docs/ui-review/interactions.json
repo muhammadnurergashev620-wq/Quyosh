@@ -1,0 +1,57 @@
+[
+ {
+  "id": "modal-focus-1440",
+  "ok": true,
+  "detail": "focus ichida: true, trap: true, Esc yopdi: true"
+ },
+ {
+  "id": "modal-focus-390",
+  "ok": true,
+  "detail": "focus ichida: true, trap: true, Esc yopdi: true, pastga yopishgan: true"
+ },
+ {
+  "id": "notify-panel",
+  "ok": true,
+  "detail": "ochildi: true, Esc’dan keyin focus: button[Bildirishnomalar] "
+ },
+ {
+  "id": "cmdk",
+  "ok": true,
+  "detail": "ochildi: true, birinchi natija: Do‘konlar xaritasi, URL: /mijoz/xarita"
+ },
+ {
+  "id": "toast-types",
+  "ok": true,
+  "detail": "error:alert:true, success:status:true"
+ },
+ {
+  "id": "button-states",
+  "ok": true,
+  "detail": "focus ring: true, hover transform: matrix(1, 0, 0, 1, 0, -1), disabled: true/0.45/not-allowed, loading: true/true"
+ },
+ {
+  "id": "tab-order-login",
+  "ok": false,
+  "detail": "a[Quyosh — bosh sahifa] Quyosh.uz → button UZ → button[Yorug‘ mavzu. Almashtirish uchun bosing]  → input  → input  → button[Parolni ko‘rsatish]  → button Kirish → button Google orqali davom etish → a Ro‘yxatdan o‘tish → body Quyosh.uz\nMijoz paneli\nTomingi"
+ },
+ {
+  "id": "reduced-motion",
+  "ok": true,
+  "detail": "animatsiyalar: 0, 200 ms dan uzun: yo‘q"
+ },
+ {
+  "id": "film-chapters",
+  "ok": false,
+  "detail": "ko‘rilgan boblar: 01Tong"
+ },
+ {
+  "id": "no-webgl",
+  "ok": true,
+  "detail": "statik kadr: true, xatolar: yo‘q"
+ },
+ {
+  "id": "shop-login-fields",
+  "ok": true,
+  "detail": "username, password"
+ }
+]

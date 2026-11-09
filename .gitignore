@@ -27,3 +27,6 @@ test-results/
 playwright-report/
 docs/ui/before/
 docs/ui/after/
+docs/ui-review/shots/
+docs/ui-review/results*.json
+.ui-review-tokens.json
