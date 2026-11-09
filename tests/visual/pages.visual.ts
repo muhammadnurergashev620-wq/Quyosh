@@ -52,7 +52,7 @@ for (const page of PAGES) {
         const p = await ctx.newPage();
         await p.goto(`http://localhost:${PORT[page.panel]}${page.path}`, { waitUntil: 'load' });
         await p.waitForSelector('main, .qs-portal, .gm-auth-page', { timeout: 20_000 });
-        await p.waitForLoadState('networkidle').catch(() => undefined);
+        await p.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => undefined);
         await p.waitForFunction(() => !document.querySelector('.gm-page-loader'), null, { timeout: 15_000 }).catch(() => undefined);
         await p.waitForTimeout(600);
         await expect(p).toHaveScreenshot(`${page.name}-${width}-${theme}.png`, { mask: MASK.map((selector) => p.locator(selector)) });
