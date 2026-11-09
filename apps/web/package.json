@@ -10,7 +10,7 @@
     "dev:shop": "vite --mode shop --port 5174 --strictPort",
     "dev:admin": "vite --mode admin --port 5175 --strictPort",
     "dev:all": "node scripts/dev-all.mjs",
-    "build": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json && vite build",
+    "build": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json && NODE_ENV=production vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
